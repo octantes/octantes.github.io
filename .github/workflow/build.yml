@@ -1,0 +1,51 @@
+name: build-md
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: install deps
+        run: npm ci
+
+      - name: 1. build spa using vite
+        run: npm run build
+
+      - name: 2. run buildstep for htmls and index
+        run: node buildstep.js
+
+      - name: 3. sync dist-spa and dist-content to docs
+        run: |
+          mkdir -p docs
+          rsync -a --delete dist/ docs/
+
+      - name: commit & push generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "no changes to commit"
+          else
+            git commit -m "build: regenerar html + index.json + SPA"
+            git push origin HEAD:main
+          fi
