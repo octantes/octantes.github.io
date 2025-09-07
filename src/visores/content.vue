@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
-import Shader from '../recursos/shader.vue'
+import ShaderMatrix from '../recursos/shaderMatrix.vue'
+import ShaderPortal from '../recursos/shaderPortal.vue'
 
 const route = useRoute()
 const noteContent = ref('')
@@ -27,7 +28,7 @@ onBeforeRouteUpdate((to) => loadNote(to.params.slug))
 
 <template>
   <div class="post">
-    <Shader v-if="loading" />
+    <ShaderMatrix v-if="loading" />
     <div v-else class="text" v-html="noteContent"></div>
   </div>
 </template>
