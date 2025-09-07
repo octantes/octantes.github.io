@@ -1,17 +1,14 @@
 <script setup>
-import { ref } from 'vue'
 import Content from './visores/content.vue'
 import Navigation from './visores/navigation.vue'
 import Footer from './visores/footer.vue'
-
-const currentRoute = ref('')
 </script>
 
 <template>
     <div class="pagina">
         <div class="layout">
-            <Navigation class="navigation" v-model="currentRoute"/>
-            <Content class="content" :route="currentRoute"/>
+            <Navigation class="navigation"/>
+            <Content class="content"/>
         </div>
         <div class="footer">
             <Footer/>
@@ -39,6 +36,9 @@ const currentRoute = ref('')
   .layout {
     grid-template-columns: 1fr;
     grid-auto-rows: auto;
+  }
+  .content {
+    aspect-ratio: 3/4;
   }
 }
 </style>
