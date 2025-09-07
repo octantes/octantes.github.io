@@ -4,15 +4,21 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const notes = ref([])
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
 onMounted(async () => {
-  const res = await fetch(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/index.json`)
-  notes.value = await res.json()
+  try {
+    const response = await fetch(`${base}/index.json`)
+    if (!response.ok) throw new Error(`http error ${response.status}`)
+    notes.value = await response.json()
+  } catch (e) {
+    console.error('error cargando índice de notas:', e)
+    notes.value = []
+  }
 })
 
 function openNote(slug) {
-  const cleanSlug = slug.replace(/^\/posts\//, '').replace(/\/$/, '')
-  router.push({ path: `/${cleanSlug}` })
+  router.push({ path: `/${slug}` })
 }
 </script>
 
@@ -22,18 +28,18 @@ function openNote(slug) {
     <table>
       <thead>
         <tr>
-          <th>Título</th>
-          <th>Fecha</th>
-          <th>Tags</th>
-          <th>Link</th>
+          <th>título</th>
+          <th>fecha</th>
+          <th>tags</th>
+          <th>link</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="note in notes" :key="note.url">
+        <tr v-for="note in notes" :key="note.slug">
           <td>{{ note.title }}</td>
           <td>{{ note.date }}</td>
           <td>{{ note.tags.join(', ') }}</td>
-          <td><button @click="openNote(note.url)">Ver</button></td>
+          <td><button @click="openNote(note.slug)">ver</button></td>
         </tr>
       </tbody>
     </table>

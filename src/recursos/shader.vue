@@ -1,7 +1,7 @@
-<script setup>
 // credits: https://speckyboy.com/css-javascript-ascii-artwork-snippets/
 
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+<script setup>
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 const gridRef = ref(null)
 const containerRef = ref(null)
@@ -19,8 +19,15 @@ function updateSize() {
   if (!containerRef.value) return
   const { clientWidth, clientHeight } = containerRef.value
 
-  cols = Math.floor(clientWidth / fontSize)
-  rows = Math.floor(clientHeight / fontSize)
+  // ajustar fontSize dinámicamente según ancho
+  fontSize = Math.max(4, Math.floor(clientWidth / 100))
+  cols = Math.ceil(clientWidth / fontSize)
+  // generar filas extra para cubrir posibles gaps y evitar cortes
+  rows = Math.ceil(clientHeight / fontSize) + 2
+
+  if (gridRef.value) {
+    gridRef.value.style.fontSize = `${fontSize}px`
+  }
 }
 
 function generateGrid(tick) {
@@ -31,7 +38,7 @@ function generateGrid(tick) {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const t = 100 + tick * 0.001
-      const v = ((Math.cos((x - cx) / 8) + Math.sin((y - cy) / 8) + t) * 16)
+      const v = (Math.cos((x - cx) / 8) + Math.sin((y - cy) / 8) + t) * 16
       const val = Math.floor(v) % charRangeMax
       content += String.fromCharCode(charRangeStart + val)
     }
@@ -40,14 +47,15 @@ function generateGrid(tick) {
   return content
 }
 
-function animate(tick = 0) {
+function animate(ts) {
   if (gridRef.value) {
-    gridRef.value.textContent = generateGrid(tick)
+    gridRef.value.textContent = generateGrid(ts)
   }
-  animationId = requestAnimationFrame((ts) => animate(ts))
+  animationId = requestAnimationFrame(animate)
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await nextTick() // espera que el DOM esté renderizado
   updateSize()
   window.addEventListener('resize', updateSize)
   animate()
@@ -71,15 +79,21 @@ onBeforeUnmount(() => {
 .grid-container {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
 .grid {
+  flex: 1;
+  margin: 0;
+  padding: 0;
   font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
   line-height: 1;
   color: #1b1c1c;
   white-space: pre;
-  margin: 0;
+  box-sizing: content-box;
+  /* asegurar que el grid se dibuje desde Y=0 aunque sobrepase */
+  min-height: 100%;
 }
 </style>

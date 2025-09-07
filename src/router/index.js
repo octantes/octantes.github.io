@@ -9,12 +9,12 @@ const routes = [
   {
     path: '/:slug',
     component: Content,
-    props: true // pasa el slug como prop
+    props: true // pasa el slug como prop para content
   },
   {
     path: '/:catchAll(.*)',
     component: Content,
-    props: { slug: '404' } // fallback para rutas inexistentes
+    props: { slug: '404' } // mantener siempre al final
   }
 ]
 
