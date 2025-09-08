@@ -21,6 +21,8 @@ async function loadNote(slug) {
   } catch (e) {
     noteContent.value = `<p>error cargando la nota</p>`
     console.error(`error fetching slug "${slug}":`, e)
+  } finally {
+    loading.value = false
   }
 }
 
