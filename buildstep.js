@@ -5,11 +5,9 @@ import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sizeOf from 'image-size'
 import sharp from 'sharp'
-import { Eta } from 'eta'
 import { minify } from 'html-minifier-terser'
 
 const md = new MarkdownIt()
-const eta = new Eta()
 
 const contentDir = './content'
 const outputDir = './dist'
@@ -40,7 +38,7 @@ try {
 const indexItems = []
 
 // helper para procesar imagen
-function processImgTag(attrs, noteOutputDir, portada, attributes) {
+function processImgTag(attrs, noteOutputDir, portada) {
   const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
   if (!srcMatch) return `<img ${attrs}>`
@@ -56,6 +54,9 @@ function processImgTag(attrs, noteOutputDir, portada, attributes) {
   newAttrs += ` width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}"`
   return `<img ${newAttrs}>`
 }
+
+// leer template
+const template = await fs.readFile('./templates/post.html', 'utf-8')
 
 for (const slug of postDirs) {
   const postFolder = path.join(contentDir, slug)
@@ -93,13 +94,10 @@ for (const slug of postDirs) {
   if (cache[`${slug}/index.md`] !== finalHash) {
     let htmlContent = md.render(body)
 
-    // reemplazo de rutas relativas en markdown links e imágenes
     const relativeDepth = path.relative(outputDir, noteOutputDir).split(path.sep).length
     const basePath = '../'.repeat(relativeDepth)
     htmlContent = htmlContent.replace(/(src|href)=['"]\.\/([^'"]+)['"]/g, `$1=$2${basePath}$2`)
-
-    // procesamiento de imágenes
-    htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) => processImgTag(attrs, noteOutputDir, attributes.portada, attributes))
+    htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) => processImgTag(attrs, noteOutputDir, attributes.portada))
 
     const title = attributes.title || slug
     const description = attributes.description || ''
@@ -111,16 +109,15 @@ for (const slug of postDirs) {
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
       : `{"@type":"Person","name":"Desconocido"}`
 
-    const fullHtml = await eta.renderFile('./templates/post.html', {
-      title,
-      description,
-      portada,
-      canonicalUrl,
-      handle,
-      date,
-      authorJson,
-      htmlContent
-    })
+    let fullHtml = template
+      .replace(/{{title}}/g, title)
+      .replace(/{{description}}/g, description)
+      .replace(/{{portada}}/g, portada)
+      .replace(/{{canonicalUrl}}/g, canonicalUrl)
+      .replace(/{{handle}}/g, handle)
+      .replace(/{{date}}/g, date)
+      .replace(/{{authorJson}}/g, authorJson)
+      .replace(/{{htmlContent}}/g, htmlContent)
 
     const minified = await minify(fullHtml, {
       collapseWhitespace: true,
@@ -141,10 +138,8 @@ for (const slug of postDirs) {
   })
 }
 
-// crear dist si no existe
 await fs.mkdir(outputDir, { recursive: true })
 
-// index.json
 const indexPath = path.join(outputDir, 'index.json')
 let prevIndex = '[]'
 try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch {}
@@ -153,7 +148,6 @@ const newIndexStr = JSON.stringify(indexItems,null,2)
 if (prevIndex !== newIndexStr) await fs.writeFile(indexPath,newIndexStr),console.log('index.json actualizado')
 else console.log('index.json sin cambios')
 
-// sitemap.xml
 const staticPages = [
   { url: '/', lastmod: new Date().toISOString() },
   { url: '/about/', lastmod: new Date().toISOString() },
@@ -174,7 +168,6 @@ ${sitemapItems}
 await fs.writeFile(path.join(outputDir,'sitemap.xml'),sitemap)
 console.log('sitemap.xml actualizado')
 
-// robots.txt
 const robots = `User-agent: *
 Disallow:
 
@@ -183,11 +176,9 @@ Sitemap: ${siteUrl}/sitemap.xml
 await fs.writeFile(path.join(outputDir,'robots.txt'),robots)
 console.log('robots.txt generado')
 
-// guardar cache persistente en root
 await fs.mkdir(path.dirname(cacheFile), { recursive: true })
 await fs.writeFile(cacheFile, JSON.stringify(cache, null, 2))
 
-// 404.html
 try {
   const indexHtmlPath = path.join(outputDir, 'index.html')
   const notFoundPath = path.join(outputDir, '404.html')
