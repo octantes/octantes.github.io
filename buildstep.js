@@ -5,8 +5,8 @@ import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sizeOf from 'image-size'
 import sharp from 'sharp'
+import eta from 'eta'
 import { minify } from 'html-minifier-terser'
-import { renderFile } from 'eta'
 
 const md = new MarkdownIt()
 
@@ -110,7 +110,7 @@ for (const slug of postDirs) {
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
       : `{"@type":"Person","name":"Desconocido"}`
 
-    const fullHtml = await renderFile('./templates/post.html', {
+    const fullHtml = await eta.renderFile('./templates/post.html', {
       title,
       description,
       portada,
