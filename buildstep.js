@@ -5,10 +5,11 @@ import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sizeOf from 'image-size'
 import sharp from 'sharp'
-import eta from 'eta'
+import { Eta } from 'eta'
 import { minify } from 'html-minifier-terser'
 
 const md = new MarkdownIt()
+const eta = new Eta()
 
 const contentDir = './content'
 const outputDir = './dist'
