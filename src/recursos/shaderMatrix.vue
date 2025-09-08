@@ -22,16 +22,15 @@ let columns = 0
 let rows = 0
 
 // parámetros ajustables
-let speed = 0.7          // velocidad de la cabeza
-let trailLength = 60      // longitud de la estela
-let resetChance = 0.02    // probabilidad de reinicio al pasar el fondo
-let headBrightnessFactor = 1.0 // multiplicador para alpha de la cabeza
+let speed = 0.7          
+let trailLength = 60     
+let resetChance = 0.02   
+let headBrightnessFactor = 1.0 
 
 const chars = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%')
 
 // estado por columna
 let heads = []
-let trails = []
 let charBuffers = []
 
 function pickChar() {
@@ -41,10 +40,8 @@ function pickChar() {
 function initGrid() {
   columns = Math.max(1, Math.floor(width / fontSize))
   rows = Math.max(2, Math.floor(height / fontSize))
-  // iniciar cada columna en posición aleatoria para simular drops inmediatos
   heads = Array.from({ length: columns }, () => Math.random() * rows * -1)
-  trails = new Array(columns).fill(null).map(() => [])
-  charBuffers = new Array(columns).fill(null).map(() => [])
+  charBuffers = new Array(columns).fill(null).map(() => new Array(rows).fill(null))
 }
 
 function setCanvasSize() {
@@ -74,7 +71,6 @@ function updateSize() {
 function drawFrame() {
   if (!ctx) return
 
-  // fondo estático
   ctx.fillStyle = '#986C98'
   ctx.fillRect(0, 0, width, height)
 
@@ -84,34 +80,31 @@ function drawFrame() {
 
   for (let i = 0; i < columns; i++) {
     heads[i] += speed
-
     const rowPos = Math.floor(heads[i])
-    if (rowPos >= 0) {
-      trails[i].unshift(rowPos)
-      charBuffers[i].unshift(pickChar())
-      if (trails[i].length > trailLength) {
-        trails[i].pop()
-        charBuffers[i].pop()
-      }
+
+    if (rowPos >= 0 && rowPos < rows) {
+      // reemplazar el carácter en esa fila
+      charBuffers[i][rowPos] = pickChar()
     }
 
-    for (let idx = 0; idx < trails[i].length; idx++) {
-      const ty = trails[i][idx]
-      if (ty == null || ty < 0) continue
+    for (let idx = 0; idx < rows; idx++) {
+      const ch = charBuffers[i][idx]
+      if (!ch) continue
 
-      let alpha = 1 - idx / trailLength
+      const distFromHead = rowPos - idx
+      if (distFromHead < 0 || distFromHead > trailLength) continue
+
+      let alpha = 1 - distFromHead / trailLength
       alpha = Math.pow(Math.max(0, alpha), 1.2)
-      if (idx === 0) alpha = Math.min(1, alpha * headBrightnessFactor)
+      if (distFromHead === 0) alpha = Math.min(1, alpha * headBrightnessFactor)
 
       ctx.fillStyle = `rgba(27,28,28,${alpha.toFixed(3)})`
-      const ch = charBuffers[i][idx] || pickChar()
-      ctx.fillText(ch, i * fontSize, ty * fontSize)
+      ctx.fillText(ch, i * fontSize, idx * fontSize)
     }
 
     if (heads[i] > rows + trailLength && Math.random() < resetChance) {
       heads[i] = -Math.random() * rows
-      trails[i] = []
-      charBuffers[i] = []
+      charBuffers[i] = new Array(rows).fill(null)
     }
   }
 
