@@ -9,6 +9,9 @@ const noteContent = ref('')
 const loading = ref(true)
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
+const shaders = [ShaderMatrix, ShaderPortal]
+const chosenShader = ref(shaders[Math.floor(Math.random() * shaders.length)])
+
 async function loadNote(slug) {
   loading.value = true
   try {
@@ -28,7 +31,7 @@ onBeforeRouteUpdate((to) => loadNote(to.params.slug))
 
 <template>
   <div class="post">
-    <ShaderMatrix v-if="loading" />
+    <component :is="chosenShader" v-if="loading" />
     <div v-else class="text" v-html="noteContent"></div>
   </div>
 </template>
