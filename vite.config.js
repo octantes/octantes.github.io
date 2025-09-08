@@ -4,8 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
-  // base: '/octantes.net/', // correccion del path para ghpages
-  plugins: [ vue(), vueDevTools(), ],
+  plugins: [ vue() ],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },

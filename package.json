@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "crypto": "^1.0.1",
+    "eta": "^3.5.0",
     "front-matter": "^4.0.2",
     "html-minifier-terser": "^7.2.0",
     "image-size": "^2.0.2",
@@ -27,5 +28,9 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "vite": "^7.0.6",
     "vite-plugin-vue-devtools": "^8.0.0"
+  },
+  "overrides": {
+    "color-name": "1.1.4",
+    "is-arrayish": "0.3.2"
   }
 }
