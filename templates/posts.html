@@ -1,44 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title><%= it.title %></title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="<%= it.description %>">
-  <link rel="canonical" href="<%= it.canonicalUrl %>">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <link rel="canonical" href="{{canonicalUrl}}">
 
+  <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:title" content="<%= it.title %>">
-  <meta property="og:description" content="<%= it.description %>">
-  <meta property="og:url" content="<%= it.canonicalUrl %>">
-  <% if (it.portada) { %>
-  <meta property="og:image" content="<%= it.portada %>">
-  <% } %>
+  <meta property="og:title" content="{{title}}">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:url" content="{{canonicalUrl}}">
+  <meta property="og:image" content="{{portada}}">
 
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="<%= it.title %>">
-  <meta name="twitter:description" content="<%= it.description %>">
-  <% if (it.portada) { %>
-  <meta name="twitter:image" content="<%= it.portada %>">
-  <% } %>
-  <% if (it.handle) { %>
-  <meta name="twitter:creator" content="@<%= it.handle %>">
-  <% } %>
+  <meta name="twitter:title" content="{{title}}">
+  <meta name="twitter:description" content="{{description}}">
+  <meta name="twitter:image" content="{{portada}}">
+  <meta name="twitter:creator" content="@{{handle}}">
 
+  <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "<%= it.title %>",
-    "description": "<%= it.description %>",
-    "image": "<%= it.portada || '' %>",
-    "url": "<%= it.canonicalUrl %>",
-    "datePublished": "<%= it.date %>",
-    "author": <%= it.authorJson %>
+    "headline": "{{title}}",
+    "description": "{{description}}",
+    "image": "{{portada}}",
+    "url": "{{canonicalUrl}}",
+    "datePublished": "{{date}}",
+    "author": {{authorJson}}
   }
   </script>
 </head>
 <body>
-  <%- it.htmlContent %>
+  {{htmlContent}}
 </body>
 </html>
