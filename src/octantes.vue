@@ -1,5 +1,4 @@
 <script setup>
-import Content from './visores/content.vue'
 import Navigation from './visores/navigation.vue'
 import Footer from './visores/footer.vue'
 </script>
@@ -8,7 +7,7 @@ import Footer from './visores/footer.vue'
     <div class="pagina">
         <div class="layout">
             <Navigation class="navigation"/>
-            <Content class="content"/>
+            <RouterView class="content"/>
         </div>
         <div class="footer">
             <Footer/>
