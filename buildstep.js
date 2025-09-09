@@ -17,9 +17,13 @@ const siteUrl = 'https://octantes.github.io'
 let cache = {}
 try { cache = JSON.parse(await fs.readFile(cacheFile, 'utf-8')) } catch {}
 
-const postDirs = (await fs.readdir(contentDir, { withFileTypes: true }))
-  .filter(d => d.isDirectory())
-  .map(d => d.name)
+// leer directorios de posts, si content no existe devuelve array vacío
+let postDirs = []
+try {
+  postDirs = (await fs.readdir(contentDir, { withFileTypes: true }))
+    .filter(d => d.isDirectory())
+    .map(d => d.name)
+} catch { postDirs = [] }
 
 const postsDir = path.join(outputDir, 'posts')
 
@@ -29,6 +33,7 @@ try {
   await fs.access(postsDir)
 } catch {
   fullRebuild = true
+  await fs.mkdir(postsDir, { recursive: true })
 }
 
 // eliminar orphans de postsDir
