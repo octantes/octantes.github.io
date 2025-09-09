@@ -1,9 +1,23 @@
 [
   {
+    "slug": "testnote",
+    "title": "testnote",
+    "date": "",
+    "tags": [],
+    "url": "/posts/testnote/"
+  },
+  {
     "slug": "octantes",
     "title": "octantes",
     "date": "",
     "tags": [],
     "url": "/posts/octantes/"
+  },
+  {
+    "slug": "addnote",
+    "title": "addnote",
+    "date": "",
+    "tags": [],
+    "url": "/posts/addnote/"
   }
 ]
