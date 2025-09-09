@@ -8,9 +8,10 @@ import sharp from 'sharp'
 
 const md = new MarkdownIt()
 
-const contentDir = './content'
-const outputDir = './dist'
-const cacheFile = path.resolve('.build-cache.json')
+const repoRoot = process.env.GITHUB_WORKSPACE || process.cwd()
+const contentDir = path.join(repoRoot, 'content')
+const outputDir = path.join(repoRoot, 'dist')
+const cacheFile = path.resolve(repoRoot, '.build-cache.json')
 const siteUrl = 'https://octantes.github.io'
 
 // leer cache persistente
@@ -22,6 +23,10 @@ const postDirs = (await fs.readdir(contentDir, { withFileTypes: true }))
   .map(d => d.name)
 
 const postsDir = path.join(outputDir, 'posts')
+
+const changedSlugs = []
+const removedSlugs = []
+
 try {
   const existingDirs = await fs.readdir(postsDir, { withFileTypes: true })
   for (const dirent of existingDirs) {
@@ -30,9 +35,12 @@ try {
     if (!postDirs.includes(slug)) {
       await fs.rm(path.join(postsDir, slug), { recursive: true, force: true })
       delete cache[`${slug}/index.md`]
+      removedSlugs.push(slug)
     }
   }
-} catch { await fs.mkdir(postsDir, { recursive: true }) }
+} catch {
+  await fs.mkdir(postsDir, { recursive: true })
+}
 
 const indexItems = []
 
@@ -53,7 +61,7 @@ function processImgTag(attrs, noteOutputDir, portada) {
   return `<img ${newAttrs}>`
 }
 
-const template = await fs.readFile('./templates/post.html', 'utf-8')
+const template = await fs.readFile(path.join(repoRoot, 'templates', 'post.html'), 'utf-8')
 
 for (const slug of postDirs) {
   const postFolder = path.join(contentDir, slug)
@@ -118,6 +126,7 @@ for (const slug of postDirs) {
 
     await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
     cache[`${slug}/index.md`] = finalHash
+    changedSlugs.push(slug)
   } else console.log(`skip ${slug}/index.md (unchanged)`)
 
   indexItems.push({
@@ -167,8 +176,21 @@ Sitemap: ${siteUrl}/sitemap.xml
 await fs.writeFile(path.join(outputDir,'robots.txt'),robots)
 console.log('robots.txt generado')
 
+// persistir cache en workspace
 await fs.mkdir(path.dirname(cacheFile), { recursive: true })
 await fs.writeFile(cacheFile, JSON.stringify(cache, null, 2))
+
+// escribir listados temporales para el workflow
+if (changedSlugs.length > 0) {
+  await fs.writeFile(path.join(repoRoot, '.changed-posts.txt'), changedSlugs.join('\n'))
+} else {
+  await fs.rm(path.join(repoRoot, '.changed-posts.txt'), { force: true }).catch(()=>{})
+}
+if (removedSlugs.length > 0) {
+  await fs.writeFile(path.join(repoRoot, '.removed-posts.txt'), removedSlugs.join('\n'))
+} else {
+  await fs.rm(path.join(repoRoot, '.removed-posts.txt'), { force: true }).catch(()=>{})
+}
 
 try {
   const indexHtmlPath = path.join(outputDir, 'index.html')
