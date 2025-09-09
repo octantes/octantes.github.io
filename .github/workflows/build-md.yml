@@ -19,6 +19,12 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
+      - name: restore build cache
+        uses: actions/download-artifact@v3
+        with:
+          name: build-cache
+          path: .
+
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -37,6 +43,12 @@ jobs:
         run: |
           mkdir -p docs
           rsync -a --delete dist/ docs/
+
+      - name: persist build cache
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-cache
+          path: ./.build-cache.json
 
       - name: commit & push generated files
         run: |

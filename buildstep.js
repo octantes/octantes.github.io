@@ -11,7 +11,7 @@ const md = new MarkdownIt()
 
 const contentDir = './content'
 const outputDir = './dist'
-const cacheFile = path.resolve('./.build-cache.json')
+const cacheFile = path.resolve('.build-cache.json')
 const siteUrl = 'https://octantes.github.io'
 
 // leer cache persistente
