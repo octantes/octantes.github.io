@@ -19,7 +19,7 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: restore build cache (best-effort)
+      - name: restore build cache
         uses: actions/download-artifact@v4
         with:
           name: build-cache
@@ -34,35 +34,18 @@ jobs:
       - name: install deps
         run: npm ci
 
-      - name: 1. copy build cache into temporal fs
-        run: |
-          if [ -f ./.build-cache.json ]; then
-            mkdir -p $(dirname ./.build-cache.json)
-            cp ./.build-cache.json ./.build-cache.json
-          fi
-
-      - name: 2. build spa using vite
+      - name: 1. build spa using vite
         run: npm run build
 
-      - name: 3. run buildstep for htmls and index
+      - name: 2. run buildstep for htmls and index
         run: node buildstep.js
 
-      - name: 4. sync dist-spa and dist-content to docs
+      - name: 3. sync dist-spa and dist-content to docs
         run: |
           mkdir -p docs
           rsync -a --delete dist/ docs/
 
-      - name: check cache exists
-        id: check_cache
-        run: |
-          if [ -f ./.build-cache.json ]; then
-            echo "has_cache=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_cache=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: persist build cache (artifact)
-        if: steps.check_cache.outputs.has_cache == 'true'
+      - name: persist build cache
         uses: actions/upload-artifact@v4
         with:
           name: build-cache
@@ -72,7 +55,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/ .build-cache.json
+          git add docs/
           if git diff --cached --quiet; then
             echo "no changes to commit"
           else
