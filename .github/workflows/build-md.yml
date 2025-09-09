@@ -36,7 +36,7 @@ jobs:
       - name: 3. sync dist-spa and dist-content to docs
         run: |
           mkdir -p docs
-          rsync -a --delete dist/ docs/
+          rsync -a --update --delete dist/ docs/
 
       - name: commit & push generated files
         run: |
