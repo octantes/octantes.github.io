@@ -44,3 +44,8 @@ la pagina esta diseñada como una SPA estática, por lo que el **seo** va a ser 
 para solucionarlo, usar una github action que haga pre-render a html cuando pusheo
 yo mantengo el workflow que busco, pero al sumar un md github lo integra como html
 también debe generar un index que puedo usar para generar dinamicamente la tabla
+
+lo importante es definir como la spa consume el contenido html que genera github
+para eso debo definir una estructura de archivos escalable y final, eso es prioritario
+por otro lado, para construir la acción puedo usar un script de node local accion.js
+necesito testear bien la integración de imágenes al html desde links relativos en md
