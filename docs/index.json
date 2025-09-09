@@ -1,5 +1,12 @@
 [
   {
+    "slug": "testadd",
+    "title": "testadd",
+    "date": "",
+    "tags": [],
+    "url": "/posts/testadd/"
+  },
+  {
     "slug": "octantes",
     "title": "octantes",
     "date": "",
@@ -14,10 +21,10 @@
     "url": "/posts/newadd/"
   },
   {
-    "slug": "addtest",
-    "title": "addtest",
+    "slug": "extratest",
+    "title": "extratest",
     "date": "",
     "tags": [],
-    "url": "/posts/addtest/"
+    "url": "/posts/extratest/"
   }
 ]
