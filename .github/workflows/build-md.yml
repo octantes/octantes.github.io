@@ -1,3 +1,4 @@
+# .github/workflows/build-md.yml
 name: build-md
 
 on:
@@ -47,10 +48,32 @@ jobs:
       - name: 3. run buildstep for htmls and index
         run: node buildstep.js
 
-      - name: 4. sync dist-spa and dist-content to docs
+      - name: 4. sync dist-spa and dist-content to docs (incremental)
         run: |
-          mkdir -p docs
-          rsync -a --delete dist/ docs/
+          set -e
+          if [ ! -d docs ]; then
+            mkdir -p docs
+            rsync -a --delete dist/ docs/
+            exit 0
+          fi
+
+          # sync SPA/core except posts
+          rsync -a --delete --exclude 'posts' dist/ docs/
+
+          # copy only changed/created posts
+          if [ -f .changed-posts.txt ]; then
+            while IFS= read -r slug || [ -n "$slug" ]; do
+              mkdir -p "docs/posts/$slug"
+              rsync -a "dist/posts/$slug/" "docs/posts/$slug/"
+            done < .changed-posts.txt
+          fi
+
+          # remove deleted posts from docs
+          if [ -f .removed-posts.txt ]; then
+            while IFS= read -r slug || [ -n "$slug" ]; do
+              rm -rf "docs/posts/$slug"
+            done < .removed-posts.txt
+          fi
 
       - name: check cache exists
         id: check_cache
@@ -67,6 +90,10 @@ jobs:
         with:
           name: build-cache
           path: ./.build-cache.json
+
+      - name: cleanup temp list files before commit
+        run: |
+          rm -f .changed-posts.txt .removed-posts.txt || true
 
       - name: commit & push generated files
         run: |
