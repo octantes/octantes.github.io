@@ -4,7 +4,7 @@ id:
   - llave
 cerradura:
   - "[[°pagina]]"
-portada: "[[C8 st portal.png]]"
+portada: "portal.png"
 ---
 la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
 de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
@@ -15,7 +15,7 @@ elevando el valor final de la publicación al integrar soportes visuales, refere
 - visor dinámico de contenido para presentar todos los artículos y los proyectos
 - statusbar integrando elementos dinámicos, datos en real time y toggle idioma
 
-[holahola](./portal.png)
+![holahola](portal.png)
 
 el visor de **proyectos** integra distintos layouts según el contenido que debe presentar
 se suman funcionalidades exclusivas, como una barra de scroll o el shader de espera
