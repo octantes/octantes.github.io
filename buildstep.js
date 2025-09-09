@@ -22,6 +22,15 @@ const postDirs = (await fs.readdir(contentDir, { withFileTypes: true }))
   .map(d => d.name)
 
 const postsDir = path.join(outputDir, 'posts')
+
+// detectar si hace falta full rebuild (si no existe postsDir)
+let fullRebuild = false
+try {
+  await fs.access(postsDir)
+} catch {
+  fullRebuild = true
+}
+
 try {
   const existingDirs = await fs.readdir(postsDir, { withFileTypes: true })
   for (const dirent of existingDirs) {
@@ -88,7 +97,7 @@ for (const slug of postDirs) {
 
   const finalHash = hash.digest('hex')
 
-  if (cache[`${slug}/index.md`] !== finalHash) {
+  if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
     let htmlContent = md.render(body)
 
     const relativeDepth = path.relative(outputDir, noteOutputDir).split(path.sep).length
