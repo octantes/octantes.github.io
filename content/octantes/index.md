@@ -45,11 +45,6 @@ para solucionarlo, usar una github action que haga pre-render a html cuando push
 yo mantengo el workflow que busco, pero al sumar un md github lo integra como html
 también debe generar un index que puedo usar para generar dinamicamente la tabla
 
-1. subo el md a un directorio de mi branch principal
-2. corro la acción de github que buildea y genera el html
-3. la spa toma el html y lo inserta en el panel correspondiente
-4. la spa toma el index json y lo usa para generar la tabla de navegacion
-
 lo importante es definir como la spa consume el contenido html que genera github
 para eso debo definir una estructura de archivos escalable y final, eso es prioritario
 por otro lado, para construir la acción puedo usar un script de node local accion.js
