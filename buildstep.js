@@ -60,12 +60,16 @@ function processImgTag(attrs, noteOutputDir, portada) {
   const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
   if (!srcMatch) return `<img ${attrs}>`
-  const src = path.join(noteOutputDir, srcMatch[1])
+  let src = srcMatch[1]
+  // reemplazar extensión por webp
+  if (/\.(jpe?g|png)$/i.test(src)) src = src.replace(/\.(jpe?g|png)$/i, '.webp')
+  const imgPath = path.join(noteOutputDir, src)
   let dimensions = { width: 600, height: 400 }
   if (srcMatch[1] === portada) dimensions = { width: 1200, height: 630 }
-  else { try { dimensions = sizeOf(src) } catch {} }
+  else { try { dimensions = sizeOf(imgPath) } catch {} }
   const altText = altMatch ? altMatch[1] : ''
   let newAttrs = attrs
+    .replace(/src=['"][^'"]*['"]/, `src="${src}"`)
     .replace(/width=['"][^'"]*['"]/, '')
     .replace(/height=['"][^'"]*['"]/, '')
     .replace(/alt=['"][^'"]*['"]/, '')
@@ -96,6 +100,7 @@ for (const slug of postDirs) {
       const data = await fs.readFile(assetPath)
       hash.update(data)
       if (/\.(jpe?g|png)$/i.test(asset.name)) {
+        // generar webp
         await sharp(assetPath)
           .resize({ width: 1200 })
           .webp({ quality: 80 })
@@ -118,7 +123,9 @@ for (const slug of postDirs) {
 
     const title = attributes.title || slug
     const description = attributes.description || ''
-    const portada = attributes.portada ? `${siteUrl}/posts/${slug}/${attributes.portada}` : ''
+    const portada = attributes.portada
+      ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}`
+      : ''
     const canonicalUrl = `${siteUrl}/posts/${slug}/`
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
     const date = attributes.date || new Date().toISOString()
