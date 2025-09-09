@@ -9,10 +9,11 @@ import sharp from 'sharp'
 const md = new MarkdownIt()
 
 const contentDir = './content'
-const outputDir = './dist-content'  // directorio final de posts
+const outputDir = './dist'
 const cacheFile = path.resolve('.build-cache.json')
 const siteUrl = 'https://octantes.github.io'
 
+// leer cache persistente
 let cache = {}
 try { cache = JSON.parse(await fs.readFile(cacheFile, 'utf-8')) } catch {}
 
@@ -22,22 +23,21 @@ const postDirs = (await fs.readdir(contentDir, { withFileTypes: true }))
 
 const postsDir = path.join(outputDir, 'posts')
 
+// detectar si hace falta full rebuild (si no existe postsDir)
 let fullRebuild = false
-try { await fs.access(postsDir) } catch { fullRebuild = true }
+try {
+  await fs.access(postsDir)
+} catch {
+  fullRebuild = true
+}
 
-const regeneratedFiles = []
-const removedFiles = []
-
-// eliminar orphans
 try {
   const existingDirs = await fs.readdir(postsDir, { withFileTypes: true })
   for (const dirent of existingDirs) {
     if (!dirent.isDirectory()) continue
     const slug = dirent.name
     if (!postDirs.includes(slug)) {
-      const rmDir = path.join(postsDir, slug)
-      await fs.rm(rmDir, { recursive: true, force: true })
-      removedFiles.push(rmDir)
+      await fs.rm(path.join(postsDir, slug), { recursive: true, force: true })
       delete cache[`${slug}/index.md`]
     }
   }
@@ -85,12 +85,12 @@ for (const slug of postDirs) {
       const data = await fs.readFile(assetPath)
       hash.update(data)
       if (/\.(jpe?g|png)$/i.test(asset.name)) {
-        const outPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
-        await sharp(assetPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(outPath)
-        regeneratedFiles.push(outPath)
+        await sharp(assetPath)
+          .resize({ width: 1200 })
+          .webp({ quality: 80 })
+          .toFile(destPath.replace(/\.(jpe?g|png)$/i, '.webp'))
       } else {
         await fs.writeFile(destPath, data)
-        regeneratedFiles.push(destPath)
       }
     }
   } catch {}
@@ -99,6 +99,7 @@ for (const slug of postDirs) {
 
   if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
     let htmlContent = md.render(body)
+
     const relativeDepth = path.relative(outputDir, noteOutputDir).split(path.sep).length
     const basePath = '../'.repeat(relativeDepth)
     htmlContent = htmlContent.replace(/(src|href)=['"]\.\/([^'"]+)['"]/g, `$1=$2${basePath}$2`)
@@ -124,9 +125,7 @@ for (const slug of postDirs) {
       .replace(/{{authorJson}}/g, authorJson)
       .replace(/{{htmlContent}}/g, htmlContent)
 
-    const outPath = path.join(noteOutputDir, 'index.html')
-    await fs.writeFile(outPath, fullHtml)
-    regeneratedFiles.push(outPath)
+    await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
     cache[`${slug}/index.md`] = finalHash
   } else console.log(`skip ${slug}/index.md (unchanged)`)
 
@@ -139,25 +138,16 @@ for (const slug of postDirs) {
   })
 }
 
-// escribir arrays de commit solo de posts
-const buildChanges = {
-  add: regeneratedFiles,
-  remove: removedFiles
-}
-await fs.writeFile('.build-changes.json', JSON.stringify(buildChanges, null, 2))
-
-// index.json, sitemap.xml, robots.txt, cache, 404.html
 await fs.mkdir(outputDir, { recursive: true })
 
-// index.json
 const indexPath = path.join(outputDir, 'index.json')
 let prevIndex = '[]'
 try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch {}
 indexItems.sort((a,b)=> (a.date?new Date(a.date):new Date(0)) - (b.date?new Date(b.date):new Date(0))).reverse()
 const newIndexStr = JSON.stringify(indexItems,null,2)
-if (prevIndex !== newIndexStr) await fs.writeFile(indexPath,newIndexStr)
+if (prevIndex !== newIndexStr) await fs.writeFile(indexPath,newIndexStr),console.log('index.json actualizado')
+else console.log('index.json sin cambios')
 
-// sitemap.xml
 const staticPages = [
   { url: '/', lastmod: new Date().toISOString() },
   { url: '/about/', lastmod: new Date().toISOString() },
@@ -175,24 +165,28 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapItems}
 </urlset>`
-await fs.writeFile(path.join(outputDir,'sitemap.xml'), sitemap)
+await fs.writeFile(path.join(outputDir,'sitemap.xml'),sitemap)
+console.log('sitemap.xml actualizado')
 
-// robots.txt
 const robots = `User-agent: *
 Disallow:
 
 Sitemap: ${siteUrl}/sitemap.xml
 `
-await fs.writeFile(path.join(outputDir,'robots.txt'), robots)
+await fs.writeFile(path.join(outputDir,'robots.txt'),robots)
+console.log('robots.txt generado')
 
-// cache
 await fs.mkdir(path.dirname(cacheFile), { recursive: true })
 await fs.writeFile(cacheFile, JSON.stringify(cache, null, 2))
 
-// 404.html
 try {
-  const indexHtml = await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')
-  await fs.writeFile(path.join(outputDir, '404.html'), indexHtml)
-} catch (e) { console.error('no se pudo generar 404.html', e) }
+  const indexHtmlPath = path.join(outputDir, 'index.html')
+  const notFoundPath = path.join(outputDir, '404.html')
+  const indexHtml = await fs.readFile(indexHtmlPath, 'utf-8')
+  await fs.writeFile(notFoundPath, indexHtml)
+  console.log('404.html generado a partir de index.html')
+} catch (e) {
+  console.error('no se pudo generar 404.html', e)
+}
 
-console.log('build completado: posts generados y dist-content preparado para sync a docs.')
+console.log('build completado: notas + index.json + sitemap.xml + robots.txt + cache + 404.html generados.')

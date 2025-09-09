@@ -27,52 +27,25 @@ jobs:
       - name: install deps
         run: npm ci
 
-      - name: 1A. run buildstep for htmls and index
-        run: node buildstep.js
-
-      - name: 1B. selective commit and push dist-content
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -f .build-changes.json ]; then
-
-            adds=$(jq -r '.add[]' .build-changes.json)
-            removes=$(jq -r '.remove[]' .build-changes.json)
-
-            for f in $removes; do
-              git rm -f "$f" || true
-            done
-
-            for f in $adds; do
-              git add "$f"
-            done
-
-          else
-            echo ".build-changes.json no existe, saltando commit de contenido"
-          fi
-
-      - name: 1C. sync dist-content to docs
-        run: |
-          mkdir -p docs
-          rsync -a --update --delete dist-content/ docs/
-          git add $(find docs -type f -not -path 'docs/posts/*')
-
-      - name: 2A. build spa using vite
+      - name: 1. build spa using vite
         run: npm run build
 
-      - name: 2B. sync dist-spa to docs
+      - name: 2. run buildstep for htmls and index
+        run: node buildstep.js
+
+      - name: 3. sync dist-spa and dist-content to docs
         run: |
           mkdir -p docs
-          rsync -a --update --delete dist-spa/ docs/
-          git add $(find docs -type f -not -path 'docs/posts/*')
+          rsync -a --update --delete dist/ docs/
 
-      - name: 3A. commit & push generated files
+      - name: commit & push generated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/ .build-cache.json
           if git diff --cached --quiet; then
             echo "no changes to commit"
           else
-            git commit -m "build: spa regenerada y contenido integrado"
+            git commit -m "build: regenerar html + index.json + SPA"
             git push origin HEAD:main
           fi
