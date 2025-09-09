@@ -139,18 +139,23 @@ for (const slug of postDirs) {
   })
 }
 
-// index.json
+// escribir arrays de commit solo de posts
+const buildChanges = {
+  add: regeneratedFiles,
+  remove: removedFiles
+}
+await fs.writeFile('.build-changes.json', JSON.stringify(buildChanges, null, 2))
+
+// index.json, sitemap.xml, robots.txt, cache, 404.html
 await fs.mkdir(outputDir, { recursive: true })
+
+// index.json
 const indexPath = path.join(outputDir, 'index.json')
 let prevIndex = '[]'
 try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch {}
 indexItems.sort((a,b)=> (a.date?new Date(a.date):new Date(0)) - (b.date?new Date(b.date):new Date(0))).reverse()
 const newIndexStr = JSON.stringify(indexItems,null,2)
-if (prevIndex !== newIndexStr) {
-  await fs.writeFile(indexPath,newIndexStr)
-  regeneratedFiles.push(indexPath)
-  console.log('index.json actualizado')
-} else console.log('index.json sin cambios')
+if (prevIndex !== newIndexStr) await fs.writeFile(indexPath,newIndexStr)
 
 // sitemap.xml
 const staticPages = [
@@ -170,10 +175,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapItems}
 </urlset>`
-const sitemapPath = path.join(outputDir,'sitemap.xml')
-await fs.writeFile(sitemapPath,sitemap)
-regeneratedFiles.push(sitemapPath)
-console.log('sitemap.xml actualizado')
+await fs.writeFile(path.join(outputDir,'sitemap.xml'), sitemap)
 
 // robots.txt
 const robots = `User-agent: *
@@ -181,33 +183,16 @@ Disallow:
 
 Sitemap: ${siteUrl}/sitemap.xml
 `
-const robotsPath = path.join(outputDir,'robots.txt')
-await fs.writeFile(robotsPath,robots)
-regeneratedFiles.push(robotsPath)
-console.log('robots.txt generado')
+await fs.writeFile(path.join(outputDir,'robots.txt'), robots)
 
 // cache
 await fs.mkdir(path.dirname(cacheFile), { recursive: true })
 await fs.writeFile(cacheFile, JSON.stringify(cache, null, 2))
-regeneratedFiles.push(cacheFile)
 
 // 404.html
 try {
-  const indexHtmlPath = path.join(outputDir, 'index.html')
-  const notFoundPath = path.join(outputDir, '404.html')
-  const indexHtml = await fs.readFile(indexHtmlPath, 'utf-8')
-  await fs.writeFile(notFoundPath, indexHtml)
-  regeneratedFiles.push(notFoundPath)
-  console.log('404.html generado a partir de index.html')
-} catch (e) {
-  console.error('no se pudo generar 404.html', e)
-}
+  const indexHtml = await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')
+  await fs.writeFile(path.join(outputDir, '404.html'), indexHtml)
+} catch (e) { console.error('no se pudo generar 404.html', e) }
 
-// escribir arrays de commit solo de dist-content
-const buildChanges = {
-  add: regeneratedFiles,
-  remove: removedFiles
-}
-await fs.writeFile('.build-changes.json', JSON.stringify(buildChanges, null, 2))
-
-console.log('build completado: notas + index.json + sitemap.xml + robots.txt + cache + 404.html generados.')
+console.log('build completado: posts generados y dist-content preparado para sync a docs.')
