@@ -39,8 +39,3 @@ lo mas simple para arrancar va a ser hostear en github pages y diseñar la escal
 pensando un sistema estructural que sea fácilmente adaptable a nuevas necesidades
 
 - otra prioridad es que el workflow para sumar notas sea solo droppear el markdown
-
-la pagina esta diseñada como una SPA estática, por lo que el **seo** va a ser un problema
-para solucionarlo, usar una github action que haga pre-render a html cuando pusheo
-yo mantengo el workflow que busco, pero al sumar un md github lo integra como html
-también debe generar un index que puedo usar para generar dinamicamente la tabla
