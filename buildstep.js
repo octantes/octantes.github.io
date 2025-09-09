@@ -5,7 +5,6 @@ import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sizeOf from 'image-size'
 import sharp from 'sharp'
-import { minify } from 'html-minifier-terser'
 
 const md = new MarkdownIt()
 
@@ -37,7 +36,6 @@ try {
 
 const indexItems = []
 
-// helper para procesar imagen
 function processImgTag(attrs, noteOutputDir, portada) {
   const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
@@ -55,7 +53,6 @@ function processImgTag(attrs, noteOutputDir, portada) {
   return `<img ${newAttrs}>`
 }
 
-// leer template
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 
 for (const slug of postDirs) {
@@ -119,13 +116,7 @@ for (const slug of postDirs) {
       .replace(/{{authorJson}}/g, authorJson)
       .replace(/{{htmlContent}}/g, htmlContent)
 
-    const minified = await minify(fullHtml, {
-      collapseWhitespace: true,
-      removeComments: true,
-      removeEmptyAttributes: true,
-    })
-
-    await fs.writeFile(path.join(noteOutputDir, 'index.html'), minified)
+    await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
     cache[`${slug}/index.md`] = finalHash
   } else console.log(`skip ${slug}/index.md (unchanged)`)
 
