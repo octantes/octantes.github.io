@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>octantes</title>
+  <title>newadd</title>
   <meta name="description" content="">
-  <link rel="canonical" href="https://octantes.github.io/posts/octantes/">
+  <link rel="canonical" href="https://octantes.github.io/posts/newadd/">
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:title" content="octantes">
+  <meta property="og:title" content="newadd">
   <meta property="og:description" content="">
-  <meta property="og:url" content="https://octantes.github.io/posts/octantes/">
+  <meta property="og:url" content="https://octantes.github.io/posts/newadd/">
   <meta property="og:image" content="">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="octantes">
+  <meta name="twitter:title" content="newadd">
   <meta name="twitter:description" content="">
   <meta name="twitter:image" content="">
   <meta name="twitter:creator" content="@">
@@ -26,27 +26,17 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "octantes",
+    "headline": "newadd",
     "description": "",
     "image": "",
-    "url": "https://octantes.github.io/posts/octantes/",
-    "datePublished": "2025-09-09T15:31:18.652Z",
+    "url": "https://octantes.github.io/posts/newadd/",
+    "datePublished": "2025-09-09T15:31:18.651Z",
     "author": {"@type":"Person","name":"Desconocido"}
   }
   </script>
 </head>
 <body>
-  <p>en versiones previas de la pagina, la <strong>estética</strong> era un problema importante a consolidar
-la idea de <em>contener universos estéticos amplios</em> chocaba con la definición de un estilo
-para resolver esto, tome como referencia la expresión mínima de una interfaz: las CLI
-la estética final contiene un meme defensivo, que filtra usuarios realmente interesados</p>
-<ul>
-<li>estructura de ventanas triptica de twm, con un foco particular para cada <em>visor</em></li>
-<li>paleta de ocho colores basados en la commodore, con acentos magentas</li>
-<li>combinación de una font pixel para la consola (gohu) y una grotesk (space)</li>
-<li>uso frecuente de ascii art como filtro de las imágenes y vídeos incluidos</li>
-</ul>
-<p>hay dos dimensiones importantes a resolver para lograr la <strong>responsividad</strong> del layout
+  <p>hay dos dimensiones importantes a resolver para lograr la <strong>responsividad</strong> del layout
 tanto en mobile como en desktop, la <em>estructura triple debe mantenerse</em> siempre</p>
 <ol>
 <li>la división del viewport en columnas con dimensiones relativas (cssgrid)
@@ -82,6 +72,12 @@ pensando un sistema estructural que sea fácilmente adaptable a nuevas necesidad
 para solucionarlo, usar una github action que haga pre-render a html cuando pusheo
 yo mantengo el workflow que busco, pero al sumar un md github lo integra como html
 también debe generar un index que puedo usar para generar dinamicamente la tabla</p>
+<ol>
+<li>subo el md a un directorio de mi branch principal</li>
+<li>corro la acción de github que buildea y genera el html</li>
+<li>la spa toma el html y lo inserta en el panel correspondiente</li>
+<li>la spa toma el index json y lo usa para generar la tabla de navegacion</li>
+</ol>
 <p>lo importante es definir como la spa consume el contenido html que genera github
 para eso debo definir una estructura de archivos escalable y final, eso es prioritario
 por otro lado, para construir la acción puedo usar un script de node local accion.js
