@@ -47,16 +47,15 @@ jobs:
               git add "$f"
             done
 
-            if git diff --cached --quiet; then
-              echo "no changes to commit"
-            else
-              git commit -m "build: posts y contenido regenerado"
-              git push origin HEAD:main
-            fi
-
           else
             echo ".build-changes.json no existe, saltando commit de contenido"
           fi
+
+      - name: 1C. sync dist-content to docs
+        run: |
+          mkdir -p docs
+          rsync -a --update --delete dist-content/ docs/
+          git add $(find docs -type f -not -path 'docs/posts/*')
 
       - name: 2A. build spa using vite
         run: npm run build
@@ -65,15 +64,15 @@ jobs:
         run: |
           mkdir -p docs
           rsync -a --update --delete dist-spa/ docs/
+          git add $(find docs -type f -not -path 'docs/posts/*')
 
-      - name: 2C. commit & push generated files
+      - name: 3A. commit & push generated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add $(find docs -type f -not -path 'docs/posts/*') .build-cache.json
           if git diff --cached --quiet; then
-            echo "no SPA changes to commit"
+            echo "no changes to commit"
           else
-            git commit -m "build: spa regenerada"
+            git commit -m "build: spa regenerada y contenido integrado"
             git push origin HEAD:main
           fi
