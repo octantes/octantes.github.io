@@ -199,6 +199,11 @@ try {
   console.error('no se pudo generar 404.html', e)
 }
 
-await fs.writeFile(postChangesFile, changedFiles.join('\n'))
+await fs.writeFile(
+  postChangesFile,
+  changedFiles
+    .map(f => f.replace(/^dist\//, 'docs/')) // mapeo a la carpeta que realmente se commitea
+    .join('\n')
+)
 
 console.log('build completado: notas + index.json + sitemap.xml + robots.txt + cache + 404.html generados.')
