@@ -56,25 +56,21 @@ for (const key of Object.keys(cache)) {
 
 const indexItems = []
 
-function processImgTag(attrs, noteOutputDir, portada) {
+function processImgTag(attrs, slug, portada) {
   const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
   if (!srcMatch) return `<img ${attrs}>`
-  let src = srcMatch[1]
-  // reemplazar extensión por webp
-  if (/\.(jpe?g|png)$/i.test(src)) src = src.replace(/\.(jpe?g|png)$/i, '.webp')
-  const imgPath = path.join(noteOutputDir, src)
+
+  let filename = srcMatch[1]
   let dimensions = { width: 600, height: 400 }
-  if (srcMatch[1] === portada) dimensions = { width: 1200, height: 630 }
-  else { try { dimensions = sizeOf(imgPath) } catch {} }
+  if (filename === portada) dimensions = { width: 1200, height: 630 }
+
+  // reemplazar extensión por webp
+  if (/\.(jpe?g|png)$/i.test(filename)) filename = filename.replace(/\.(jpe?g|png)$/i, '.webp')
+  const absUrl = `${siteUrl}/posts/${slug}/${filename}`
+
   const altText = altMatch ? altMatch[1] : ''
-  let newAttrs = attrs
-    .replace(/src=['"][^'"]*['"]/, `src="${src}"`)
-    .replace(/width=['"][^'"]*['"]/, '')
-    .replace(/height=['"][^'"]*['"]/, '')
-    .replace(/alt=['"][^'"]*['"]/, '')
-  newAttrs += ` width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}"`
-  return `<img ${newAttrs}>`
+  return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
 }
 
 const template = await fs.readFile('./templates/post.html', 'utf-8')
@@ -100,7 +96,6 @@ for (const slug of postDirs) {
       const data = await fs.readFile(assetPath)
       hash.update(data)
       if (/\.(jpe?g|png)$/i.test(asset.name)) {
-        // generar webp
         await sharp(assetPath)
           .resize({ width: 1200 })
           .webp({ quality: 80 })
@@ -115,11 +110,9 @@ for (const slug of postDirs) {
 
   if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
     let htmlContent = md.render(body)
-
-    const relativeDepth = path.relative(outputDir, noteOutputDir).split(path.sep).length
-    const basePath = '../'.repeat(relativeDepth)
-    htmlContent = htmlContent.replace(/(src|href)=['"]\.\/([^'"]+)['"]/g, `$1=$2${basePath}$2`)
-    htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) => processImgTag(attrs, noteOutputDir, attributes.portada))
+    htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) =>
+      processImgTag(attrs, slug, attributes.portada)
+    )
 
     const title = attributes.title || slug
     const description = attributes.description || ''
