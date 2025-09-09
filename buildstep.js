@@ -31,6 +31,7 @@ try {
   fullRebuild = true
 }
 
+// eliminar orphans de postsDir
 try {
   const existingDirs = await fs.readdir(postsDir, { withFileTypes: true })
   for (const dirent of existingDirs) {
@@ -38,10 +39,15 @@ try {
     const slug = dirent.name
     if (!postDirs.includes(slug)) {
       await fs.rm(path.join(postsDir, slug), { recursive: true, force: true })
-      delete cache[`${slug}/index.md`]
     }
   }
 } catch { await fs.mkdir(postsDir, { recursive: true }) }
+
+// eliminar orphans de cache
+for (const key of Object.keys(cache)) {
+  const slug = key.split('/')[0]
+  if (!postDirs.includes(slug)) delete cache[key]
+}
 
 const indexItems = []
 
