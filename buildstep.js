@@ -121,7 +121,7 @@ for (const slug of postDirs) {
       .replace(/{{authorJson}}/g, authorJson)
       .replace(/{{htmlContent}}/g, `<div id="app"></div>${spaMountScript}`)
 
-    await fs.writeFile(path.join(postsDir, slug), fullHtml)
+    await fs.writeFile(path.join(postsDir, slug, 'index.html'), fullHtml)
     cache[`${slug}/index.md`] = finalHash
   } else console.log(`skip ${slug}/index.md (unchanged)`)
 
