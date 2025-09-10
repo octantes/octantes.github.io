@@ -25,7 +25,7 @@ async function loadNote(slug) {
       noteContent.value = window.__POST_CONTENT__
       window.__POST_CONTENT__ = null
     } else {
-      const res = await fetch(`/posts/${slug}/`)
+      const res = await fetch(`/posts/${slug}/index.html`)
       if (!res.ok) throw new Error(`HTTP error ${res.status}`)
       noteContent.value = await res.text()
     }
