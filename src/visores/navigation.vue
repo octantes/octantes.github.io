@@ -18,7 +18,7 @@ onMounted(async () => {
 })
 
 function openNote(slug) {
-  router.push({ path: `/notes/${slug}` })
+  router.push({ path: `/posts/${slug}` })
 }
 </script>
 

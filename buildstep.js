@@ -105,9 +105,8 @@ for (const slug of postDirs) {
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
       : `{"@type":"Person","name":"Desconocido"}`
 
-    // SPA bootstrap script + redirect a #/posts/slug
+    // SPA bootstrap script: solo asigna __POST_CONTENT__ y deja que la SPA monte
     const spaMountScript = `<script>
-      window.location.replace('#/posts/${slug}');
       document.addEventListener('DOMContentLoaded',()=>{window.__POST_CONTENT__=\`${htmlContent}\`;});
     </script>`
 
