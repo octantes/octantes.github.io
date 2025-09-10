@@ -12,20 +12,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "crypto": "^1.0.1",
-    "front-matter": "^4.0.2",
-    "image-size": "^2.0.2",
-    "markdown-it": "^14.1.0",
-    "path": "^0.12.7",
-    "promises": "^0.2.5",
-    "sharp": "^0.34.3",
-    "vue": "^3.5.18",
-    "vue-router": "^4.5.1"
+    "crypto": "1.0.1",
+    "front-matter": "4.0.2",
+    "image-size": "2.0.2",
+    "markdown-it": "14.1.0",
+    "path": "0.12.7",
+    "promises": "0.2.5",
+    "sharp": "0.34.3",
+    "vue": "3.5.18",
+    "vue-router": "4.5.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.1",
-    "vite": "^7.0.6",
-    "vite-plugin-vue-devtools": "^8.0.0"
+    "@vitejs/plugin-vue": "6.0.1",
+    "vite": "7.0.6",
+    "vite-plugin-vue-devtools": "8.0.0"
   },
   "overrides": {
     "color-name": "1.1.4",
