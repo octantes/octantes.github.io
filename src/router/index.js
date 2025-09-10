@@ -7,7 +7,7 @@
       component: Content
     },
     {
-      path: '/posts/:slug',
+      path: '/notes/:slug',
       component: Content,
       props: true // pasa el slug como prop para content
     },

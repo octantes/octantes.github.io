@@ -13,9 +13,11 @@ const outputDir = './dist'
 const cacheFile = path.resolve('.build-cache.json')
 const siteUrl = 'https://octantes.github.io'
 
+// leer cache persistente
 let cache = {}
 try { cache = JSON.parse(await fs.readFile(cacheFile, 'utf-8')) } catch {}
 
+// leer directorios de posts, si content no existe devuelve array vacío
 let postDirs = []
 try {
   postDirs = (await fs.readdir(contentDir, { withFileTypes: true }))
@@ -24,9 +26,17 @@ try {
 } catch { postDirs = [] }
 
 const postsDir = path.join(outputDir, 'posts')
-let fullRebuild = false
-try { await fs.access(postsDir) } catch { fullRebuild = true; await fs.mkdir(postsDir, { recursive: true }) }
 
+// detectar si hace falta full rebuild (si no existe postsDir)
+let fullRebuild = false
+try {
+  await fs.access(postsDir)
+} catch {
+  fullRebuild = true
+  await fs.mkdir(postsDir, { recursive: true })
+}
+
+// eliminar orphans de postsDir
 try {
   const existingDirs = await fs.readdir(postsDir, { withFileTypes: true })
   for (const dirent of existingDirs) {
@@ -38,6 +48,7 @@ try {
   }
 } catch { await fs.mkdir(postsDir, { recursive: true }) }
 
+// eliminar orphans de cache
 for (const key of Object.keys(cache)) {
   const slug = key.split('/')[0]
   if (!postDirs.includes(slug)) delete cache[key]
@@ -53,8 +64,11 @@ function processImgTag(attrs, slug, portada) {
   let filename = srcMatch[1]
   let dimensions = { width: 600, height: 400 }
   if (filename === portada) dimensions = { width: 1200, height: 630 }
+
+  // reemplazar extensión por webp
   if (/\.(jpe?g|png)$/i.test(filename)) filename = filename.replace(/\.(jpe?g|png)$/i, '.webp')
   const absUrl = `${siteUrl}/posts/${slug}/${filename}`
+
   const altText = altMatch ? altMatch[1] : ''
   return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
 }
@@ -65,7 +79,8 @@ for (const slug of postDirs) {
   const postFolder = path.join(contentDir, slug)
   const mdPath = path.join(postFolder, 'index.md')
   let raw
-  try { raw = await fs.readFile(mdPath, 'utf-8') } catch { console.warn(`no se encontró index.md en ${slug}`); continue }
+  try { raw = await fs.readFile(mdPath, 'utf-8') }
+  catch { console.warn(`no se encontró index.md en ${slug}, se saltea`); continue }
 
   const { attributes, body } = fm(raw)
   const noteOutputDir = path.join(postsDir, slug)
@@ -81,7 +96,10 @@ for (const slug of postDirs) {
       const data = await fs.readFile(assetPath)
       hash.update(data)
       if (/\.(jpe?g|png)$/i.test(asset.name)) {
-        await sharp(assetPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(destPath.replace(/\.(jpe?g|png)$/i, '.webp'))
+        await sharp(assetPath)
+          .resize({ width: 1200 })
+          .webp({ quality: 80 })
+          .toFile(destPath.replace(/\.(jpe?g|png)$/i, '.webp'))
       } else {
         await fs.writeFile(destPath, data)
       }
@@ -89,9 +107,12 @@ for (const slug of postDirs) {
   } catch {}
 
   const finalHash = hash.digest('hex')
+
   if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
     let htmlContent = md.render(body)
-    htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) => processImgTag(attrs, slug, attributes.portada))
+    htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) =>
+      processImgTag(attrs, slug, attributes.portada)
+    )
 
     const title = attributes.title || slug
     const description = attributes.description || ''
@@ -105,11 +126,6 @@ for (const slug of postDirs) {
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
       : `{"@type":"Person","name":"Desconocido"}`
 
-    // SPA bootstrap script: solo asigna __POST_CONTENT__ y deja que la SPA monte
-    const spaMountScript = `<script>
-      document.addEventListener('DOMContentLoaded',()=>{window.__POST_CONTENT__=\`${htmlContent}\`;});
-    </script>`
-
     let fullHtml = template
       .replace(/{{title}}/g, title)
       .replace(/{{description}}/g, description)
@@ -118,16 +134,23 @@ for (const slug of postDirs) {
       .replace(/{{handle}}/g, handle)
       .replace(/{{date}}/g, date)
       .replace(/{{authorJson}}/g, authorJson)
-      .replace(/{{htmlContent}}/g, `<div id="app"></div>${spaMountScript}`)
+      .replace(/{{htmlContent}}/g, htmlContent)
 
-    await fs.writeFile(path.join(postsDir, slug, 'index.html'), fullHtml)
+    await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
     cache[`${slug}/index.md`] = finalHash
   } else console.log(`skip ${slug}/index.md (unchanged)`)
 
-  indexItems.push({ slug, title: attributes.title || slug, date: attributes.date || '', tags: attributes.tags || [], url: `/posts/${slug}/` })
+  indexItems.push({
+    slug,
+    title: attributes.title || slug,
+    date: attributes.date || '',
+    tags: attributes.tags || [],
+    url: `/posts/${slug}/`
+  })
 }
 
 await fs.mkdir(outputDir, { recursive: true })
+
 const indexPath = path.join(outputDir, 'index.json')
 let prevIndex = '[]'
 try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch {}
