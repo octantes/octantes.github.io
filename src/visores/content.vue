@@ -20,15 +20,9 @@ async function loadNote(slug) {
   loading.value = true
   chosenShader.value = shaders[Math.floor(Math.random() * shaders.length)]
   try {
-    // usar contenido prerenderizado si existe
-    if (window.__POST_CONTENT__) {
-      noteContent.value = window.__POST_CONTENT__
-      window.__POST_CONTENT__ = null
-    } else {
-      const res = await fetch(`/posts/${slug}/index.html`)
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-      noteContent.value = await res.text()
-    }
+    const res = await fetch(`/posts/${slug}/`)
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+    noteContent.value = await res.text()
   } catch (e) {
     noteContent.value = `<p>error cargando la nota</p>`
     console.error(`error fetching slug "${slug}":`, e)
