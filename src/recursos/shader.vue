@@ -158,8 +158,10 @@ function isFrontier(maskArr, x, y) {
 
 function drawFrame(ts) {
   if (!ctx) return
-  ctx.fillStyle = '#1b1c1c'
-  ctx.fillRect(0, 0, width, height)
+  // ctx.fillStyle = '#1b1c1c'
+  // ctx.fillRect(0, 0, width, height)
+  
+  ctx.clearRect(0, 0, width, height)
 
   updatePortalGrid(ts)
 
@@ -253,8 +255,9 @@ function drawFrame(ts) {
 
           // luego sobreescribimos si estamos dentro del círculo outro
           if (circleCells.has(idx) && !circleFrontier.has(idx)) {
-            drawCh = ' '
-            color = '#1b1c1c'
+            // drawCh = ' '
+            // color = '#1b1c1c'
+            continue
           } else if (circleFrontier.has(idx)) {
             color = borderColor
           }
@@ -304,7 +307,6 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #1b1c1c;
 }
 canvas {
   display: block;

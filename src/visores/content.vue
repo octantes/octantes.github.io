@@ -6,12 +6,7 @@ import Shader from '../recursos/shader.vue'
 const route = useRoute()
 const noteContent = ref('')
 const loading = ref(false)
-
 const shaderRef = ref(null)
-
-const props = defineProps({
-  shaderKey: Number
-})
 
 async function loadNote(slug) {
   if (!slug) {
@@ -19,6 +14,7 @@ async function loadNote(slug) {
     loading.value = true
     return
   }
+  shaderRef.value?.startOutro()
   loading.value = true
   try {
     const res = await fetch(`/posts/${slug}/`)
@@ -38,15 +34,14 @@ watch(() => route.params.slug, slug => loadNote(slug), { immediate: true })
 
 <template>
   <div class="post">
-    <button @click="shaderRef.startOutro()">trigger outro</button>
-    <Shader ref="shaderRef" v-if="loading" :key="shaderKey"/>
+    <Shader ref="shaderRef" v-if="loading"/>
     <div v-else class="text" v-html="noteContent"></div>
   </div>
 </template>
 
 <style>
 .post {
-  background-color: #986C98;
+  background-color: #1b1c1c;
   border: 1px solid #AAABAC;
   width: 100%;
 }

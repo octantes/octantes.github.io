@@ -1,20 +1,14 @@
 <script setup>
-import { ref } from 'vue'
 import Navigation from './visores/navigation.vue'
 import Footer from './visores/footer.vue'
 import Test from './visores/test.vue';
-
-const shaderKey = ref(0)
-function triggerShader() {
-  shaderKey.value++
-}
 </script>
 
 <template>
   <div class="pagina">
     <div class="layout">
-        <Navigation @note-selected="triggerShader" class="navigation"/>
-        <RouterView :shader-key="shaderKey" class="content"/>
+        <Navigation class="navigation"/>
+        <RouterView class="content"/>
         <!--<Test class="content"/>-->
     </div>
     <div class="footer">
