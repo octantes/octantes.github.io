@@ -34,7 +34,7 @@ watch(() => route.params.slug, slug => loadNote(slug), { immediate: true })
 
 <template>
   <div class="post">
-    <Shader class="shader" ref="shaderRef" v-if="loading"/>
+    <Shader class="shader" ref="shaderRef"/>
     <div class="text" v-html="noteContent"></div>
   </div>
 </template>
