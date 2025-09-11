@@ -34,12 +34,15 @@ watch(() => route.params.slug, slug => loadNote(slug), { immediate: true })
 
 <template>
   <div class="post">
+    <Shader class="shader" ref="shaderRef" v-if="loading"/>
     <div class="text" v-html="noteContent"></div>
-    <Shader ref="shaderRef" v-if="loading"/>
   </div>
 </template>
 
 <style>
+.shader {
+  z-index: 10;
+}
 .post {
   background-color: #1b1c1c;
   border: 1px solid #AAABAC;
