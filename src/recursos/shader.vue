@@ -172,45 +172,53 @@ function drawFrame(ts) {
       charBuffers[c].fill(null)
     }
   }
-  
+
   ctx.font = `${fontSize}px 'Gohu Mono', monospace`
   ctx.textBaseline = 'top'
   ctx.textAlign = 'left'
-  
 
-  let ratio
-  if (mode === 'intro') ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
-  else if (mode === 'outro') ratio = 1
-  else ratio = 1
-
-  // calcular mask
   const total = rows * cols
-  if (mode === 'intro') { 
+  let circleCells = new Set()
+  let circleFrontier = new Set()
+
+  if (mode === 'intro') {
+    const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
     for (let i = 0; i < total; i++) baseMask[i] = noiseMap[i] < ratio ? 1 : 0
   } else if (mode === 'outro' && outroMode === 'radial') {
     outroRadius += 1
+
+    // calcular circleCells **una vez por frame** con noise
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const dx = x - outroCenter.x
         const dy = y - outroCenter.y
         const dist = Math.sqrt(dx*dx + dy*dy)
         const n = noiseMap[y*cols + x] * 5
-        baseMask[y*cols + x] = (dist + n < outroRadius) ? 0 : 1
+        const idx = y*cols + x
+        if (dist + n <= outroRadius) circleCells.add(idx)
       }
     }
-  }
 
-  const steps = Math.min(maxDilateSteps, Math.floor(ratio * maxDilateSteps))
-  const resultMask = dilateMaskInplace(baseMask, tmpMask, steps)
-
-  // después de calcular resultMask en drawFrame
-  if (mode === 'intro' && revealFrame >= revealMaxFrames) {
-    // recorrer todas las celdas y reducir gradualmente
-    for (let i = 0; i < total; i++) {
-      if (baseMask[i] && Math.random() < 0.05) baseMask[i] = 0
+    // calcular circleFrontier solo en los bordes de circleCells
+    circleFrontier.clear()
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const idx = y * cols + x
+        if (!circleCells.has(idx)) continue
+        if (
+          (x > 0 && !circleCells.has(idx-1)) ||
+          (x < cols-1 && !circleCells.has(idx+1)) ||
+          (y > 0 && !circleCells.has(idx-cols)) ||
+          (y < rows-1 && !circleCells.has(idx+cols))
+        ) circleFrontier.add(idx)
+      }
     }
+
+    for (let i = 0; i < total; i++) baseMask[i] = circleCells.has(i) ? 0 : 1
   }
 
+  const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
+  const resultMask = dilateMaskInplace(baseMask, tmpMask, steps)
 
   for (let x = 0; x < cols; x++) {
     const headPos = Math.floor(heads[x])
@@ -223,46 +231,55 @@ function drawFrame(ts) {
       const revealed = !!resultMask[idx]
       const frontier = isFrontier(resultMask, x, y)
 
-      let drawCh = ' '
-      let color = '#1b1c1c'
+      let drawCh = portalCh
+      let color = `rgba(152,108,152,1)` // default portal shader
 
-      if (frontier) {
-        drawCh = portalCh
-        color = borderColor
-      } else if (revealed) {
-        if (matrixCh) {
+      if (mode === 'intro') {
+        if (!revealed) color = '#1b1c1c' // fondo negro
+        if (frontier) color = borderColor // borde blanco sobre fondo negro
+        if (matrixCh && revealed) {
           const dist = headPos - y
-          let alpha = 0
-          if (dist >= 0 && dist <= trailLength) alpha = 1 - dist / trailLength
-          if (alpha > 0) {
-            drawCh = matrixCh
-            color = getTrailColor(alpha)
-          } else {
-            drawCh = portalCh
-            color = `rgba(152,108,152,1)`
-          }
-        } else {
-          drawCh = portalCh
-          color = `rgba(152,108,152,1)`
+          if (dist >=0 && dist <= trailLength) color = getTrailColor(1 - dist/trailLength)
         }
-      }
+        } else if (mode === 'outro' && outroMode === 'radial') {
+          const dist = headPos - y
+          const inTrail = matrixCh && dist >=0 && dist <= trailLength
+
+          // la lluvia se genera normalmente
+          if (inTrail) {
+            color = getTrailColor(1 - dist/trailLength)
+            drawCh = matrixCh
+          }
+
+          // luego sobreescribimos si estamos dentro del círculo outro
+          if (circleCells.has(idx) && !circleFrontier.has(idx)) {
+            drawCh = ' '
+            color = '#1b1c1c'
+          } else if (circleFrontier.has(idx)) {
+            color = borderColor
+          }
+        } else if (frontier) {
+          color = borderColor
+        }
+
 
       ctx.fillStyle = color
-      ctx.fillText(drawCh, x * fontSize, y * fontSize)
+      ctx.fillText(drawCh, x*fontSize, y*fontSize)
     }
   }
 
-  if (mode === 'intro' && revealFrame < revealMaxFrames) revealFrame++
-  else if (mode === 'outro' && outroMode === 'radial' && outroRadius < Math.hypot(cols, rows)) outroFrame++
+  if (mode==='intro' && revealFrame<revealMaxFrames) revealFrame++
+  else if (mode==='outro' && outroMode==='radial' && outroRadius<Math.hypot(cols,rows)) outroFrame++
 
   animationId = requestAnimationFrame(drawFrame)
 }
+
 
 function startOutro() {
   mode = 'outro'
   outroMode = 'radial'
   outroRadius = 0
-  outroCenter = { x: 0, y: rows - 1 } // esquina inferior izquierda
+  outroCenter = { x: 0, y: rows } // esquina inferior izquierda
 }
 
 defineExpose({ startOutro })
