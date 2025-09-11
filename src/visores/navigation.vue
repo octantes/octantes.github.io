@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const notes = ref([])
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+const emit = defineEmits(['note-selected'])
 
 onMounted(async () => {
   try {
@@ -18,6 +19,7 @@ onMounted(async () => {
 })
 
 function openNote(slug) {
+  emit('note-selected') 
   router.push({ path: `/notes/${slug}` })
 }
 </script>

@@ -1,11 +1,17 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import shader from '../recursos/shader.vue'
+import Shader from '../recursos/shader.vue'
 
 const route = useRoute()
 const noteContent = ref('')
 const loading = ref(false)
+
+const shaderRef = ref(null)
+
+const props = defineProps({
+  shaderKey: Number
+})
 
 async function loadNote(slug) {
   if (!slug) {
@@ -32,7 +38,8 @@ watch(() => route.params.slug, slug => loadNote(slug), { immediate: true })
 
 <template>
   <div class="post">
-    <component :is="shader" v-if="loading" />
+    <button @click="shaderRef.startOutro()">trigger outro</button>
+    <Shader ref="shaderRef" v-if="loading" :key="shaderKey"/>
     <div v-else class="text" v-html="noteContent"></div>
   </div>
 </template>
