@@ -47,7 +47,6 @@ watch(() => route.params.slug, slug => loadNote(slug), { immediate: true })
 }
 .text {
   color: #1B1C1C;
-  background-color: #986C98;
   padding: 1rem;
 }
 </style>
