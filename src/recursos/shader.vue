@@ -307,7 +307,6 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: 10;
 }
 canvas {
   display: block;
