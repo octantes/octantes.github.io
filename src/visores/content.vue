@@ -8,6 +8,7 @@ const shaderRef = ref(null)
 const noteContent = ref('')
 let noteLoaded = false
 let firstLoad = true
+let lastSlug = null
 
 function runShader(state) {
   switch (state) {
@@ -48,6 +49,7 @@ watch(
         runShader('intro')
         noteLoaded = false
         firstLoad = false
+        lastSlug = null
 
         break
 
@@ -58,6 +60,7 @@ watch(
         await loadNote(slug)
         noteLoaded = true
         firstLoad = false
+        lastSlug = slug
         
         break
 
@@ -68,16 +71,18 @@ watch(
         await loadNote(slug)
         noteLoaded = true
         firstLoad = false
+        lastSlug = slug
         
         break
       
       // loaded note change
-      case slug && noteLoaded && !firstLoad:
+      case slug && noteLoaded && lastSlug !== slug:
 
         runShader('transition')
-        setTimeout(async () => { await loadNote(slug) }, 800)
+        setTimeout(async () => { await loadNote(slug) }, 900)
         noteLoaded = true
         firstLoad = false
+        lastSlug = slug
 
         break
 
@@ -105,6 +110,8 @@ watch(
 }
 .text {
   position: absolute;
+  top: 0;
+  left: 0;
   color: #AAABAC;
   padding: 1rem;
 }
