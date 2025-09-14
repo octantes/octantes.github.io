@@ -6,8 +6,8 @@ import Shader from '../recursos/shader.vue'
 const route = useRoute()
 const shaderRef = ref(null)
 const noteContent = ref('')
-const currentNote = ref(null)
-const firstLoad = ref(true)
+let firstLoad = true
+let noteLoaded = false
 
 function runShader(state) {
   switch (state) {
@@ -34,7 +34,7 @@ async function loadNote(slug) {
 
 watch(
 
-  () => route.params.slug,
+  () => route.params.slug,  
 
   async slug => {
 
@@ -43,40 +43,42 @@ watch(
     switch (true) {
 
       // first load without note
-      case firstLoad.value && !slug:
+      case !slug && firstLoad:
 
         runShader('intro')
-        noteContent.value = ''
-        currentNote.value = null
-        firstLoad.value = false
-
-        break
-
-      // first note load
-      case !firstLoad.value && currentNote.value === null && slug:
-
-        runShader('outro')
-        await loadNote(slug)
-        currentNote.value = slug
-        
-        break
-      
-      // loaded note change
-      case !firstLoad.value && currentNote.value && currentNote.value !== slug:
-
-        runShader('transition')
-        setTimeout(async () => { await loadNote(slug); currentNote.value = slug }, 2000)
+        firstLoad = false
+        noteLoaded = false
 
         break
 
       // first load from url
-      case firstLoad.value && slug:
+      case slug && firstLoad:
 
         await loadNote(slug)
         runShader('direct')
-        currentNote.value = slug
-        firstLoad.value = false
+        firstLoad = false
+        noteLoaded = true
         
+        break
+
+      // first note load
+      case slug && !firstLoad && !noteLoaded:
+
+        runShader('outro')
+        await loadNote(slug)
+        firstLoad = false
+        noteLoaded = true
+        
+        break
+      
+      // loaded note change
+      case slug && noteLoaded:
+
+        runShader('transition')
+        setTimeout(async () => { await loadNote(slug) }, 2000)
+        firstLoad = false
+        noteLoaded = true
+
         break
 
       default:
