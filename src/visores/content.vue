@@ -39,6 +39,7 @@ watch(
   async slug => {
 
     await nextTick()
+    if (shaderRef.value?.waitReady) await shaderRef.value.waitReady()
 
     switch (true) {
 
