@@ -75,7 +75,7 @@ watch(
       case slug && noteLoaded && !firstLoad:
 
         runShader('transition')
-        setTimeout(async () => { await loadNote(slug) }, 500)
+        setTimeout(async () => { await loadNote(slug) }, 800)
         noteLoaded = true
         firstLoad = false
 
@@ -91,17 +91,20 @@ watch(
 <template>
   <div class="post">
     <Shader ref="shaderRef"/>
+    <div class="text" v-if="noteContent" v-html="noteContent"></div>
   </div>
-  <div class="text" v-if="noteContent" v-html="noteContent"></div>
 </template>
 
 <style>
 .post {
+  position: relative;
   background-color: #1B1C1C;
   border: 1px solid #AAABAC;
   width: 100%;
+  height: 100%;
 }
 .text {
+  position: absolute;
   color: #AAABAC;
   padding: 1rem;
 }
