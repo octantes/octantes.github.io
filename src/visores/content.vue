@@ -79,7 +79,7 @@ watch(
       case slug && noteLoaded && lastSlug !== slug:
 
         runShader('transition')
-        setTimeout(async () => { await loadNote(slug) }, 1200)
+        setTimeout(async () => { await loadNote(slug) }, 1350)
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
@@ -102,6 +102,7 @@ watch(
 
 <style>
 .shader {
+  position: relative;
   z-index: 10;
 }
 .post {
@@ -115,6 +116,7 @@ watch(
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
   color: #AAABAC;
   padding: 1rem;
 }
