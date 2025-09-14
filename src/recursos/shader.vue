@@ -573,7 +573,6 @@ onMounted ( async () => {
 
   await nextTick()
   updateSize()
-  runTransition()
 
   window.addEventListener('resize', updateSize)
   animationId = requestAnimationFrame(drawFrame)
