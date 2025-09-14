@@ -54,7 +54,8 @@ watch(
       case !firstLoad.value && currentNote.value === null && slug:
 
         runShader('outro')
-        async () => { await loadNote(slug); currentNote.value = slug }
+        await loadNote(slug)
+        currentNote.value = slug
         
         break
       
