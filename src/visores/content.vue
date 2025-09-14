@@ -38,6 +38,8 @@ watch(
 
   async slug => {
 
+    await nextTick()
+
     switch (true) {
 
       // first load without note
