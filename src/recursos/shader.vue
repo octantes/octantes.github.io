@@ -6,9 +6,6 @@ const charRangeStart = 33                             // unicode char start
 const charRangeEnd = 126                              // unicode char end
 const charRangeMax = charRangeEnd - charRangeStart    // max possible chars
 
-let _readyResolve = null
-const _ready = new Promise(r => { _readyResolve = r })
-
 const canvasRef = ref(null)         // dom << canvas >> ref
 const containerRef = ref(null)      // container div ref
 
@@ -137,11 +134,6 @@ function setGrid() {                      // create grid + animate rain
   noiseMap = new Float32Array(cols * rows)
   baseMask = new Uint8Array(cols * rows)
   tmpMask = new Uint8Array(cols * rows)
-
-  baseMask.fill(0)
-  tmpMask.fill(0)
-
-  if (_readyResolve) { _readyResolve(); _readyResolve = null }
 
   // set noisemap
   for (let y = 0; y < rows; y++) {
@@ -575,11 +567,12 @@ function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < row
 function runTransition() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0) }                                     // DONE
 function runHidden() { mode = 'hidden'; }                                                                               // DONE
 
-defineExpose({ runIntro, runStatic, runOutro, runTransition, runDirect, runHidden, waitReady: () => _ready })
+defineExpose({ runIntro, runStatic, runOutro, runTransition, runDirect, runHidden })
 
 onMounted ( async () => {
 
   updateSize()
+
   window.addEventListener('resize', updateSize)
   animationId = requestAnimationFrame(drawFrame)
 
