@@ -580,7 +580,6 @@ defineExpose({ runIntro, runStatic, runOutro, runTransition, runDirect, runHidde
 onMounted ( async () => {
 
   updateSize()
-  runIntro()
   window.addEventListener('resize', updateSize)
   animationId = requestAnimationFrame(drawFrame)
 
