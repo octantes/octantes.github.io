@@ -34,7 +34,7 @@ let tmpMask = null                  // dilation temporal buffer mask
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
-let mode = 'static'                 // current mode store string
+let mode = 'hidden'                       // current mode store string
 let outroFrame = 0                  // outro max frame counter
 let outroRadius = 0                 // current outro animation radius
 let outroCenter = { x: 0, y: 0 }    // outro animation center position
@@ -571,7 +571,6 @@ defineExpose({ runIntro, runStatic, runOutro, runTransition, runDirect, runHidde
 
 onMounted ( async () => {
 
-  await nextTick()
   updateSize()
 
   window.addEventListener('resize', updateSize)
