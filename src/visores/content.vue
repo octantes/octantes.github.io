@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import Shader from '../recursos/shader.vue'
 
@@ -39,7 +39,6 @@ watch(
   async slug => {
 
     await nextTick()
-    if (shaderRef.value?.waitReady) await shaderRef.value.waitReady()
 
     switch (true) {
 
