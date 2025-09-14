@@ -6,8 +6,8 @@ import Shader from '../recursos/shader.vue'
 const route = useRoute()
 const shaderRef = ref(null)
 const noteContent = ref('')
-let firstLoad = true
 let noteLoaded = false
+let firstLoad = true
 
 function runShader(state) {
   switch (state) {
@@ -46,28 +46,28 @@ watch(
       case !slug && firstLoad:
 
         runShader('intro')
-        firstLoad = false
         noteLoaded = false
-
-        break
-
-      // first load from url
-      case slug && firstLoad:
-
-        await loadNote(slug)
-        runShader('direct')
         firstLoad = false
-        noteLoaded = true
-        
+
         break
 
       // first note load
-      case slug && !firstLoad && !noteLoaded:
+      case slug && !noteLoaded && !firstLoad:
 
         runShader('outro')
         await loadNote(slug)
-        firstLoad = false
         noteLoaded = true
+        firstLoad = false
+        
+        break
+
+      // first load from url
+      case slug && !noteLoaded && firstLoad:
+
+        runShader('direct')
+        await loadNote(slug)
+        noteLoaded = true
+        firstLoad = false
         
         break
       
@@ -76,12 +76,14 @@ watch(
 
         runShader('transition')
         setTimeout(async () => { await loadNote(slug) }, 2000)
-        firstLoad = false
         noteLoaded = true
+        firstLoad = false
 
         break
 
       default:
+
+        noteLoaded = false
 
         break
 
