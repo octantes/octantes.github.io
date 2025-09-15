@@ -34,7 +34,7 @@ let tmpMask = null                  // dilation temporal buffer mask
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
-let mode = 'hidden'                       // current mode store string
+let mode = 'intro'                 // current mode store string
 let outroFrame = 0                  // outro max frame counter
 let outroRadius = 0                 // current outro animation radius
 let outroCenter = { x: 0, y: 0 }    // outro animation center position
@@ -109,7 +109,7 @@ function updateSize() {                   // update context
 
   setSize()
 
-  fontSize = Math.max(12, Math.floor(width / 70)) * 0.75
+  fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
 
   setGrid()
 
@@ -395,18 +395,23 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
 
   let drawCh = portalCh
   let color = `rgba(152,108,152,1)` // default portal shader
+  let needsBg = false
 
   switch (mode) {
 
     case 'intro': { 
 
-      if (!revealed) color = '#1b1c1c'
+      if (!revealed) color = '#1B1C1C'
       if (frontier) color = borderColor
 
       if (matrixCh && revealed) {
 
         const dist = headPos - y
-        if (dist >= 0 && dist <= trailLength) color = trailAlpha(1 - dist / trailLength)
+
+        if (dist >= 0 && dist <= trailLength) {
+          color = trailAlpha(1 - dist / trailLength)
+          needsBg = true
+        }
       
       }
 
@@ -416,40 +421,38 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
 
     case 'static': { 
 
-      const dist = headPos - y
+      if (matrixCh) {
 
-      if (matrixCh && dist >= 0 && dist <= trailLength) {
+        const dist = headPos - y
 
-        color = trailAlpha(1 - dist / trailLength)
-        drawCh = matrixCh
+        if (dist >= 0 && dist <= trailLength) {
+
+          color = trailAlpha(1 - dist / trailLength)
+          drawCh = matrixCh
+          needsBg = true
+
+        }
+
+        break
 
       }
-
-      break
 
     }
 
     case 'outro': { 
 
       const dist = headPos - y
-      const inTrail = matrixCh && dist >= 0 && dist <= trailLength
 
-      if (inTrail) {
+      if (matrixCh && dist >= 0 && dist <= trailLength) {
 
         color = trailAlpha(1 - dist / trailLength)
         drawCh = matrixCh
+        needsBg = true
 
       }
 
-      if (circleCells.has(idx) && !circleFrontier.has(idx)) {
-
-        drawCh = null
-
-      } else if (circleFrontier.has(idx)) {
-
-        color = borderColor
-
-      }
+      if (circleCells.has(idx) && !circleFrontier.has(idx)) drawCh = null
+      else if (circleFrontier.has(idx)) color = borderColor
 
       break
 
@@ -460,15 +463,20 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
       if (!revealed) {
 
         drawCh = null
-        color = borderColor && isFrontier(resultMask, x, y) ? borderColor : '#1b1c1c'
+        color = borderColor && isFrontier(resultMask, x, y) ? borderColor : '#1B1C1C'
 
       } else {
 
         drawCh = matrixCh || portalCh
         const dist = headPos - y
 
-        if (matrixCh && dist >= 0 && dist <= trailLength) color = trailAlpha(1 - dist / trailLength)
-        
+        if (matrixCh && dist >= 0 && dist <= trailLength) {
+
+          color = trailAlpha(1 - dist / trailLength)
+          needsBg = true
+
+        }
+
       }
       
       break
@@ -479,7 +487,8 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
       
       if (!revealed) {
         
-        if (frontier) { drawCh = portalCh; color = borderColor } else { drawCh = null }
+        if (frontier) { drawCh = portalCh; color = borderColor; needsBg = true }
+        else { drawCh = null }
         
       } else {
         
@@ -495,6 +504,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
             
             color = trailAlpha(1 - dist / trailLength)
             drawCh = matrixCh
+            needsBg = true
             
           }
           
@@ -512,7 +522,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
     
   }
 
-  return { drawCh, color }
+  return { drawCh, color, needsBg, frontier }
 
 }
 
@@ -543,8 +553,49 @@ function drawFrame(ts) {                                        // draws shader
 
     for (let y = 0; y < rows; y++) {
 
-      const { drawCh, color } = cellRender(x, y, headPos, colBuf, resultMask)
-      if (drawCh !== null) ctx.fillStyle = color, ctx.fillText(drawCh, x * fontSize, y * fontSize)
+      const idx = y * cols + x
+      const { drawCh, color, frontier } = cellRender(x, y, headPos, colBuf, resultMask)
+
+      if (drawCh === null) continue
+
+      const px = Math.floor(x * fontSize)
+      const py = Math.floor(y * fontSize)
+
+      const matrixCh = colBuf[y]
+      const dist = headPos - y
+      const isRain = !!(matrixCh && dist >= 0 && dist <= trailLength)
+      const portalCh = String.fromCharCode(portalCodes[idx])
+      const isPortal = drawCh === portalCh
+      const isFrontier = !!frontier
+      const revealed = !!resultMask[idx]
+
+      if (mode === 'outro' || mode === 'transition') {
+
+        if (isRain || isPortal || isFrontier) {
+
+          ctx.fillStyle = '#1b1c1c'
+          ctx.fillRect(px, py, fontSize, fontSize)
+
+        }
+
+      } else if (mode === 'intro') {
+
+        if (revealed && (isRain || isPortal || isFrontier || true)) {
+
+          ctx.fillStyle = '#1b1c1c'
+          ctx.fillRect(px, py, fontSize, fontSize)
+
+        }
+
+      } else {
+
+        ctx.fillStyle = '#1b1c1c'
+        ctx.fillRect(px, py, fontSize, fontSize)
+
+      }
+
+      ctx.fillStyle = color
+      ctx.fillText(drawCh, px, py)
 
     }
 
