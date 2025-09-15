@@ -615,7 +615,7 @@ function runIntro() { mode = 'intro'; revealFrame = 0; }                        
 function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                 // DONE
 function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                // DONE
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }        // DONE
-function runTransition() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0) }                                     // DONE
+function runTransition() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0 }     // DONE
 function runHidden() { mode = 'hidden'; }                                                                               // DONE
 
 defineExpose({ runIntro, runStatic, runOutro, runTransition, runDirect, runHidden })
