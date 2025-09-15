@@ -79,7 +79,7 @@ watch(
       case slug && noteLoaded && lastSlug !== slug:
 
         runShader('transition')
-        setTimeout(async () => { await loadNote(slug) }, 1325)
+        setTimeout(async () => { await loadNote(slug) }, 1300)
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
