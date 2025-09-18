@@ -1,10 +1,11 @@
 html, body, #octantes {
   box-sizing: border-box;
+  background-color: #1b1c1c;
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color: #1b1c1c;
+  font-family: sans-serif;
 }
 
 *, *::before, *::after {
