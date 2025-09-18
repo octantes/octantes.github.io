@@ -96,28 +96,57 @@ watch(
 <template>
   <div class="post">
     <Shader class ="shader" ref="shaderRef"/>
-    <div class="text" v-if="noteContent" v-html="noteContent"></div>
+    <div class="content">
+      <div class="text" v-if="noteContent" v-html="noteContent"></div>
+    </div>
   </div>
 </template>
 
 <style>
-.shader {
-  position: relative;
-  z-index: 10;
-}
+
 .post {
   position: relative;
+  height: 100%;
+  width: 100%;
   background-color: #1B1C1C;
   border: 1px solid #AAABAC;
-  width: 100%;
-  height: 100%;
+  overflow-x: hidden;
 }
+
+.shader {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}
+
+.content {
+  position: relative;
+  top: 0; left: 0;
+  height: 100%;
+  width: 100%;
+  padding: 0rem 1rem;
+}
+
 .text {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0; right: 0;
+  height: 100%;
+  width: 100%;
   z-index: 1;
   color: #AAABAC;
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  word-break: break-word;
   padding: 1rem;
 }
+
+.text img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 </style>
