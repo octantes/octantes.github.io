@@ -39,8 +39,8 @@ function updateHead(html) {
 
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
-  document.title = doc.querySelector('title')?.textContent || ''
-  const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href')
+  document.title = doc.querySelector('title')?.textContent || '' // title
+  const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href') // canonical
   let canonicalEl = document.querySelector('link[rel="canonical"]')
 
   if (!canonicalEl) {
@@ -51,7 +51,7 @@ function updateHead(html) {
 
   canonicalEl.setAttribute('href', canonical || window.location.href)
 
-  const description = doc.querySelector('meta[name="description"]')?.getAttribute('content')
+  const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') // description
   let descEl = document.querySelector('meta[name="description"]')
 
   if (!descEl) {
@@ -61,9 +61,10 @@ function updateHead(html) {
   }
 
   descEl.setAttribute('content', description || '')
+  const ogProps = ['og:type','og:title','og:description','og:url','og:image'] // open graph
 
-  const ogProps = ['og:title', 'og:description', 'og:image']
   ogProps.forEach(prop => {
+
     const value = doc.querySelector(`meta[property="${prop}"]`)?.getAttribute('content')
     let el = document.querySelector(`meta[property="${prop}"]`)
 
@@ -76,6 +77,34 @@ function updateHead(html) {
     el.setAttribute('content', value || '')
 
   })
+
+  const twitterProps = ['twitter:card','twitter:title','twitter:description','twitter:image','twitter:creator'] // twitter
+
+  twitterProps.forEach(name => {
+
+    const value = doc.querySelector(`meta[name="${name}"]`)?.getAttribute('content')
+    let el = document.querySelector(`meta[name="${name}"]`)
+
+    if (!el) {
+      el = document.createElement('meta')
+      el.setAttribute('name', name)
+      document.head.appendChild(el)
+    }
+
+    el.setAttribute('content', value || '')
+
+  })
+
+  const ldScript = doc.querySelector('script[type="application/ld+json"]') // json-ld
+  let existingLd = document.querySelector('script[type="application/ld+json"]')
+
+  if (!existingLd) {
+    existingLd = document.createElement('script')
+    existingLd.type = 'application/ld+json'
+    document.head.appendChild(existingLd)
+  }
+
+  existingLd.textContent = ldScript?.textContent || ''
 
 }
 
