@@ -25,65 +25,100 @@ async function loadNote(slug) {
   if (!slug) { noteContent.value = ''; return }
   try {
     const res = await fetch(`/posts/${slug}/`)
+    const html = await res.text()
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-    noteContent.value = await res.text()
+    noteContent.value = html
+    updateHead(html)
   } catch (e) {
     noteContent.value = `<p>error cargando la nota</p>`
     console.error(`error fetching slug "${slug}":`, e)
   }
 }
 
+function updateHead(html) {
+
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, 'text/html')
+  document.title = doc.querySelector('title')?.textContent || ''
+  const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href')
+  let canonicalEl = document.querySelector('link[rel="canonical"]')
+
+  if (!canonicalEl) {
+    canonicalEl = document.createElement('link')
+    canonicalEl.setAttribute('rel', 'canonical')
+    document.head.appendChild(canonicalEl)
+  }
+
+  canonicalEl.setAttribute('href', canonical || window.location.href)
+
+  const description = doc.querySelector('meta[name="description"]')?.getAttribute('content')
+  let descEl = document.querySelector('meta[name="description"]')
+
+  if (!descEl) {
+    descEl = document.createElement('meta')
+    descEl.setAttribute('name', 'description')
+    document.head.appendChild(descEl)
+  }
+
+  descEl.setAttribute('content', description || '')
+
+  const ogProps = ['og:title', 'og:description', 'og:image']
+  ogProps.forEach(prop => {
+    const value = doc.querySelector(`meta[property="${prop}"]`)?.getAttribute('content')
+    let el = document.querySelector(`meta[property="${prop}"]`)
+
+    if (!el) {
+      el = document.createElement('meta')
+      el.setAttribute('property', prop)
+      document.head.appendChild(el)
+    }
+
+    el.setAttribute('content', value || '')
+
+  })
+
+}
+
 watch(
-
-  () => route.params.slug,  
-
+  () => route.params.slug,
   async slug => {
 
     await nextTick()
-
     switch (true) {
 
       // first load without note
       case !slug && firstLoad:
-
         runShader('intro')
         noteLoaded = false
         firstLoad = false
         lastSlug = null
-
         break
 
       // first note load
       case slug && !noteLoaded && !firstLoad:
-
         runShader('outro')
         await loadNote(slug)
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        
         break
 
       // first load from url
       case slug && !noteLoaded && firstLoad:
-
         runShader('direct')
         await loadNote(slug)
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        
         break
       
       // loaded note change
       case slug && noteLoaded && lastSlug !== slug:
-
         runShader('transition')
         setTimeout(async () => { await loadNote(slug) }, 1300)
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-
         break
 
     }
