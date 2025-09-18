@@ -283,58 +283,71 @@ function updateGermInv(total) {           // next germ frame inverted
 }
 
 function updateSwipe() {                  // next swipe frame 
-  
   const line = Math.floor(transFrame)
   tmpMask.fill(0)
 
-  const t = performance.now() * 0.01
-  const verticalShift = Math.floor(t)
+  const t = performance.now() * 0.001
+  const scroll = t * 20
 
   if (transPhase === 0) {
 
     for (let y = 0; y < rows; y++) {
 
-      const n = noiseMap[((y + verticalShift) % rows) * cols]
-      const noiseOffset = Math.floor(Math.sin(t + n * 5) + 1)
-      const xLimit = Math.min(line + noiseOffset, cols - 1)
+      const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
+      const frac = scroll % 1
 
+      const n0 = noiseMap[idx]
+      const n1 = noiseMap[(idx + 1) % (rows * cols)]
+      const n = n0 * (1 - frac) + n1 * frac
+
+      const wave = Math.sin(y * 0.25 + t * 2 + n * 2)
+      const noiseOffset = Math.floor(n * 4 + wave * 2)
+
+      const xLimit = Math.min(line + noiseOffset, cols - 1)
       for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
 
     }
+
   } else if (transPhase === 1) {
 
     for (let y = 0; y < rows; y++) {
 
-      const n = noiseMap[((y + verticalShift) % rows) * cols]
-      const noiseOffset = Math.floor(Math.sin(t + n * 5) + 1)
+      const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
+      const frac = scroll % 1
+      const n0 = noiseMap[idx]
+      const n1 = noiseMap[(idx + 1) % (rows * cols)]
+      const n = n0 * (1 - frac) + n1 * frac
+
+      const wave = Math.cos(y * 0.25 - t * 2 + n * 2)
+      const noiseOffset = Math.floor(n * 4 + wave * 2)
+
       const xStart = Math.max(line - noiseOffset, 0)
-       
       for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
 
     }
+
   }
 
-  transFrame += 1.0;
+  transFrame += 1.0
 
   if (transFrame >= cols) {
 
     if (transPhase === 0) {
 
-      transPhase = 1;
-      transFrame = 0;
-      baseMask.set(tmpMask);
+      transPhase = 1
+      transFrame = 0
+      baseMask.set(tmpMask)
 
     } else if (transPhase === 1) {
 
-      baseMask.fill(0);
-      tmpMask.fill(0);
-      transFrame = cols;
-      transPhase = 1;
+      baseMask.fill(0)
+      tmpMask.fill(0)
+      transFrame = cols
+      transPhase = 1
 
     }
 
   }
-  
 }
 
 function expandMask(src, dst, steps) {    // next mask frame 
