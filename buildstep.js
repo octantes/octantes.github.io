@@ -171,9 +171,13 @@ for (const slug of postDirs) {
   indexItems.push({
     slug,
     title: attributes.title || slug,
+    description: attributes.description || '',
     date: attributes.date || '',
     tags: attributes.tags || [],
-    url: `/posts/${slug}/`
+    url: `/posts/${slug}/`,
+    type: attributes.type || 'note',
+    image: attributes.portada 
+      ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
   })
 
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Shader from '../recursos/shader.vue'
 
@@ -9,6 +9,27 @@ const noteContent = ref('')
 let noteLoaded = false
 let firstLoad = true
 let lastSlug = null
+
+const postsIndex = ref([])
+const currentPost = ref(null)
+
+const components = {
+  note: Note,
+  design: Design,
+  music: Music,
+  dev: Dev
+}
+
+const currentComponent = computed (() =>
+  currentPost.value?.type ? components[currentPost.value.type] : components.note
+)
+
+async function fetchIndex() {
+  try {
+    const res = await fetch('/index.json')
+    postsIndex.value = await res.json()
+  } catch {}
+}
 
 function runShader(state) {
   switch (state) {
@@ -22,7 +43,8 @@ function runShader(state) {
 }
 
 async function loadNote(slug) {
-  if (!slug) { noteContent.value = ''; return }
+  if (!slug) { noteContent.value = ''; currentPost.value = null; return }
+  currentPost.value = postsIndex.value.find(p => p.slug === slug) || { type: 'note' }
   try {
     const res = await fetch(`/posts/${slug}/`)
     const html = await res.text()
@@ -113,6 +135,8 @@ watch(
   async slug => {
 
     await nextTick()
+    if (!postsIndex.value.length) await fetchIndex()
+  
     switch (true) {
 
       // first load without note
@@ -160,6 +184,7 @@ watch(
 <template>
   <div class="post">
     <Shader class ="shader" ref="shaderRef"/>
+    <component :is="currentComponent" :html="noteContent" />
     <div class="content">
       <div class="text" v-if="noteContent" v-html="noteContent"></div>
     </div>
