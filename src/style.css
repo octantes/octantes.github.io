@@ -5,7 +5,6 @@ html, body, #octantes {
   padding: 0;
   height: 100%;
   width: 100%;
-  font-family: sans-serif;
 }
 
 *, *::before, *::after {
@@ -17,4 +16,41 @@ html, body, #octantes {
   flex-direction: column;
   height: 100%;
   width: 100%;
+}
+
+body { font-family: 'Outfit', sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+code, pre { font-family: 'Inconsolata', monospace; }
+strong { color: #986C98; }
+i { color: #8AB6BB; }
+
+a { 
+  font-family: 'Outfit';
+  background: linear-gradient(125deg, #8AB6BB, #986C98);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: underline;
+  text-decoration-color: #8AB6BB80;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.25s ease;
+}
+
+a:hover { 
+  background: linear-gradient(250deg, #8AB6BB, #986C98);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: underline;
+  text-decoration-color: #986C9880;
+}
+
+::selection {
+  background-color: #986C98;
+  color: #1B1C1C;
+}
+
+::-moz-selection {
+  background-color: #986C98;
+  color: #1B1C1C;
 }

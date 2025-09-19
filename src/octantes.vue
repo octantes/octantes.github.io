@@ -8,7 +8,6 @@ import Footer from './01/footer.vue'
     <div class="layout">
         <Navigation class="navigation"/>
         <RouterView class="content"/>
-        <!--<Test class="content"/>-->
     </div>
     <div class="footer">
         <Footer/>

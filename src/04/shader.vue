@@ -544,7 +544,7 @@ function drawFrame(ts) {                                        // draws shader
   if (!ctx) return
   const total = rows * cols
 
-  ctx.font = `${fontSize}px 'Gohu Mono', monospace`
+  ctx.font = `${fontSize}px monospace`
   ctx.textBaseline = 'top'
   ctx.textAlign = 'left'
 
@@ -662,8 +662,6 @@ onBeforeUnmount ( () => {
 </template>
 
 <style>
-
-@import url('https://font.gohu.org/css2?family=Gohu+Mono&display=swap');
 
 .container {
   width: 100%;
