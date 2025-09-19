@@ -1,45 +1,33 @@
 <script setup>
 import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import Shader from '../recursos/shader.vue'
+import Shader from '../04/shader.vue'
+import A2 from '../02/A2.vue'
+import S6 from '../02/S6.vue'
+import S7 from '../02/S7.vue'
+import N9 from '../02/N9.vue'
+
+const components = { dev: A2, note: S6, design: S7, music: N9 }
 
 const route = useRoute()
 const shaderRef = ref(null)
+const postsIndex = ref([])
 const noteContent = ref('')
+const currentPost = ref(null)
+
 let noteLoaded = false
 let firstLoad = true
 let lastSlug = null
-
-const postsIndex = ref([])
-const currentPost = ref(null)
-
-const components = {
-  note: Note,
-  design: Design,
-  music: Music,
-  dev: Dev
-}
 
 const currentComponent = computed (() =>
   currentPost.value?.type ? components[currentPost.value.type] : components.note
 )
 
-async function fetchIndex() {
+async function loadIndex() {
   try {
     const res = await fetch('/index.json')
     postsIndex.value = await res.json()
   } catch {}
-}
-
-function runShader(state) {
-  switch (state) {
-    case 'intro':         shaderRef.value?.runIntro();        break          // only on first page load
-    case 'static':        shaderRef.value?.runStatic();       break          // when in between states
-    case 'outro':         shaderRef.value?.runOutro();        break          // only on first note load
-    case 'transition':    shaderRef.value?.runTransition();   break          // when switching note
-    case 'direct':        shaderRef.value?.runDirect();       break          // when loading from url
-    case 'hidden':        shaderRef.value?.runHidden();       break          // when note is loaded
-  }
 }
 
 async function loadNote(slug) {
@@ -131,43 +119,54 @@ function updateHead(html) {
 }
 
 watch(
+
   () => route.params.slug,
+
   async slug => {
 
     await nextTick()
-    if (!postsIndex.value.length) await fetchIndex()
+
+    if (!postsIndex.value.length) await loadIndex()
   
     switch (true) {
 
-      // first load without note
+      // first load without note, INTRO only on first page load
+
       case !slug && firstLoad:
-        runShader('intro')
+
+        shaderRef.value?.runIntro()
         noteLoaded = false
         firstLoad = false
         lastSlug = null
         break
 
-      // first note load
+      // first note load, OUTRO only on first note load
+
       case slug && !noteLoaded && !firstLoad:
-        runShader('outro')
+
+        shaderRef.value?.runOutro()
         await loadNote(slug)
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
         break
 
-      // first load from url
+      // first load from url, DIRECT when loading from url
+
       case slug && !noteLoaded && firstLoad:
-        runShader('direct')
+
+        shaderRef.value?.runDirect()
         await loadNote(slug)
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
         break
       
-      // loaded note change
+      // loaded note change, TRANSITION when switching note
+
       case slug && noteLoaded && lastSlug !== slug:
-        runShader('transition')
+
+        shaderRef.value?.runTransition()
         setTimeout(async () => { await loadNote(slug) }, 1300)
         noteLoaded = true
         firstLoad = false
@@ -184,9 +183,8 @@ watch(
 <template>
   <div class="post">
     <Shader class ="shader" ref="shaderRef"/>
-    <component :is="currentComponent" :html="noteContent" />
     <div class="content">
-      <div class="text" v-if="noteContent" v-html="noteContent"></div>
+      <component :is="currentComponent" :html="noteContent" />
     </div>
   </div>
 </template>
@@ -216,26 +214,6 @@ watch(
   height: 100%;
   width: 100%;
   padding: 0rem 1rem;
-}
-
-.text {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 1;
-  color: #AAABAC;
-  font-size: 1rem;
-  line-height: 1.5;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  padding: 1rem;
-}
-
-.text img {
-  display: block;
-  max-width: 100%;
-  height: auto;
 }
 
 </style>

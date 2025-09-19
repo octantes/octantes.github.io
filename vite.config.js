@@ -4,11 +4,6 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [ vue() ],
-  resolve: {
-    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
-  },
-  build: {
-    outDir: 'dist', // carpeta de build
-    emptyOutDir: true, // limpia dist antes de buildear
-  },
+  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) }, },
+  build: { outDir: 'dist', emptyOutDir: true, },
 })

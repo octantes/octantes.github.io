@@ -1,6 +1,6 @@
 <script setup>
-import Navigation from './visores/navigation.vue'
-import Footer from './visores/footer.vue'
+import Navigation from './01/navigation.vue'
+import Footer from './01/footer.vue'
 </script>
 
 <template>
