@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "test",
+    "title": "test",
+    "description": "",
+    "date": "",
+    "tags": [],
+    "url": "/posts/test/",
+    "type": "note",
+    "image": "https://octantes.github.io/posts/test/portal.webp"
+  },
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "date": "",
+    "tags": [],
+    "url": "/posts/octantes/",
+    "type": "note",
+    "image": ""
+  }
+]
