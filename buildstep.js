@@ -22,8 +22,7 @@ function renderType(body, type, portada) {
       let assetBlock = parts[0] || ''
       let noteBlock = parts.slice(1).join('[!TEXT]')
 
-      // renderizar y quitar <p> que contienen solo <img>
-      const renderedAssets = md.render(assetBlock).replace(/<p>\s*(<img[^>]+\/?>)\s*<\/p>/gi, '$1')
+      const renderedAssets = md.render(assetBlock).replace(/<p>\s*((?:<img[^>]+\/?>\s*)+)<\/p>/gi, '$1')
 
       return `
         <div class="S7">
@@ -169,10 +168,10 @@ for (const slug of postDirs) {
 
     let htmlContent = renderType(body, attributes.type, attributes.portada)
 
-    htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) =>
+    htmlContent = htmlContent.replace(/<img\s+([^>]+?)\/?>/gi, (match, attrs) =>
       processImgTag(attrs, slug, attributes.portada)
     )
-
+    
     const title = attributes.title || slug
     const description = attributes.description || ''
     const portada = attributes.portada
