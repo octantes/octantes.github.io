@@ -4,18 +4,28 @@ import Footer from './01/footer.vue'
 </script>
 
 <template>
+
   <div class="pagina">
+
     <div class="layout">
+
         <Navigation class="navigation"/>
-        <RouterView class="content"/>
+        <RouterView class="articulos"/>
+
     </div>
+
     <div class="footer">
+
         <Footer/>
+        
     </div>
+
   </div>
+
 </template>
 
 <style>
+
 .layout {
   display: grid;
   grid-template-columns: 5fr 3fr;
@@ -25,6 +35,7 @@ import Footer from './01/footer.vue'
   min-height: 0;
   gap: 1rem;
 }
+
 .pagina {
   display: flex;
   flex-direction: column;
@@ -33,24 +44,32 @@ import Footer from './01/footer.vue'
   padding: 1rem;
   gap: 1rem;
 }
-.content {
+
+.articulos {
   flex: 1 1 auto;
   overflow-y: auto;
   min-height: 0;
 }
+
 @media (max-width: 1080px) {
+
   .pagina {
     height: auto;
   }
+
   .layout {
     grid-template-columns: 1fr;
     grid-auto-rows: auto 1fr;
   }
+
   .navigation {
     height: auto;
   }
+
   .content {
     aspect-ratio: 3/4;
   }
+
 }
+
 </style>

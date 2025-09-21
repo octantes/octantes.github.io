@@ -20,12 +20,17 @@ onMounted(async () => {
 function openNote(slug) {
   router.push({ path: `/notes/${slug}` })
 }
+
 </script>
 
 <template>
+
   <div class="navigation">
+
     <h1>navegacion</h1>
+
     <table>
+
       <thead>
         <tr>
           <th>título</th>
@@ -34,6 +39,7 @@ function openNote(slug) {
           <th>link</th>
         </tr>
       </thead>
+
       <tbody>
         <tr v-for="note in notes" :key="note.slug">
           <td>{{ note.title }}</td>
@@ -42,11 +48,15 @@ function openNote(slug) {
           <td><button @click="openNote(note.slug)">ver</button></td>
         </tr>
       </tbody>
+
     </table>
+    
   </div>
+
 </template>
 
 <style>
+
 .navigation {
   display: flex;
   flex-direction: column;
@@ -55,4 +65,5 @@ function openNote(slug) {
   padding: 1rem;
   border: 1px solid #AAABAC;
 }
+
 </style>

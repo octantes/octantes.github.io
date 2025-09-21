@@ -7,10 +7,6 @@ html, body, #octantes {
   width: 100%;
 }
 
-*, *::before, *::after {
-  box-sizing: inherit;
-}
-
 #octantes > .root {
   display: flex;
   flex-direction: column;
@@ -18,11 +14,18 @@ html, body, #octantes {
   width: 100%;
 }
 
-body { font-family: 'Outfit', sans-serif; }
+*, *::before, *::after { box-sizing: inherit; }
+
+/* fonts and styles */
+
+body, i, strong { font-family: 'Outfit', sans-serif; }
 h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
 code, pre { font-family: 'Inconsolata', monospace; }
+
 strong { color: #986C98; }
-i { color: #8AB6BB; }
+i { color: #8AB6BB; margin: 0.1rem; }
+
+/* links */
 
 a { 
   font-family: 'Outfit';
@@ -45,12 +48,12 @@ a:hover {
   text-decoration-color: #986C9880;
 }
 
-::selection {
-  background-color: #986C98;
-  color: #1B1C1C;
-}
+/* highlighting */
 
-::-moz-selection {
-  background-color: #986C98;
-  color: #1B1C1C;
-}
+::selection { background-color: #986C98; color: #1B1C1C; }
+::-moz-selection { background-color: #986C98; color: #1B1C1C; }
+
+/* scrollbars */
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background-color: #986C9820; }
