@@ -67,7 +67,8 @@ import Footer from './01/footer.vue'
   }
 
   .content {
-    aspect-ratio: 3/4;
+    /*aspect-ratio: 3/4;*/
+    min-height: 60rem;
   }
 
 }

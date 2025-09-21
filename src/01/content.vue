@@ -203,7 +203,7 @@ watch(
   height: 100%;
   width: 100%;
   background-color: #1B1C1C;
-  border: 1px solid #AAABAC;
+  border: 1px solid #AAABAC25;
   overflow-x: hidden;
 }
 
