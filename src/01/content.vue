@@ -184,12 +184,11 @@ watch(
 
   <div class="post">
 
-    <!--<Shader class ="shader" ref="shaderRef"/>-->
+    <Shader class ="shader" ref="shaderRef"/>
     
     <div class="content">
 
-      <!--<component :is="currentComponent" :html="noteContent" />-->
-      <S7/>
+      <component :is="currentComponent" :html="noteContent" />
 
     </div>
 

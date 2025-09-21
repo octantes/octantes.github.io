@@ -12,6 +12,36 @@ const cacheFile = path.resolve('.build-cache.json')
 const siteUrl = 'https://octantes.github.io'
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 
+function renderType(body, type, portada) {
+
+  switch (type) {
+
+    case 'design': {
+
+      let parts = body.split('[!TEXT]') // separar assets de texto con [!S7TEXT]
+      let assetBlock = parts[0] || ''
+      let noteBlock = parts.slice(1).join('[!TEXT]')
+
+      // renderizar y quitar <p> que contienen solo <img>
+      const renderedAssets = md.render(assetBlock).replace(/<p>\s*(<img[^>]+\/?>)\s*<\/p>/gi, '$1')
+
+      return `
+        <div class="S7">
+          ${renderedAssets}
+        </div>
+        ${noteBlock ? `<div class="S7TEXT">${md.render(noteBlock)}</div>` : ''}
+      `
+    }
+
+    case 'dev': return `<div class="A2">${md.render(body)}</div>`
+    case 'note': return `<div class="S6">${md.render(body)}</div>`
+    case 'music': return `<div class="N9">${md.render(body)}</div>`
+    default: return `<div class="S6">${md.render(body)}</div>`
+
+  }
+
+}
+
 // read or create new hash cache file
 
 let cache = {}
@@ -137,7 +167,7 @@ for (const slug of postDirs) {
 
   if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
 
-    let htmlContent = md.render(body)
+    let htmlContent = renderType(body, attributes.type, attributes.portada)
 
     htmlContent = htmlContent.replace(/<img\s+([^>]+?)>/g, (match, attrs) =>
       processImgTag(attrs, slug, attributes.portada)
