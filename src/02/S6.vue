@@ -19,7 +19,7 @@ defineProps({ html: String })
   line-height: 1.5;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .text img {

@@ -55,5 +55,5 @@ a:hover {
 
 /* scrollbars */
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background-color: #986C9820; }
+::-webkit-scrollbar { background-color: #3C3C3C; width: 4px; }
+::-webkit-scrollbar-thumb { background-color: #986C98; }
