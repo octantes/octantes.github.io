@@ -24,18 +24,13 @@ function renderType(body, type, portada) {
 
       const renderedAssets = md.render(assetBlock).replace(/<p>\s*((?:<img[^>]+\/?>\s*)+)<\/p>/gi, '$1')
 
-      return `
-        <div class="S7">
-          ${renderedAssets}
-        </div>
-        ${noteBlock ? `<div class="S7TEXT">${md.render(noteBlock)}</div>` : ''}
-      `
+      return `${renderedAssets}${ noteBlock ? `<div class="S7TEXT">${md.render(noteBlock)}</div>` : ''}`
     }
 
-    case 'dev': return `<div class="A2">${md.render(body)}</div>`
-    case 'note': return `<div class="S6">${md.render(body)}</div>`
-    case 'music': return `<div class="N9">${md.render(body)}</div>`
-    default: return `<div class="S6">${md.render(body)}</div>`
+    case 'dev': return md.render(body)
+    case 'note': return md.render(body)
+    case 'music': return md.render(body)
+    default: return md.render(body)
 
   }
 
