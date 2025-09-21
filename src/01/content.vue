@@ -181,12 +181,19 @@ watch(
 </script>
 
 <template>
+
   <div class="post">
-    <!--<Shader class ="shader" ref="shaderRef"/>-->
+
+    <Shader class ="shader" ref="shaderRef"/>
+    
     <div class="content">
+
       <component :is="currentComponent" :html="noteContent" />
+
     </div>
+
   </div>
+
 </template>
 
 <style>
@@ -213,7 +220,6 @@ watch(
   top: 0; left: 0;
   height: 100%;
   width: 100%;
-  padding: 0rem 1rem;
 }
 
 </style>
