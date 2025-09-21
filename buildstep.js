@@ -161,7 +161,7 @@ for (const slug of postDirs) {
 
   if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
 
-    let htmlContent = renderType(body, attributes.type, attributes.portada)
+    let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
 
     htmlContent = htmlContent.replace(/<img\s+([^>]+?)\/?>/gi, (match, attrs) =>
       processImgTag(attrs, slug, attributes.portada)

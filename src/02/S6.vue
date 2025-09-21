@@ -18,7 +18,7 @@ defineProps({ html: String })
   line-height: 1.5;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding: 2rem 2rem 0rem 2rem;
+  padding: 1.5rem 2rem 0rem 2rem;
 }
 
 .S6 img {

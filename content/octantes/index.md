@@ -6,12 +6,6 @@ cerradura:
   - "[[°web]]"
 type: note
 ---
-
-<img src="https://octantes.github.io/posts/test/portal.webp" width="1200" height="630" loading="lazy" alt="holahola">
-<img src="https://octantes.github.io/posts/test/portal.webp" width="1200" height="630" loading="lazy" alt="holahola">
-<img src="https://octantes.github.io/posts/test/portal.webp" width="1200" height="630" loading="lazy" alt="holahola">
-<img src="https://octantes.github.io/posts/test/portal.webp" width="1200" height="630" loading="lazy" alt="holahola">
-
 en versiones previas de la pagina, la **estética** era un problema importante a consolidar
 la idea de *contener universos estéticos amplios* chocaba con la definición de un estilo
 para resolver esto, tome como referencia la expresión mínima de una interfaz: las CLI
