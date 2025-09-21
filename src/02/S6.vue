@@ -4,14 +4,13 @@ defineProps({ html: String })
 
 <template>
 
-  <div class="text" v-html="html"></div>
+  <div class="S6" v-html="html"></div>
 
 </template>
 
 <style>
 
-.text {
-  height: 100%;
+.S6 {
   width: 100%;
   z-index: 1;
   color: #AAABAC;
@@ -19,10 +18,10 @@ defineProps({ html: String })
   line-height: 1.5;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding: 2rem;
+  padding: 2rem 2rem 0rem 2rem;
 }
 
-.text img {
+.S6 img {
   display: block;
   max-width: 100%;
   height: auto;

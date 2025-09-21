@@ -67,10 +67,11 @@ import Footer from './01/footer.vue'
   }
 
   .content {
-    /*aspect-ratio: 3/4;*/
-    min-height: 60rem;
+    aspect-ratio: 3/4;
   }
-
+  
+  .articulos::-webkit-scrollbar-thumb { background-color: #8ab6bb; }
+  
 }
 
 </style>

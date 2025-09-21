@@ -184,11 +184,12 @@ watch(
 
   <div class="post">
 
-    <Shader class ="shader" ref="shaderRef"/>
+    <!--<Shader class ="shader" ref="shaderRef"/>-->
     
     <div class="content">
 
-      <component :is="currentComponent" :html="noteContent" />
+      <!--<component :is="currentComponent" :html="noteContent" />-->
+      <S7/>
 
     </div>
 
@@ -220,6 +221,16 @@ watch(
   top: 0; left: 0;
   height: 100%;
   width: 100%;
+}
+
+.content::after {
+  content: '';
+  display: block;
+  height: 3rem;
+  margin-top: -1rem;
+  background: linear-gradient(to bottom, #1B1C1C00 0%, #1B1C1CFF 100%);
+  position: sticky;
+  bottom: 0;
 }
 
 </style>
