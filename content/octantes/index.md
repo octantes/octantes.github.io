@@ -4,6 +4,7 @@ id:
   - llave
 cerradura:
   - "[[°web]]"
+type: note
 ---
 
 <img src="https://octantes.github.io/posts/test/portal.webp" width="1200" height="630" loading="lazy" alt="holahola">
