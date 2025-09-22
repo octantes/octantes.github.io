@@ -7,14 +7,15 @@ const authors = {
     octantes: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
 }
 
-const data = computed(() => ({
-    ...metadata,
-    portada: metadata?.portada || 'https://octantes.github.io/posts/test/portal.webp',
-    title: metadata?.title || 'titulo del post',
-    description: metadata?.description || 'descripcion del post derivada de las primeras lineas descripcion del post derivada de las primeras lineas',
-    handle: metadata?.handle || 'kaste',
-    date: metadata?.date || '10/10/25',
-}))
+const data = computed(() => {
+    return {
+        portada: metadata?.image || 'https://octantes.github.io/posts/test/portal.webp',
+        title: metadata?.title || 'titulo del post',
+        description: metadata?.description || 'descripcion del post derivada de las primeras lineas descripcion del post derivada de las primeras lineas',
+        handle: metadata?.handle || 'kaste',
+        date: metadata?.date || '10/10/25',
+    }
+})
 
 const author = computed( () => authors[data.value.handle] || { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' } )
 function openAuthor() { window.open(author.value.link, '_blank') }
@@ -29,12 +30,12 @@ function openAuthor() { window.open(author.value.link, '_blank') }
 
         <div class="info">
             
-            <div class="title">{{ data.title }}</div>
-            <div class="description">{{ data.description }}</div>
+            <div class="title">{{ data.value.title }}</div>
+            <div class="description">{{ data.value.description }}</div>
             <hr />
             <div class="profile" @click="openAuthor">
-                <img class="author" :src="author.img" />
-                <span>@{{ data.handle }} - {{ data.date }}</span>
+                <img class="author" :src="author.value.img" />
+                <span>@{{ data.value.handle }} - {{ data.value.date }}</span>
             </div>
 
         </div>
@@ -42,7 +43,7 @@ function openAuthor() { window.open(author.value.link, '_blank') }
     </div>
 
     <div class="cover">
-        <img :src="data.portada" alt="" />
+        <img :src="data.value.portada" alt="" />
     </div>  
 
   </div>
