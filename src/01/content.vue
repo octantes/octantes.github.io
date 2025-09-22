@@ -39,6 +39,7 @@ async function loadNote(slug) {
     const html = await res.text()
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
     noteContent.value = html
+    console.log('currentPost', currentPost.value)
     updateHead(html)
   } catch (e) {
     noteContent.value = `<p>error cargando la nota</p>`
