@@ -8,11 +8,12 @@ const authors = {
 }
 
 const data = computed(() => ({
-  portada: metadata?.portada || 'https://octantes.github.io/posts/test/portal.webp',
-  title: metadata?.title || 'titulo del post',
-  description: metadata?.description || 'descripcion del post derivada de las primeras lineas descripcion del post derivada de las primeras lineas',
-  handle: 'kaste',
-  date: '10/10/25'
+    ...metadata,
+    portada: metadata?.portada || 'https://octantes.github.io/posts/test/portal.webp',
+    title: metadata?.title || 'titulo del post',
+    description: metadata?.description || 'descripcion del post derivada de las primeras lineas descripcion del post derivada de las primeras lineas',
+    handle: metadata?.handle || 'kaste',
+    date: metadata?.date || '10/10/25',
 }))
 
 const author = computed( () => authors[data.value.handle] || { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' } )
