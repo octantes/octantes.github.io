@@ -134,10 +134,10 @@ watch(
       // first load without note, INTRO only on first page load
 
       case !slug && firstLoad:
-
-        shaderRef.value?.runIntro()
+        
         noteLoaded = false
         firstLoad = false
+        shaderRef.value?.runIntro()
         lastSlug = null
         break
 
@@ -145,10 +145,10 @@ watch(
 
       case slug && !noteLoaded && !firstLoad:
 
-        shaderRef.value?.runOutro()
-        await loadNote(slug)
         noteLoaded = true
         firstLoad = false
+        shaderRef.value?.runOutro()
+        await loadNote(slug)
         lastSlug = slug
         break
 
@@ -156,10 +156,10 @@ watch(
 
       case slug && !noteLoaded && firstLoad:
 
-        shaderRef.value?.runDirect()
-        await loadNote(slug)
         noteLoaded = true
         firstLoad = false
+        shaderRef.value?.runDirect()
+        await loadNote(slug)
         lastSlug = slug
         break
       
@@ -167,10 +167,10 @@ watch(
 
       case slug && noteLoaded && lastSlug !== slug:
 
-        shaderRef.value?.runTransition()
-        setTimeout(async () => { await loadNote(slug) }, 1300)
         noteLoaded = true
         firstLoad = false
+        shaderRef.value?.runTransition()
+        setTimeout(async () => { await loadNote(slug) }, 1300)
         lastSlug = slug
         break
 
