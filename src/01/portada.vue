@@ -64,9 +64,9 @@ function openAuthor() { window.open(author.value.link, '_blank') }
     font-family: 'Inconsolata';
     display: flex; flex-direction: column;
     justify-content: center;
+    width: 100%; height: 100%;
     padding: 1.5rem;
     min-width: 50%;
-    width: 100%;
     gap: 1rem;
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
