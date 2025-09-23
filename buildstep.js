@@ -219,7 +219,7 @@ for (const slug of postDirs) {
     portada: attributes.portada ? `${siteUrl}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : '',
     handle: attributes.handle || 'kaste',
     date: attributes.date || '',
-    url: `/posts/${slug}/`,
+    url: `/posts/${type}/${slug}/`,
   })
 
 }
