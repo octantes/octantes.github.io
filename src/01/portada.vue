@@ -60,8 +60,8 @@ const data = computed(() => {
 .cover img { display: block; width: 100%; height: 100%; object-fit: cover;}
 .cover:hover { filter: grayscale() }
 
-.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; transition: background-color 0.3s ease; }
-.text:hover { background-color: #1B1C1C15; }
+.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; transition: filter 0.3s ease; }
+.text:hover { filter: brightness(90%); }
 
 .info {
     font-family: 'Inconsolata';
