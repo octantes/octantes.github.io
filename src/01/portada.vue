@@ -53,14 +53,15 @@ const data = computed(() => {
 <style>
 
 .card { display: flex; flex-direction: row; width: 100%; align-items: stretch; }
-.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; }
 .title { font-size: 1.25rem; }
 .description { font-style: italic; }
 .author { width: 25px; height: auto; border-radius: 50%; }
-
 .cover { max-width: 50%; background-color: #986C98; transition: filter .5s ease;}
 .cover img { display: block; width: 100%; height: 100%; object-fit: cover;}
 .cover:hover { filter: grayscale() }
+
+.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; transition: background-color 0.3s ease; }
+.text:hover { background-color: #1B1C1C15; }
 
 .info {
     font-family: 'Inconsolata';
@@ -70,10 +71,10 @@ const data = computed(() => {
     padding: 1.5rem;
     min-width: 50%;
     gap: 1rem;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease;
 }
 .info hr { border:none; border-top: 1px solid #1B1C1C; margin: 0;  }
-.info:hover { transform: scale(0.99); background-color: #1B1C1C15;}
+.info:hover { transform: scale(0.95); }
 
 .profile { 
     display: inline-flex;
