@@ -1,24 +1,15 @@
 <script setup>
 import { computed } from 'vue'
 
-const metadata = defineProps({ metadata: Object })
+const props = defineProps({ metadata: { type: Object, default: () => ({}) } })
+
 const authors = { 
     kaste: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
     octantes: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
 }
 
-const data = computed(() => {
-    return {
-        portada: metadata?.image || 'https://octantes.github.io/posts/test/portal.webp',
-        title: metadata?.title || 'titulo del post',
-        description: metadata?.description || 'descripcion del post derivada de las primeras lineas descripcion del post derivada de las primeras lineas',
-        handle: metadata?.handle || 'kaste',
-        date: metadata?.date || '10/10/25',
-    }
-})
-
-const author = computed( () => authors[data.value.handle] || { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' } )
-function openAuthor() { window.open(author.value.link, '_blank') }
+const author = computed( () => authors[props.metadata.handle] || { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' } )
+function openAuthor() { window.open(author.value.link, '_blank', 'noopener,noreferrer') }
 
 </script>
 
@@ -30,12 +21,12 @@ function openAuthor() { window.open(author.value.link, '_blank') }
 
         <div class="info">
             
-            <div class="title">{{ data.value.title }}</div>
-            <div class="description">{{ data.value.description }}</div>
+            <div class="title">{{ props.metadata.title || 'titulo de la nota' }}</div>
+            <div class="description">{{ props.metadata.description || 'descripcion de la nota' }}</div>
             <hr />
             <div class="profile" @click="openAuthor">
-                <img class="author" :src="author.value.img" />
-                <span>@{{ data.value.handle }} - {{ data.value.date }}</span>
+                <img class="author" :src="author.img" />
+                <span>@{{ props.metadata.handle || 'kaste' }} - {{ props.metadata.date || '10/10/25' }}</span>
             </div>
 
         </div>
@@ -43,7 +34,7 @@ function openAuthor() { window.open(author.value.link, '_blank') }
     </div>
 
     <div class="cover">
-        <img :src="data.value.portada" alt="" />
+        <img :src="props.metadata.portada || 'https://octantes.github.io/posts/test/portal.webp'" alt="" />
     </div>  
 
   </div>

@@ -28,18 +28,17 @@ async function loadIndex() {
   try {
     const res = await fetch('/index.json')
     postsIndex.value = await res.json()
-  } catch {}
+  } catch { postsIndex.value = [] }
 }
 
 async function loadNote(slug) {
   if (!slug) { noteContent.value = ''; currentPost.value = null; return }
-  currentPost.value = postsIndex.value.find(p => p.slug === slug) || { type: 'note' }
+  currentPost.value = postsIndex.value.find(p => p.slug === slug) || { type: 'note', slug }
   try {
     const res = await fetch(`/posts/${slug}/`)
     const html = await res.text()
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
     noteContent.value = html
-    console.log('currentPost', currentPost.value)
     updateHead(html)
   } catch (e) {
     noteContent.value = `<p>error cargando la nota</p>`
