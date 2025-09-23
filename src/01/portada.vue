@@ -15,7 +15,7 @@ const data = computed(() => {
         description: props.metadata.description || 'descripcion de la nota',
         author: authors[handle] || { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
         date: props.metadata.date || '10/10/25',
-        portada: props.metadata.portada || 'https://octantes.github.io/assets/portada.webp',
+        portada: props.metadata.portada || '',
         handle,
     }
 })
@@ -42,9 +42,9 @@ const data = computed(() => {
 
     </div>
 
-    <div class="cover">
+    <div class="cover" v-if="data.portada">
         <img :src="data.portada" alt="" />
-    </div>  
+    </div>
 
   </div>
 
