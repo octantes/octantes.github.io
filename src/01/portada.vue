@@ -2,14 +2,23 @@
 import { computed } from 'vue'
 
 const props = defineProps({ metadata: { type: Object, default: () => ({}) } })
+function openAuthor() { window.open(data.value.author.link, '_blank', 'noopener,noreferrer') }
 
-const authors = { 
-    kaste: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
-    octantes: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
-}
-
-const author = computed( () => authors[props.metadata.handle] || { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' } )
-function openAuthor() { window.open(author.value.link, '_blank', 'noopener,noreferrer') }
+const data = computed(() => {
+    const handle = props.metadata.handle || 'kaste'
+    const authors = { 
+        kaste: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
+        octantes: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
+    }
+    return {
+        title: props.metadata.title || 'titulo de la nota',
+        description: props.metadata.description || 'descripcion de la nota',
+        author: authors[handle] || { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
+        date: props.metadata.date || '10/10/25',
+        portada: props.metadata.portada || 'https://octantes.github.io/posts/test/portal.webp',
+        handle,
+    }
+})
 
 </script>
 
@@ -21,12 +30,12 @@ function openAuthor() { window.open(author.value.link, '_blank', 'noopener,noref
 
         <div class="info">
             
-            <div class="title">{{ props.metadata.title || 'titulo de la nota' }}</div>
-            <div class="description">{{ props.metadata.description || 'descripcion de la nota' }}</div>
+            <div class="title">{{ data.title }}</div>
+            <div class="description">{{ data.description }}</div>
             <hr />
             <div class="profile" @click="openAuthor">
-                <img class="author" :src="author.img" />
-                <span>@{{ props.metadata.handle || 'kaste' }} - {{ props.metadata.date || '10/10/25' }}</span>
+                <img class="author" :src="data.author.img" />
+                <span>@{{ data.handle }} - {{ data.date }}</span>
             </div>
 
         </div>
@@ -34,7 +43,7 @@ function openAuthor() { window.open(author.value.link, '_blank', 'noopener,noref
     </div>
 
     <div class="cover">
-        <img :src="props.metadata.portada || 'https://octantes.github.io/posts/test/portal.webp'" alt="" />
+        <img :src="data.portada" alt="" />
     </div>  
 
   </div>
@@ -44,7 +53,7 @@ function openAuthor() { window.open(author.value.link, '_blank', 'noopener,noref
 <style>
 
 .card { display: flex; flex-direction: row; width: 100%; align-items: stretch; }
-.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); }
+.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; }
 .title { font-size: 1.25rem; }
 .description { font-style: italic; }
 .author { width: 25px; height: auto; border-radius: 50%; }
