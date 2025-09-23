@@ -35,7 +35,8 @@ async function loadNote(slug) {
   if (!slug) { noteContent.value = ''; currentPost.value = null; return }
   currentPost.value = postsIndex.value.find(p => p.slug === slug) || { type: 'note', slug }
   try {
-    const res = await fetch(`/posts/${slug}/`)
+    const fetchPath = currentPost.value.url || `/posts/${currentPost.value.type || 'note'}/${slug}/`
+    const res = await fetch(fetchPath)
     const html = await res.text()
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
     noteContent.value = html

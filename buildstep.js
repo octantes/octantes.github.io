@@ -53,6 +53,23 @@ try {
 
 } catch { postDirs = []; console.log("Posts directory not found, returning empty array") }
 
+// copiar assets globales a docs/assets
+
+try {
+  const assetsSrc = path.join(contentDir, 'assets')
+  const assetsDest = path.join(outputDir, 'assets')
+  await fs.mkdir(assetsDest, { recursive: true })
+  const assets = await fs.readdir(assetsSrc)
+  for (const asset of assets) {
+    const srcPath = path.join(assetsSrc, asset)
+    const destPath = path.join(assetsDest, asset)
+    await fs.copyFile(srcPath, destPath)
+  }
+  console.log('Assets copied to dist/assets')
+} catch(e) {
+  console.warn('Global assets not copied:', e)
+}
+
 // prepare output directory
 
 const postsDir = path.join(outputDir, 'posts')
@@ -68,18 +85,19 @@ catch {
 // delete orphans from output directory
 
 try {
-
-  const existingDirs = await fs.readdir(postsDir, { withFileTypes: true })
-  for (const dirent of existingDirs) {
-
-    if (!dirent.isDirectory()) continue
-    const slug = dirent.name
-    if (!postDirs.includes(slug)) {
-      await fs.rm(path.join(postsDir, slug), { recursive: true, force: true })
+  const typeDirs = await fs.readdir(postsDir, { withFileTypes: true })
+  for (const tdir of typeDirs) {
+    if (!tdir.isDirectory()) continue
+    const typePath = path.join(postsDir, tdir.name)
+    const children = await fs.readdir(typePath, { withFileTypes: true })
+    for (const child of children) {
+      if (!child.isDirectory()) continue
+      const slug = child.name
+      if (!postDirs.includes(slug)) {
+        await fs.rm(path.join(typePath, slug), { recursive: true, force: true })
+      }
     }
-
   }
-
 } catch { await fs.mkdir(postsDir, { recursive: true }) }
 
 // delete orphans from hash cache file
@@ -95,7 +113,7 @@ for (const key of Object.keys(cache)) {
 
 const indexItems = []
 
-function processImgTag(attrs, slug, portada) {
+function processImgTag(attrs, type, slug, portada) {
 
   const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
@@ -108,7 +126,7 @@ function processImgTag(attrs, slug, portada) {
   if (filename === portada) dimensions = { width: 1200, height: 630 }
   if (/\.(jpe?g|png)$/i.test(filename)) filename = filename.replace(/\.(jpe?g|png)$/i, '.webp')
 
-  const absUrl = `${siteUrl}/posts/${slug}/${filename}`
+  const absUrl = `${siteUrl}/posts/${type}/${slug}/${filename}`
   const altText = altMatch ? altMatch[1] : ''
   
   return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
@@ -127,7 +145,8 @@ for (const slug of postDirs) {
   catch { console.warn(`index.md not found in ${slug}, skipping`); continue }
 
   const { attributes, body } = fm(raw)
-  const noteOutputDir = path.join(postsDir, slug)
+  const type = attributes.type || 'note'
+  const noteOutputDir = path.join(postsDir, type, slug)
   await fs.mkdir(noteOutputDir, { recursive: true })
   const hash = crypto.createHash('sha256').update(raw)
 
@@ -164,15 +183,15 @@ for (const slug of postDirs) {
     let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
 
     htmlContent = htmlContent.replace(/<img\s+([^>]+?)\/?>/gi, (match, attrs) =>
-      processImgTag(attrs, slug, attributes.portada)
+      processImgTag(attrs, type, slug, attributes.portada)
     )
     
     const title = attributes.title || slug
     const description = attributes.description || ''
-    const portada = attributes.portada ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
+    const portada = attributes.portada ? `${siteUrl}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
     const date = attributes.date || new Date().toISOString()
-    const canonicalUrl = `${siteUrl}/notes/${slug}/`
+    const canonicalUrl = `${siteUrl}/notes/${type}/${slug}/`
     const authorJson = handle
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
       : `{"@type":"Person","name":"Desconocido"}`
@@ -197,7 +216,7 @@ for (const slug of postDirs) {
     description: attributes.description || '',
     type: attributes.type || 'note',
     tags: attributes.tags || [],
-    portada: attributes.portada ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : '',
+    portada: attributes.portada ? `${siteUrl}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : '',
     handle: attributes.handle || 'kaste',
     date: attributes.date || '',
     url: `/posts/${slug}/`,
