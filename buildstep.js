@@ -169,11 +169,10 @@ for (const slug of postDirs) {
     
     const title = attributes.title || slug
     const description = attributes.description || ''
-    const portada = attributes.portada
-      ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
-    const canonicalUrl = `${siteUrl}/notes/${slug}/`
+    const portada = attributes.portada ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
     const date = attributes.date || new Date().toISOString()
+    const canonicalUrl = `${siteUrl}/notes/${slug}/`
     const authorJson = handle
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
       : `{"@type":"Person","name":"Desconocido"}`
@@ -196,12 +195,12 @@ for (const slug of postDirs) {
     slug,
     title: attributes.title || slug,
     description: attributes.description || '',
-    date: attributes.date || '',
-    tags: attributes.tags || [],
-    url: `/posts/${slug}/`,
     type: attributes.type || 'note',
-    image: attributes.portada 
-      ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
+    tags: attributes.tags || [],
+    portada: attributes.portada ? `${siteUrl}/posts/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : '',
+    handle: attributes.handle || 'kaste',
+    date: attributes.date || '',
+    url: `/posts/${slug}/`,
   })
 
 }
