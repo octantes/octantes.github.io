@@ -7,15 +7,15 @@ function openAuthor() { window.open(data.value.author.link, '_blank', 'noopener,
 const data = computed(() => {
     const handle = props.metadata.handle || 'kaste'
     const authors = { 
-        kaste: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
-        octantes: { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
+        kaste: { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
+        octantes: { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
     }
     return {
         title: props.metadata.title || 'titulo de la nota',
         description: props.metadata.description || 'descripcion de la nota',
-        author: authors[handle] || { img: 'content/assets/kaste.jpg', link: 'https://x.com/octantes' },
+        author: authors[handle] || { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
         date: props.metadata.date || '10/10/25',
-        portada: props.metadata.portada || 'https://octantes.github.io/posts/test/portal.webp',
+        portada: props.metadata.portada || 'https://octantes.github.io/assets/portada.webp',
         handle,
     }
 })

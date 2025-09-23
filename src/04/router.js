@@ -9,9 +9,9 @@
     },
 
     {
-      path: '/notes/:slug',
+      path: '/notes/:type/:slug',
       component: Content,
-      props: true // pasa el slug como prop para content
+      props: route => ({ slug: route.params.slug, type: route.params.type }) // pasa el slug como prop para content
     },
 
     {
