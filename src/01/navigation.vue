@@ -17,7 +17,7 @@ onMounted(async () => {
   }
 })
 
-function openNote(slug) {
+function openNote(type, slug) {
   router.push({ path: `/notes/${type}/${slug}` })
 }
 
@@ -45,7 +45,7 @@ function openNote(slug) {
           <td>{{ note.title }}</td>
           <td>{{ note.date }}</td>
           <td>{{ note.tags.join(', ') }}</td>
-          <td><button @click="openNote(note.slug)">ver</button></td>
+          <td><button @click="openNote(note.type, note.slug)">ver</button></td>
         </tr>
       </tbody>
 
