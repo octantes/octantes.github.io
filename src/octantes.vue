@@ -53,23 +53,10 @@ import Footer from './01/footer.vue'
 
 @media (max-width: 1080px) {
 
-  .pagina {
-    height: auto;
-  }
-
-  .layout {
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto 1fr;
-  }
-
-  .navigation {
-    height: auto;
-  }
-
-  .content {
-    aspect-ratio: 3/4;
-  }
-  
+  .pagina { height: auto; }
+  .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
+  .navigation { height: auto; }
+  .content { aspect-ratio: 3/4;}
   .articulos::-webkit-scrollbar-thumb { background-color: #8ab6bb; }
   
 }
