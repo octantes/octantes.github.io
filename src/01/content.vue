@@ -211,6 +211,7 @@ watch(
 }
 
 .shader {
+  pointer-events: none;
   position: absolute;
   top: 0; left: 0;
   height: 100%;
