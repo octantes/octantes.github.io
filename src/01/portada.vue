@@ -74,7 +74,7 @@ const data = computed(() => {
     transition: transform 0.3s ease;
 }
 .info hr { border:none; border-top: 1px solid #1B1C1C; margin: 0;  }
-.info:hover { transform: scale(0.95); }
+.info:hover { transform: scale(0.975); }
 
 .profile { 
     display: inline-flex;

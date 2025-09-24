@@ -180,26 +180,33 @@ watch(
   }, { immediate: true }
 
 )
+
 </script>
 
 <template>
 
-  <div class="post">
+  <div class="container">
 
     <Shader class ="shader" ref="shaderRef"/>
     
-    <div class="content">
-
-      <Portada v-if="currentPost" :metadata="currentPost || {}"  />
-      <component :is="currentComponent" :html="noteContent" />
-
+    <div class="post">
+      
+      <div class="content">
+        
+        <Portada v-if="currentPost" :metadata="currentPost || {}" />
+        <component :is="currentComponent" :html="noteContent" />
+        
+      </div>
+      
     </div>
-
+    
   </div>
 
 </template>
 
 <style>
+
+.container { position: relative; }
 
 .post {
   position: relative;
