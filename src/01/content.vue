@@ -40,84 +40,11 @@ async function loadNote(slug) {
     const html = await res.text()
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
     noteContent.value = html
-    updateHead(html)
+    if (currentPost.value.title && currentPost.value.title !== document.title) document.title = currentPost.value.title
   } catch (e) {
     noteContent.value = `<p>error cargando la nota</p>`
     console.error(`error fetching slug "${slug}":`, e)
   }
-}
-
-function updateHead(html) {
-
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(html, 'text/html')
-  document.title = doc.querySelector('title')?.textContent || '' // title
-  const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href') // canonical
-  let canonicalEl = document.querySelector('link[rel="canonical"]')
-
-  if (!canonicalEl) {
-    canonicalEl = document.createElement('link')
-    canonicalEl.setAttribute('rel', 'canonical')
-    document.head.appendChild(canonicalEl)
-  }
-
-  canonicalEl.setAttribute('href', canonical || window.location.href)
-
-  const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') // description
-  let descEl = document.querySelector('meta[name="description"]')
-
-  if (!descEl) {
-    descEl = document.createElement('meta')
-    descEl.setAttribute('name', 'description')
-    document.head.appendChild(descEl)
-  }
-
-  descEl.setAttribute('content', description || '')
-  const ogProps = ['og:type','og:title','og:description','og:url','og:image'] // open graph
-
-  ogProps.forEach(prop => {
-
-    const value = doc.querySelector(`meta[property="${prop}"]`)?.getAttribute('content')
-    let el = document.querySelector(`meta[property="${prop}"]`)
-
-    if (!el) {
-      el = document.createElement('meta')
-      el.setAttribute('property', prop)
-      document.head.appendChild(el)
-    }
-
-    el.setAttribute('content', value || '')
-
-  })
-
-  const twitterProps = ['twitter:card','twitter:title','twitter:description','twitter:image','twitter:creator'] // twitter
-
-  twitterProps.forEach(name => {
-
-    const value = doc.querySelector(`meta[name="${name}"]`)?.getAttribute('content')
-    let el = document.querySelector(`meta[name="${name}"]`)
-
-    if (!el) {
-      el = document.createElement('meta')
-      el.setAttribute('name', name)
-      document.head.appendChild(el)
-    }
-
-    el.setAttribute('content', value || '')
-
-  })
-
-  const ldScript = doc.querySelector('script[type="application/ld+json"]') // json-ld
-  let existingLd = document.querySelector('script[type="application/ld+json"]')
-
-  if (!existingLd) {
-    existingLd = document.createElement('script')
-    existingLd.type = 'application/ld+json'
-    document.head.appendChild(existingLd)
-  }
-
-  existingLd.textContent = ldScript?.textContent || ''
-
 }
 
 watch(

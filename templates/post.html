@@ -2,54 +2,55 @@
 
 <html lang="es">
 
-<head>
+  <head>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{{title}}</title>
+    <title>{{title}}</title>
 
-  <meta name="description" content="{{description}}">
-  <link rel="canonical" href="{{canonicalUrl}}">
+    <meta name="description" content="{{description}}">
+    <link rel="canonical" href="{{canonicalUrl}}">
 
-  <!-- Open Graph -->
+    <!-- Open Graph -->
 
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="{{title}}">
-  <meta property="og:description" content="{{description}}">
-  <meta property="og:url" content="{{canonicalUrl}}">
-  <meta property="og:image" content="{{portada}}">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{title}}">
+    <meta property="og:description" content="{{description}}">
+    <meta property="og:url" content="{{canonicalUrl}}">
+    <meta property="og:image" content="{{portada}}">
 
-  <!-- Twitter Card -->
+    <!-- Twitter Card -->
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{title}}">
-  <meta name="twitter:description" content="{{description}}">
-  <meta name="twitter:image" content="{{portada}}">
-  <meta name="twitter:creator" content="@{{handle}}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{title}}">
+    <meta name="twitter:description" content="{{description}}">
+    <meta name="twitter:image" content="{{portada}}">
+    <meta name="twitter:creator" content="@{{handle}}">
 
-  <!-- JSON-LD Structured Data -->
+    <!-- JSON-LD Structured Data -->
 
-  <script type="application/ld+json">
+    <script type="application/ld+json">
 
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "{{title}}",
-    "description": "{{description}}",
-    "image": "{{portada}}",
-    "url": "{{canonicalUrl}}",
-    "datePublished": "{{date}}",
-    "author": {{authorJson}}
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "{{title}}",
+      "description": "{{description}}",
+      "image": "{{portada}}",
+      "url": "{{canonicalUrl}}",
+      "datePublished": "{{date}}",
+      "author": {{authorJson}}
+    }
 
-  </script>
+    </script>
 
-</head>
+  </head>
 
-<body>
+  <body>
 
-  {{htmlContent}}
-</body>
+    {{htmlContent}}
+    
+  </body>
 
 </html>

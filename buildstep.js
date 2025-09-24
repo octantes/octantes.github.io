@@ -191,7 +191,7 @@ for (const slug of postDirs) {
     const portada = attributes.portada ? `${siteUrl}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
     const date = attributes.date || new Date().toISOString()
-    const canonicalUrl = `${siteUrl}/posts/${type}/${slug}/`
+    const canonicalUrl = `${siteUrl}/${type}/${slug}/`
     const authorJson = handle
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
       : `{"@type":"Person","name":"Desconocido"}`
