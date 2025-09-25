@@ -42,6 +42,9 @@ let transFrame = 0                  // swipe animation line counter
 let transPhase = 0                  // swipe animation direction
 let autoOutro = false               // swipe outro autotrigger
 
+let resolveAnimationEnd = null      // current resolve for animation-end promise
+let currentAnimation = null         // name of current logical animation
+
 const revealMaxFrames = 160         // intro total frames counter
 const borderColor = '#AAABAC'       // active border zone color
 const maxDilateSteps = 32           // outro animation max frames
@@ -49,44 +52,51 @@ const maxDilateSteps = 32           // outro animation max frames
 // HELPERS
 
 function clamp(v, a = 0, b = 1) {         // constrain value 
-
   return Math.min(b, Math.max(a, v))
-
 }
 
 function pickChar() {                     // return character 
-
   return String.fromCharCode(charRangeStart + Math.floor(Math.random() * charRangeMax))
-
 }
 
 function trailAlpha(alpha) {              // returns trail color 
-
   alpha = Math.pow(Math.max(0, alpha), 1.2)
-
   return `rgba(126,189,196,${alpha.toFixed(3)})`
-
 }
 
 function isFrontier(maskArr, x, y) {      // detects border of zone 
-
   const i = y * cols + x
-
   // true if cell is active and one neighbor is not active
   if (!maskArr[i]) return false
   if (x > 0 && !maskArr[i - 1]) return true
   if (x < cols - 1 && !maskArr[i + 1]) return true
   if (y > 0 && !maskArr[i - cols]) return true
   if (y < rows - 1 && !maskArr[i + cols]) return true
-
   return false
+}
 
+function notifyAnimationEnd(value = undefined) {
+  if (resolveAnimationEnd) {
+    try { resolveAnimationEnd(value) } catch (e) {}
+    resolveAnimationEnd = null
+    currentAnimation = null
+  }
+}
+
+// central helper: start an animation, resolving any previous one and returning a new promise
+function startAnim(name, setupFn = () => {}) {
+  // resolve previous if any (so callers awaiting previous won't hang)
+  if (resolveAnimationEnd) notifyAnimationEnd()
+  currentAnimation = name
+  setupFn()
+  return new Promise(resolve => {
+    resolveAnimationEnd = resolve
+  })
 }
 
 // CONTEXT
 
 function setSize() {                      // prepare context 
-
   // container div size
   if (!canvasRef.value || !containerRef.value) return
   const rect = containerRef.value.getBoundingClientRect()
@@ -103,21 +113,15 @@ function setSize() {                      // prepare context
   // transform to normals
   ctx = canvasRef.value.getContext('2d')
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
 }
 
 function updateSize() {                   // update context 
-
   setSize()
-
   fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
-
   setGrid()
-
 }
 
 function setGrid() {                      // create grid + animate rain 
-
   // set size
   cols = Math.max(1, Math.ceil(width / fontSize))
   rows = Math.max(2, Math.ceil(height / fontSize))
@@ -152,7 +156,6 @@ function setGrid() {                      // create grid + animate rain
 // ANIMATIONS
 
 function updatePortal(tick) {             // next portal frame 
-
   // set variables
   const cx = cols / 2
   const cy = rows / 2
@@ -167,11 +170,9 @@ function updatePortal(tick) {             // next portal frame
       portalCodes[idx] = charRangeStart + mod
     }
   }
-
 }
 
 function updateRain() {                   // next rain frame 
-
   for (let c = 0; c < cols; c++) {
     const rowPos = Math.floor(heads[c] + speed)
     heads[c] += speed
@@ -181,11 +182,9 @@ function updateRain() {                   // next rain frame
       charBuffers[c].fill(null)
     }
   }
-  
 }
 
 function updateCircle() {                 // next circle frame 
-
   outroRadius += 1
   circleCells.clear()
   circleFrontier.clear()  
@@ -217,18 +216,14 @@ function updateCircle() {                 // next circle frame
   }
 
   for (let i = 0; i < rows*cols; i++) baseMask[i] = circleCells.has(i) ? 0 : 1
-  
 }
 
 function updateGerm(total) {              // next germ frame 
-
   const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
   for (let i = 0; i < total; i++) baseMask[i] = noiseMap[i] < ratio ? 1 : 0
-
 }
 
 function updateGermInv(total) {           // next germ frame inverted 
-
   const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
 
   for (let i = 0; i < total; i++) {
@@ -280,7 +275,6 @@ function updateGermInv(total) {           // next germ frame inverted
       baseMask.set(newMask)
     }
   }
-
 }
 
 function updateSwipe() {                  // next swipe frame 
@@ -340,7 +334,11 @@ function updateSwipe() {                  // next swipe frame
       if (autoOutro) {
         transPhase = 1
         transFrame = 0
-      } else { mode = 'static' }
+      } else { 
+        mode = 'static'
+        // transition intro finished -> notify
+        notifyAnimationEnd()
+      }
       
     } else if (transPhase === 1) {
 
@@ -349,14 +347,14 @@ function updateSwipe() {                  // next swipe frame
       transFrame = cols
       transPhase = 1
       mode = 'hidden'
-
+      // transition outro/hidden finished -> notify
+      notifyAnimationEnd()
     }
 
   }
 }
 
 function expandMask(src, dst, steps) {    // next mask frame 
-
   dst.set(src)
 
   // for each step, activate neighbors
@@ -382,28 +380,22 @@ function expandMask(src, dst, steps) {    // next mask frame
 
   // returns expanded mask
   return (steps % 2 === 0) ? dst : src
-
 }
 
 // MAIN
 
 function updateMasks(total) {                                   // handle mask mode 
-
     switch (mode) {
-
     case 'intro': { updateGerm(total); break }
     case 'static': { tmpMask.set(baseMask); break }
     case 'outro': { updateCircle(); break }
     case 'direct': { updateGermInv(total); break }
     case 'transition': { updateSwipe(); break }
     case 'hidden': { tmpMask.fill(0); break }
-  
   }
-
 }
 
 function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells 
-  
   const idx = y * cols + x
   const portalCode = portalCodes[idx]
   const portalCh = String.fromCharCode(portalCode)
@@ -418,134 +410,86 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
   switch (mode) {
 
     case 'intro': { 
-
       if (!revealed) color = '#1B1C1C'
       if (frontier) color = borderColor
 
       if (matrixCh && revealed) {
-
         const dist = headPos - y
-
         if (dist >= 0 && dist <= trailLength) {
           color = trailAlpha(1 - dist / trailLength)
           needsBg = true
         }
-      
       }
-
       break
-
     }
 
     case 'static': { 
-
       if (matrixCh) {
-
         const dist = headPos - y
-
         if (dist >= 0 && dist <= trailLength) {
-
           color = trailAlpha(1 - dist / trailLength)
           drawCh = matrixCh
           needsBg = true
-
         }
-
         break
-
       }
-
     }
 
     case 'outro': { 
-
       const dist = headPos - y
-
       if (matrixCh && dist >= 0 && dist <= trailLength) {
-
         color = trailAlpha(1 - dist / trailLength)
         drawCh = matrixCh
         needsBg = true
-
       }
-
       if (circleCells.has(idx) && !circleFrontier.has(idx)) drawCh = null
       else if (circleFrontier.has(idx)) color = borderColor
-
       break
-
     }
 
     case 'direct': { 
-
       if (!revealed) {
-
         drawCh = null
         color = borderColor && isFrontier(resultMask, x, y) ? borderColor : '#1B1C1C'
-
       } else {
-
         drawCh = matrixCh || portalCh
         const dist = headPos - y
-
         if (matrixCh && dist >= 0 && dist <= trailLength) {
-
           color = trailAlpha(1 - dist / trailLength)
           needsBg = true
-
         }
-
       }
-      
       break
-      
     }
 
     case 'transition': { 
-      
       if (!revealed) {
-        
         if (frontier) { drawCh = portalCh; color = borderColor; needsBg = true }
         else { drawCh = null }
-        
       } else {
-        
         drawCh = portalCh
-        
         if (frontier) color = borderColor
-        
         if (matrixCh) {
-          
           const dist = headPos - y
-          
           if (dist >= 0 && dist <= trailLength) {
-            
             color = trailAlpha(1 - dist / trailLength)
             drawCh = matrixCh
             needsBg = true
-            
           }
-          
         }
-        
       }
-      
       break
-      
     }
     
     case 'hidden': { drawCh = null; break }
     
     default: { if (frontier) color = borderColor; break }
-    
   }
 
   return { drawCh, color, needsBg, frontier }
-
 }
 
 function drawFrame(ts) {                                        // draws shader 
-
   if (!ctx) return
   const total = rows * cols
 
@@ -559,7 +503,7 @@ function drawFrame(ts) {                                        // draws shader
   updateRain()
   updateMasks(total)
 
-  // outro circle
+  // outro circle expansion steps
   const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
 
   let resultMask
@@ -596,74 +540,134 @@ function drawFrame(ts) {                                        // draws shader
       const revealed = !!resultMask[idx]
 
       if (mode === 'outro' || mode === 'transition') {
-
         if (isRain || isPortal || isFrontier) {
-
           ctx.fillStyle = '#1b1c1c'
           ctx.fillRect(px, py, fontSize, fontSize)
-
         }
-
       } else if (mode === 'intro') {
-
         if (revealed && (isRain || isPortal || isFrontier || true)) {
-
           ctx.fillStyle = '#1b1c1c'
           ctx.fillRect(px, py, fontSize, fontSize)
-
         }
-
       } else {
-
         ctx.fillStyle = '#1b1c1c'
         ctx.fillRect(px, py, fontSize, fontSize)
-
       }
 
       ctx.fillStyle = color
       ctx.fillText(drawCh, px, py)
-
     }
-
   }
 
-  // frame counters
-  if (mode==='intro' && revealFrame < revealMaxFrames) revealFrame++
-  else if (mode === 'outro' && outroRadius < Math.hypot(cols,rows)) outroFrame++
-  else if (mode === 'direct' && revealFrame < revealMaxFrames) revealFrame++
+  // frame counters & end notifications
+  if (mode === 'intro') {
+    if (revealFrame < revealMaxFrames) {
+      revealFrame++
+      if (revealFrame >= revealMaxFrames) {
+        // intro reached its logical end
+        notifyAnimationEnd()
+      }
+    }
+  } else if (mode === 'outro') {
+    // updateCircle increments outroRadius; check if finished
+    if (outroRadius >= Math.hypot(cols, rows)) {
+      notifyAnimationEnd()
+    } else {
+      // outro progress tracked by updateCircle; ensure outroFrame advance (kept original behavior)
+      outroFrame++
+    }
+  } else if (mode === 'direct') {
+    if (revealFrame < revealMaxFrames) {
+      revealFrame++
+      if (revealFrame >= revealMaxFrames) notifyAnimationEnd()
+    }
+  }
 
   // request next frame
   animationId = requestAnimationFrame(drawFrame)
-
 }
 
-function runIntro() { mode = 'intro'; revealFrame = 0; }                                                                                      // DONE
-function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                                       // DONE
-function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                      // DONE
-function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
-function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
-function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
-function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
-function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
+function runIntro() {
+  return startAnim('intro', () => {
+    mode = 'intro'
+    revealFrame = 0
+  })
+}
 
-defineExpose({ runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runDirect, runHidden })
+function runStatic() {
+  mode = 'static'
+  for (let i = 0; i < rows * cols; i++) baseMask[i] = 1
+  return Promise.resolve()
+}
+
+function runOutro() {
+  return startAnim('outro', () => {
+    mode = 'outro'
+    outroRadius = 0
+    outroCenter = { x: 0, y: rows }
+  })
+}
+
+function runDirect() {
+  return startAnim('direct', () => {
+    mode = 'direct'
+    revealFrame = 0
+    for (let i = 0; i < rows * cols; i++) baseMask[i] = 1
+  })
+}
+
+function runHidden() {
+  mode = 'hidden'
+  return Promise.resolve()
+}
+
+function runTransitionFull() {
+  return startAnim('transition-full', () => {
+    mode = 'transition'
+    baseMask.fill(0)
+    tmpMask.fill(0)
+    transFrame = 0
+    transPhase = 0
+    autoOutro = true
+  })
+}
+
+function runTransitionIntro() {
+  return startAnim('transition-intro', () => {
+    mode = 'transition'
+    baseMask.fill(0)
+    tmpMask.fill(0)
+    transFrame = 0
+    transPhase = 0
+    autoOutro = false
+  })
+}
+
+function runTransitionOutro() {
+  return startAnim('transition-outro', () => {
+    mode = 'transition'
+    baseMask.set(tmpMask)
+    transFrame = 0
+    transPhase = 1
+    autoOutro = false
+  })
+}
+
+defineExpose({ runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runTransitionFull, runDirect, runHidden })
 
 onMounted ( async () => {
-
   updateSize()
   window.addEventListener('resize', updateSize)
   animationId = requestAnimationFrame(drawFrame)
-
 })
 
 onBeforeUnmount ( () => {
-
   cancelAnimationFrame(animationId)
   window.removeEventListener('resize', updateSize)
-
 })
 
 </script>
+
 
 <template>
 
