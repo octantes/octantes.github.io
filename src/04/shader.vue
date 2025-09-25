@@ -34,12 +34,13 @@ let tmpMask = null                  // dilation temporal buffer mask
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
-let mode = 'intro'                 // current mode store string
+let mode = 'intro'                  // current mode store string
 let outroFrame = 0                  // outro max frame counter
 let outroRadius = 0                 // current outro animation radius
 let outroCenter = { x: 0, y: 0 }    // outro animation center position
 let transFrame = 0                  // swipe animation line counter
 let transPhase = 0                  // swipe animation direction
+let autoOutro = false               // swipe outro autotrigger
 
 const revealMaxFrames = 160         // intro total frames counter
 const borderColor = '#AAABAC'       // active border zone color
@@ -333,17 +334,21 @@ function updateSwipe() {                  // next swipe frame
   if (transFrame >= cols) {
 
     if (transPhase === 0) {
-
-      transPhase = 1
-      transFrame = 0
+      
       baseMask.set(tmpMask)
 
+      if (autoOutro) {
+        transPhase = 1
+        transFrame = 0
+      } else { mode = 'static' }
+      
     } else if (transPhase === 1) {
 
       baseMask.fill(0)
       tmpMask.fill(0)
       transFrame = cols
       transPhase = 1
+      mode = 'hidden'
 
     }
 
@@ -624,19 +629,20 @@ function drawFrame(ts) {                                        // draws shader
 
 }
 
-function runIntro() { mode = 'intro'; revealFrame = 0; }                                                                // DONE
-function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                 // DONE
-function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                // DONE
-function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }        // DONE
-function runTransition() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0 }     // DONE
-function runHidden() { mode = 'hidden'; }                                                                               // DONE
+function runIntro() { mode = 'intro'; revealFrame = 0; }                                                                                      // DONE
+function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                                       // DONE
+function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                      // DONE
+function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
+function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
+function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
+function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
+function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
 
-defineExpose({ runIntro, runStatic, runOutro, runTransition, runDirect, runHidden })
+defineExpose({ runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runDirect, runHidden })
 
 onMounted ( async () => {
 
   updateSize()
-  
   window.addEventListener('resize', updateSize)
   animationId = requestAnimationFrame(drawFrame)
 

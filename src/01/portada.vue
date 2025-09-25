@@ -61,7 +61,7 @@ const data = computed(() => {
 .cover:hover { filter: grayscale() }
 
 .text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; transition: filter 0.3s ease; }
-.text:hover { filter: brightness(90%); }
+.text:hover { filter: brightness(95%); }
 
 .info {
     font-family: 'Inconsolata';
