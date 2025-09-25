@@ -41,7 +41,6 @@ let outroCenter = { x: 0, y: 0 }    // outro animation center position
 let transFrame = 0                  // swipe animation line counter
 let transPhase = 0                  // swipe animation direction
 let autoOutro = false               // swipe outro autotrigger
-let resolveTransitionEnd = null     // transition end signal
 
 const revealMaxFrames = 160         // intro total frames counter
 const borderColor = '#AAABAC'       // active border zone color
@@ -341,11 +340,7 @@ function updateSwipe() {                  // next swipe frame
       if (autoOutro) {
         transPhase = 1
         transFrame = 0
-      } else { 
-        mode = 'static'
-        resolveTransitionEnd?.()
-        resolveTransitionEnd = null
-      }
+      } else { mode = 'static' }
       
     } else if (transPhase === 1) {
 
@@ -354,8 +349,7 @@ function updateSwipe() {                  // next swipe frame
       transFrame = cols
       transPhase = 1
       mode = 'hidden'
-      resolveTransitionEnd?.()
-      resolveTransitionEnd = null
+
     }
 
   }
@@ -567,7 +561,15 @@ function drawFrame(ts) {                                        // draws shader
 
   // outro circle
   const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
-  const resultMask = mode === 'direct' ? baseMask : mode === 'transition' ? tmpMask : expandMask(baseMask, tmpMask, steps)
+
+  let resultMask
+  if (mode === 'direct' || mode === 'static') {
+    resultMask = baseMask
+  } else if (mode === 'transition') {
+    resultMask = tmpMask
+  } else {
+    resultMask = expandMask(baseMask, tmpMask, steps)
+  }
 
   // cell draw loop
   for (let x = 0; x < cols; x++) {
@@ -639,20 +641,10 @@ function runIntro() { mode = 'intro'; revealFrame = 0; }                        
 function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                                       // DONE
 function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                      // DONE
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
-function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
-
 function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
-function runTransitionIntro() {
-  mode = 'transition'
-  baseMask.fill(0)
-  tmpMask.fill(0)
-  transFrame = 0
-  transPhase = 0
-  autoOutro = false
-  if (resolveTransitionEnd) { resolveTransitionEnd(); resolveTransitionEnd = null }
-  return new Promise(resolve => { resolveTransitionEnd = resolve })
-}
+function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
 function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
+function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
 
 defineExpose({ runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runDirect, runHidden })
 
