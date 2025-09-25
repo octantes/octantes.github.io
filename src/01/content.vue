@@ -97,8 +97,9 @@ watch(
 
         noteLoaded = true
         firstLoad = false
-        shaderRef.value?.runTransition()
-        setTimeout(async () => { await loadNote(slug) }, 1300)
+        shaderRef.value?.runTransitionIntro()
+        await loadNote(slug)
+        shaderRef.value?.runTransitionOutro()
         lastSlug = slug
         break
 
