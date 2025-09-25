@@ -635,8 +635,8 @@ function runTransitionFull() {
 function runTransitionIntro() {
   return startAnim('transition-intro', () => {
     mode = 'transition'
-    baseMask.fill(0)
-    tmpMask.fill(0)
+    baseMask.fill(1)
+    tmpMask.fill(1)
     transFrame = 0
     transPhase = 0
     autoOutro = false
