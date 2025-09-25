@@ -41,6 +41,7 @@ let outroCenter = { x: 0, y: 0 }    // outro animation center position
 let transFrame = 0                  // swipe animation line counter
 let transPhase = 0                  // swipe animation direction
 let autoOutro = false               // swipe outro autotrigger
+let resolveTransitionEnd = null     // transition end signal
 
 const revealMaxFrames = 160         // intro total frames counter
 const borderColor = '#AAABAC'       // active border zone color
@@ -639,9 +640,16 @@ function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i]
 function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                      // DONE
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
 function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
+
 function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
-function runTransitionIntro() {                                                                                                               // DONE
-  mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false;
+function runTransitionIntro() {
+  mode = 'transition'
+  baseMask.fill(0)
+  tmpMask.fill(0)
+  transFrame = 0
+  transPhase = 0
+  autoOutro = false
+  if (resolveTransitionEnd) { resolveTransitionEnd(); resolveTransitionEnd = null }
   return new Promise(resolve => { resolveTransitionEnd = resolve })
 }
 function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
