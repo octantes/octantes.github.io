@@ -340,7 +340,11 @@ function updateSwipe() {                  // next swipe frame
       if (autoOutro) {
         transPhase = 1
         transFrame = 0
-      } else { mode = 'static' }
+      } else { 
+        mode = 'static'
+        resolveTransitionEnd?.()
+        resolveTransitionEnd = null
+      }
       
     } else if (transPhase === 1) {
 
@@ -349,7 +353,8 @@ function updateSwipe() {                  // next swipe frame
       transFrame = cols
       transPhase = 1
       mode = 'hidden'
-
+      resolveTransitionEnd?.()
+      resolveTransitionEnd = null
     }
 
   }
@@ -633,10 +638,13 @@ function runIntro() { mode = 'intro'; revealFrame = 0; }                        
 function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                                       // DONE
 function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                      // DONE
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
-function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
-function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
-function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
 function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
+function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
+function runTransitionIntro() {                                                                                                               // DONE
+  mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false;
+  return new Promise(resolve => { resolveTransitionEnd = resolve })
+}
+function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
 
 defineExpose({ runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runDirect, runHidden })
 
