@@ -97,8 +97,8 @@ watch(
 
         noteLoaded = true
         firstLoad = false
-        await loadNote(slug)
         shaderRef.value?.runTransitionOutro()
+        await loadNote(slug)
         lastSlug = slug
         break
 
