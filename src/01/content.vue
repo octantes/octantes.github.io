@@ -99,6 +99,7 @@ watch(
         firstLoad = false
         await shaderRef.value?.runTransitionIntro()
         await loadNote(slug)
+        await nextTick()
         shaderRef.value?.runTransitionOutro()
         lastSlug = slug
         break
