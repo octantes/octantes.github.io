@@ -75,8 +75,8 @@ watch(
 
         noteLoaded = true
         firstLoad = false
-        await shaderRef.value?.runOutro()
         await loadNote(slug)
+        await shaderRef.value?.runOutro()
         lastSlug = slug
         break
 
@@ -86,8 +86,8 @@ watch(
 
         noteLoaded = true
         firstLoad = false
-        shaderRef.value?.runDirect()
         await loadNote(slug)
+        await shaderRef.value?.runDirect()
         lastSlug = slug
         break
       
@@ -98,6 +98,7 @@ watch(
         noteLoaded = true
         firstLoad = false
         await shaderRef.value?.runTransitionIntro()
+        shaderRef.value?.runStatic()
         await loadNote(slug)
         await shaderRef.value?.runTransitionOutro()
         lastSlug = slug
