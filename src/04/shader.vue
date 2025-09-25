@@ -285,72 +285,50 @@ function updateSwipe() {                  // next swipe frame
   const scroll = t * 20
 
   if (transPhase === 0) {
-
     for (let y = 0; y < rows; y++) {
-
       const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
       const frac = scroll % 1
-
       const n0 = noiseMap[idx]
       const n1 = noiseMap[(idx + 1) % (rows * cols)]
       const n = n0 * (1 - frac) + n1 * frac
-
       const wave = Math.sin(y * 0.25 + t * 2 + n * 2)
       const noiseOffset = Math.floor(n * 4 + wave * 2)
-
       const xLimit = Math.min(line + noiseOffset, cols - 1)
       for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
-
     }
-
   } else if (transPhase === 1) {
-
     for (let y = 0; y < rows; y++) {
-
       const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
       const frac = scroll % 1
       const n0 = noiseMap[idx]
       const n1 = noiseMap[(idx + 1) % (rows * cols)]
       const n = n0 * (1 - frac) + n1 * frac
-
       const wave = Math.cos(y * 0.25 - t * 2 + n * 2)
       const noiseOffset = Math.floor(n * 4 + wave * 2)
-
       const xStart = Math.max(line - noiseOffset, 0)
       for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
-
     }
-
   }
 
   transFrame += 1.0
 
   if (transFrame >= cols) {
-
     if (transPhase === 0) {
-      
       baseMask.set(tmpMask)
-
       if (autoOutro) {
         transPhase = 1
         transFrame = 0
       } else { 
         mode = 'static'
-        // transition intro finished -> notify
         notifyAnimationEnd()
       }
-      
     } else if (transPhase === 1) {
-
       baseMask.fill(0)
       tmpMask.fill(0)
       transFrame = cols
-      transPhase = 1
       mode = 'hidden'
-      // transition outro/hidden finished -> notify
       notifyAnimationEnd()
     }
-
   }
 }
 
