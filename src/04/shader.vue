@@ -653,8 +653,9 @@ function checkOutro() { return mode === 'outro' && outroRadius >= Math.hypot(col
 function checkDirect() {
   if (revealFrame < revealMaxFrames) return false;
   for (let i = 0; i < baseMask.length; i++) {
-    if (baseMask[i] === 0) return false;
+    if (baseMask[i] !== 0 && noiseMap[i] < 1) return false;
   }
+
   return true;
 }
 function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
