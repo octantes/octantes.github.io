@@ -672,7 +672,17 @@ function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: 
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
 function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
 function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
-function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
+//function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE
+function runTransitionOutro() {
+  // queremos empezar la transición de salida partiendo de la máscara actual (baseMask)
+  // y animar tmpMask hacia afuera (transPhase = 1)
+  mode = 'transition'
+  // inicializar tmpMask desde baseMask (no al revés)
+  tmpMask.set(baseMask)
+  transFrame = 0
+  transPhase = 1
+  autoOutro = false
+}
 function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
 
 function checkIntro() { return mode === 'intro' && revealFrame >= revealMaxFrames }
