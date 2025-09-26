@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import Navigation from './01/navigation.vue'
 import Footer from './01/footer.vue'
 
@@ -13,7 +14,7 @@ function updateProcessing(val) { processing.value = val }
 
     <div class="layout">
 
-        <Navigation class="navigation" :disabled="processing" />
+        <Navigation class="navigation" :disabled="processing.value" />
         <RouterView class="articulos" @updateProcessing="updateProcessing" />
 
     </div>

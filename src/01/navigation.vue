@@ -46,7 +46,7 @@ function openNote(type, slug) {
           <td>{{ note.title }}</td>
           <td>{{ note.date }}</td>
           <td>{{ note.tags.join(', ') }}</td>
-          <td><button :disabled="disabled" @click="openNote(note.type, note.slug)">ver</button></td>
+          <td><button :disabled="props.disabled" @click="openNote(note.type, note.slug)">ver</button></td>
         </tr>
       </tbody>
 
