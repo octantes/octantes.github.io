@@ -31,6 +31,8 @@ let portalCodes = null              // portal cell char codes
 let noiseMap = null                 // static noise array for animations
 let baseMask = null                 // active/inactive animation cell mask
 let tmpMask = null                  // dilation temporal buffer mask
+let expandA = null
+let expandB = null
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
@@ -355,34 +357,57 @@ function updateSwipe() {                  // next swipe frame
   }
 }
 
-function expandMask(src, dst, steps) {    // next mask frame 
+function ensureExpandBuffers() {
+  const total = cols * rows
+  if (!expandA || expandA.length !== total) {
+    expandA = new Uint8Array(total)
+    expandB = new Uint8Array(total)
+  }
+}
 
-  dst.set(src)
+function expandMask(src, steps) {    // devuelve un Uint8Array resultado, sin mutar src
+  ensureExpandBuffers()
 
-  // for each step, activate neighbors
+  const total = cols * rows
+  if (steps <= 0) {
+    // copia a buffer estable y devolvemos ese buffer
+    expandA.set(src)
+    return expandA
+  }
+
+  // a/b son buffers temporales exclusivos (no tocan src ni tmpMask)
+  let a = expandA
+  let b = expandB
+
+  // copiar src a 'a' como estado inicial
+  a.set(src)
+
   for (let s = 0; s < steps; s++) {
-    const srcBuf = (s % 2 === 0) ? dst : src
-    const dstBuf = (s % 2 === 0) ? src : dst
-    dstBuf.fill(0)
+    b.fill(0)
     for (let y = 0; y < rows; y++) {
       const yOff = y * cols
       for (let x = 0; x < cols; x++) {
         const i = yOff + x
-        if (srcBuf[i]) {
-          dstBuf[i] = 1
-          if (x > 0) dstBuf[i - 1] = 1
-          if (x < cols - 1) dstBuf[i + 1] = 1
-          if (y > 0) dstBuf[i - cols] = 1
-          if (y < rows - 1) dstBuf[i + cols] = 1
-          if (x === 0 && y === 0) dstBuf[i] = 1
+        if (a[i]) {
+          b[i] = 1
+          if (x > 0) b[i - 1] = 1
+          if (x < cols - 1) b[i + 1] = 1
+          if (y > 0) b[i - cols] = 1
+          if (y < rows - 1) b[i + cols] = 1
         }
       }
     }
+    // swap para siguiente iteración
+    const tmp = a
+    a = b
+    b = tmp
   }
 
-  // returns expanded mask
-  return (steps % 2 === 0) ? dst : src
+  // 'a' contiene el resultado; lo devolvemos (es un buffer estable expandA/expandB)
+  // Si querés, garantizamos que siempre devolvamos expandA para estabilidad externa:
+  if (a !== expandA) expandA.set(a), a = expandA
 
+  return a
 }
 
 // MAIN
@@ -560,7 +585,10 @@ function drawFrame(ts) {                                        // draws shader
   updateMasks(total)
 
   // outro circle
-  const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
+  const steps = Math.min(
+    maxDilateSteps,
+    Math.floor((mode === 'intro' ? clamp(revealFrame / revealMaxFrames, 0, 1) : 1) * maxDilateSteps)
+  )
 
   let resultMask
   if (mode === 'direct' || mode === 'static') {
@@ -568,7 +596,8 @@ function drawFrame(ts) {                                        // draws shader
   } else if (mode === 'transition') {
     resultMask = tmpMask
   } else {
-    resultMask = expandMask(baseMask, tmpMask, steps)
+    // expandMask ahora trabaja con buffers internos y no pisa baseMask ni tmpMask
+    resultMask = expandMask(baseMask, steps)
   }
 
   // cell draw loop
