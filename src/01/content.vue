@@ -78,6 +78,7 @@ async function processQueue() {
         lastSlug = slug
         await loadNote(slug)
         await shaderRef.value?.runQueue('direct')
+        await new Promise(resolve => setTimeout(resolve, 350));
         break
 
       case slug && noteLoaded && lastSlug !== slug:
@@ -90,7 +91,7 @@ async function processQueue() {
         break
 
     }
-    
+
   }
 
   document.body.style.cursor = ''
