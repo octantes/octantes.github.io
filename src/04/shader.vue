@@ -32,6 +32,7 @@ let noiseMap = null                 // static noise array for animations
 let baseMask = null                 // active/inactive animation cell mask
 let tmpMask = null                  // dilation temporal buffer mask
 let expandedMask = null             // buffer para expandMask
+let expandTemp = null
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
