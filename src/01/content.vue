@@ -16,6 +16,7 @@ const postsIndex = ref([])
 const noteContent = ref('')
 const currentPost = ref(null)
 
+let isAnimating = false
 let noteLoaded = false
 let firstLoad = true
 let lastSlug = null
@@ -53,6 +54,9 @@ watch(
 
   async slug => {
 
+    if (isAnimating) return
+
+    isAnimating = true
     await nextTick()
 
     if (!postsIndex.value.length) await loadIndex()
@@ -103,6 +107,7 @@ watch(
         await shaderRef.value?.runQueue('transition-outro')
         break
 
+        isAnimating = false
     }
 
   }, { immediate: true }
