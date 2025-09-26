@@ -88,7 +88,7 @@ watch(
         firstLoad = false
         lastSlug = slug
         await shaderRef.value?.runQueue('transition-intro')
-        await loadNote(slug)
+        //await loadNote(slug)
         await shaderRef.value?.runQueue('transition-outro')
         break
       
