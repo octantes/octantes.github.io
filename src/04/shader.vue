@@ -583,7 +583,7 @@ function drawFrame(ts) {                                        // draws shader
   updateMasks(total)
 
   // outro circle
-  const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1) * maxDilateSteps))
+  const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
 
   let resultMask
   if (mode === 'transition') {
@@ -591,10 +591,8 @@ function drawFrame(ts) {                                        // draws shader
   } else if (mode === 'direct' || mode === 'static') {
     resultMask = baseMask
   } else {
-    // expandMask ahora devuelve un buffer estable (expandA)
-    resultMask = expandMask(baseMask, steps)
+    resultMask = expandMask(baseMask, expandedMask, steps)
   }
-
 
   // cell draw loop
   for (let x = 0; x < cols; x++) {
@@ -668,7 +666,22 @@ function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: 
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
 function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
 function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
-function runTransitionOutro() { mode = 'transition'; tmpMask.set(baseMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
+//function runTransitionOutro() { mode = 'transition'; tmpMask.set(baseMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE
+function runTransitionOutro() {
+  mode = 'transition'
+  // asegurar tmpMask inicial igual a baseMask
+  tmpMask.set(baseMask)
+  transFrame = 0
+  transPhase = 1
+  autoOutro = false
+  // reiniciar buffers de expansión para la próxima fase
+  if (expandA && expandA.length === cols*rows) {
+    expandA.fill(0)
+    expandB.fill(0)
+    expandedMask = expandA
+  }
+}
+
 function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
 
 function checkIntro() { return mode === 'intro' && revealFrame >= revealMaxFrames }
