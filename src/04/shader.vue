@@ -555,12 +555,13 @@ function drawFrame(ts) {                                        // draws shader
   const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
 
   let resultMask
-  if (mode === 'intro' || mode === 'outro') {
-    resultMask = expandMask(baseMask, expandedMask, steps)
-  } else if (mode === 'transition') {
+  if (mode === 'transition') {
     resultMask = tmpMask
-  } else {
+  } else if (mode === 'direct' || mode === 'static') {
     resultMask = baseMask
+  } else {
+    expandedMask = expandedMask || new Uint8Array(cols * rows)
+    resultMask = expandMask(baseMask, expandedMask, steps)
   }
 
   // cell draw loop
