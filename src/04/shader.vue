@@ -649,7 +649,14 @@ function runHidden() { mode = 'hidden'; }                                       
 function checkIntro() { return mode === 'intro' && revealFrame >= revealMaxFrames }
 function checkStatic() { return true }
 function checkOutro() { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
-function checkDirect() { return mode === 'direct' && revealFrame >= revealMaxFrames }
+// function checkDirect() { return mode === 'direct' && revealFrame >= revealMaxFrames }
+function checkDirect() {
+  if (revealFrame < revealMaxFrames) return false;
+  for (let i = 0; i < baseMask.length; i++) {
+    if (baseMask[i] === 0) return false;
+  }
+  return true;
+}
 function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionFull() { return mode === 'hidden' || mode === 'static' }
