@@ -31,6 +31,7 @@ let portalCodes = null              // portal cell char codes
 let noiseMap = null                 // static noise array for animations
 let baseMask = null                 // active/inactive animation cell mask
 let tmpMask = null                  // dilation temporal buffer mask
+let expandedMask = null             // buffer para expandMask
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
@@ -135,6 +136,7 @@ function setGrid() {                      // create grid + animate rain
   noiseMap = new Float32Array(cols * rows)
   baseMask = new Uint8Array(cols * rows)
   tmpMask = new Uint8Array(cols * rows)
+  expandedMask = new Uint8Array(cols * rows)
 
   // set noisemap
   for (let y = 0; y < rows; y++) {
@@ -563,12 +565,12 @@ function drawFrame(ts) {                                        // draws shader
   const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
 
   let resultMask
-  if (mode === 'direct' || mode === 'static') {
-    resultMask = baseMask
+  if (mode === 'intro' || mode === 'outro') {
+    resultMask = expandMask(baseMask, expandedMask, steps)
   } else if (mode === 'transition') {
     resultMask = tmpMask
   } else {
-    resultMask = expandMask(baseMask, tmpMask, steps)
+    resultMask = baseMask
   }
 
   // cell draw loop
