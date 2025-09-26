@@ -2,6 +2,8 @@
 
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
+const emit = defineEmits(['finished'])
+
 const charRangeStart = 33                             // unicode char start
 const charRangeEnd = 126                              // unicode char end
 const charRangeMax = charRangeEnd - charRangeStart    // max possible chars
@@ -45,6 +47,10 @@ let autoOutro = false               // swipe outro autotrigger
 const revealMaxFrames = 160         // intro total frames counter
 const borderColor = '#AAABAC'       // active border zone color
 const maxDilateSteps = 32           // outro animation max frames
+
+const queue = []                    // animation queue
+let running = false                 // boolean animation playing
+let currentTask = null              // current animation playing
 
 // HELPERS
 
@@ -385,6 +391,70 @@ function expandMask(src, dst, steps) {    // next mask frame
 
 }
 
+// QUEUE
+
+
+function enqueue(name, startFn, finishCheckFn) {
+  return new Promise((resolve, reject) => {
+    queue.push({
+      name,
+      startFn,
+      finishCheckFn,
+      resolve,
+      reject
+    })
+    if (!running) runNext()
+  })
+}
+
+function runNext() {
+  if (running) return
+  const task = queue.shift()
+  if (!task) return
+  currentTask = task
+  running = true
+  try {
+    task.startFn()
+  } catch (e) {
+    task.reject(e)
+    currentTask = null
+    running = false
+    if (queue.length) runNext()
+    return
+  }
+  // comprueba inmediatamente por si la tarea ya cumple su condición de fin
+  try {
+    if (typeof task.finishCheckFn === 'function' && task.finishCheckFn()) {
+      completeCurrent()
+    }
+  } catch (e) {
+    console.error('runNext: error en finishCheckFn', e)
+  }
+}
+
+function completeCurrent() {
+  if (!currentTask) return
+  try {
+    currentTask.resolve()
+    emit('finished', currentTask.name)
+  } catch (e) {
+    console.error('error al resolver tarea', e)
+  } finally {
+    currentTask = null
+    running = false
+    if (queue.length) runNext()
+  }
+}
+
+function checkCurrentCompletion() {
+  if (!currentTask || typeof currentTask.finishCheckFn !== 'function') return
+  try {
+    if (currentTask.finishCheckFn()) completeCurrent()
+  } catch (e) {
+    console.error('error en finishCheckFn', e)
+  }
+}
+
 // MAIN
 
 function updateMasks(total) {                                   // handle mask mode 
@@ -632,13 +702,15 @@ function drawFrame(ts) {                                        // draws shader
   else if (mode === 'outro' && outroRadius < Math.hypot(cols,rows)) outroFrame++
   else if (mode === 'direct' && revealFrame < revealMaxFrames) revealFrame++
 
+  checkCurrentCompletion()
+
   // request next frame
   animationId = requestAnimationFrame(drawFrame)
 
 }
 
 function runIntro() { mode = 'intro'; revealFrame = 0; }                                                                                      // DONE
-function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                                       // DONE
+function runStatic() { mode = 'static'; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; }                                                       // DONE
 function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                      // DONE
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
 function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
@@ -646,7 +718,35 @@ function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.f
 function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
 function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
 
-defineExpose({ runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runDirect, runHidden })
+function checkIntro() { return mode === 'intro' && revealFrame >= revealMaxFrames }
+function checkStatic() { return true }
+function checkOutro() { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
+function checkDirect() { return mode === 'direct' && revealFrame >= revealMaxFrames }
+function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
+function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
+function checkTransitionFull() { return mode === 'hidden' || mode === 'static' }
+function checkHidden() { return true }
+
+const TASKS = {
+  'intro':            { impl: runIntro,            finish: checkIntro },
+  'static':           { impl: runStatic,           finish: checkStatic },
+  'outro':            { impl: runOutro,            finish: checkOutro },
+  'direct':           { impl: runDirect,           finish: checkDirect },
+  'transition-full':  { impl: runTransitionFull,   finish: checkTransitionFull },
+  'transition-intro': { impl: runTransitionIntro,  finish: checkTransitionIntro },
+  'transition-outro': { impl: runTransitionOutro,  finish: checkTransitionOutro },
+  'hidden':           { impl: runHidden,           finish: checkHidden },
+}
+
+function runQueue(name) {
+  const task = TASKS[name]
+  if (!task) {
+    return Promise.reject(new Error(`Unknown shader task "${name}"`))
+  }
+  return enqueue(name, task.impl, task.finish)
+}
+
+defineExpose({ runQueue, runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runDirect, runHidden })
 
 onMounted ( async () => {
 
