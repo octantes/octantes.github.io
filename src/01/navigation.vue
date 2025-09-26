@@ -27,7 +27,7 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
   <div class="navigation">
 
     <h1>navegacion</h1>
-
+    
     <table>
 
       <thead>

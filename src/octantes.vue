@@ -14,10 +14,12 @@ function updateProcessing(val) { processing.value = val }
 
     <div class="layout">
 
-        <Navigation class="navigation" :disabled="processing.value" />
+        <Navigation class="navigation" :disabled="processing" />
 
         <RouterView v-slot="{ Component }">
+
           <component :is="Component" @updateProcessing="updateProcessing" />
+          
         </RouterView>
 
     </div>
