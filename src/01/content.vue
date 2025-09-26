@@ -63,44 +63,44 @@ watch(
 
       case !slug && firstLoad:
         
-        await shaderRef.value?.runQueue('intro')
         noteLoaded = false
         firstLoad = false
         lastSlug = null
+        await shaderRef.value?.runQueue('intro')
         break
 
       // first note load, OUTRO only on first note load
 
       case slug && !noteLoaded && !firstLoad:
         
-        await loadNote(slug)
-        await shaderRef.value?.runQueue('outro')
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
+        await loadNote(slug)
+        await shaderRef.value?.runQueue('outro')
         break
 
       // first load from url, DIRECT when loading from url
 
       case slug && !noteLoaded && firstLoad:
 
-        await loadNote(slug)
-        await shaderRef.value?.runQueue('direct')
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
+        await loadNote(slug)
+        await shaderRef.value?.runQueue('direct')
         break
       
       // loaded note change, TRANSITION when switching note
 
       case slug && noteLoaded && lastSlug !== slug:
 
-        await shaderRef.value?.runQueue('transition-intro')
-        await loadNote(slug)
-        await shaderRef.value?.runQueue('transition-outro')
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
+        await shaderRef.value?.runQueue('transition-intro')
+        await loadNote(slug)
+        await shaderRef.value?.runQueue('transition-outro')
         break
 
     }
