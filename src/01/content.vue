@@ -63,20 +63,20 @@ watch(
 
       case !slug && firstLoad:
         
+        await shaderRef.value?.runQueue('intro')
         noteLoaded = false
         firstLoad = false
-        shaderRef.value?.runQueue('intro')
         lastSlug = null
         break
 
       // first note load, OUTRO only on first note load
 
       case slug && !noteLoaded && !firstLoad:
-
+        
+        await loadNote(slug)
+        await shaderRef.value?.runQueue('outro')
         noteLoaded = true
         firstLoad = false
-        shaderRef.value?.runQueue('outro')
-        await loadNote(slug)
         lastSlug = slug
         break
 
@@ -84,10 +84,10 @@ watch(
 
       case slug && !noteLoaded && firstLoad:
 
+        await loadNote(slug)
+        await shaderRef.value?.runQueue('direct')
         noteLoaded = true
         firstLoad = false
-        shaderRef.value?.runQueue('direct')
-        await loadNote(slug)
         lastSlug = slug
         break
       
@@ -95,11 +95,11 @@ watch(
 
       case slug && noteLoaded && lastSlug !== slug:
 
-        noteLoaded = true
-        firstLoad = false
-        shaderRef.value?.runQueue('transition-intro')
+        await shaderRef.value?.runQueue('transition-intro')
         await loadNote(slug)
         await shaderRef.value?.runQueue('transition-outro')
+        noteLoaded = true
+        firstLoad = false
         lastSlug = slug
         break
 
