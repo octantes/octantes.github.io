@@ -46,6 +46,8 @@ async function processQueue() {
   if (processing) return
   processing = true
 
+  document.body.style.cursor = 'wait'
+
   while (navQueue.length > 0) {
     const slug = navQueue.shift()
 
@@ -88,7 +90,9 @@ async function processQueue() {
     }
   }
 
+  document.body.style.cursor = ''
   processing = false
+  
 }
 
 watch(
