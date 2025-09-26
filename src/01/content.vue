@@ -51,7 +51,6 @@ watch(
     if (processing.value) return
     processing.value = true; emit('updateProcessing', processing.value)
     document.body.style.cursor = 'wait'
-    await nextTick()
     
     if (!postsIndex.value.length) await loadIndex()
     
