@@ -31,10 +31,6 @@ let portalCodes = null              // portal cell char codes
 let noiseMap = null                 // static noise array for animations
 let baseMask = null                 // active/inactive animation cell mask
 let tmpMask = null                  // dilation temporal buffer mask
-let expandedMask = null             // buffer para expandMask
-let expandA = null
-let expandB = null
-let expandTemp = null
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
@@ -139,10 +135,6 @@ function setGrid() {                      // create grid + animate rain
   noiseMap = new Float32Array(cols * rows)
   baseMask = new Uint8Array(cols * rows)
   tmpMask = new Uint8Array(cols * rows)
-  expandA = new Uint8Array(cols * rows)
-  expandB = new Uint8Array(cols * rows)
-  expandedMask = expandA
-  expandTemp = new Uint8Array(cols * rows)
 
   // set noisemap
   for (let y = 0; y < rows; y++) {
@@ -293,13 +285,15 @@ function updateGermInv(total) {           // next germ frame inverted
 
 function updateSwipe() {                  // next swipe frame 
   const line = Math.floor(transFrame)
-  const next = new Uint8Array(cols * rows)
+  tmpMask.fill(0)
 
   const t = performance.now() * 0.001
   const scroll = t * 20
 
   if (transPhase === 0) {
+
     for (let y = 0; y < rows; y++) {
+
       const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
       const frac = scroll % 1
 
@@ -311,10 +305,14 @@ function updateSwipe() {                  // next swipe frame
       const noiseOffset = Math.floor(n * 4 + wave * 2)
 
       const xLimit = Math.min(line + noiseOffset, cols - 1)
-      for (let x = 0; x <= xLimit; x++) next[y * cols + x] = 1
+      for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
+
     }
+
   } else if (transPhase === 1) {
+
     for (let y = 0; y < rows; y++) {
+
       const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
       const frac = scroll % 1
       const n0 = noiseMap[idx]
@@ -325,88 +323,67 @@ function updateSwipe() {                  // next swipe frame
       const noiseOffset = Math.floor(n * 4 + wave * 2)
 
       const xStart = Math.max(line - noiseOffset, 0)
-      for (let x = xStart; x < cols; x++) next[y * cols + x] = 1
-    }
-  }
+      for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
 
-  // swap atomically: evita estados intermedios de tmpMask
-  tmpMask.set(next)
+    }
+
+  }
 
   transFrame += 1.0
 
   if (transFrame >= cols) {
+
     if (transPhase === 0) {
+      
       baseMask.set(tmpMask)
+
       if (autoOutro) {
         transPhase = 1
         transFrame = 0
-      } else {
-        mode = 'static'
-      }
+      } else { mode = 'static' }
+      
     } else if (transPhase === 1) {
+
       baseMask.fill(0)
       tmpMask.fill(0)
       transFrame = cols
       transPhase = 1
       mode = 'hidden'
+
     }
+
   }
 }
 
 function expandMask(src, dst, steps) {    // next mask frame 
-  const total = cols * rows
-  if (!expandA || expandA.length !== total) {
-    expandA = new Uint8Array(total)
-    expandB = new Uint8Array(total)
-    expandedMask = expandA
-  }
 
-  if (steps <= 0) {
-    // copia src a expandA y devolvemos expandA
-    expandA.set(src)
-    return expandA
-  }
+  dst.set(src)
 
-  // a = expandA, b = expandB (buffers internos)
-  let a = expandA
-  let b = expandB
-
-  // copiar src a 'a'
-  a.set(src)
-
+  // for each step, activate neighbors
   for (let s = 0; s < steps; s++) {
-    b.fill(0)
-    // dilatación simple: si a[i] entonces b[i] y vecinos = 1
+    const srcBuf = (s % 2 === 0) ? dst : src
+    const dstBuf = (s % 2 === 0) ? src : dst
+    dstBuf.fill(0)
     for (let y = 0; y < rows; y++) {
       const yOff = y * cols
       for (let x = 0; x < cols; x++) {
         const i = yOff + x
-        if (a[i]) {
-          b[i] = 1
-          if (x > 0) b[i - 1] = 1
-          if (x < cols - 1) b[i + 1] = 1
-          if (y > 0) b[i - cols] = 1
-          if (y < rows - 1) b[i + cols] = 1
+        if (srcBuf[i]) {
+          dstBuf[i] = 1
+          if (x > 0) dstBuf[i - 1] = 1
+          if (x < cols - 1) dstBuf[i + 1] = 1
+          if (y > 0) dstBuf[i - cols] = 1
+          if (y < rows - 1) dstBuf[i + cols] = 1
+          if (x === 0 && y === 0) dstBuf[i] = 1
         }
       }
     }
-    // swap a/b para la siguiente iteración
-    const tmp = a
-    a = b
-    b = tmp
   }
 
-  // aseguramos que expandedMask referencie al buffer resultado (a)
-  if (a !== expandA) {
-    // si el resultado quedó en 'b' (por intercambio), volcamos en expandA para estabilidad
-    expandA.set(a)
-    a = expandA
-  }
+  // returns expanded mask
+  return (steps % 2 === 0) ? dst : src
 
-  expandedMask = a
-  return a
 }
-
 
 // MAIN
 
@@ -586,12 +563,12 @@ function drawFrame(ts) {                                        // draws shader
   const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
 
   let resultMask
-  if (mode === 'transition') {
-    resultMask = tmpMask
-  } else if (mode === 'direct' || mode === 'static') {
+  if (mode === 'direct' || mode === 'static') {
     resultMask = baseMask
+  } else if (mode === 'transition') {
+    resultMask = tmpMask
   } else {
-    resultMask = expandMask(baseMask, expandedMask, steps)
+    resultMask = expandMask(baseMask, tmpMask, steps)
   }
 
   // cell draw loop
@@ -666,22 +643,7 @@ function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: 
 function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
 function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
 function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
-//function runTransitionOutro() { mode = 'transition'; tmpMask.set(baseMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE
-function runTransitionOutro() {
-  mode = 'transition'
-  // asegurar tmpMask inicial igual a baseMask
-  tmpMask.set(baseMask)
-  transFrame = 0
-  transPhase = 1
-  autoOutro = false
-  // reiniciar buffers de expansión para la próxima fase
-  if (expandA && expandA.length === cols*rows) {
-    expandA.fill(0)
-    expandB.fill(0)
-    expandedMask = expandA
-  }
-}
-
+function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
 function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
 
 function checkIntro() { return mode === 'intro' && revealFrame >= revealMaxFrames }
@@ -709,9 +671,11 @@ function runQueue(name) {
   const task = TASKS[name]
 
   if (!task) { return Promise.reject(new Error(`Unknown shader task "${name}"`)) }
+
   return new Promise((resolve, reject) => {
 
     try { task.impl() } catch (err) { reject(err); return }
+
     let rafId = null
 
     const check = () => {
@@ -725,8 +689,11 @@ function runQueue(name) {
       } catch (err) { if (rafId != null) cancelAnimationFrame(rafId); reject(err); return }
 
       rafId = requestAnimationFrame(check)
+
     }
+
     rafId = requestAnimationFrame(check)
+
   })
 }
 
