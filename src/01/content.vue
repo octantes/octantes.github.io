@@ -107,8 +107,9 @@ watch(
         await shaderRef.value?.runQueue('transition-outro')
         break
 
-        isAnimating = false
-    }
+      }
+      
+      isAnimating = false
 
   }, { immediate: true }
 
