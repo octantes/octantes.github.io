@@ -18,9 +18,7 @@ onMounted(async () => {
   }
 })
 
-function openNote(type, slug) {
-  router.push({ path: `/${type}/${slug}` })
-}
+function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }
 
 </script>
 
