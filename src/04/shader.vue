@@ -671,11 +671,9 @@ function runQueue(name) {
   const task = TASKS[name]
 
   if (!task) { return Promise.reject(new Error(`Unknown shader task "${name}"`)) }
-
   return new Promise((resolve, reject) => {
 
     try { task.impl() } catch (err) { reject(err); return }
-
     let rafId = null
 
     const check = () => {
@@ -689,11 +687,8 @@ function runQueue(name) {
       } catch (err) { if (rafId != null) cancelAnimationFrame(rafId); reject(err); return }
 
       rafId = requestAnimationFrame(check)
-
     }
-
     rafId = requestAnimationFrame(check)
-
   })
 }
 

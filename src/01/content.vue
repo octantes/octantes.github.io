@@ -51,6 +51,7 @@ watch(
     if (processing.value) return
     processing.value = true; emit('updateProcessing', processing.value)
     document.body.style.cursor = 'wait'
+    await nextTick()
     
     if (!postsIndex.value.length) await loadIndex()
     
@@ -88,7 +89,7 @@ watch(
         firstLoad = false
         lastSlug = slug
         await shaderRef.value?.runQueue('transition-intro')
-        //await loadNote(slug)
+        await loadNote(slug)
         await shaderRef.value?.runQueue('transition-outro')
         break
       
