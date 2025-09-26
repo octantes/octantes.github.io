@@ -9,6 +9,7 @@ import S7 from '../02/S7.vue'
 import N9 from '../02/N9.vue'
 
 const emit = defineEmits(['updateProcessing'])
+const processing = ref(false)
 
 const components = { dev: A2, note: S6, design: S7, music: N9 }
 const currentComponent = computed (() => currentPost.value?.type ? components[currentPost.value.type] : components.note )
@@ -19,7 +20,6 @@ const postsIndex = ref([])
 const noteContent = ref('')
 const currentPost = ref(null)
 
-let processing = false
 let noteLoaded = false
 let firstLoad = true
 let lastSlug = null
@@ -48,8 +48,8 @@ watch(
   
   async slug => {
     
-    if (processing) return
-    processing = true; emit('updateProcessing', processing)
+    if (processing.value) return
+    processing.value = true; emit('updateProcessing', processing.value)
     document.body.style.cursor = 'wait'
     await nextTick()
     
@@ -96,7 +96,7 @@ watch(
       }
 
       document.body.style.cursor = ''
-      processing = false; emit('updateProcessing', processing)
+      processing.value = false; emit('updateProcessing', processing.value)
             
   }, { immediate: true }
 
