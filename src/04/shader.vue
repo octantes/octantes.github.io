@@ -137,6 +137,7 @@ function setGrid() {                      // create grid + animate rain
   baseMask = new Uint8Array(cols * rows)
   tmpMask = new Uint8Array(cols * rows)
   expandedMask = new Uint8Array(cols * rows)
+  expandTemp = new Uint8Array(cols * rows)
 
   // set noisemap
   for (let y = 0; y < rows; y++) {
@@ -349,32 +350,38 @@ function updateSwipe() {                  // next swipe frame
 
 function expandMask(src, dst, steps) {    // next mask frame 
 
-  dst.set(src)
+  const total = cols * rows
+  if (steps <= 0) {
+    dst.set(src)
+    return dst
+  }
 
-  // for each step, activate neighbors
+  let a = dst
+  let b = expandTemp
+
+  a.set(src)
   for (let s = 0; s < steps; s++) {
-    const srcBuf = (s % 2 === 0) ? dst : src
-    const dstBuf = (s % 2 === 0) ? src : dst
-    dstBuf.fill(0)
+    b.fill(0)
     for (let y = 0; y < rows; y++) {
       const yOff = y * cols
       for (let x = 0; x < cols; x++) {
         const i = yOff + x
-        if (srcBuf[i]) {
-          dstBuf[i] = 1
-          if (x > 0) dstBuf[i - 1] = 1
-          if (x < cols - 1) dstBuf[i + 1] = 1
-          if (y > 0) dstBuf[i - cols] = 1
-          if (y < rows - 1) dstBuf[i + cols] = 1
-          if (x === 0 && y === 0) dstBuf[i] = 1
+        if (a[i]) {
+          b[i] = 1
+          if (x > 0) b[i - 1] = 1
+          if (x < cols - 1) b[i + 1] = 1
+          if (y > 0) b[i - cols] = 1
+          if (y < rows - 1) b[i + cols] = 1
         }
       }
     }
+    const tmp = a
+    a = b
+    b = tmp
   }
 
-  // returns expanded mask
-  return (steps % 2 === 0) ? dst : src
-
+  if (a !== dst) dst.set(a)
+  return dst
 }
 
 // MAIN
