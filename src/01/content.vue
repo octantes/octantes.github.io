@@ -9,28 +9,21 @@ import S7 from '../02/S7.vue'
 import N9 from '../02/N9.vue'
 
 const components = { dev: A2, note: S6, design: S7, music: N9 }
+const currentComponent = computed (() => currentPost.value?.type ? components[currentPost.value.type] : components.note )
 
 const route = useRoute()
 const shaderRef = ref(null)
 const postsIndex = ref([])
 const noteContent = ref('')
 const currentPost = ref(null)
+const navQueue = []
 
-let isAnimating = false
+let processing = false
 let noteLoaded = false
 let firstLoad = true
 let lastSlug = null
 
-const currentComponent = computed (() =>
-  currentPost.value?.type ? components[currentPost.value.type] : components.note
-)
-
-async function loadIndex() {
-  try {
-    const res = await fetch('/index.json')
-    postsIndex.value = await res.json()
-  } catch { postsIndex.value = [] }
-}
+async function loadIndex() { try { const res = await fetch('/index.json'); postsIndex.value = await res.json() } catch { postsIndex.value = [] } }
 
 async function loadNote(slug) {
   if (!slug) { noteContent.value = ''; currentPost.value = null; return }
@@ -48,35 +41,27 @@ async function loadNote(slug) {
   }
 }
 
-watch(
-
-  () => route.params.slug,
-
-  async slug => {
-
-    if (isAnimating) return
-
-    isAnimating = true
-    await nextTick()
-
-    if (!postsIndex.value.length) await loadIndex()
+async function processQueue() {
   
+  if (processing) return
+  processing = true
+
+  while (navQueue.length > 0) {
+    const slug = navQueue.shift()
+
+    await nextTick()
+    if (!postsIndex.value.length) await loadIndex()
+
     switch (true) {
 
-      // first load without note, INTRO only on first page load
-
       case !slug && firstLoad:
-        
         noteLoaded = false
         firstLoad = false
         lastSlug = null
         await shaderRef.value?.runQueue('intro')
         break
 
-      // first note load, OUTRO only on first note load
-
       case slug && !noteLoaded && !firstLoad:
-        
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
@@ -84,21 +69,15 @@ watch(
         await shaderRef.value?.runQueue('outro')
         break
 
-      // first load from url, DIRECT when loading from url
-
       case slug && !noteLoaded && firstLoad:
-
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
         await loadNote(slug)
         await shaderRef.value?.runQueue('direct')
         break
-      
-      // loaded note change, TRANSITION when switching note
 
       case slug && noteLoaded && lastSlug !== slug:
-
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
@@ -106,13 +85,16 @@ watch(
         await loadNote(slug)
         await shaderRef.value?.runQueue('transition-outro')
         break
+    }
+  }
 
-      }
+  processing = false
+}
 
-      isAnimating = false
-
-  }, { immediate: true }
-
+watch(
+  () => route.params.slug,
+  slug => { navQueue.push(slug); processQueue() },
+  { immediate: true }
 )
 
 </script>
