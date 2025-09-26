@@ -49,6 +49,7 @@ async function processQueue() {
   document.body.style.cursor = 'wait'
 
   while (navQueue.length > 0) {
+
     const slug = navQueue.shift()
 
     await nextTick()
@@ -87,7 +88,9 @@ async function processQueue() {
         await loadNote(slug)
         await shaderRef.value?.runQueue('transition-outro')
         break
+
     }
+    
   }
 
   document.body.style.cursor = ''
