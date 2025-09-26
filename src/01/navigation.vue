@@ -65,4 +65,6 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
   border: 1px solid #AAABAC25;
 }
 
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+
 </style>
