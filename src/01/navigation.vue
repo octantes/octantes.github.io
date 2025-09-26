@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
+const props = defineProps({ disabled: Boolean })
 const router = useRouter()
 const notes = ref([])
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -45,7 +46,7 @@ function openNote(type, slug) {
           <td>{{ note.title }}</td>
           <td>{{ note.date }}</td>
           <td>{{ note.tags.join(', ') }}</td>
-          <td><button @click="openNote(note.type, note.slug)">ver</button></td>
+          <td><button :disabled="disabled" @click="openNote(note.type, note.slug)">ver</button></td>
         </tr>
       </tbody>
 
