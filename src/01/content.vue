@@ -16,7 +16,6 @@ const shaderRef = ref(null)
 const postsIndex = ref([])
 const noteContent = ref('')
 const currentPost = ref(null)
-const navQueue = []
 
 let processing = false
 let noteLoaded = false
@@ -41,29 +40,30 @@ async function loadNote(slug) {
   }
 }
 
-async function processQueue() {
+watch(
   
-  if (processing) return
-  processing = true
-
-  document.body.style.cursor = 'wait'
-
-  while (navQueue.length > 0) {
-
-    const slug = navQueue.shift()
-
+  () => route.params.slug,
+  
+  async slug => {
+    
+    if (processing) return
+    processing = true
+    document.body.style.cursor = 'wait'
     await nextTick()
+    
     if (!postsIndex.value.length) await loadIndex()
-
+    
     switch (true) {
-
+      
+      // first load without note, INTRO only on first page load
       case !slug && firstLoad:
         noteLoaded = false
         firstLoad = false
         lastSlug = null
         await shaderRef.value?.runQueue('intro')
         break
-
+      
+      // first note load, OUTRO only on first note load
       case slug && !noteLoaded && !firstLoad:
         noteLoaded = true
         firstLoad = false
@@ -71,16 +71,17 @@ async function processQueue() {
         await loadNote(slug)
         await shaderRef.value?.runQueue('outro')
         break
-
+      
+      // first load from url, DIRECT when loading from url
       case slug && !noteLoaded && firstLoad:
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
         await loadNote(slug)
         await shaderRef.value?.runQueue('direct')
-        await new Promise(resolve => setTimeout(resolve, 350));
         break
-
+      
+      // loaded note change, TRANSITION when switching note
       case slug && noteLoaded && lastSlug !== slug:
         noteLoaded = true
         firstLoad = false
@@ -89,20 +90,14 @@ async function processQueue() {
         await loadNote(slug)
         await shaderRef.value?.runQueue('transition-outro')
         break
+      
+      }
 
-    }
+      document.body.style.cursor = ''
+      processing = false
+            
+  }, { immediate: true }
 
-  }
-
-  document.body.style.cursor = ''
-  processing = false
-  
-}
-
-watch(
-  () => route.params.slug,
-  slug => { navQueue.push(slug); processQueue() },
-  { immediate: true }
 )
 
 </script>
