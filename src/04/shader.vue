@@ -32,6 +32,8 @@ let noiseMap = null                 // static noise array for animations
 let baseMask = null                 // active/inactive animation cell mask
 let tmpMask = null                  // dilation temporal buffer mask
 let expandedMask = null             // buffer para expandMask
+let expandA = null
+let expandB = null
 let expandTemp = null
 
 let animationId = null              // next requested frame id
@@ -137,7 +139,9 @@ function setGrid() {                      // create grid + animate rain
   noiseMap = new Float32Array(cols * rows)
   baseMask = new Uint8Array(cols * rows)
   tmpMask = new Uint8Array(cols * rows)
-  expandedMask = new Uint8Array(cols * rows)
+  expandA = new Uint8Array(cols * rows)
+  expandB = new Uint8Array(cols * rows)
+  expandedMask = expandA
   expandTemp = new Uint8Array(cols * rows)
 
   // set noisemap
@@ -350,19 +354,29 @@ function updateSwipe() {                  // next swipe frame
 }
 
 function expandMask(src, dst, steps) {    // next mask frame 
-
   const total = cols * rows
-  if (steps <= 0) {
-    dst.set(src)
-    return dst
+  if (!expandA || expandA.length !== total) {
+    expandA = new Uint8Array(total)
+    expandB = new Uint8Array(total)
+    expandedMask = expandA
   }
 
-  let a = dst
-  let b = expandTemp
+  if (steps <= 0) {
+    // copia src a expandA y devolvemos expandA
+    expandA.set(src)
+    return expandA
+  }
 
+  // a = expandA, b = expandB (buffers internos)
+  let a = expandA
+  let b = expandB
+
+  // copiar src a 'a'
   a.set(src)
+
   for (let s = 0; s < steps; s++) {
     b.fill(0)
+    // dilatación simple: si a[i] entonces b[i] y vecinos = 1
     for (let y = 0; y < rows; y++) {
       const yOff = y * cols
       for (let x = 0; x < cols; x++) {
@@ -376,14 +390,23 @@ function expandMask(src, dst, steps) {    // next mask frame
         }
       }
     }
+    // swap a/b para la siguiente iteración
     const tmp = a
     a = b
     b = tmp
   }
 
-  if (a !== dst) dst.set(a)
-  return dst
+  // aseguramos que expandedMask referencie al buffer resultado (a)
+  if (a !== expandA) {
+    // si el resultado quedó en 'b' (por intercambio), volcamos en expandA para estabilidad
+    expandA.set(a)
+    a = expandA
+  }
+
+  expandedMask = a
+  return a
 }
+
 
 // MAIN
 
@@ -560,7 +583,7 @@ function drawFrame(ts) {                                        // draws shader
   updateMasks(total)
 
   // outro circle
-  const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
+  const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1) * maxDilateSteps))
 
   let resultMask
   if (mode === 'transition') {
@@ -568,9 +591,10 @@ function drawFrame(ts) {                                        // draws shader
   } else if (mode === 'direct' || mode === 'static') {
     resultMask = baseMask
   } else {
-    expandedMask = expandedMask || new Uint8Array(cols * rows)
-    resultMask = expandMask(baseMask, expandedMask, steps)
+    // expandMask ahora devuelve un buffer estable (expandA)
+    resultMask = expandMask(baseMask, steps)
   }
+
 
   // cell draw loop
   for (let x = 0; x < cols; x++) {
