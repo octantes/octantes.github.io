@@ -66,7 +66,7 @@ function updateProcessing(val) { processing.value = val }
   .pagina { height: auto; }
   .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
   .navigation { height: auto; }
-  .content { aspect-ratio: 3/4;}
+  .content { aspect-ratio: 3/5;}
   .articulos::-webkit-scrollbar-thumb { background-color: #8ab6bb; }
   
 }
