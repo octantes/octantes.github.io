@@ -112,10 +112,9 @@ watch(
     
     <div class="post">
       
-      <Portada v-if="currentPost" :metadata="currentPost || {}" />
-      
       <div class="content">
         
+        <Portada v-if="currentPost" :metadata="currentPost || {}" />
         <component :is="currentComponent" :html="noteContent" />
         
       </div>
