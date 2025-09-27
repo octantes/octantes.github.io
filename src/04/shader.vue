@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 const charRangeStart = 33                             // unicode char start
 const charRangeEnd = 126                              // unicode char end
@@ -31,8 +31,6 @@ let portalCodes = null              // portal cell char codes
 let noiseMap = null                 // static noise array for animations
 let baseMask = null                 // active/inactive animation cell mask
 let tmpMask = null                  // dilation temporal buffer mask
-let expandA = null
-let expandB = null
 
 let animationId = null              // next requested frame id
 let revealFrame = 0                 // frame counter for intro
@@ -72,8 +70,6 @@ function trailAlpha(alpha) {              // returns trail color
 
 function isFrontier(maskArr, x, y) {      // detects border of zone 
 
-  if (!maskArr || maskArr.length === 0) return false
-  if (x < 0 || x >= cols || y < 0 || y >= rows) return false
   const i = y * cols + x
 
   // true if cell is active and one neighbor is not active
@@ -82,29 +78,9 @@ function isFrontier(maskArr, x, y) {      // detects border of zone
   if (x < cols - 1 && !maskArr[i + 1]) return true
   if (y > 0 && !maskArr[i - cols]) return true
   if (y < rows - 1 && !maskArr[i + cols]) return true
+
   return false
 
-}
-
-function secureCopy(dst, src) {           // prevent overwrite on src copy 
-
-  if (!src) return new Uint8Array(0)
-
-  if (!dst || dst.length !== src.length) {
-    dst = new Uint8Array(src.length)
-  }
-
-  dst.set(src)
-  return dst
-
-}
-
-function secureExpand() {                 // prevent overwrite on expand 
-  const total = cols * rows
-  if (!expandA || expandA.length !== total) {
-    expandA = new Uint8Array(total)
-    expandB = new Uint8Array(total)
-  }
 }
 
 // CONTEXT
@@ -170,11 +146,6 @@ function setGrid() {                      // create grid + animate rain
       noiseMap[y * cols + x] = n
     }
   }
-
-  // ensure masks exist with correct size
-  const total = cols * rows
-  if (!baseMask || baseMask.length !== total) baseMask = new Uint8Array(total)
-  if (!tmpMask  || tmpMask.length  !== total) tmpMask  = new Uint8Array(total)
 
 }
 
@@ -364,7 +335,7 @@ function updateSwipe() {                  // next swipe frame
 
     if (transPhase === 0) {
       
-      baseMask = secureCopy(baseMask, tmpMask)
+      baseMask.set(tmpMask)
 
       if (autoOutro) {
         transPhase = 1
@@ -384,61 +355,39 @@ function updateSwipe() {                  // next swipe frame
   }
 }
 
-function expandMask(src, steps) {         // next mask frame 
+function expandMask(src, dst, steps) {    // next mask frame 
 
-  secureExpand()
-  const total = cols * rows
+  dst.set(src)
 
-  if (steps <= 0) {
-    secureExpand()
-    if (src.length !== expandA.length) {
-      const out = new Uint8Array(src.length)
-      out.set(src)
-      return out
-    }
-    expandA.set(src)
-    return expandA
-  }
-
-  let a = expandA, b = expandB
-  a.set(src)
-
+  // for each step, activate neighbors
   for (let s = 0; s < steps; s++) {
-
-    b.fill(0)
-
+    const srcBuf = (s % 2 === 0) ? dst : src
+    const dstBuf = (s % 2 === 0) ? src : dst
+    dstBuf.fill(0)
     for (let y = 0; y < rows; y++) {
       const yOff = y * cols
       for (let x = 0; x < cols; x++) {
         const i = yOff + x
-        if (a[i]) {
-          b[i] = 1
-          if (x > 0) b[i - 1] = 1
-          if (x < cols - 1) b[i + 1] = 1
-          if (y > 0) b[i - cols] = 1
-          if (y < rows - 1) b[i + cols] = 1
+        if (srcBuf[i]) {
+          dstBuf[i] = 1
+          if (x > 0) dstBuf[i - 1] = 1
+          if (x < cols - 1) dstBuf[i + 1] = 1
+          if (y > 0) dstBuf[i - cols] = 1
+          if (y < rows - 1) dstBuf[i + cols] = 1
+          if (x === 0 && y === 0) dstBuf[i] = 1
         }
       }
     }
-
-    const tmp = a; a = b; b = tmp
-
   }
 
-  if (a !== expandA) expandA.set(a), a = expandA
-
-  return a
+  // returns expanded mask
+  return (steps % 2 === 0) ? dst : src
 
 }
 
 // MAIN
 
 function updateMasks(total) {                                   // handle mask mode 
-
-  const totalSize = cols * rows
-
-  if (!baseMask || baseMask.length !== totalSize) baseMask = new Uint8Array(totalSize)
-  if (!tmpMask  || tmpMask.length  !== totalSize) tmpMask  = new Uint8Array(totalSize)
 
     switch (mode) {
 
@@ -459,7 +408,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render cells
   const portalCode = portalCodes[idx]
   const portalCh = String.fromCharCode(portalCode)
   const matrixCh = colBuf[y]
-  const revealed = resultMask && resultMask.length ? !!resultMask[idx] : false
+  const revealed = !!resultMask[idx]
   const frontier = isFrontier(resultMask, x, y)
 
   let drawCh = portalCh
@@ -614,13 +563,12 @@ function drawFrame(ts) {                                        // draws shader
   const steps = Math.min(maxDilateSteps, Math.floor((mode === 'intro' ? clamp(revealFrame/revealMaxFrames,0,1) : 1)*maxDilateSteps))
 
   let resultMask
-
   if (mode === 'direct' || mode === 'static') {
     resultMask = baseMask
   } else if (mode === 'transition') {
     resultMask = tmpMask
   } else {
-    resultMask = expandMask(baseMask, steps)
+    resultMask = expandMask(baseMask, tmpMask, steps)
   }
 
   // cell draw loop
@@ -689,14 +637,14 @@ function drawFrame(ts) {                                        // draws shader
 
 }
 
-function runIntro() { mode = 'intro'; revealFrame = 0; }                                                                                              // DONE
-function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                                               // DONE
-function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                              // DONE
-function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                                      // DONE
-function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }            // DONE
-function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }          // DONE
-function runTransitionOutro() { mode = 'transition'; tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false; }    // DONE 
-function runHidden() { mode = 'hidden'; }                                                                                                             // DONE
+function runIntro() { mode = 'intro'; revealFrame = 0; }                                                                                      // DONE
+function runStatic() { mode = 'static'; for(let i=0;i<rows*cols;i++) baseMask[i] = 1; }                                                       // DONE
+function runOutro() { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }                                                      // DONE
+function runDirect() { mode = 'direct'; revealFrame = 0; for (let i = 0; i < rows * cols; i++) baseMask[i] = 1 }                              // DONE
+function runTransitionFull() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true; }    // DONE
+function runTransitionIntro() { mode = 'transition'; baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false; }  // DONE
+function runTransitionOutro() { mode = 'transition'; baseMask.set(tmpMask); transFrame = 0; transPhase = 1; autoOutro = false; }              // DONE 
+function runHidden() { mode = 'hidden'; }                                                                                                     // DONE
 
 function checkIntro() { return mode === 'intro' && revealFrame >= revealMaxFrames }
 function checkStatic() { return true }
