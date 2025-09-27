@@ -14,7 +14,6 @@ const maxDilateSteps = 32                                               // outro
 let circleCells = new Set()                                             // guarda indices dentro del circulo
 let circleFrontier = new Set()                                          // guarda indices del limite del circulo
 
-let lastFrameTime = 0                                                   // set frame time count
 let ctx = null                                                          // canvas 2D context
 let height = 0                                                          // canvas px height
 let width = 0                                                           // canvas px width
@@ -499,13 +498,6 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
   return { drawCh, color, needsBg, frontier }
 }
 function drawFrame(ts) {                                                // draw shader 
-
-  // faster render for low end hardware
-  if (ts - lastFrameTime < 33) { 
-    animationId = requestAnimationFrame(drawFrame)
-    return
-  }
-  lastFrameTime = ts
 
   if (!ctx) return
   const total = rows * cols
