@@ -110,7 +110,7 @@ function setSize() {                                                    // prepa
 }
 function updateSize() {                                                 // update context 
   setSize()
-  fontSize = Math.floor(width / 70)
+  fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
   setGrid()
 }
 function setGrid() {                                                    // create grid + animate rain 
@@ -549,20 +549,20 @@ function drawFrame(ts) {                                                // draw 
 
         if (isRain || isPortal || isFrontier) {
           ctx.fillStyle = '#1b1c1c'
-          ctx.fillRect(px, py, fontSize, fontSize)
+          ctx.fillRect(px, py, fontSize+1, fontSize+1)
         }
 
       } else if (mode === 'intro') {
 
         if (revealed) {
           ctx.fillStyle = '#1b1c1c'
-          ctx.fillRect(px, py, fontSize, fontSize)
+          ctx.fillRect(px, py, fontSize+1, fontSize+1)
         }
 
       } else {
 
         ctx.fillStyle = '#1b1c1c'
-        ctx.fillRect(px, py, fontSize, fontSize)
+        ctx.fillRect(px, py, fontSize+1, fontSize+1)
 
       }
 
