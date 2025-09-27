@@ -163,14 +163,16 @@ for (const slug of postDirs) {
       hash.update(data)
 
       if (/\.(jpe?g|png)$/i.test(asset.name)) {
-
+        const outputPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
         await sharp(assetPath)
           .resize({ width: 1200 })
           .webp({ quality: 80 })
-          .toFile(destPath.replace(/\.(jpe?g|png)$/i, '.webp'))
-
+          .toFile(outputPath)
+        const finalData = await fs.readFile(outputPath)
+        hash.update(finalData)
       } else {
         await fs.writeFile(destPath, data)
+        hash.update(data)
       }
 
     }
@@ -190,7 +192,8 @@ for (const slug of postDirs) {
     const description = attributes.description || ''
     const portada = attributes.portada ? `${siteUrl}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
-    const date = attributes.date || new Date().toISOString()
+    const date = new Date();
+    const formatted = `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
     const canonicalUrl = `${siteUrl}/${type}/${slug}/`
     const authorJson = handle
       ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}`
@@ -201,7 +204,7 @@ for (const slug of postDirs) {
       .replace(/{{portada}}/g, portada)
       .replace(/{{canonicalUrl}}/g, canonicalUrl)
       .replace(/{{handle}}/g, handle)
-      .replace(/{{date}}/g, date)
+      .replace(/{{date}}/g, formatted)
       .replace(/{{authorJson}}/g, authorJson)
       .replace(/{{htmlContent}}/g, htmlContent)
 

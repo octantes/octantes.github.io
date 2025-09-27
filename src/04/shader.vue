@@ -672,17 +672,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style>
-
-.container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
+.container { overflow: hidden; width: 100%; height: 100%; }
+canvas { display: block; width: 100%; height: 100%; }
 </style>
