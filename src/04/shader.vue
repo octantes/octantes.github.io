@@ -1,62 +1,62 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const charRangeStart = 33                             // unicode char start
-const charRangeEnd = 126                              // unicode char end
-const charRangeMax = charRangeEnd - charRangeStart    // max possible chars
+const charRangeStart = 33                                               // unicode char start
+const charRangeEnd = 126                                                // unicode char end
+const charRangeMax = charRangeEnd - charRangeStart                      // max possible chars
 
-const canvasRef = ref(null)         // dom << canvas >> ref
-const containerRef = ref(null)      // container div ref
-const revealMaxFrames = 160         // intro total frames counter
-const borderColor = '#AAABAC'       // active border zone color
-const maxDilateSteps = 32           // outro animation max frames
+const canvasRef = ref(null)                                             // dom << canvas >> ref
+const containerRef = ref(null)                                          // container div ref
+const revealMaxFrames = 160                                             // intro total frames counter
+const borderColor = '#AAABAC'                                           // active border zone color
+const maxDilateSteps = 32                                               // outro animation max frames
 
-let circleCells = new Set()         // guarda indices dentro del circulo
-let circleFrontier = new Set()      // guarda indices del limite del circulo
+let circleCells = new Set()                                             // guarda indices dentro del circulo
+let circleFrontier = new Set()                                          // guarda indices del limite del circulo
 
-let ctx = null                      // canvas 2D context
-let width = 0                       // canvas px height
-let height = 0                      // canvas px width
-let fontSize = 16                   // font px size
-let dpr = 1                         // device px ratio
-let cols = 0                        // char grid columns
-let rows = 0                        // char grid rows
+let ctx = null                                                          // canvas 2D context
+let height = 0                                                          // canvas px height
+let width = 0                                                           // canvas px width
+let fontSize = 16                                                       // font px size
+let dpr = 1                                                             // device px ratio
+let cols = 0                                                            // char grid columns
+let rows = 0                                                            // char grid rows
 
-let speed = 0.7                     // rain fall speed
-let trailLength = 40                // rain trail char length
-let resetChance = 0.02              // column reset chance
-let heads = []                      // first rain char position
-let charBuffers = []                // rain column chars positions
-let portalCodes = null              // portal cell char codes
-let animationId = null              // next requested frame id
-let revealFrame = 0                 // frame counter for intro
-let mode = 'intro'                  // current mode store string
-let outroFrame = 0                  // outro max frame counter
-let outroRadius = 0                 // current outro animation radius
-let outroCenter = { x: 0, y: 0 }    // outro animation center position
-let transFrame = 0                  // swipe animation line counter
-let transPhase = 0                  // swipe animation direction
-let autoOutro = false               // swipe outro autotrigger
+let speed = 0.7                                                         // rain fall speed
+let trailLength = 40                                                    // rain trail char length
+let resetChance = 0.02                                                  // column reset chance
+let heads = []                                                          // first rain char position
+let charBuffers = []                                                    // rain column chars positions
+let portalCodes = null                                                  // portal cell char codes
+let animationId = null                                                  // next requested frame id
+let revealFrame = 0                                                     // frame counter for intro
+let mode = 'intro'                                                      // current mode store string
+let outroFrame = 0                                                      // outro max frame counter
+let outroRadius = 0                                                     // current outro animation radius
+let outroCenter = { x: 0, y: 0 }                                        // outro animation center position
+let transFrame = 0                                                      // swipe animation line counter
+let transPhase = 0                                                      // swipe animation direction
+let autoOutro = false                                                   // swipe outro autotrigger
 
-let noiseMap = null                 // static noise array for animations
-let baseMask = null                 // active/inactive animation cell mask
-let tmpMask = null                  // dilation temporal buffer mask
-let expandA = null                  // expand variable a
-let expandB = null                  // expand variable b
+let noiseMap = null                                                     // static noise array for animations
+let baseMask = null                                                     // active/inactive animation cell mask
+let tmpMask = null                                                      // dilation temporal buffer mask
+let expandA = null                                                      // expand variable a
+let expandB = null                                                      // expand variable b
 
 // HELPERS
 
-function clamp(v, a = 0, b = 1) {         // constrain value 
+function clamp(v, a = 0, b = 1) {                                       // constrain value 
   return Math.min(b, Math.max(a, v))
 }
-function pickChar() {                     // return character 
+function pickChar() {                                                   // return character 
   return String.fromCharCode(charRangeStart + Math.floor(Math.random() * charRangeMax))
 }
-function trailAlpha(alpha) {              // returns trail color 
+function trailAlpha(alpha) {                                            // returns trail color 
   alpha = Math.pow(Math.max(0, alpha), 1.2)
   return `rgba(126,189,196,${alpha.toFixed(3)})`
 }
-function isFrontier(maskArr, x, y) {      // detects border of zone 
+function isFrontier(maskArr, x, y) {                                    // detects border of zone 
   const i = y * cols + x
   if (!maskArr || !maskArr.length) return false
   if (!maskArr[i]) return false
@@ -66,20 +66,20 @@ function isFrontier(maskArr, x, y) {      // detects border of zone
   if (y < rows - 1 && !maskArr[i + cols]) return true
   return false
 }
-function secureCopy(dst, src) {           // prevent overwrite on src copy 
+function secureCopy(dst, src) {                                         // prevent overwrite on src copy 
   if (!src) return null
   if (!dst || dst.length !== src.length) { dst = new Uint8Array(src.length) }
   dst.set(src)
   return dst
 }
-function secureExpand() {                 // prevent overwrite on expand 
+function secureExpand() {                                               // prevent overwrite on expand 
   const total = cols * rows
   if (!expandA || expandA.length !== total) {
     expandA = new Uint8Array(total)
     expandB = new Uint8Array(total)
   }
 }
-function secureMasks() {                  // prevent mask overwrite 
+function secureMasks() {                                                // prevent mask overwrite 
   const total = cols * rows
   if (!baseMask || baseMask.length !== total) baseMask = new Uint8Array(total)
   if (!tmpMask || tmpMask.length !== total) tmpMask = new Uint8Array(total)
@@ -88,7 +88,7 @@ function secureMasks() {                  // prevent mask overwrite
 
 // CONTEXT
 
-function setSize() {                      // prepare context 
+function setSize() {                                                    // prepare context 
 
   // container div size
   if (!canvasRef.value || !containerRef.value) return
@@ -108,12 +108,12 @@ function setSize() {                      // prepare context
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
 }
-function updateSize() {                   // update context 
+function updateSize() {                                                 // update context 
   setSize()
   fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
   setGrid()
 }
-function setGrid() {                      // create grid + animate rain 
+function setGrid() {                                                    // create grid + animate rain 
 
   // set size
   cols = Math.max(1, Math.ceil(width / fontSize))
@@ -151,7 +151,7 @@ function setGrid() {                      // create grid + animate rain
 
 // ANIMATIONS
 
-function updatePortal(tick) {             // render next portal frame 
+function updatePortal(tick) {                                           // render next portal frame 
 
   // set variables
   const cx = cols / 2
@@ -169,7 +169,7 @@ function updatePortal(tick) {             // render next portal frame
   }
 
 }
-function updateRain() {                   // render next rain frame 
+function updateRain() {                                                 // render next rain frame 
   for (let c = 0; c < cols; c++) {
     const rowPos = Math.floor(heads[c] + speed)
     heads[c] += speed
@@ -180,7 +180,7 @@ function updateRain() {                   // render next rain frame
     }
   }
 }
-function updateCircle() {                 // render next circle frame 
+function updateCircle() {                                               // render next circle frame 
 
   outroRadius += 1
   circleCells.clear()
@@ -216,11 +216,11 @@ function updateCircle() {                 // render next circle frame
   for (let i = 0; i < rows * cols; i++) baseMask[i] = circleCells.has(i) ? 0 : 1
 
 }
-function updateGerm(total) {              // render next germ frame 
+function updateGerm(total) {                                            // render next germ frame 
   const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
   for (let i = 0; i < total; i++) baseMask[i] = noiseMap[i] < ratio ? 1 : 0
 }
-function updateGermInv(total) {           // render next inverted germ frame 
+function updateGermInv(total) {                                         // render next inverted germ frame 
 
   const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
   
@@ -271,15 +271,15 @@ function updateGermInv(total) {           // render next inverted germ frame
     }
   }
 }
-function updateSwipe() {                  // render next swipe frame 
+function updateSwipe() {                                                // render next swipe frame 
 
   secureMasks()
 
   const line = Math.floor(transFrame)
   tmpMask.fill(0)
 
-  const t = performance.now() * 0.001
-  const scroll = t * 20
+  const t = transFrame * 0.05
+  const scroll = transFrame * 0.5
 
   if (transPhase === 0) {
 
@@ -338,7 +338,7 @@ function updateSwipe() {                  // render next swipe frame
   }
 
 }
-function expandMask(src, steps) {         // render next mask frame with buffer 
+function expandMask(src, steps) {                                       // render next mask frame with buffer 
 
   secureExpand()
   const total = cols * rows
@@ -377,7 +377,7 @@ function expandMask(src, steps) {         // render next mask frame with buffer
 
 // MAIN RENDER
 
-function updateMasks(total) {                                   // handle mask mode 
+function updateMasks(total) {                                           // handle mask mode 
 
   secureMasks()
 
@@ -391,7 +391,7 @@ function updateMasks(total) {                                   // handle mask m
   }
 
 }
-function cellRender(x, y, headPos, colBuf, resultMask) {        // render mode cells 
+function cellRender(x, y, headPos, colBuf, resultMask) {                // render mode cells 
 
   const idx = y * cols + x
   const portalCode = portalCodes[idx]
@@ -497,7 +497,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {        // render mode c
 
   return { drawCh, color, needsBg, frontier }
 }
-function drawFrame(ts) {                                        // draw shader 
+function drawFrame(ts) {                                                // draw shader 
 
   if (!ctx) return
   const total = rows * cols
@@ -582,25 +582,7 @@ function drawFrame(ts) {                                        // draw shader
 
 // TASKS
 
-function runIntro()             { mode = 'intro'; revealFrame = 0 }
-function runStatic()            { mode = 'static'; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
-function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
-function runDirect()            { mode = 'direct'; revealFrame = 0; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
-function runTransitionFull()    { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true }
-function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false }
-function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
-function runHidden()            { mode = 'hidden' }
-
-function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames }
-function checkStatic()          { return true }
-function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
-function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
-function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
-function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
-function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
-function checkHidden()          { return true }
-
-const TASKS = {                                                 // run and check 
+const TASKS = {                                                         // run and check 
 
   intro:    { impl: runIntro, finish: checkIntro    },
   static:   { impl: runStatic, finish: checkStatic  },
@@ -613,7 +595,7 @@ const TASKS = {                                                 // run and check
   'transition-outro': { impl: runTransitionOutro, finish: checkTransitionOutro },
 
 }
-function runQueue(name) {                                       // run queue 
+function runQueue(name) {                                               // run queue 
 
   const task = TASKS[name]
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
@@ -640,7 +622,34 @@ function runQueue(name) {                                       // run queue
 
 }
 
-defineExpose({ runQueue, runIntro, runStatic, runOutro, runTransitionIntro, runTransitionOutro, runDirect, runHidden })
+function runIntro()             { mode = 'intro'; revealFrame = 0 }
+function runStatic()            { mode = 'static'; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
+function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
+function runDirect()            { mode = 'direct'; revealFrame = 0; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
+function runTransitionFull()    { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true }
+function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false }
+function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
+function runHidden()            { mode = 'hidden' }
+
+function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames }
+function checkStatic()          { return true }
+function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
+function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
+function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
+function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
+function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
+function checkHidden()          { return true }
+
+defineExpose({ 
+  runQueue,
+  runIntro,
+  runStatic,
+  runOutro,
+  runTransitionIntro,
+  runTransitionOutro,
+  runDirect,
+  runHidden,
+})
 
 onMounted(() => {
   updateSize()
