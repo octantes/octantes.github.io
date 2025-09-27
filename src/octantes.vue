@@ -16,9 +16,9 @@ function updateProcessing(val) { processing.value = val }
 
         <Navigation class="navigation" :disabled="processing" />
 
-        <RouterView v-slot="{ Component }" class="articulos">
+        <RouterView v-slot="{ Component }" >
 
-          <component :is="Component" @updateProcessing="updateProcessing" />
+          <component class="articulos" :is="Component" @updateProcessing="updateProcessing" />
           
         </RouterView>
 
@@ -67,7 +67,7 @@ function updateProcessing(val) { processing.value = val }
   .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
   .navigation { height: auto; }
   .content { aspect-ratio: 3/5;}
-  .articulos::-webkit-scrollbar-thumb { background-color: #8ab6bb; }
+  .articulos::-webkit-scrollbar-thumb { background-color: #8AB6BB; }
   
 }
 
