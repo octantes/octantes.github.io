@@ -110,7 +110,7 @@ function setSize() {                                                    // prepa
 }
 function updateSize() {                                                 // update context 
   setSize()
-  fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
+  fontSize = Math.floor(width / 70)
   setGrid()
 }
 function setGrid() {                                                    // create grid + animate rain 
