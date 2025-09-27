@@ -499,6 +499,13 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 }
 function drawFrame(ts) {                                                // draw shader 
 
+  // faster render for low end hardware
+  if (ts - lastFrameTime < 33) { 
+    animationId = requestAnimationFrame(drawFrame)
+    return
+  }
+  lastFrameTime = ts
+
   if (!ctx) return
   const total = rows * cols
 
@@ -549,20 +556,20 @@ function drawFrame(ts) {                                                // draw 
 
         if (isRain || isPortal || isFrontier) {
           ctx.fillStyle = '#1b1c1c'
-          ctx.fillRect(px, py, fontSize+1, fontSize+1)
+          ctx.fillRect(px, py, fontSize + 1, fontSize + 1)
         }
 
       } else if (mode === 'intro') {
 
         if (revealed) {
           ctx.fillStyle = '#1b1c1c'
-          ctx.fillRect(px, py, fontSize+1, fontSize+1)
+          ctx.fillRect(px, py, fontSize + 1, fontSize + 1)
         }
 
       } else {
 
         ctx.fillStyle = '#1b1c1c'
-        ctx.fillRect(px, py, fontSize+1, fontSize+1)
+        ctx.fillRect(px, py, fontSize + 1, fontSize + 1)
 
       }
 
