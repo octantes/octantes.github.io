@@ -50,13 +50,16 @@ let expandB = null                                                      // expan
 function clamp(v, a = 0, b = 1) {                                       // constrain value 
   return Math.min(b, Math.max(a, v))
 }
+
 function pickChar() {                                                   // return character 
   return String.fromCharCode(charRangeStart + Math.floor(Math.random() * charRangeMax))
 }
+
 function trailAlpha(alpha) {                                            // returns trail color 
   alpha = Math.pow(Math.max(0, alpha), 1.2)
   return `rgba(126,189,196,${alpha.toFixed(3)})`
 }
+
 function isFrontier(maskArr, x, y) {                                    // detects border of zone 
   const i = y * cols + x
   if (!maskArr || !maskArr.length) return false
@@ -67,12 +70,14 @@ function isFrontier(maskArr, x, y) {                                    // detec
   if (y < rows - 1 && !maskArr[i + cols]) return true
   return false
 }
+
 function secureCopy(dst, src) {                                         // prevent overwrite on src copy 
   if (!src) return null
   if (!dst || dst.length !== src.length) { dst = new Uint8Array(src.length) }
   dst.set(src)
   return dst
 }
+
 function secureExpand() {                                               // prevent overwrite on expand 
   const total = cols * rows
   if (!expandA || expandA.length !== total) {
@@ -80,6 +85,7 @@ function secureExpand() {                                               // preve
     expandB = new Uint8Array(total)
   }
 }
+
 function secureMasks() {                                                // prevent mask overwrite 
   const total = cols * rows
   if (!baseMask || baseMask.length !== total) baseMask = new Uint8Array(total)
@@ -109,11 +115,13 @@ function setSize() {                                                    // prepa
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
 }
+
 function updateSize() {                                                 // update context 
   setSize()
   fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
   setGrid()
 }
+
 function setGrid() {                                                    // create grid + animate rain 
 
   // set size
@@ -186,6 +194,7 @@ function updatePortal(tick) {                                           // rende
   }
 
 }
+
 function updateRain() {                                                 // render next rain frame 
   for (let c = 0; c < cols; c++) {
     const rowPos = Math.floor(heads[c] + speed)
@@ -197,6 +206,7 @@ function updateRain() {                                                 // rende
     }
   }
 }
+
 function updateCircle() {                                               // render next circle frame 
 
   outroRadius += 1
@@ -233,10 +243,12 @@ function updateCircle() {                                               // rende
   for (let i = 0; i < rows * cols; i++) baseMask[i] = circleCells.has(i) ? 0 : 1
 
 }
+
 function updateGerm(total) {                                            // render next germ frame 
   const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
   for (let i = 0; i < total; i++) baseMask[i] = noiseMap[i] < ratio ? 1 : 0
 }
+
 function updateGermInv(total) {                                         // render next inverted germ frame 
 
   const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
@@ -288,6 +300,7 @@ function updateGermInv(total) {                                         // rende
     }
   }
 }
+
 function updateSwipe() {                                                // render next swipe frame 
 
   secureMasks()
@@ -355,6 +368,7 @@ function updateSwipe() {                                                // rende
   }
 
 }
+
 function expandMask(src, steps) {                                       // render next mask frame with buffer 
 
   secureExpand()
@@ -408,6 +422,7 @@ function updateMasks(total) {                                           // handl
   }
 
 }
+
 function cellRender(x, y, headPos, colBuf, resultMask) {                // render mode cells 
 
   const idx = y * cols + x
@@ -514,6 +529,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 
   return { drawCh, color, needsBg, frontier }
 }
+
 function drawFrame(ts) {                                                // draw shader 
 
   if (!ctx) return
@@ -617,6 +633,7 @@ const TASKS = {                                                         // run a
   'transition-outro': { impl: runTransitionOutro, finish: checkTransitionOutro },
 
 }
+
 function runQueue(name) {                                               // run queue 
   const task = TASKS[name]
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
@@ -639,7 +656,6 @@ function runQueue(name) {                                               // run q
     rafId = requestAnimationFrame(check)
   })
 }
-
 
 function runIntro()             { mode = 'intro'; revealFrame = 0 }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
