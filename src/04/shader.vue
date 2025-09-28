@@ -590,9 +590,8 @@ function drawFrame(ts) {                                                // draw 
   }
 
   if (mode === 'intro' && revealFrame < revealMaxFrames) revealFrame++
-  else if (mode === 'outro') { if (outroRadius < Math.hypot(cols, rows)) outroFrame++; else mode = 'hidden' }
-  else if (mode === 'direct') {
-  if (revealFrame < revealMaxFrames + extraFrames) revealFrame++; else mode = 'hidden' }
+  else if (mode === 'outro' && outroRadius < Math.hypot(cols, rows)) outroFrame++
+  else if (mode === 'direct' && revealFrame < revealMaxFrames + extraFrames) revealFrame++
 
   animationId = requestAnimationFrame(drawFrame)
 
