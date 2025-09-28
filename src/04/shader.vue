@@ -10,6 +10,7 @@ const containerRef = ref(null)                                          // conta
 const revealMaxFrames = 160                                             // intro total frames counter
 const borderColor = '#AAABAC'                                           // active border zone color
 const maxDilateSteps = 32                                               // outro animation max frames
+const extraFrames = 60                                                  // direct animation extra frames
 
 let circleCells = new Set()                                             // guarda indices dentro del circulo
 let circleFrontier = new Set()                                          // guarda indices del limite del circulo
@@ -574,7 +575,7 @@ function drawFrame(ts) {                                                // draw 
 
   if (mode === 'intro' && revealFrame < revealMaxFrames) revealFrame++
   else if (mode === 'outro' && outroRadius < Math.hypot(cols, rows)) outroFrame++
-  else if (mode === 'direct' && revealFrame < revealMaxFrames + 60) revealFrame++
+  else if (mode === 'direct' && revealFrame < revealMaxFrames + extraFrames) revealFrame++
 
   animationId = requestAnimationFrame(drawFrame)
 
@@ -634,7 +635,7 @@ function runHidden()            { mode = 'hidden' }
 function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.7 }
 function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
-function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
+function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames + extraFrames }
 function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
