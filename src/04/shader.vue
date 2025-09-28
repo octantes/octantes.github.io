@@ -631,7 +631,20 @@ function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.f
 function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
 function runHidden()            { mode = 'hidden' }
 
-function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames }
+function checkIntro()           {
+  if (mode !== 'intro') return false;
+  const total = rows * cols;
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const idx = y * cols + x;
+      if (baseMask[idx] === 1) {
+        return false
+      }
+    }
+  }
+  return true // ninguna celda activa dentro del canvas
+}
+
 function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
