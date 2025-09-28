@@ -631,7 +631,23 @@ function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.f
 function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
 function runHidden()            { mode = 'hidden' }
 
-function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames }
+function checkIntro() {
+  if (mode !== 'intro') return false
+  if (revealFrame < revealMaxFrames) return false
+
+  // Verificar que ya no quede geometría visible
+  const steps = Math.min(maxDilateSteps, maxDilateSteps)
+  const mask = expandMask(baseMask, steps)
+
+  for (let i = 0; i < mask.length; i++) {
+    if (mask[i]) {
+      return false   // todavía hay algo pintado
+    }
+  }
+
+  return true
+}
+
 function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
