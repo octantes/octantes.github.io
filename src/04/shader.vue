@@ -517,6 +517,8 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 function drawFrame(ts) {                                                // draw shader 
 
   if (!ctx) return
+  if (mode === 'hidden') { if (animationId != null) cancelAnimationFrame(animationId); animationId = null; return }
+
   const total = rows * cols
 
   ctx.font = `${fontSize}px monospace`
@@ -590,10 +592,11 @@ function drawFrame(ts) {                                                // draw 
   }
 
   if (mode === 'intro' && revealFrame < revealMaxFrames) revealFrame++
-  else if (mode === 'outro' && outroRadius < Math.hypot(cols, rows)) outroFrame++
-  else if (mode === 'direct' && revealFrame < revealMaxFrames + extraFrames) revealFrame++
+  else if (mode === 'outro') { if (outroRadius < Math.hypot(cols, rows)) outroFrame++; else mode = 'hidden' }
+  else if (mode === 'direct') {
+  if (revealFrame < revealMaxFrames + extraFrames) revealFrame++; else mode = 'hidden' }
 
-  animationId = requestAnimationFrame(drawFrame)
+  if (mode !== 'hidden') animationId = requestAnimationFrame(drawFrame)
 
 }
 
@@ -616,6 +619,8 @@ function runQueue(name) {                                               // run q
 
   const task = TASKS[name]
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
+
+  if (!animationId) animationId = requestAnimationFrame(drawFrame) // reiniciar raf
 
   return new Promise((resolve, reject) => {
     try { task.impl() } catch (err) { reject(err); return }
