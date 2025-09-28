@@ -617,18 +617,26 @@ const TASKS = {                                                         // run a
   'transition-outro': { impl: runTransitionOutro, finish: checkTransitionOutro },
 
 }
-function runQueue(name) {
+function runQueue(name) {                                               // run queue 
   const task = TASKS[name]
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
 
   return new Promise((resolve, reject) => {
     try { task.impl() } catch (err) { return reject(err) }
+
+    let rafId
     const check = () => {
-      try { if (mode === 'hidden' || mode === 'static') return resolve() } 
-      catch (err) { return reject(err) }
-      requestAnimationFrame(check)
+      try {
+        if (rafId != null && (mode === 'hidden' || mode === 'static' || (typeof task.finish === 'function' && task.finish()))) {
+          cancelAnimationFrame(rafId)
+          return resolve()
+        }
+      } catch (err) { if (rafId != null) cancelAnimationFrame(rafId); return reject(err) }
+
+      rafId = requestAnimationFrame(check)
     }
-    requestAnimationFrame(check)
+
+    rafId = requestAnimationFrame(check)
   })
 }
 
