@@ -517,7 +517,13 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 function drawFrame(ts) {                                                // draw shader 
 
   if (!ctx) return
-  if (mode === 'hidden') { if (animationId != null) cancelAnimationFrame(animationId); animationId = null; return }
+  
+  if (mode === 'hidden') {
+    ctx.clearRect(0, 0, width, height);
+    if (animationId != null) cancelAnimationFrame(animationId);
+    animationId = null;
+    return;
+  }
 
   const total = rows * cols
 
@@ -627,7 +633,7 @@ function runQueue(name) {                                               // run q
     let rafId = null
     const check = () => {
       try {
-        if (typeof task.finish === 'function' && task.finish()) {
+        if (typeof task.finish === 'function' && (task.finish() || mode === 'hidden')) {
           if (rafId != null) cancelAnimationFrame(rafId)
           resolve()
           return
@@ -641,7 +647,6 @@ function runQueue(name) {                                               // run q
     }
     rafId = requestAnimationFrame(check)
   })
-
 }
 
 function runIntro()             { mode = 'intro'; revealFrame = 0 }
