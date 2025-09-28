@@ -663,21 +663,11 @@ function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' 
 function checkStatic()          { return true }
 function checkHidden()          { return true }
 
-defineExpose({ 
-  runQueue,
-  runIntro,
-  runStatic,
-  runOutro,
-  runTransitionIntro,
-  runTransitionOutro,
-  runDirect,
-  runHidden,
-})
+defineExpose({ runQueue })
 
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-  runQueue('direct')
   secureMasks()
   animationId = requestAnimationFrame(drawFrame)
 })
