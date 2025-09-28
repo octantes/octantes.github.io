@@ -617,38 +617,21 @@ const TASKS = {                                                         // run a
   'transition-outro': { impl: runTransitionOutro, finish: checkTransitionOutro },
 
 }
-function runQueue(name) {                                               // run queue 
-
+function runQueue(name) {
   const task = TASKS[name]
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
 
   return new Promise((resolve, reject) => {
-
-    try { task.impl() } catch (err) { reject(err); return }
-    let rafId = null
-
+    try { task.impl() } catch (err) { return reject(err) }
     const check = () => {
-      try {
-
-        if (mode === 'hidden' || mode === 'static') {
-          if (rafId != null) cancelAnimationFrame(rafId)
-          resolve()
-          return
-        }
-
-        if (typeof task.finish === 'function' && task.finish()) {
-          if (rafId != null) cancelAnimationFrame(rafId)
-          resolve()
-          return
-        }
-
-      } catch (err) { if (rafId != null) cancelAnimationFrame(rafId); reject(err); return }
-      rafId = requestAnimationFrame(check)
+      try { if (mode === 'hidden' || mode === 'static') return resolve() } 
+      catch (err) { return reject(err) }
+      requestAnimationFrame(check)
     }
-    
-    rafId = requestAnimationFrame(check)
+    requestAnimationFrame(check)
   })
 }
+
 
 function runIntro()             { mode = 'intro'; revealFrame = 0 }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
@@ -673,8 +656,6 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-    runQueue('outro')
-
   secureMasks()
   animationId = requestAnimationFrame(drawFrame)
 })
