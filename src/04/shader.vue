@@ -31,7 +31,7 @@ let charBuffers = []                                                    // rain 
 let portalCodes = null                                                  // portal cell char codes
 let animationId = null                                                  // next requested frame id
 let revealFrame = 0                                                     // frame counter for intro
-let mode = 'intro'                                                      // current mode store string
+let mode = 'hidden'                                                     // current mode store string
 let outroFrame = 0                                                      // outro max frame counter
 let outroRadius = 0                                                     // current outro animation radius
 let outroCenter = { x: 0, y: 0 }                                        // outro animation center position
@@ -591,7 +591,7 @@ function drawFrame(ts) {                                                // draw 
 
   switch (mode) {
     case 'intro':         if (revealFrame < revealMaxFrames) { revealFrame++ } else { mode = 'static' } break
-    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { outroFrame++ } break
+    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { outroFrame++ } else { mode = 'hidden' } break
     case 'direct':        if (revealFrame < revealMaxFrames + extraFrames) { revealFrame++ } else { mode = 'hidden' } break
     case 'transition':    updateSwipe(); break
     default:
@@ -665,6 +665,7 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('outro')
   secureMasks()
   animationId = requestAnimationFrame(drawFrame)
 })
