@@ -594,7 +594,7 @@ function drawFrame(ts) {                                                // draw 
   else if (mode === 'direct') {
   if (revealFrame < revealMaxFrames + extraFrames) revealFrame++; else mode = 'hidden' }
 
-  if (mode !== 'hidden') animationId = requestAnimationFrame(drawFrame)
+  animationId = requestAnimationFrame(drawFrame)
 
 }
 
