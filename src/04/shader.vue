@@ -631,18 +631,15 @@ function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.f
 function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
 function runHidden()            { mode = 'hidden' }
 
-function checkIntro()           {
+function checkIntro() {
   if (mode !== 'intro') return false;
-  const total = rows * cols;
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      const idx = y * cols + x;
-      if (baseMask[idx] === 1) {
-        return false
-      }
-    }
+
+  // revisa solo baseMask, ignorando la dilatación
+  for (let i = 0; i < rows * cols; i++) {
+    if (!baseMask[i]) return false;  // todavía hay celdas no reveladas
   }
-  return true // ninguna celda activa dentro del canvas
+
+  return true;  // todo dentro del canvas ya está revelado
 }
 
 function checkStatic()          { return true }
