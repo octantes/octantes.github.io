@@ -10,7 +10,7 @@ const containerRef = ref(null)                                          // conta
 const revealMaxFrames = 160                                             // intro total frames counter
 const borderColor = '#AAABAC'                                           // active border zone color
 const maxDilateSteps = 32                                               // outro animation max frames
-const extraFrames = 60                                                  // direct animation extra frames
+const extraFrames = 50                                                  // direct animation extra frames
 
 let circleCells = new Set()                                             // guarda indices dentro del circulo
 let circleFrontier = new Set()                                          // guarda indices del limite del circulo
@@ -632,7 +632,7 @@ function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.f
 function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
 function runHidden()            { mode = 'hidden' }
 
-function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.7 }
+function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.6 }
 function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames + extraFrames }
