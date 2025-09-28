@@ -591,8 +591,7 @@ function drawFrame(ts) {                                                // draw 
 
   switch (mode) {
     case 'intro':         if (revealFrame < revealMaxFrames) { revealFrame++ } else { mode = 'static' } break
-    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { outroFrame++ }
-    //else { mode = 'hidden' } break
+    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { mode = 'outro' && outroFrame++ } else { mode = 'hidden' } break
     case 'direct':        if (revealFrame < revealMaxFrames + extraFrames) { revealFrame++ } else { mode = 'hidden' } break
     case 'transition':    updateSwipe(); break
     default:
