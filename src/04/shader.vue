@@ -606,13 +606,13 @@ function drawFrame(ts) {                                                // draw 
 
 const TASKS = {                                                         // run and check 
 
-  intro:    { impl: runIntro, finish: checkIntro    },
+  intro:    { impl: runIntro,  finish: checkIntro   },
   static:   { impl: runStatic, finish: checkStatic  },
-  outro:    { impl: runOutro, finish: checkOutro    },
+  outro:    { impl: runOutro,  finish: checkOutro   },
   direct:   { impl: runDirect, finish: checkDirect  },
   hidden:   { impl: runHidden, finish: checkHidden  },
 
-  'transition-full': { impl: runTransitionFull, finish: checkTransitionFull },
+  'transition-full':  { impl: runTransitionFull,  finish: checkTransitionFull  },
   'transition-intro': { impl: runTransitionIntro, finish: checkTransitionIntro },
   'transition-outro': { impl: runTransitionOutro, finish: checkTransitionOutro },
 
@@ -623,8 +623,10 @@ function runQueue(name) {                                               // run q
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
 
   return new Promise((resolve, reject) => {
+
     try { task.impl() } catch (err) { reject(err); return }
     let rafId = null
+
     const check = () => {
       try {
         if (typeof task.finish === 'function' && task.finish()) {
@@ -632,16 +634,12 @@ function runQueue(name) {                                               // run q
           resolve()
           return
         }
-      } catch (err) {
-        if (rafId != null) cancelAnimationFrame(rafId)
-        reject(err)
-        return
-      }
+      } catch (err) { if (rafId != null) cancelAnimationFrame(rafId); reject(err); return }
       rafId = requestAnimationFrame(check)
     }
+    
     rafId = requestAnimationFrame(check)
   })
-
 }
 
 function runIntro()             { mode = 'intro'; revealFrame = 0 }
