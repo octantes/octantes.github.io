@@ -589,10 +589,16 @@ function drawFrame(ts) {                                                // draw 
     }
   }
 
-  if (mode === 'intro' && revealFrame < revealMaxFrames) revealFrame++
-  else if (mode === 'outro' && outroRadius < Math.hypot(cols, rows)) outroFrame++
-  else if (mode === 'direct' && revealFrame < revealMaxFrames + extraFrames) revealFrame++
+  switch (mode) {
+    case 'intro':         if (revealFrame < revealMaxFrames) { revealFrame++ } else { mode = 'static' } break
+    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { outroFrame++ } else { mode = 'hidden' } break
+    case 'direct':        if (revealFrame < revealMaxFrames + extraFrames) { revealFrame++ } else { mode = 'hidden' } break
+    case 'transition':    updateSwipe(); break
+    default:
+      break
+  }
 
+  console.log(mode)
   animationId = requestAnimationFrame(drawFrame)
 
 }
@@ -640,21 +646,21 @@ function runQueue(name) {                                               // run q
 }
 
 function runIntro()             { mode = 'intro'; revealFrame = 0 }
-function runStatic()            { mode = 'static'; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
 function runDirect()            { mode = 'direct'; revealFrame = 0; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
 function runTransitionFull()    { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true }
 function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false }
 function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
+function runStatic()            { mode = 'static'; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
 function runHidden()            { mode = 'hidden' }
 
 function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.65 }
-function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames + extraFrames }
 function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
+function checkStatic()          { return true }
 function checkHidden()          { return true }
 
 defineExpose({ 
@@ -671,6 +677,7 @@ defineExpose({
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('direct')
   secureMasks()
   animationId = requestAnimationFrame(drawFrame)
 })
