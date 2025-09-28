@@ -632,22 +632,8 @@ function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = 
 function runHidden()            { mode = 'hidden' }
 
 function checkIntro() {
-  if (mode !== 'intro') return false
-  if (revealFrame < revealMaxFrames) return false
-
-  // Verificar que ya no quede geometría visible
-  const steps = Math.min(maxDilateSteps, maxDilateSteps)
-  const mask = expandMask(baseMask, steps)
-
-  for (let i = 0; i < mask.length; i++) {
-    if (mask[i]) {
-      return false   // todavía hay algo pintado
-    }
-  }
-
-  return true
+  return mode === 'intro' && revealFrame > revealMaxFrames
 }
-
 function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
