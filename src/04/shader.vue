@@ -631,9 +631,7 @@ function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.f
 function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
 function runHidden()            { mode = 'hidden' }
 
-function checkIntro() {
-  return mode === 'intro' && revealFrame > revealMaxFrames
-}
+function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames }
 function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
