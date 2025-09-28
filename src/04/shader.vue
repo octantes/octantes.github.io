@@ -10,7 +10,7 @@ const containerRef = ref(null)                                          // conta
 const revealMaxFrames = 160                                             // intro total frames counter
 const borderColor = '#AAABAC'                                           // active border zone color
 const maxDilateSteps = 32                                               // outro animation max frames
-const extraFrames = 50                                                  // direct animation extra frames
+const extraFrames = 42                                                  // direct animation extra frames
 
 let circleCells = new Set()                                             // guarda indices dentro del circulo
 let circleFrontier = new Set()                                          // guarda indices del limite del circulo
@@ -117,8 +117,24 @@ function updateSize() {                                                 // updat
 function setGrid() {                                                    // create grid + animate rain 
 
   // set size
-  cols = Math.max(1, Math.ceil(width / fontSize))
-  rows = Math.max(2, Math.ceil(height / fontSize))
+  let tempCols = Math.ceil(width / fontSize)
+  let tempRows = Math.ceil(height / fontSize)
+
+  const maxCols = 80
+  const maxRows = 100
+
+  // dynamic font size for large screen
+  if (tempCols > maxCols || tempRows > maxRows) {
+    const scaleX = width / maxCols
+    const scaleY = height / maxRows
+    fontSize = Math.floor(Math.min(scaleX, scaleY))
+    tempCols = Math.ceil(width / fontSize)
+    tempRows = Math.ceil(height / fontSize)
+  }
+
+  // set final sizes
+  cols = tempCols
+  rows = tempRows
 
   // set rain
   heads = new Array(cols)
@@ -632,7 +648,7 @@ function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.f
 function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
 function runHidden()            { mode = 'hidden' }
 
-function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.6 }
+function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.65 }
 function checkStatic()          { return true }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames + extraFrames }
