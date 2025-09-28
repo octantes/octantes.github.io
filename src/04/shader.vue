@@ -591,7 +591,8 @@ function drawFrame(ts) {                                                // draw 
 
   switch (mode) {
     case 'intro':         if (revealFrame < revealMaxFrames) { revealFrame++ } else { mode = 'static' } break
-    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { outroFrame++ } else { mode = 'hidden' } break
+    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { outroFrame++ }
+    //else { mode = 'hidden' } break
     case 'direct':        if (revealFrame < revealMaxFrames + extraFrames) { revealFrame++ } else { mode = 'hidden' } break
     case 'transition':    updateSwipe(); break
     default:
@@ -665,6 +666,7 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('outro')
   secureMasks()
   animationId = requestAnimationFrame(drawFrame)
 })
