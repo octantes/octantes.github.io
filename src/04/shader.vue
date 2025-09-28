@@ -633,8 +633,8 @@ function runHidden()            { mode = 'hidden' }
 
 function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.7 }
 function checkStatic()          { return true }
-function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) * 1.20 }
-function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames }
+function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
+function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames * 1.3 }
 function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
 function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
