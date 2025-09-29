@@ -585,6 +585,7 @@ function drawFrame(ts) {                                                // draw 
 
   if (!ctx) return
   const total = rows * cols
+  ctx.clearRect(0, 0, width, height)
 
   if (!headInts || headInts.length !== cols) headInts = new Int16Array(cols)
   for (let i = 0; i < cols; i++) headInts[i] = Math.floor(heads[i])
@@ -608,25 +609,22 @@ function drawFrame(ts) {                                                // draw 
     const py = y * fontSize
 
     for (let x = 0; x < cols; x++) {
-
-      const idx = yOff + x
       const headPos = headInts[x]
       const px = x * fontSize
       const colBuf = charBuffers[x]
-      const { drawCh, color } = cellRender(x, y, headPos, colBuf, resultMask)
+      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
 
-      // chequeo contra backbuffer
-      if (drawCh === prevChars[idx] && color === prevColors[idx]) continue
+      if (drawCh === null) continue
 
-      if (drawCh !== prevChars[idx] || color !== prevColors[idx]) {
-        ctx.fillStyle = COLOR_BG
-        ctx.fillRect(px, py, fontSize, fontSize)
+      const isRain = !!(matrixCh && dist >= 0 && dist <= trailLength)
+      const isPortal = drawCh === portalCh
+      const isFront = !!frontier
 
-        if (drawCh) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
-
-        prevChars[idx] = drawCh
-        prevColors[idx] = color
-      }
+      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) }
+      
+      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
     }
   }
 
@@ -705,6 +703,7 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('intro')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
