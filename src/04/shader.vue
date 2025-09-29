@@ -257,22 +257,30 @@ function updateRain() {                                                 // rende
 }
 
 function updateCircle() {                                               // render next circle frame 
+  
   outroRadius += 1
-  circleCells.fill(0)
-  circleFrontier.fill(0)
 
-  for (let y = 0; y < rows; y++) {
+  const rCurr = outroRadius
+  const yStart = Math.max(0, Math.floor(outroCenter.y - rCurr))
+  const yEnd = Math.min(rows - 1, Math.ceil(outroCenter.y + rCurr))
+  const xStart = Math.max(0, Math.floor(outroCenter.x - rCurr))
+  const xEnd = Math.min(cols - 1, Math.ceil(outroCenter.x + rCurr))
+
+  for (let y = yStart; y <= yEnd; y++) {
     const yOff = y * cols
-    for (let x = 0; x < cols; x++) {
+    for (let x = xStart; x <= xEnd; x++) {
+      const idx = yOff + x
       const dx = x - outroCenter.x
       const dy = y - outroCenter.y
-      const dist = dx * dx + dy * dy
-      const n = noiseMap[yOff + x] * 5
-      const radiusNoise = (outroRadius + n) * (outroRadius + n)
-      if (dist <= radiusNoise) circleCells[yOff + x] = 1
+      const dist2 = dx * dx + dy * dy
+      const n = noiseMap[idx] * 5
+      const radiusNoise2 = (rCurr + n) * (rCurr + n)
+
+      if (dist2 <= radiusNoise2) circleCells[idx] = 1
     }
   }
 
+  for (let i = 0; i < rows * cols; i++) circleFrontier[i] = 0
   for (let y = 0; y < rows; y++) {
     const yOff = y * cols
     for (let x = 0; x < cols; x++) {
@@ -290,62 +298,58 @@ function updateCircle() {                                               // rende
   for (let i = 0; i < rows * cols; i++) baseMask[i] = circleCells[i] ? 0 : 1
 }
 
+
 function updateGerm(total) {                                            // render next germ frame 
-  const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
-  for (let i = 0; i < total; i++) baseMask[i] = noiseMap[i] < ratio ? 1 : 0
+  const oldRatio = updateGerm.lastRatio || 0
+  const newRatio = clamp(revealFrame / revealMaxFrames, 0, 1)
+
+  for (let i = 0; i < total; i++) { const n = noiseMap[i]; if (n >= oldRatio && n < newRatio) baseMask[i] = 1 }
+  updateGerm.lastRatio = newRatio
+
 }
 
 function updateGermInv(total) {                                         // render next inverted germ frame 
-
+  
   const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
   
-  for (let i = 0; i < total; i++) {
-    if (baseMask[i] === 0 || noiseMap[i] < ratio) baseMask[i] = 0
-    else baseMask[i] = 1
-  }
+  for (let i = 0; i < total; i++) { if (baseMask[i] === 1 && noiseMap[i] < ratio) baseMask[i] = 0 }
 
   if (ratio >= 1) {
-    const frontier = []
+    if (!updateGermInv.frontierQueue) updateGermInv.frontierQueue = []
+    const q = updateGermInv.frontierQueue
+
     for (let y = 0; y < rows; y++) {
       const yOff = y * cols
       for (let x = 0; x < cols; x++) {
         const i = yOff + x
-        if (baseMask[i] === 1) {
-          if ((x > 0 && baseMask[i - 1] === 0) || (x < cols - 1 && baseMask[i + 1] === 0) || (y > 0 && baseMask[i - cols] === 0) || (y < rows - 1 && baseMask[i + cols] === 0)) {
-            frontier.push(i)
-          }
+        if (baseMask[i] !== 1) continue
+        if (
+          (x > 0 && baseMask[i - 1] === 0) ||
+          (x < cols - 1 && baseMask[i + 1] === 0) ||
+          (y > 0 && baseMask[i - cols] === 0) ||
+          (y < rows - 1 && baseMask[i + cols] === 0)
+        ) {
+          if (!q.includes(i)) q.push(i)
         }
       }
     }
 
-    if (frontier.length > 0) {
+    if (q.length > 0) {
       const perFrame = Math.max(1, Math.floor(total / revealMaxFrames))
-      const newMask = baseMask.slice()
-
-      if (frontier.length <= perFrame) {
-        for (let k = 0; k < frontier.length; k++) newMask[frontier[k]] = 0
-      } else {
-        const step = Math.ceil(frontier.length / perFrame)
-        let count = 0
-        for (let k = 0; k < frontier.length && count < perFrame; k += step) {
-          newMask[frontier[k]] = 0
+      let count = 0
+      for (let k = 0; k < q.length && count < perFrame; k++) {
+        const idx = q[k]
+        if (baseMask[idx] === 1) {
+          baseMask[idx] = 0
           count++
-        }
-        if (count < perFrame) {
-          for (let k = 0; k < frontier.length && count < perFrame; k++) {
-            const idx = frontier[k]
-            if (newMask[idx] !== 0) {
-              newMask[idx] = 0
-              count++
-            }
-          }
         }
       }
 
-      baseMask.set(newMask)
+      updateGermInv.frontierQueue = q.filter(i => baseMask[i] === 1)
     }
   }
 }
+
 
 function updateSwipe() {                                                // render next swipe frame 
 
