@@ -588,7 +588,7 @@ function drawFrame(ts) {                                                // draw 
       else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
       else { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) }
 
-      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
+      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh || '', px, py) }
 
     }
   }
@@ -669,7 +669,6 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-  runQueue('outro')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
