@@ -27,6 +27,17 @@ let portalLookup = null                                                 // porta
 let sinCache = null                                                     // portal trigo cache
 let cosCache = null                                                     // portal trigo cache
 
+let headInts = null
+let idxToX = null
+let idxToY = null
+let frontierMap = null
+let portalChars = null
+let frontierBufA = null
+let frontierBufB = null
+let neighborsMap = null
+let waveCacheSin = null
+let waveCacheCos = null
+
 let heads = []                                                          // first rain char position
 let charBuffers = []                                                    // rain column chars positions
 let preChars = null                                                     // precomputed char lookup
@@ -76,8 +87,8 @@ function characterBuffer() {                                            // creat
   charIndex = 0
 }
 
-function trailAlphas(dist) {                                          // returns trail alpha colors 
-  const di = Math.floor(dist)
+function trailAlphas(dist) {                                            // returns trail alpha colors 
+  const di = dist | 0
   if (di < 0 || di > trailLength) return null
   return trailColors[di]
 }
@@ -89,15 +100,44 @@ function buildPortal() {                                                // preco
   }
 }
 
-function isFrontier(maskArr, x, y) {                                    // detects border of zone 
-  const i = y * cols + x
-  if (!maskArr || !maskArr.length) return false
-  if (!maskArr[i]) return false
-  if (x > 0 && !maskArr[i - 1]) return true
-  if (x < cols - 1 && !maskArr[i + 1]) return true
-  if (y > 0 && !maskArr[i - cols]) return true
-  if (y < rows - 1 && !maskArr[i + cols]) return true
-  return false
+function buildNeighbors() {                                             // precompute neighbors
+  const total = cols * rows
+  neighborsMap = new Array(total)
+  for (let idx = 0; idx < total; idx++) {
+    const x = idxToX[idx]
+    const y = idxToY[idx]
+    const neighbors = []
+    if (x > 0) neighbors.push(idx - 1)
+    if (x < cols - 1) neighbors.push(idx + 1)
+    if (y > 0) neighbors.push(idx - cols)
+    if (y < rows - 1) neighbors.push(idx + cols)
+    neighborsMap[idx] = neighbors
+  }
+}
+
+function buildWaves() {                                                 // precompute waves
+  waveCacheSin = new Float32Array(rows)
+  waveCacheCos = new Float32Array(rows)
+  for (let y = 0; y < rows; y++) {
+    waveCacheSin[y] = Math.sin(y * 0.25)
+    waveCacheCos[y] = Math.cos(y * 0.25)
+  }
+}
+
+function computeFrontier(mask) {                                        // detects border of zone 
+  if (!mask) { frontierMap && frontierMap.fill(0); return }
+  frontierMap.fill(0)
+  for (let y = 0; y < rows; y++) {
+    const yOff = y * cols
+    for (let x = 0; x < cols; x++) {
+      const i = yOff + x
+      if (!mask[i]) continue
+      if (x > 0 && !mask[i - 1]) { frontierMap[i] = 1; continue }
+      if (x < cols - 1 && !mask[i + 1]) { frontierMap[i] = 1; continue }
+      if (y > 0 && !mask[i - cols]) { frontierMap[i] = 1; continue }
+      if (y < rows - 1 && !mask[i + cols]) { frontierMap[i] = 1; continue }
+    }
+  }
 }
 
 function secureCopy(dst, src) {                                         // prevent overwrite on src copy 
@@ -113,6 +153,8 @@ function secureExpand() {                                               // preve
     expandA = new Uint8Array(total)
     expandB = new Uint8Array(total)
   }
+  if (!frontierBufA || frontierBufA.length !== total) frontierBufA = new Uint32Array(total)
+  if (!frontierBufB || frontierBufB.length !== total) frontierBufB = new Uint32Array(total)
 }
 
 function secureMasks() {                                                // prevent mask overwrite 
@@ -121,6 +163,8 @@ function secureMasks() {                                                // preve
   if (!tmpMask || tmpMask.length !== total) tmpMask = new Uint8Array(total)
   if (!circleCells || circleCells.length !== total) circleCells = new Uint8Array(total)
   if (!circleFrontier || circleFrontier.length !== total) circleFrontier = new Uint8Array(total)
+  if (!frontierMap || frontierMap.length !== total) frontierMap = new Uint8Array(total)
+  if (!portalChars || portalChars.length !== total) portalChars = new Array(total)
   secureExpand()
 }
 
@@ -178,15 +222,25 @@ function setGrid() {                                                    // creat
   // set final sizes
   cols = tempCols
   rows = tempRows
+  const total = cols * rows
 
-  // set portal trigo cache
+  // declare arrays
+  idxToX = new Int16Array(total)
+  idxToY = new Int16Array(total)
+  portalCodes = new Uint16Array(total)
+  noiseMap = new Float32Array(total)
+  baseMask = new Uint8Array(total)
+  tmpMask = new Uint8Array(total)
   cosCache = new Float32Array(cols)
   sinCache = new Float32Array(rows)
 
   const cx = cols / 2
   const cy = rows / 2
-  for (let x = 0; x < cols; x++) cosCache[x] = Math.cos((x - cx) / 8)
-  for (let y = 0; y < rows; y++) sinCache[y] = Math.sin((y - cy) / 8)
+  
+  const t0 = 100
+  for (let y = 0, i = 0; y < rows; y++) { for (let x = 0; x < cols; x++, i++) { idxToX[i] = x; idxToY[i] = y } }
+  for (let x = 0; x < cols; x++) cosCache[x] = Math.cos((x - cx) / 8 + t0 * 0.001)
+  for (let y = 0; y < rows; y++) sinCache[y] = Math.sin((y - cy) / 8 + t0 * 0.001)
 
   // set rain
   heads = new Array(cols)
@@ -195,12 +249,6 @@ function setGrid() {                                                    // creat
     heads[c] = Math.random() * rows * -1
     charBuffers[c] = new Array(rows).fill(null)
   }
-
-  // set masks and buffers
-  portalCodes = new Uint16Array(cols * rows)
-  noiseMap = new Float32Array(cols * rows)
-  baseMask = new Uint8Array(cols * rows)
-  tmpMask = new Uint8Array(cols * rows)
 
   // precompute all chars
   if (!preChars) {
@@ -212,6 +260,11 @@ function setGrid() {                                                    // creat
 
   characterBuffer()
   buildPortal()
+  buildNeighbors()
+  buildWaves()
+
+  portalChars = new Array(cols * rows)
+  for (let i = 0; i < cols * rows; i++) portalChars[i] = portalLookup[portalCodes[i]]
 
   // set alpha cache
   trailColors = new Array(trailLength + 1)
@@ -232,6 +285,7 @@ function setGrid() {                                                    // creat
   }
 
   // ensure aligned expansion
+  secureMasks()
   secureExpand()
 
 }
@@ -239,14 +293,12 @@ function setGrid() {                                                    // creat
 // ANIMATIONS
 
 function updatePortal(tick) {                                           // render next portal frame 
-
-  const t = 100 + tick * 0.001
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const idx = y * cols + x
-      const v = (cosCache[x] + sinCache[y] + t) * 16
-      const mod = ((Math.floor(v) % charRangeMax) + charRangeMax) % charRangeMax
-      portalCodes[idx] = mod
+      const v = cosCache[x] + sinCache[y] + tick * 0.001
+      portalCodes[idx] = ((v * 16 | 0) % charRangeMax + charRangeMax) % charRangeMax
+      portalChars[idx] = portalLookup[portalCodes[idx]]
     }
   }
 }
@@ -363,42 +415,20 @@ function updateSwipe() {                                                // rende
   const line = Math.floor(transFrame)
   tmpMask.fill(0)
 
-  const t = transFrame * 0.05
-  const scroll = transFrame * 0.5
-
   if (transPhase === 0) {
-
     for (let y = 0; y < rows; y++) {
-      const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
-      const frac = scroll % 1
-
-      const n0 = noiseMap[idx]
-      const n1 = noiseMap[(idx + 1) % (rows * cols)]
-      const n = n0 * (1 - frac) + n1 * frac
-
-      const wave = Math.sin(y * 0.25 + t * 2 + n * 2)
-      const noiseOffset = Math.floor(n * 4 + wave * 2)
-
+      const wave = waveCacheSin[y]
+      const noiseOffset = Math.floor(wave * 2)
       const xLimit = Math.min(line + noiseOffset, cols - 1)
       for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
     }
-
   } else if (transPhase === 1) {
-
     for (let y = 0; y < rows; y++) {
-      const idx = (y * cols + Math.floor(scroll)) % (rows * cols)
-      const frac = scroll % 1
-      const n0 = noiseMap[idx]
-      const n1 = noiseMap[(idx + 1) % (rows * cols)]
-      const n = n0 * (1 - frac) + n1 * frac
-
-      const wave = Math.cos(y * 0.25 - t * 2 + n * 2)
-      const noiseOffset = Math.floor(n * 4 + wave * 2)
-
+      const wave = waveCacheCos[y]
+      const noiseOffset = Math.floor(wave * 2)
       const xStart = Math.max(line - noiseOffset, 0)
       for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
     }
-
   }
 
   transFrame += 1.0
@@ -425,43 +455,43 @@ function updateSwipe() {                                                // rende
 }
 
 function expandMask(src, steps) {                                       // render next mask frame with buffer 
+
   secureExpand();
+
   const total = cols * rows
   let a = expandA, b = expandB
-  a.set(src);
+  a.set(src)
 
-  let frontier = new Uint32Array(total);
-  let frontierLen = 0;
+  let frontier = frontierBufA
+  let nextFrontier = frontierBufB
+  let frontierLen = 0
+  let nextLen = 0
 
-  for (let i = 0; i < total; i++) if (a[i]) frontier[frontierLen++] = i;
+  for (let i = 0; i < total; i++) { if (a[i]) frontier[frontierLen++] = i }
+
   for (let s = 0; s < steps; s++) {
 
-    b.fill(0); b.set(a)
-    let nextFrontier = new Uint32Array(total)
-    let nextLen = 0
+    b.set(a)
+    nextLen = 0
 
     for (let f = 0; f < frontierLen; f++) {
       const idx = frontier[f]
-      const x = idx % cols
-      const y = Math.floor(idx / cols)
-
-      if (x > 0 && !b[idx - 1]) { b[idx - 1] = 1; nextFrontier[nextLen++] = idx - 1 }
-      if (x < cols - 1 && !b[idx + 1]) { b[idx + 1] = 1; nextFrontier[nextLen++] = idx + 1 }
-      if (y > 0 && !b[idx - cols]) { b[idx - cols] = 1; nextFrontier[nextLen++] = idx - cols }
-      if (y < rows - 1 && !b[idx + cols]) { b[idx + cols] = 1; nextFrontier[nextLen++] = idx + cols }
+      const neighbors = neighborsMap[idx]
+      for (let n of neighbors) { if (!b[n]) { b[n] = 1; nextFrontier[nextLen++] = n } }
     }
 
-    if (nextLen === 0) break
-    frontier = nextFrontier
-    frontierLen = nextLen
+    if (nextLen === 0) break;
 
-    const tmp = a
-    a = b
-    b = tmp
+    [frontier, nextFrontier] = [nextFrontier, frontier];
+    frontierLen = nextLen;
+    [a, b] = [b, a];
   }
-  expandA.set(a)
-  return expandA
+
+  expandA.set(a);
+  return expandA;
 }
+
+
 
 // MAIN RENDER
 
@@ -483,10 +513,10 @@ function updateMasks(total) {                                           // handl
 function cellRender(x, y, headPos, colBuf, resultMask) {                // render mode cells 
 
   const idx = y * cols + x
-  const portalCh = portalLookup[portalCodes[idx]]
+  const portalCh = portalChars ? portalChars[idx] : portalLookup[portalCodes[idx]]
   const matrixCh = colBuf[y]
   const revealed = !!resultMask[idx]
-  const frontier = isFrontier(resultMask, x, y)
+  const frontier = !!frontierMap[idx]
   const dist = headPos - y
 
   let drawCh = portalCh
@@ -548,6 +578,9 @@ function drawFrame(ts) {                                                // draw 
 
   ctx.clearRect(0, 0, width, height)
 
+  if (!headInts || headInts.length !== cols) headInts = new Int16Array(cols)
+  for (let i = 0; i < cols; i++) headInts[i] = Math.floor(heads[i])
+
   // update animations only when not hidden
   if (mode !== 'hidden') { updatePortal(ts); updateRain(); updateMasks(total) }
 
@@ -557,30 +590,34 @@ function drawFrame(ts) {                                                // draw 
   )
 
   let resultMask
-
+  
   if (mode === 'direct' || mode === 'static') { resultMask = baseMask }
   else if (mode === 'transition') { resultMask = tmpMask }
   else { resultMask = expandMask(baseMask, steps) }
 
-  // cell draw loop
-  for (let x = 0; x < cols; x++) {
-    const headPos = Math.floor(heads[x])
-    const colBuf = charBuffers[x]
+  computeFrontier(resultMask)
 
-    for (let y = 0; y < rows; y++) {
-      const idx = y * cols + x
+  // cell draw loop
+  for (let y = 0; y < rows; y++) {
+
+    const yOff = y * cols
+    const py = y * fontSize
+
+    for (let x = 0; x < cols; x++) {
+
+      const idx = yOff + x
+      const headPos = headInts[x]
+      const px = x * fontSize
+      const colBuf = charBuffers[x]
       const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
 
       if (drawCh === null) continue
 
-      const px = Math.floor(x * fontSize)
-      const py = Math.floor(y * fontSize)
-
       const isRain = !!(matrixCh && dist >= 0 && dist <= trailLength)
       const isPortal = drawCh === portalCh
-      const isFrontier = !!frontier
+      const isFront = !!frontier
 
-      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFrontier) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
       else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
       else { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) }
       
@@ -664,6 +701,7 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('transition-full')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
