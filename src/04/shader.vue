@@ -166,6 +166,10 @@ function setGrid() {                                                    // creat
     tempRows = Math.ceil(height / fontSize)
   }
 
+  ctx.font = `${fontSize}px monospace`
+  ctx.textBaseline = 'top'
+  ctx.textAlign = 'left'
+
   // set final sizes
   cols = tempCols
   rows = tempRows
@@ -499,6 +503,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
     }
 
     case 'direct': {
+      if (frontier) { drawCh = portalCh; color = borderColor; needsBg = true }
       if (!revealed) { drawCh = null; color = frontier ? borderColor : '#1B1C1C' }
       else {
         drawCh = matrixCh || portalCh
@@ -529,10 +534,6 @@ function drawFrame(ts) {                                                // draw 
 
   if (!ctx) return
   const total = rows * cols
-
-  ctx.font = `${fontSize}px monospace`
-  ctx.textBaseline = 'top'
-  ctx.textAlign = 'left'
 
   ctx.clearRect(0, 0, width, height)
 
@@ -652,6 +653,7 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('direct')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
