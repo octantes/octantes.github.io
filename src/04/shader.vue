@@ -7,14 +7,13 @@ const charRangeMax = charRangeEnd - charRangeStart                      // max p
 
 const canvasRef = ref(null)                                             // dom << canvas >> ref
 const containerRef = ref(null)                                          // container div ref
-const revealMaxFrames = 160                                             // intro total frames counter
 const borderColor = '#AAABAC'                                           // active border zone color
+const revealMaxFrames = 160                                             // intro total frames counter
 const maxDilateSteps = 32                                               // outro animation max frames
 const extraFrames = 42                                                  // direct animation extra frames
 
-let circleCells = new Set()                                             // guarda indices dentro del circulo
-let circleFrontier = new Set()                                          // guarda indices del limite del circulo
-
+let pendingTask = null                                                  // promise handling for drawloop
+let pendingResolve = null                                               // resolve handling for drawloop
 let ctx = null                                                          // canvas 2D context
 let height = 0                                                          // canvas px height
 let width = 0                                                           // canvas px width
@@ -23,12 +22,17 @@ let dpr = 1                                                             // devic
 let cols = 0                                                            // char grid columns
 let rows = 0                                                            // char grid rows
 
-let speed = 0.7                                                         // rain fall speed
-let trailLength = 40                                                    // rain trail char length
-let resetChance = 0.02                                                  // column reset chance
 let heads = []                                                          // first rain char position
 let charBuffers = []                                                    // rain column chars positions
 let portalCodes = null                                                  // portal cell char codes
+let portalChars = null                                                  // portal char cache
+let preChars = null                                                     // precomputed char lookup
+let charBuffer = []                                                     // buffer for precomputed chars
+let charIndex = 0                                                       // character buffer index
+
+let speed = 0.7                                                         // rain fall speed
+let trailLength = 40                                                    // rain trail char length
+let resetChance = 0.02                                                  // column reset chance
 let animationId = null                                                  // next requested frame id
 let revealFrame = 0                                                     // frame counter for intro
 let mode = 'hidden'                                                     // current mode store string
@@ -39,6 +43,8 @@ let transFrame = 0                                                      // swipe
 let transPhase = 0                                                      // swipe animation direction
 let autoOutro = false                                                   // swipe outro autotrigger
 
+let circleCells = null                                                  // guarda indices dentro del circulo
+let circleFrontier = null                                               // guarda indices del limite del circulo
 let noiseMap = null                                                     // static noise array for animations
 let baseMask = null                                                     // active/inactive animation cell mask
 let tmpMask = null                                                      // dilation temporal buffer mask
@@ -52,7 +58,18 @@ function clamp(v, a = 0, b = 1) {                                       // const
 }
 
 function pickChar() {                                                   // return character 
-  return String.fromCharCode(charRangeStart + Math.floor(Math.random() * charRangeMax))
+  const ch = charBuffer[charIndex]
+  charIndex = (charIndex + 1) % charRangeMax
+  return ch
+}
+
+function characterBuffer() {                                                 // create char buffer 
+  charBuffer = new Array(charRangeMax * 2)
+  for (let i = 0; i < charRangeMax; i++) {
+    charBuffer[i] = preChars[i]
+    charBuffer[i + charRangeMax] = preChars[i]
+  }
+  charIndex = 0
 }
 
 function trailAlpha(alpha) {                                            // returns trail color 
@@ -90,6 +107,8 @@ function secureMasks() {                                                // preve
   const total = cols * rows
   if (!baseMask || baseMask.length !== total) baseMask = new Uint8Array(total)
   if (!tmpMask || tmpMask.length !== total) tmpMask = new Uint8Array(total)
+  if (!circleCells || circleCells.length !== total) circleCells = new Uint8Array(total)
+  if (!circleFrontier || circleFrontier.length !== total) circleFrontier = new Uint8Array(total)
   secureExpand()
 }
 
@@ -157,6 +176,17 @@ function setGrid() {                                                    // creat
   noiseMap = new Float32Array(cols * rows)
   baseMask = new Uint8Array(cols * rows)
   tmpMask = new Uint8Array(cols * rows)
+  portalChars = new Array(cols * rows)
+
+  // precompute all chars
+  if (!preChars) {
+    preChars = new Array(charRangeMax)
+    for (let i = 0; i < charRangeMax; i++) {
+      preChars[i] = String.fromCharCode(charRangeStart + i)
+    }
+  }
+
+  characterBuffer()
 
   // set noisemap
   for (let y = 0; y < rows; y++) {
@@ -190,6 +220,7 @@ function updatePortal(tick) {                                           // rende
       const v = (Math.cos((x - cx) / 8) + Math.sin((y - cy) / 8) + t) * 16
       const mod = ((Math.floor(v) % charRangeMax) + charRangeMax) % charRangeMax
       portalCodes[idx] = charRangeStart + mod
+      portalChars[idx] = preChars[mod]
     }
   }
 
@@ -208,12 +239,10 @@ function updateRain() {                                                 // rende
 }
 
 function updateCircle() {                                               // render next circle frame 
-
   outroRadius += 1
-  circleCells.clear()
-  circleFrontier.clear()
+  circleCells.fill(0)
+  circleFrontier.fill(0)
 
-  // calcular circulo
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const dx = x - outroCenter.x
@@ -221,27 +250,24 @@ function updateCircle() {                                               // rende
       const dist = Math.sqrt(dx * dx + dy * dy)
       const n = noiseMap[y * cols + x] * 5
       const idx = y * cols + x
-      if (dist + n <= outroRadius) circleCells.add(idx)
+      if (dist + n <= outroRadius) circleCells[idx] = 1
     }
   }
 
-  // calcular fronteras
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const idx = y * cols + x
-      if (!circleCells.has(idx)) continue
+      if (!circleCells[idx]) continue
       if (
-        (x > 0 && !circleCells.has(idx - 1)) ||
-        (x < cols - 1 && !circleCells.has(idx + 1)) ||
-        (y > 0 && !circleCells.has(idx - cols)) ||
-        (y < rows - 1 && !circleCells.has(idx + cols))
-      )
-        circleFrontier.add(idx)
+        (x > 0 && !circleCells[idx - 1]) ||
+        (x < cols - 1 && !circleCells[idx + 1]) ||
+        (y > 0 && !circleCells[idx - cols]) ||
+        (y < rows - 1 && !circleCells[idx + cols])
+      ) circleFrontier[idx] = 1
     }
   }
 
-  for (let i = 0; i < rows * cols; i++) baseMask[i] = circleCells.has(i) ? 0 : 1
-
+  for (let i = 0; i < rows * cols; i++) baseMask[i] = circleCells[i] ? 0 : 1
 }
 
 function updateGerm(total) {                                            // render next germ frame 
@@ -426,8 +452,7 @@ function updateMasks(total) {                                           // handl
 function cellRender(x, y, headPos, colBuf, resultMask) {                // render mode cells 
 
   const idx = y * cols + x
-  const portalCode = portalCodes[idx]
-  const portalCh = String.fromCharCode(portalCode)
+  const portalCh = portalChars[idx]
   const matrixCh = colBuf[y]
   const revealed = !!resultMask[idx]
   const frontier = isFrontier(resultMask, x, y)
@@ -471,8 +496,8 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
         drawCh = matrixCh
         needsBg = true
       }
-      if (circleCells.has(idx) && !circleFrontier.has(idx)) drawCh = null
-      else if (circleFrontier.has(idx)) color = borderColor
+      if (circleCells[idx] && !circleFrontier[idx]) drawCh = null
+      else if (circleFrontier[idx]) color = borderColor
       break
     }
 
@@ -541,9 +566,8 @@ function drawFrame(ts) {                                                // draw 
 
   ctx.clearRect(0, 0, width, height)
 
-  updatePortal(ts)
-  updateRain()
-  updateMasks(total)
+  // update animations only when not hidden
+  if (mode !== 'hidden') { updatePortal(ts); updateRain(); updateMasks(total) }
 
   const steps = Math.min(
     maxDilateSteps,
@@ -573,7 +597,7 @@ function drawFrame(ts) {                                                // draw 
       const matrixCh = colBuf[y]
       const dist = headPos - y
       const isRain = !!(matrixCh && dist >= 0 && dist <= trailLength)
-      const portalCh = String.fromCharCode(portalCodes[idx])
+      const portalCh = portalChars[idx]
       const isPortal = drawCh === portalCh
       const isFrontier = !!frontier
       const revealed = !!resultMask[idx]
@@ -605,17 +629,31 @@ function drawFrame(ts) {                                                // draw 
     }
   }
 
+  // end states
   switch (mode) {
-    case 'intro':         if (revealFrame < revealMaxFrames) { revealFrame++ } else { mode = 'static' } break
-    case 'outro':         if (outroRadius < Math.hypot(cols, rows)) { outroFrame++ } else { mode = 'hidden' } break
-    case 'direct':        if (revealFrame < revealMaxFrames + extraFrames) { revealFrame++ } else { mode = 'hidden' } break
+    case 'intro':         if (revealFrame < revealMaxFrames)                  { revealFrame++ }    else { mode = 'static' }   break
+    case 'direct':        if (revealFrame < revealMaxFrames + extraFrames)    { revealFrame++ }    else { mode = 'hidden' }   break
+    case 'outro':         if (outroRadius < Math.hypot(cols, rows))           { outroFrame++  }    else { mode = 'hidden' }   break
     case 'transition':    updateSwipe(); break
     default:
       break
   }
 
-  animationId = requestAnimationFrame(drawFrame)
+  // promise handling
+  if (pendingTask) {
+    try {
+      if (mode === 'hidden' || mode === 'static' || (typeof pendingTask.finish === 'function' && pendingTask.finish())) {
+        const r = pendingResolve
+        pendingTask = null
+        pendingResolve = null
+        if (r) r()
+      }
+    } catch (err) { pendingTask = null; pendingResolve = null }
+  }
+
 }
+
+function mainLoop(ts) { drawFrame(ts); animationId = requestAnimationFrame(mainLoop) }
 
 // TASKS
 
@@ -639,20 +677,8 @@ function runQueue(name) {                                               // run q
 
   return new Promise((resolve, reject) => {
     try { task.impl() } catch (err) { return reject(err) }
-
-    let rafId
-    const check = () => {
-      try {
-        if (rafId != null && (mode === 'hidden' || mode === 'static' || (typeof task.finish === 'function' && task.finish()))) {
-          cancelAnimationFrame(rafId)
-          return resolve()
-        }
-      } catch (err) { if (rafId != null) cancelAnimationFrame(rafId); return reject(err) }
-
-      rafId = requestAnimationFrame(check)
-    }
-
-    rafId = requestAnimationFrame(check)
+    pendingTask = task
+    pendingResolve = resolve
   })
 }
 
@@ -680,7 +706,7 @@ onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
   secureMasks()
-  animationId = requestAnimationFrame(drawFrame)
+  animationId = requestAnimationFrame(mainLoop)
 })
 
 onBeforeUnmount(() => {
