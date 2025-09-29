@@ -7,7 +7,6 @@ const charRangeMax = charRangeEnd - charRangeStart                      // max p
 
 const canvasRef = ref(null)                                             // dom << canvas >> ref
 const containerRef = ref(null)                                          // container div ref
-const borderColor = '#AAABAC'                                           // active border zone color
 const revealMaxFrames = 160                                             // intro total frames counter
 const maxDilateSteps = 32                                               // outro animation max frames
 const extraFrames = 42                                                  // direct animation extra frames
@@ -37,6 +36,12 @@ let frontierBufB = null
 let neighborsMap = null
 let waveCacheSin = null
 let waveCacheCos = null
+let prevChars = null
+let prevColors = null
+
+const COLOR_BG = '#1B1C1C'
+const COLOR_BORDER = '#AAABAC'
+const COLOR_PORTAL = '#986C98'
 
 let heads = []                                                          // first rain char position
 let charBuffers = []                                                    // rain column chars positions
@@ -89,8 +94,7 @@ function characterBuffer() {                                            // creat
 
 function trailAlphas(dist) {                                            // returns trail alpha colors 
   const di = dist | 0
-  if (di < 0 || di > trailLength) return null
-  return trailColors[di]
+  return (di >= 0 && di <= trailLength) ? trailColors[di] : null
 }
 
 function buildPortal() {                                                // precompute portal table
@@ -122,6 +126,12 @@ function buildWaves() {                                                 // preco
     waveCacheSin[y] = Math.sin(y * 0.25)
     waveCacheCos[y] = Math.cos(y * 0.25)
   }
+}
+
+function testColors() {
+  const total = rows * cols
+  prevChars = new Array(total).fill(null)
+  prevColors = new Array(total).fill(null)
 }
 
 function computeFrontier(mask) {                                        // detects border of zone 
@@ -270,7 +280,8 @@ function setGrid() {                                                    // creat
   trailColors = new Array(trailLength + 1)
   for (let i = 0; i <= trailLength; i++) {
     const alpha = 1 - i / Math.max(1, trailLength)
-    trailColors[i] = `rgba(126,189,196,${Math.pow(Math.max(0, alpha), 1.2).toFixed(3)})`
+    const a = Math.pow(Math.max(0, alpha), 1.2)
+    trailColors[i] = `rgba(126,189,196,${a.toFixed(3)})`
   }
 
   // set noisemap
@@ -285,6 +296,7 @@ function setGrid() {                                                    // creat
   }
 
   // ensure aligned expansion
+  testColors()
   secureMasks()
   secureExpand()
 
@@ -518,14 +530,14 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
   const dist = headPos - y
 
   let drawCh = portalCh
-  let color = `rgba(152,108,152,1)`
+  let color = COLOR_PORTAL
   let needsBg = false
 
   switch (mode) {
 
     case 'intro': {
-      if (!revealed) color = '#1B1C1C'
-      if (frontier) color = borderColor
+      if (!revealed) color = COLOR_BG
+      if (frontier) color = COLOR_BORDER
       if (matrixCh && revealed && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); needsBg = true }
       break
     }
@@ -537,13 +549,13 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 
     case 'outro': {
       if (matrixCh && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true }
-      if (circleCells[idx] && !circleFrontier[idx]) drawCh = null; else if (circleFrontier[idx]) { color = borderColor; drawCh = portalCh }
+      if (circleCells[idx] && !circleFrontier[idx]) drawCh = null; else if (circleFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
       break
     }
 
     case 'direct': {
-      if (frontier) { drawCh = portalCh; color = borderColor; needsBg = true }
-      if (!revealed) { drawCh = null; color = frontier ? borderColor : '#1B1C1C' }
+      if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true }
+      if (!revealed) { drawCh = null; color = frontier ? COLOR_BORDER : COLOR_BG }
       else {
         drawCh = matrixCh || portalCh
         if (matrixCh && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); needsBg = true }
@@ -552,17 +564,17 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
     }
 
     case 'transition': {
-      if (!revealed) { if (frontier) { drawCh = portalCh; color = borderColor; needsBg = true } else { drawCh = null } }
+      if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true } else { drawCh = null } }
       else {
         drawCh = portalCh
-        if (frontier) color = borderColor
+        if (frontier) color = COLOR_BORDER
         if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true } }
       }
       break
     }
 
     case 'hidden': { drawCh = null; break }
-    default: { if (frontier) color = borderColor; break }
+    default: { if (frontier) color = COLOR_BORDER; break }
 
   }
 
@@ -573,8 +585,6 @@ function drawFrame(ts) {                                                // draw 
 
   if (!ctx) return
   const total = rows * cols
-
-  ctx.clearRect(0, 0, width, height)
 
   if (!headInts || headInts.length !== cols) headInts = new Int16Array(cols)
   for (let i = 0; i < cols; i++) headInts[i] = Math.floor(heads[i])
@@ -587,11 +597,7 @@ function drawFrame(ts) {                                                // draw 
     Math.floor((mode === 'intro' ? clamp(revealFrame / revealMaxFrames, 0, 1) : 1) * maxDilateSteps)
   )
 
-  let resultMask
-  
-  if (mode === 'direct' || mode === 'static') { resultMask = baseMask }
-  else if (mode === 'transition') { resultMask = tmpMask }
-  else { resultMask = expandMask(baseMask, steps) }
+  let resultMask = (mode === 'direct' || mode === 'static') ? baseMask : (mode === 'transition') ? tmpMask : expandMask(baseMask, steps)
 
   computeFrontier(resultMask)
 
@@ -607,20 +613,20 @@ function drawFrame(ts) {                                                // draw 
       const headPos = headInts[x]
       const px = x * fontSize
       const colBuf = charBuffers[x]
-      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
+      const { drawCh, color } = cellRender(x, y, headPos, colBuf, resultMask)
 
-      if (drawCh === null) continue
+      // chequeo contra backbuffer
+      if (drawCh === prevChars[idx] && color === prevColors[idx]) continue
 
-      const isRain = !!(matrixCh && dist >= 0 && dist <= trailLength)
-      const isPortal = drawCh === portalCh
-      const isFront = !!frontier
+      if (drawCh !== prevChars[idx] || color !== prevColors[idx]) {
+        ctx.fillStyle = COLOR_BG
+        ctx.fillRect(px, py, fontSize, fontSize)
 
-      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
-      else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
-      else { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) }
-      
-      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
+        if (drawCh) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
 
+        prevChars[idx] = drawCh
+        prevColors[idx] = color
+      }
     }
   }
 
