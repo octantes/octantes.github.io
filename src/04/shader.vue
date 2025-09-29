@@ -31,6 +31,7 @@ let charBuffer = []                                                     // buffe
 let charIndex = 0                                                       // character buffer index
 
 let speed = 0.7                                                         // rain fall speed
+let trailColors = null                                                  // alpha color cache
 let trailLength = 40                                                    // rain trail char length
 let resetChance = 0.02                                                  // column reset chance
 let animationId = null                                                  // next requested frame id
@@ -63,13 +64,19 @@ function pickChar() {                                                   // retur
   return ch
 }
 
-function characterBuffer() {                                                 // create char buffer 
+function characterBuffer() {                                            // create char buffer 
   charBuffer = new Array(charRangeMax * 2)
   for (let i = 0; i < charRangeMax; i++) {
     charBuffer[i] = preChars[i]
     charBuffer[i + charRangeMax] = preChars[i]
   }
   charIndex = 0
+}
+
+function getTrailColor(dist) {                                          // get alpha colors 
+  const di = Math.floor(dist)
+  if (di < 0 || di > trailLength) return null
+  return trailColors ? trailColors[Math.max(0, Math.min(trailLength, di))] : trailAlpha(1 - di / Math.max(1, trailLength))
 }
 
 function trailAlpha(alpha) {                                            // returns trail color 
@@ -188,6 +195,13 @@ function setGrid() {                                                    // creat
 
   characterBuffer()
 
+  // set alpha cache
+  trailColors = new Array(trailLength + 1)
+  for (let i = 0; i <= trailLength; i++) {
+    const alpha = 1 - i / Math.max(1, trailLength)
+    trailColors[i] = `rgba(126,189,196,${Math.pow(Math.max(0, alpha), 1.2).toFixed(3)})`
+  }
+
   // set noisemap
   for (let y = 0; y < rows; y++) {
     const ny = y / Math.max(1, rows)
@@ -244,19 +258,21 @@ function updateCircle() {                                               // rende
   circleFrontier.fill(0)
 
   for (let y = 0; y < rows; y++) {
+    const yOff = y * cols
     for (let x = 0; x < cols; x++) {
       const dx = x - outroCenter.x
       const dy = y - outroCenter.y
-      const dist = Math.sqrt(dx * dx + dy * dy)
-      const n = noiseMap[y * cols + x] * 5
-      const idx = y * cols + x
-      if (dist + n <= outroRadius) circleCells[idx] = 1
+      const dist = dx * dx + dy * dy
+      const n = noiseMap[yOff + x] * 5
+      const radiusNoise = (outroRadius + n) * (outroRadius + n)
+      if (dist <= radiusNoise) circleCells[yOff + x] = 1
     }
   }
 
   for (let y = 0; y < rows; y++) {
+    const yOff = y * cols
     for (let x = 0; x < cols; x++) {
-      const idx = y * cols + x
+      const idx = yOff + x
       if (!circleCells[idx]) continue
       if (
         (x > 0 && !circleCells[idx - 1]) ||
@@ -468,10 +484,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
       if (frontier) color = borderColor
       if (matrixCh && revealed) {
         const dist = headPos - y
-        if (dist >= 0 && dist <= trailLength) {
-          color = trailAlpha(1 - dist / trailLength)
-          needsBg = true
-        }
+        if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); needsBg = true }
       }
       break
     }
@@ -479,11 +492,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
     case 'static': {
       if (matrixCh) {
         const dist = headPos - y
-        if (dist >= 0 && dist <= trailLength) {
-          color = trailAlpha(1 - dist / trailLength)
-          drawCh = matrixCh
-          needsBg = true
-        }
+        if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true }
         break
       }
       break
@@ -491,64 +500,37 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 
     case 'outro': {
       const dist = headPos - y
-      if (matrixCh && dist >= 0 && dist <= trailLength) {
-        color = trailAlpha(1 - dist / trailLength)
-        drawCh = matrixCh
-        needsBg = true
-      }
+      if (matrixCh && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true }
       if (circleCells[idx] && !circleFrontier[idx]) drawCh = null
-      else if (circleFrontier[idx]) color = borderColor
+      else if (circleFrontier[idx]) { color = borderColor; drawCh = portalCh }
       break
     }
 
     case 'direct': {
-      if (!revealed) {
-        drawCh = null
-        color = borderColor && isFrontier(resultMask, x, y) ? borderColor : '#1B1C1C'
-      } else {
+      if (!revealed) { drawCh = null; color = borderColor && isFrontier(resultMask, x, y) ? borderColor : '#1B1C1C' }
+      else {
         drawCh = matrixCh || portalCh
         const dist = headPos - y
-        if (matrixCh && dist >= 0 && dist <= trailLength) {
-          color = trailAlpha(1 - dist / trailLength)
-          needsBg = true
-        }
+        if (matrixCh && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); needsBg = true }
       }
       break
     }
 
     case 'transition': {
-      if (!revealed) {
-        if (frontier) {
-          drawCh = portalCh
-          color = borderColor
-          needsBg = true
-        } else {
-          drawCh = null
-        }
-      } else {
+      if (!revealed) { if (frontier) { drawCh = portalCh; color = borderColor; needsBg = true } else { drawCh = null } }
+      else {
         drawCh = portalCh
         if (frontier) color = borderColor
         if (matrixCh) {
           const dist = headPos - y
-          if (dist >= 0 && dist <= trailLength) {
-            color = trailAlpha(1 - dist / trailLength)
-            drawCh = matrixCh
-            needsBg = true
-          }
+          if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true }
         }
       }
       break
     }
 
-    case 'hidden': {
-      drawCh = null
-      break
-    }
-
-    default: {
-      if (frontier) color = borderColor
-      break
-    }
+    case 'hidden': { drawCh = null; break }
+    default: { if (frontier) color = borderColor; break }
 
   }
 
@@ -589,7 +571,7 @@ function drawFrame(ts) {                                                // draw 
       const idx = y * cols + x
       const { drawCh, color, frontier } = cellRender(x, y, headPos, colBuf, resultMask)
 
-      if (drawCh === null) continue
+      if (!drawCh && !frontier) continue
 
       const px = Math.floor(x * fontSize)
       const py = Math.floor(y * fontSize)
@@ -602,29 +584,11 @@ function drawFrame(ts) {                                                // draw 
       const isFrontier = !!frontier
       const revealed = !!resultMask[idx]
 
-      if (mode === 'outro' || mode === 'transition') {
+      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFrontier) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) }
 
-        if (isRain || isPortal || isFrontier) {
-          ctx.fillStyle = '#1b1c1c'
-          ctx.fillRect(px, py, fontSize + 1, fontSize + 1)
-        }
-
-      } else if (mode === 'intro') {
-
-        if (revealed) {
-          ctx.fillStyle = '#1b1c1c'
-          ctx.fillRect(px, py, fontSize + 1, fontSize + 1)
-        }
-
-      } else {
-
-        ctx.fillStyle = '#1b1c1c'
-        ctx.fillRect(px, py, fontSize + 1, fontSize + 1)
-
-      }
-
-      ctx.fillStyle = color
-      ctx.fillText(drawCh, px, py)
+      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
 
     }
   }
@@ -705,6 +669,7 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('outro')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
