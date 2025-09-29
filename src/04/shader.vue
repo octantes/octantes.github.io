@@ -657,7 +657,6 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-  runQueue('direct')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
