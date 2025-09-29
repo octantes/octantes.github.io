@@ -472,6 +472,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
   const matrixCh = colBuf[y]
   const revealed = !!resultMask[idx]
   const frontier = isFrontier(resultMask, x, y)
+  const dist = headPos - y
 
   let drawCh = portalCh
   let color = `rgba(152,108,152,1)`
@@ -482,35 +483,25 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
     case 'intro': {
       if (!revealed) color = '#1B1C1C'
       if (frontier) color = borderColor
-      if (matrixCh && revealed) {
-        const dist = headPos - y
-        if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); needsBg = true }
-      }
+      if (matrixCh && revealed && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); needsBg = true }
       break
     }
 
     case 'static': {
-      if (matrixCh) {
-        const dist = headPos - y
-        if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true }
-        break
-      }
+      if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true } break }
       break
     }
 
     case 'outro': {
-      const dist = headPos - y
       if (matrixCh && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true }
-      if (circleCells[idx] && !circleFrontier[idx]) drawCh = null
-      else if (circleFrontier[idx]) { color = borderColor; drawCh = portalCh }
+      if (circleCells[idx] && !circleFrontier[idx]) drawCh = null; else if (circleFrontier[idx]) { color = borderColor; drawCh = portalCh }
       break
     }
 
     case 'direct': {
-      if (!revealed) { drawCh = null; color = borderColor && isFrontier(resultMask, x, y) ? borderColor : '#1B1C1C' }
+      if (!revealed) { drawCh = null; color = frontier ? borderColor : '#1B1C1C' }
       else {
         drawCh = matrixCh || portalCh
-        const dist = headPos - y
         if (matrixCh && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); needsBg = true }
       }
       break
@@ -521,10 +512,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
       else {
         drawCh = portalCh
         if (frontier) color = borderColor
-        if (matrixCh) {
-          const dist = headPos - y
-          if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true }
-        }
+        if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true } }
       }
       break
     }
@@ -534,7 +522,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 
   }
 
-  return { drawCh, color, needsBg, frontier }
+  return { drawCh, color, needsBg, frontier, revealed, dist, matrixCh, portalCh }
 }
 
 function drawFrame(ts) {                                                // draw shader 
@@ -569,20 +557,16 @@ function drawFrame(ts) {                                                // draw 
 
     for (let y = 0; y < rows; y++) {
       const idx = y * cols + x
-      const { drawCh, color, frontier } = cellRender(x, y, headPos, colBuf, resultMask)
+      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
 
       if (drawCh === null) continue
 
       const px = Math.floor(x * fontSize)
       const py = Math.floor(y * fontSize)
 
-      const matrixCh = colBuf[y]
-      const dist = headPos - y
       const isRain = !!(matrixCh && dist >= 0 && dist <= trailLength)
-      const portalCh = portalChars[idx]
       const isPortal = drawCh === portalCh
       const isFrontier = !!frontier
-      const revealed = !!resultMask[idx]
 
       if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFrontier) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
       else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
@@ -668,7 +652,6 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-  runQueue('outro')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
