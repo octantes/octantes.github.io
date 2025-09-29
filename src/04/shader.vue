@@ -614,7 +614,6 @@ function drawFrame(ts) {                                                // draw 
       break
   }
 
-  console.log(mode)
   animationId = requestAnimationFrame(drawFrame)
 }
 
