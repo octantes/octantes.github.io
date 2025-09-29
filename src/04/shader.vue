@@ -22,10 +22,13 @@ let dpr = 1                                                             // devic
 let cols = 0                                                            // char grid columns
 let rows = 0                                                            // char grid rows
 
+let portalCodes = null                                                  // portal cell int char codes
+let portalLookup = null                                                 // portal codes to strings
+let sinCache = null                                                     // portal trigo cache
+let cosCache = null                                                     // portal trigo cache
+
 let heads = []                                                          // first rain char position
 let charBuffers = []                                                    // rain column chars positions
-let portalCodes = null                                                  // portal cell char codes
-let portalChars = null                                                  // portal char cache
 let preChars = null                                                     // precomputed char lookup
 let charBuffer = []                                                     // buffer for precomputed chars
 let charIndex = 0                                                       // character buffer index
@@ -73,15 +76,17 @@ function characterBuffer() {                                            // creat
   charIndex = 0
 }
 
-function getTrailColor(dist) {                                          // get alpha colors 
+function trailAlphas(dist) {                                          // returns trail alpha colors 
   const di = Math.floor(dist)
   if (di < 0 || di > trailLength) return null
-  return trailColors ? trailColors[Math.max(0, Math.min(trailLength, di))] : trailAlpha(1 - di / Math.max(1, trailLength))
+  return trailColors[di]
 }
 
-function trailAlpha(alpha) {                                            // returns trail color 
-  alpha = Math.pow(Math.max(0, alpha), 1.2)
-  return `rgba(126,189,196,${alpha.toFixed(3)})`
+function buildPortal() {                                                // precompute portal table
+  portalLookup = new Array(charRangeMax)
+  for (let i = 0; i < charRangeMax; i++) {
+    portalLookup[i] = preChars[i]
+  }
 }
 
 function isFrontier(maskArr, x, y) {                                    // detects border of zone 
@@ -174,6 +179,15 @@ function setGrid() {                                                    // creat
   cols = tempCols
   rows = tempRows
 
+  // set portal trigo cache
+  cosCache = new Float32Array(cols)
+  sinCache = new Float32Array(rows)
+
+  const cx = cols / 2
+  const cy = rows / 2
+  for (let x = 0; x < cols; x++) cosCache[x] = Math.cos((x - cx) / 8)
+  for (let y = 0; y < rows; y++) sinCache[y] = Math.sin((y - cy) / 8)
+
   // set rain
   heads = new Array(cols)
   charBuffers = new Array(cols)
@@ -187,7 +201,6 @@ function setGrid() {                                                    // creat
   noiseMap = new Float32Array(cols * rows)
   baseMask = new Uint8Array(cols * rows)
   tmpMask = new Uint8Array(cols * rows)
-  portalChars = new Array(cols * rows)
 
   // precompute all chars
   if (!preChars) {
@@ -198,6 +211,7 @@ function setGrid() {                                                    // creat
   }
 
   characterBuffer()
+  buildPortal()
 
   // set alpha cache
   trailColors = new Array(trailLength + 1)
@@ -226,22 +240,15 @@ function setGrid() {                                                    // creat
 
 function updatePortal(tick) {                                           // render next portal frame 
 
-  // set variables
-  const cx = cols / 2
-  const cy = rows / 2
   const t = 100 + tick * 0.001
-  let idx = 0
-  
-  // animate
   for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++, idx++) {
-      const v = (Math.cos((x - cx) / 8) + Math.sin((y - cy) / 8) + t) * 16
+    for (let x = 0; x < cols; x++) {
+      const idx = y * cols + x
+      const v = (cosCache[x] + sinCache[y] + t) * 16
       const mod = ((Math.floor(v) % charRangeMax) + charRangeMax) % charRangeMax
-      portalCodes[idx] = charRangeStart + mod
-      portalChars[idx] = preChars[mod]
+      portalCodes[idx] = mod
     }
   }
-
 }
 
 function updateRain() {                                                 // render next rain frame 
@@ -298,7 +305,6 @@ function updateCircle() {                                               // rende
   for (let i = 0; i < rows * cols; i++) baseMask[i] = circleCells[i] ? 0 : 1
 }
 
-
 function updateGerm(total) {                                            // render next germ frame 
   const oldRatio = updateGerm.lastRatio || 0
   const newRatio = clamp(revealFrame / revealMaxFrames, 0, 1)
@@ -349,7 +355,6 @@ function updateGermInv(total) {                                         // rende
     }
   }
 }
-
 
 function updateSwipe() {                                                // render next swipe frame 
 
@@ -458,8 +463,6 @@ function expandMask(src, steps) {                                       // rende
   return expandA
 }
 
-
-
 // MAIN RENDER
 
 function updateMasks(total) {                                           // handle mask mode 
@@ -480,7 +483,7 @@ function updateMasks(total) {                                           // handl
 function cellRender(x, y, headPos, colBuf, resultMask) {                // render mode cells 
 
   const idx = y * cols + x
-  const portalCh = portalChars[idx]
+  const portalCh = portalLookup[portalCodes[idx]]
   const matrixCh = colBuf[y]
   const revealed = !!resultMask[idx]
   const frontier = isFrontier(resultMask, x, y)
@@ -495,17 +498,17 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
     case 'intro': {
       if (!revealed) color = '#1B1C1C'
       if (frontier) color = borderColor
-      if (matrixCh && revealed && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); needsBg = true }
+      if (matrixCh && revealed && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); needsBg = true }
       break
     }
 
     case 'static': {
-      if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true } break }
+      if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true } break }
       break
     }
 
     case 'outro': {
-      if (matrixCh && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true }
+      if (matrixCh && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true }
       if (circleCells[idx] && !circleFrontier[idx]) drawCh = null; else if (circleFrontier[idx]) { color = borderColor; drawCh = portalCh }
       break
     }
@@ -515,7 +518,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
       if (!revealed) { drawCh = null; color = frontier ? borderColor : '#1B1C1C' }
       else {
         drawCh = matrixCh || portalCh
-        if (matrixCh && dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); needsBg = true }
+        if (matrixCh && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); needsBg = true }
       }
       break
     }
@@ -525,7 +528,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
       else {
         drawCh = portalCh
         if (frontier) color = borderColor
-        if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = getTrailColor(dist); drawCh = matrixCh; needsBg = true } }
+        if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true } }
       }
       break
     }
