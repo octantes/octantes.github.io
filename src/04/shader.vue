@@ -491,8 +491,6 @@ function expandMask(src, steps) {                                       // rende
   return expandA;
 }
 
-
-
 // MAIN RENDER
 
 function updateMasks(total) {                                           // handle mask mode 
@@ -701,7 +699,6 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-  runQueue('transition-full')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
