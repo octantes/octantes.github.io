@@ -420,41 +420,45 @@ function updateSwipe() {                                                // rende
 }
 
 function expandMask(src, steps) {                                       // render next mask frame with buffer 
-
-  secureExpand()
+  secureExpand();
   const total = cols * rows
+  let a = expandA, b = expandB
+  a.set(src);
 
-  if (steps <= 0) { expandA.set(src); return expandA }
+  let frontier = new Uint32Array(total);
+  let frontierLen = 0;
 
-  let a = expandA
-  let b = expandB
-
-  a.set(src)
-
+  for (let i = 0; i < total; i++) if (a[i]) frontier[frontierLen++] = i;
   for (let s = 0; s < steps; s++) {
-    b.fill(0)
-    for (let y = 0; y < rows; y++) {
-      const yOff = y * cols
-      for (let x = 0; x < cols; x++) {
-        const i = yOff + x
-        if (a[i]) {
-          b[i] = 1
-          if (x > 0) b[i - 1] = 1
-          if (x < cols - 1) b[i + 1] = 1
-          if (y > 0) b[i - cols] = 1
-          if (y < rows - 1) b[i + cols] = 1
-        }
-      }
+
+    b.fill(0); b.set(a)
+    let nextFrontier = new Uint32Array(total)
+    let nextLen = 0
+
+    for (let f = 0; f < frontierLen; f++) {
+      const idx = frontier[f]
+      const x = idx % cols
+      const y = Math.floor(idx / cols)
+
+      if (x > 0 && !b[idx - 1]) { b[idx - 1] = 1; nextFrontier[nextLen++] = idx - 1 }
+      if (x < cols - 1 && !b[idx + 1]) { b[idx + 1] = 1; nextFrontier[nextLen++] = idx + 1 }
+      if (y > 0 && !b[idx - cols]) { b[idx - cols] = 1; nextFrontier[nextLen++] = idx - cols }
+      if (y < rows - 1 && !b[idx + cols]) { b[idx + cols] = 1; nextFrontier[nextLen++] = idx + cols }
     }
+
+    if (nextLen === 0) break
+    frontier = nextFrontier
+    frontierLen = nextLen
+
     const tmp = a
     a = b
     b = tmp
   }
-
-  if (a !== expandA) expandA.set(a), a = expandA
-  return a
-
+  expandA.set(a)
+  return expandA
 }
+
+
 
 // MAIN RENDER
 
