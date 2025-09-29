@@ -571,7 +571,7 @@ function drawFrame(ts) {                                                // draw 
       const idx = y * cols + x
       const { drawCh, color, frontier } = cellRender(x, y, headPos, colBuf, resultMask)
 
-      if (!drawCh && !frontier) continue
+      if (drawCh === null) continue
 
       const px = Math.floor(x * fontSize)
       const py = Math.floor(y * fontSize)
@@ -587,8 +587,8 @@ function drawFrame(ts) {                                                // draw 
       if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFrontier) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
       else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
       else { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) }
-
-      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh || '', px, py) }
+      
+      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
 
     }
   }
@@ -638,7 +638,6 @@ const TASKS = {                                                         // run a
 function runQueue(name) {                                               // run queue 
   const task = TASKS[name]
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
-
   return new Promise((resolve, reject) => {
     try { task.impl() } catch (err) { return reject(err) }
     pendingTask = task
@@ -669,6 +668,7 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
+  runQueue('outro')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
 })
