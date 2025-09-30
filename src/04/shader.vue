@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const charRangeStart = 33                                               // unicode char start
 const charRangeEnd = 126                                                // unicode char end
-const charRangeMax = charRangeEnd - charRangeStart                      // max possible chars
+const charRangeMax = charRangeEnd - charRangeStart + 1                  // max possible chars
 
 const canvasRef = ref(null)                                             // dom << canvas >> ref
 const containerRef = ref(null)                                          // container div ref
@@ -36,8 +36,6 @@ let frontierBufB = null
 let neighborsMap = null
 let waveCacheSin = null
 let waveCacheCos = null
-let prevChars = null
-let prevColors = null
 
 const COLOR_BG = '#1B1C1C'
 const COLOR_BORDER = '#AAABAC'
@@ -128,12 +126,6 @@ function buildWaves() {                                                 // preco
   }
 }
 
-function testColors() {
-  const total = rows * cols
-  prevChars = new Array(total).fill(null)
-  prevColors = new Array(total).fill(null)
-}
-
 function computeFrontier(mask) {                                        // detects border of zone 
   if (!mask) { frontierMap && frontierMap.fill(0); return }
   frontierMap.fill(0)
@@ -150,7 +142,7 @@ function computeFrontier(mask) {                                        // detec
   }
 }
 
-function secureCopy(dst, src) {                                         // prevent overwrite on src copy 
+function copyMasks(dst, src) {                                         // prevent overwrite on src copy 
   if (!src) return null
   if (!dst || dst.length !== src.length) { dst = new Uint8Array(src.length) }
   dst.set(src)
@@ -208,15 +200,12 @@ function updateSize() {                                                 // updat
 }
 
 function setGrid() {                                                    // create grid + animate rain 
-
-  // set size
   let tempCols = Math.ceil(width / fontSize)
   let tempRows = Math.ceil(height / fontSize)
 
   const maxCols = 80
   const maxRows = 100
 
-  // dynamic font size for large screen
   if (tempCols > maxCols || tempRows > maxRows) {
     const scaleX = width / maxCols
     const scaleY = height / maxRows
@@ -225,16 +214,14 @@ function setGrid() {                                                    // creat
     tempRows = Math.ceil(height / fontSize)
   }
 
-  ctx.font = `${fontSize}px monospace`
-  ctx.textBaseline = 'top'
-  ctx.textAlign = 'left'
-
-  // set final sizes
   cols = tempCols
   rows = tempRows
   const total = cols * rows
 
-  // declare arrays
+  ctx.font = `${fontSize}px monospace`
+  ctx.textBaseline = 'top'
+  ctx.textAlign = 'left'
+
   idxToX = new Int16Array(total)
   idxToY = new Int16Array(total)
   portalCodes = new Uint16Array(total)
@@ -246,7 +233,6 @@ function setGrid() {                                                    // creat
 
   const cx = cols / 2
   const cy = rows / 2
-  
   const t0 = 100
   for (let y = 0, i = 0; y < rows; y++) { for (let x = 0; x < cols; x++, i++) { idxToX[i] = x; idxToY[i] = y } }
   for (let x = 0; x < cols; x++) cosCache[x] = Math.cos((x - cx) / 8 + t0 * 0.001)
@@ -296,7 +282,6 @@ function setGrid() {                                                    // creat
   }
 
   // ensure aligned expansion
-  testColors()
   secureMasks()
   secureExpand()
 
@@ -309,7 +294,8 @@ function updatePortal(tick) {                                           // rende
     for (let x = 0; x < cols; x++) {
       const idx = y * cols + x
       const v = cosCache[x] + sinCache[y] + tick * 0.001
-      portalCodes[idx] = ((v * 16 | 0) % charRangeMax + charRangeMax) % charRangeMax
+      const n = Math.floor(v * 16)
+      portalCodes[idx] = ((n % charRangeMax) + charRangeMax) % charRangeMax
       portalChars[idx] = portalLookup[portalCodes[idx]]
     }
   }
@@ -429,14 +415,14 @@ function updateSwipe() {                                                // rende
 
   if (transPhase === 0) {
     for (let y = 0; y < rows; y++) {
-      const wave = waveCacheSin[y]
+      const wave = sinCache[y]
       const noiseOffset = Math.floor(wave * 2)
       const xLimit = Math.min(line + noiseOffset, cols - 1)
       for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
     }
   } else if (transPhase === 1) {
     for (let y = 0; y < rows; y++) {
-      const wave = waveCacheCos[y]
+      const wave = cosCache[y]
       const noiseOffset = Math.floor(wave * 2)
       const xStart = Math.max(line - noiseOffset, 0)
       for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
@@ -449,7 +435,7 @@ function updateSwipe() {                                                // rende
 
     if (transPhase === 0) {
 
-      baseMask = secureCopy(baseMask, tmpMask)
+      baseMask = copyMasks(baseMask, tmpMask)
       if (autoOutro) { transPhase = 1; transFrame = 0 } else { mode = 'static' }
 
     } else if (transPhase === 1) {
@@ -511,7 +497,7 @@ function updateMasks(total) {                                           // handl
 
   switch (mode) {
     case 'intro':       { updateGerm(total); break }
-    case 'static':      { tmpMask = secureCopy(tmpMask, baseMask); break }
+    case 'static':      { tmpMask = copyMasks(tmpMask, baseMask); break }
     case 'outro':       { updateCircle(); break }
     case 'direct':      { updateGermInv(total); break }
     case 'transition':  { updateSwipe(); break }
@@ -682,11 +668,11 @@ function runQueue(name) {                                               // run q
 
 function runIntro()             { mode = 'intro'; revealFrame = 0 }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
-function runDirect()            { mode = 'direct'; revealFrame = 0; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
+function runDirect()            { mode = 'direct'; revealFrame = 0; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = copyMasks(tmpMask, baseMask) }
 function runTransitionFull()    { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true }
 function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false }
-function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = secureCopy(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
-function runStatic()            { mode = 'static'; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = secureCopy(tmpMask, baseMask) }
+function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = copyMasks(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
+function runStatic()            { mode = 'static'; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = copyMasks(tmpMask, baseMask) }
 function runHidden()            { mode = 'hidden' }
 
 function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.65 }
@@ -703,9 +689,9 @@ defineExpose({ runQueue })
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-  runQueue('intro')
   secureMasks()
   animationId = requestAnimationFrame(mainLoop)
+  runQueue('outro')
 })
 
 onBeforeUnmount(() => {
