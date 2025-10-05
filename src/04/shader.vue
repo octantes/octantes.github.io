@@ -1,173 +1,380 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const charRangeStart = 33                                               // unicode char start
-const charRangeEnd = 126                                                // unicode char end
-const charRangeMax = charRangeEnd - charRangeStart + 1                  // max possible chars
-
-const canvasRef = ref(null)                                             // dom << canvas >> ref
+const canvasRef    = ref(null)                                          // dom << canvas >> ref
 const containerRef = ref(null)                                          // container div ref
-const revealMaxFrames = 160                                             // intro total frames counter
-const maxDilateSteps = 32                                               // outro animation max frames
-const extraFrames = 42                                                  // direct animation extra frames
+const COLOR_BACKGR = '#1B1C1C'                                          // solid background color
+const COLOR_BORDER = '#AAABAC'                                          // solid frontier color
+const COLOR_PORTAL = '#986C98'                                          // solid portal color
+const COLOR_RAIN   = '#7EBDC4'                                          // solid rain color
+const charRangeStart    = 33                                            // unicode starting character
+const charRangeCount    = 126 - charRangeStart + 1                      // max possible characters
+const introFramesMax    = 160                                           // intro total frames counter
+const outroFramesMax    = 32                                            // outro animation max frames
+const directFramesExtra = 42                                            // direct animation extra frames
 
-let pendingTask = null                                                  // promise handling for drawloop
-let pendingResolve = null                                               // resolve handling for drawloop
-let ctx = null                                                          // canvas 2D context
+let charIndex  = 0                                                      // character buffer index
+let charTable  = null                                                   // precomputed unicode char values
+let charBuffer = []                                                     // buffer for precomputed char values
+let mode = 'hidden'                                                     // current animation mode
+let animationID = null                                                  // next requested frame id
+let taskPromise = null                                                  // promise handling for drawloop
+let taskResolve = null                                                  // resolve handling for drawloop
+let context = null                                                      // canvas 2D context init
+let fontSize = 16                                                       // font base pixel size
 let height = 0                                                          // canvas px height
 let width = 0                                                           // canvas px width
-let fontSize = 16                                                       // font px size
 let dpr = 1                                                             // device px ratio
 let cols = 0                                                            // char grid columns
 let rows = 0                                                            // char grid rows
 
-let portalCodes = null                                                  // portal cell int char codes
-let portalLookup = null                                                 // portal codes to strings
-let sinCache = null                                                     // portal trigo cache
-let cosCache = null                                                     // portal trigo cache
+let portalCodes  = null                                                 // portal cell int char codes
+let portalChars  = null                                                 // portal characters
+let portalSine   = null                                                 // portal trigo cache sine
+let portalCosine = null                                                 // portal trigo cache cosine
+let rainHeads  = []                                                     // first rain char position
+let rainBuffer = []                                                     // rain column chars positions
+let rainColumn = null                                                   // full rain column position array
+let rainColors = null                                                   // alpha color cache
+let rainChance = 0.02                                                   // column reset chance
+let rainLength = 40                                                     // rain trail char length
+let rainSpeed  = 0.7                                                    // rain trail fall speed
 
-let headInts = null
-let idxToX = null
-let idxToY = null
-let frontierMap = null
-let portalChars = null
-let frontierBufA = null
-let frontierBufB = null
-let neighborsMap = null
-let waveCacheSin = null
-let waveCacheCos = null
+let introFrame    = 0                                                   // frame counter for intro
+let swipeFrame    = 0                                                   // swipe animation line counter
+let swipePhase    = 0                                                   // swipe animation direction
+let swipeSine     = null                                                // swipe trigo cache cosine
+let swipeCosine   = null                                                // swipe trigo cache cosine
+let outroRadius   = 0                                                   // current outro animation radius
+let outroCenter   = { x: 0, y: 0 }                                      // outro animation center position
+let outroAuto     = false                                               // swipe outro autotrigger
+let outroCells    = null                                                // guarda indices dentro del circulo
+let outroFrontier = null                                                // guarda indices del limite del circulo
 
-const COLOR_BG = '#1B1C1C'
-const COLOR_BORDER = '#AAABAC'
-const COLOR_PORTAL = '#986C98'
+let baseMask   = null                                                   // binary active cell mask
+let tmpMask    = null                                                   // buffer mask for basemask
+let prevChars  = null                                                   // backbuffer for last cell char
+let prevColors = null                                                   // backbuffer for last cell color
+let expandA    = null                                                   // dilation buffer for expandMask
+let expandB    = null                                                   // dilation buffer for expandMask
+let indexToX   = null                                                   // maps linear index to x coord
+let indexToY   = null                                                   // maps linear index to y coord
 
-let heads = []                                                          // first rain char position
-let charBuffers = []                                                    // rain column chars positions
-let preChars = null                                                     // precomputed char lookup
-let charBuffer = []                                                     // buffer for precomputed chars
-let charIndex = 0                                                       // character buffer index
+let noiseMap        = null                                              // static noise map for distortion
+let neighborsMap    = null                                              // stores each cell neighbors
+let frontierMap     = null                                              // mask for cells in borders
+let frontierCurrent = null                                              // buffer for last frontier indexes
+let frontierNext    = null                                              // buffer for next frontier indexes
 
-let speed = 0.7                                                         // rain fall speed
-let trailColors = null                                                  // alpha color cache
-let trailLength = 40                                                    // rain trail char length
-let resetChance = 0.02                                                  // column reset chance
-let animationId = null                                                  // next requested frame id
-let revealFrame = 0                                                     // frame counter for intro
-let mode = 'hidden'                                                     // current mode store string
-let outroFrame = 0                                                      // outro max frame counter
-let outroRadius = 0                                                     // current outro animation radius
-let outroCenter = { x: 0, y: 0 }                                        // outro animation center position
-let transFrame = 0                                                      // swipe animation line counter
-let transPhase = 0                                                      // swipe animation direction
-let autoOutro = false                                                   // swipe outro autotrigger
+// INIT
 
-let circleCells = null                                                  // guarda indices dentro del circulo
-let circleFrontier = null                                               // guarda indices del limite del circulo
-let noiseMap = null                                                     // static noise array for animations
-let baseMask = null                                                     // active/inactive animation cell mask
-let tmpMask = null                                                      // dilation temporal buffer mask
-let expandA = null                                                      // expand variable a
-let expandB = null                                                      // expand variable b
+function initMasks() {                                                  // initialize all arrays 
+
+  const total = cols * rows
+
+  if (!noiseMap         || noiseMap.length          !== total) noiseMap          = new Float32Array(total)
+  if (!frontierCurrent  || frontierCurrent.length   !== total) frontierCurrent   = new Uint32Array(total)
+  if (!frontierNext     || frontierNext.length      !== total) frontierNext      = new Uint32Array(total)
+  if (!indexToX         || indexToX.length          !== total) indexToX          = new Int16Array(total)
+  if (!indexToY         || indexToY.length          !== total) indexToY          = new Int16Array(total)
+  if (!portalCodes      || portalCodes.length       !== total) portalCodes       = new Int16Array(total)
+  if (!baseMask         || baseMask.length          !== total) baseMask          = new Uint8Array(total)
+  if (!tmpMask          || tmpMask.length           !== total) tmpMask           = new Uint8Array(total)
+  if (!expandA          || expandA.length           !== total) expandA           = new Uint8Array(total)
+  if (!expandB          || expandB.length           !== total) expandB           = new Uint8Array(total)
+  if (!outroCells       || outroCells.length        !== total) outroCells        = new Uint8Array(total)
+  if (!outroFrontier    || outroFrontier.length     !== total) outroFrontier     = new Uint8Array(total)
+  if (!frontierMap      || frontierMap.length       !== total) frontierMap       = new Uint8Array(total)
+  if (!portalChars      || portalChars.length       !== total) portalChars       = new Array(total)
+  if (!neighborsMap     || neighborsMap.length      !== total) neighborsMap      = new Array(total)
+  if (!prevChars        || prevChars.length         !== total) prevChars         = new Array(total).fill(null)
+  if (!prevColors       || prevColors.length        !== total) prevColors        = new Array(total).fill(null)
+  if (!rainColumn       || rainColumn.length        !== cols)  rainColumn        = new Int16Array(cols)
+  if (!portalCosine     || portalCosine.length      !== cols)  portalCosine      = new Float32Array(cols)
+  if (!portalSine       || portalSine.length        !== rows)  portalSine        = new Float32Array(rows)
+  if (!swipeSine        || swipeSine.length         !== rows)  swipeSine         = new Float32Array(rows)
+  if (!swipeCosine      || swipeCosine.length       !== rows)  swipeCosine       = new Float32Array(rows)
+
+}
+
+function resetMasks() {                                                 // reset only state masks 
+
+  const total = cols * rows
+
+  if (!baseMask       || baseMask.length       !== total) baseMask       = new Uint8Array(total)
+  if (!tmpMask        || tmpMask.length        !== total) tmpMask        = new Uint8Array(total)
+  if (!outroCells     || outroCells.length     !== total) outroCells     = new Uint8Array(total)
+  if (!outroFrontier  || outroFrontier.length  !== total) outroFrontier  = new Uint8Array(total)
+  if (!frontierMap    || frontierMap.length    !== total) frontierMap    = new Uint8Array(total)
+  if (!portalChars    || portalChars.length    !== total) portalChars    = new Array(total)
+
+}
 
 // HELPERS
 
-function clamp(v, a = 0, b = 1) {                                       // constrain value 
-  return Math.min(b, Math.max(a, v))
+function clampValue(value, min = 0, max = 1) {                          // constrain value between max and min 
+  
+  return Math.min(max, Math.max(min, value))
+
 }
 
-function pickChar() {                                                   // return character 
+function secureCopy(destination, source) {                              // prevent overwrite on UINT8 array copy 
+
+  if (!source) return null
+  if (!destination || destination.length !== source.length) {
+    destination = new Uint8Array(source.length)
+  }
+  
+  destination.set(source)
+  return destination
+
+}
+
+function pickChar() {                                                   // return character from charBuffer 
+
   const ch = charBuffer[charIndex]
-  charIndex = (charIndex + 1) % charRangeMax
+  charIndex = (charIndex + 1) % charRangeCount
   return ch
+
 }
 
-function characterBuffer() {                                            // create char buffer 
-  charBuffer = new Array(charRangeMax * 2)
-  for (let i = 0; i < charRangeMax; i++) {
-    charBuffer[i] = preChars[i]
-    charBuffer[i + charRangeMax] = preChars[i]
-  }
-  charIndex = 0
-}
+// BUILDERS
 
-function trailAlphas(dist) {                                            // returns trail alpha colors 
-  const di = dist | 0
-  return (di >= 0 && di <= trailLength) ? trailColors[di] : null
-}
+function computeFrontier(mask) {                                        // frontier from cells touching inactive 
 
-function buildPortal() {                                                // precompute portal table
-  portalLookup = new Array(charRangeMax)
-  for (let i = 0; i < charRangeMax; i++) {
-    portalLookup[i] = preChars[i]
-  }
-}
-
-function buildNeighbors() {                                             // precompute neighbors
-  const total = cols * rows
-  neighborsMap = new Array(total)
-  for (let idx = 0; idx < total; idx++) {
-    const x = idxToX[idx]
-    const y = idxToY[idx]
-    const neighbors = []
-    if (x > 0) neighbors.push(idx - 1)
-    if (x < cols - 1) neighbors.push(idx + 1)
-    if (y > 0) neighbors.push(idx - cols)
-    if (y < rows - 1) neighbors.push(idx + cols)
-    neighborsMap[idx] = neighbors
-  }
-}
-
-function buildWaves() {                                                 // precompute waves
-  waveCacheSin = new Float32Array(rows)
-  waveCacheCos = new Float32Array(rows)
-  for (let y = 0; y < rows; y++) {
-    waveCacheSin[y] = Math.sin(y * 0.25)
-    waveCacheCos[y] = Math.cos(y * 0.25)
-  }
-}
-
-function computeFrontier(mask) {                                        // detects border of zone 
   if (!mask) { frontierMap && frontierMap.fill(0); return }
   frontierMap.fill(0)
+  
   for (let y = 0; y < rows; y++) {
     const yOff = y * cols
     for (let x = 0; x < cols; x++) {
       const i = yOff + x
       if (!mask[i]) continue
-      if (x > 0 && !mask[i - 1]) { frontierMap[i] = 1; continue }
-      if (x < cols - 1 && !mask[i + 1]) { frontierMap[i] = 1; continue }
-      if (y > 0 && !mask[i - cols]) { frontierMap[i] = 1; continue }
+      if (x > 0        && !mask[i - 1])    { frontierMap[i] = 1; continue }
+      if (y > 0        && !mask[i - cols]) { frontierMap[i] = 1; continue }
+      if (x < cols - 1 && !mask[i + 1])    { frontierMap[i] = 1; continue }
       if (y < rows - 1 && !mask[i + cols]) { frontierMap[i] = 1; continue }
+    }
+  }
+
+}
+
+function buildChars() {                                                 // init char buffer 
+
+  charBuffer = new Array(charRangeCount * 2)
+
+  for (let i = 0; i < charRangeCount; i++) {
+    charBuffer[i] = charTable[i]
+    charBuffer[i  + charRangeCount] = charTable[i]
+  }
+
+  charIndex = 0
+
+}
+
+// ANIMATIONS
+
+function animatePortal(tick) {                                          // render next portal frame 
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const idx = y * cols + x
+      const v = portalCosine[x] + portalSine[y] + tick * 0.001
+      portalCodes[idx] = ((v * 16 | 0) % charRangeCount + charRangeCount) % charRangeCount
+      portalChars[idx] = charTable[portalCodes[idx]]
     }
   }
 }
 
-function copyMasks(dst, src) {                                         // prevent overwrite on src copy 
-  if (!src) return null
-  if (!dst || dst.length !== src.length) { dst = new Uint8Array(src.length) }
-  dst.set(src)
-  return dst
-}
-
-function secureExpand() {                                               // prevent overwrite on expand 
-  const total = cols * rows
-  if (!expandA || expandA.length !== total) {
-    expandA = new Uint8Array(total)
-    expandB = new Uint8Array(total)
+function animateRain() {                                                // render next rain frame 
+  for (let c = 0; c < cols; c++) {
+    const rowPos = Math.floor(rainHeads[c] + rainSpeed)
+    rainHeads[c] += rainSpeed
+    if (rowPos >= 0 && rowPos < rows) rainBuffer[c][rowPos] = pickChar()
+    if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) {
+      rainHeads[c] = -Math.random() * rows
+      rainBuffer[c].fill(null)
+    }
   }
-  if (!frontierBufA || frontierBufA.length !== total) frontierBufA = new Uint32Array(total)
-  if (!frontierBufB || frontierBufB.length !== total) frontierBufB = new Uint32Array(total)
 }
 
-function secureMasks() {                                                // prevent mask overwrite 
+function animateCircle() {                                              // render next circle frame 
+  
+  outroRadius += 1
+
+  const rCurr = outroRadius
+  const yStart = Math.max(0, Math.floor(outroCenter.y - rCurr))
+  const yEnd = Math.min(rows - 1, Math.ceil(outroCenter.y + rCurr))
+  const xStart = Math.max(0, Math.floor(outroCenter.x - rCurr))
+  const xEnd = Math.min(cols - 1, Math.ceil(outroCenter.x + rCurr))
+
+  for (let y = yStart; y <= yEnd; y++) {
+    const yOff = y * cols
+    for (let x = xStart; x <= xEnd; x++) {
+      const idx = yOff + x
+      const dx = x - outroCenter.x
+      const dy = y - outroCenter.y
+      const dist2 = dx * dx + dy * dy
+      const n = noiseMap[idx] * 5
+      const radiusNoise2 = (rCurr + n) * (rCurr + n)
+
+      if (dist2 <= radiusNoise2) outroCells[idx] = 1
+    }
+  }
+
+  for (let i = 0; i < rows * cols; i++) outroFrontier[i] = 0
+
+  for (let y = 0; y < rows; y++) {
+    const yOff = y * cols
+    for (let x = 0; x < cols; x++) {
+      const idx = yOff + x
+      if (!outroCells[idx]) continue
+      if (
+        (x > 0 && !outroCells[idx - 1]) ||
+        (x < cols - 1 && !outroCells[idx + 1]) ||
+        (y > 0 && !outroCells[idx - cols]) ||
+        (y < rows - 1 && !outroCells[idx + cols])
+      ) outroFrontier[idx] = 1
+    }
+  }
+
+  for (let i = 0; i < rows * cols; i++) baseMask[i] = outroCells[i] ? 0 : 1
+
+}
+
+function animateGerm(total) {                                           // render next germ frame 
+
+  const oldRatio = animateGerm.lastRatio || 0
+  const newRatio = clampValue(introFrame / introFramesMax, 0, 1)
+
+  for (let i = 0; i < total; i++) { const n = noiseMap[i]; if (n >= oldRatio && n < newRatio) baseMask[i] = 1 }
+  animateGerm.lastRatio = newRatio
+
+}
+
+function animateGermInv(total) {                                        // render next inverted germ frame 
+  
+  const ratio = clampValue(introFrame / introFramesMax, 0, 1)
+  
+  for (let i = 0; i < total; i++) { if (baseMask[i] === 1 && noiseMap[i] < ratio) baseMask[i] = 0 }
+
+  if (ratio >= 1) {
+
+    if (!animateGermInv.frontierQueue) animateGermInv.frontierQueue = []
+    const q = animateGermInv.frontierQueue
+
+    for (let y = 0; y < rows; y++) {
+      const yOff = y * cols
+      for (let x = 0; x < cols; x++) {
+        const i = yOff + x
+        if (baseMask[i] !== 1) continue
+        if (
+          (x > 0        && baseMask[i - 1]    === 0) ||
+          (x < cols - 1 && baseMask[i + 1]    === 0) ||
+          (y > 0        && baseMask[i - cols] === 0) ||
+          (y < rows - 1 && baseMask[i + cols] === 0)
+        ) { if (!q.includes(i)) q.push(i) }
+      }
+    }
+
+    if (q.length > 0) {
+      const perFrame = Math.max(1, Math.floor(total / introFramesMax))
+      let count = 0
+      for (let k = 0; k < q.length && count < perFrame; k++) {
+        const idx = q[k]
+        if (baseMask[idx] === 1) { baseMask[idx] = 0; count++ }
+      }
+      animateGermInv.frontierQueue = q.filter(i => baseMask[i] === 1)
+    }
+  }
+}
+
+function animateSwipe() {                                               // render next swipe frame 
+
+  initMasks()
+
+  const line = Math.floor(swipeFrame)
+  tmpMask.fill(0)
+  secureCopy(tmpMask, new Uint8Array(tmpMask.length))
+
+  if (swipePhase === 0) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeSine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xLimit = Math.min(line + noiseOffset, cols - 1)
+      for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
+    }
+  } else if (swipePhase === 1) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeCosine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xStart = Math.max(line - noiseOffset, 0)
+      for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
+    }
+  }
+
+  swipeFrame += 1.0
+
+  if (swipeFrame >= cols) {
+
+    if (swipePhase === 0) {
+
+      secureCopy(baseMask, tmpMask)
+      if (outroAuto) { swipePhase = 1; swipeFrame = 0 } else { mode = 'static' }
+
+    } else if (swipePhase === 1) {
+
+      secureCopy(baseMask, new Uint8Array(baseMask.length))
+      secureCopy(tmpMask, new Uint8Array(tmpMask.length))
+      baseMask.fill(0)
+      tmpMask.fill(0)
+      swipeFrame = cols
+      swipePhase = 1
+      mode = 'hidden'
+
+    }
+
+  }
+
+}
+
+function expandMask(source, steps) {                                    // render next mask frame with buffer 
+
+  initMasks()
+
   const total = cols * rows
-  if (!baseMask || baseMask.length !== total) baseMask = new Uint8Array(total)
-  if (!tmpMask || tmpMask.length !== total) tmpMask = new Uint8Array(total)
-  if (!circleCells || circleCells.length !== total) circleCells = new Uint8Array(total)
-  if (!circleFrontier || circleFrontier.length !== total) circleFrontier = new Uint8Array(total)
-  if (!frontierMap || frontierMap.length !== total) frontierMap = new Uint8Array(total)
-  if (!portalChars || portalChars.length !== total) portalChars = new Array(total)
-  secureExpand()
+  let a = expandA, b = expandB
+  a.set(source)
+  
+  let frontier = frontierCurrent
+  let nextFrontier = frontierNext
+  let frontierLen = 0
+  let nextLen = 0
+
+  for (let i = 0; i < total; i++) { if (a[i]) frontier[frontierLen++] = i }
+
+  for (let s = 0; s < steps; s++) {
+
+    b.set(a)
+    nextLen = 0
+
+    for (let f = 0; f < frontierLen; f++) {
+      const idx = frontier[f]
+      const neighbors = neighborsMap[idx]
+      for (let n of neighbors) { if (!b[n]) { b[n] = 1; nextFrontier[nextLen++] = n } }
+    }
+
+    if (nextLen === 0) break
+
+    [frontier, nextFrontier] = [nextFrontier, frontier]
+    frontierLen = nextLen
+    const tmp = a
+    a = b
+    b = tmp
+
+  }
+
+  expandA.set(a);
+  return expandA;
 }
 
 // CONTEXT
@@ -188,8 +395,8 @@ function setSize() {                                                    // prepa
   canvasRef.value.style.height = height + 'px'
 
   // transform to normals
-  ctx = canvasRef.value.getContext('2d')
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+  context = canvasRef.value.getContext('2d')
+  context.setTransform(dpr, 0, 0, dpr, 0, 0)
 
 }
 
@@ -200,12 +407,15 @@ function updateSize() {                                                 // updat
 }
 
 function setGrid() {                                                    // create grid + animate rain 
+
+  // set size
   let tempCols = Math.ceil(width / fontSize)
   let tempRows = Math.ceil(height / fontSize)
 
   const maxCols = 80
   const maxRows = 100
 
+  // dynamic font size for large screen
   if (tempCols > maxCols || tempRows > maxRows) {
     const scaleX = width / maxCols
     const scaleY = height / maxRows
@@ -214,60 +424,70 @@ function setGrid() {                                                    // creat
     tempRows = Math.ceil(height / fontSize)
   }
 
+  context.font = `${fontSize}px monospace`
+  context.textBaseline = 'top'
+  context.textAlign = 'left'
+
+  // set final sizes
   cols = tempCols
   rows = tempRows
   const total = cols * rows
 
-  ctx.font = `${fontSize}px monospace`
-  ctx.textBaseline = 'top'
-  ctx.textAlign = 'left'
-
-  idxToX = new Int16Array(total)
-  idxToY = new Int16Array(total)
-  portalCodes = new Uint16Array(total)
-  noiseMap = new Float32Array(total)
-  baseMask = new Uint8Array(total)
-  tmpMask = new Uint8Array(total)
-  cosCache = new Float32Array(cols)
-  sinCache = new Float32Array(rows)
+  initMasks()
 
   const cx = cols / 2
   const cy = rows / 2
+  
   const t0 = 100
-  for (let y = 0, i = 0; y < rows; y++) { for (let x = 0; x < cols; x++, i++) { idxToX[i] = x; idxToY[i] = y } }
-  for (let x = 0; x < cols; x++) cosCache[x] = Math.cos((x - cx) / 8 + t0 * 0.001)
-  for (let y = 0; y < rows; y++) sinCache[y] = Math.sin((y - cy) / 8 + t0 * 0.001)
+  
+  // portal trig animation
+  for (let y = 0, i = 0; y < rows; y++) { for (let x = 0; x < cols; x++, i++) { indexToX[i] = x; indexToY[i] = y } }
+  for (let x = 0; x < cols; x++) portalCosine[x] = Math.cos((x - cx) / 8 + t0 * 0.001)
+  for (let y = 0; y < rows; y++) portalSine[y] = Math.sin((y - cy) / 8 + t0 * 0.001)
 
   // set rain
-  heads = new Array(cols)
-  charBuffers = new Array(cols)
+  rainHeads = new Array(cols)
+  rainBuffer = new Array(cols)
   for (let c = 0; c < cols; c++) {
-    heads[c] = Math.random() * rows * -1
-    charBuffers[c] = new Array(rows).fill(null)
+    rainHeads[c] = Math.random() * rows * -1
+    rainBuffer[c] = new Array(rows).fill(null)
   }
 
   // precompute all chars
-  if (!preChars) {
-    preChars = new Array(charRangeMax)
-    for (let i = 0; i < charRangeMax; i++) {
-      preChars[i] = String.fromCharCode(charRangeStart + i)
+  if (!charTable) {
+    charTable = new Array(charRangeCount)
+    for (let i = 0; i < charRangeCount; i++) {
+      charTable[i] = String.fromCharCode(charRangeStart + i)
     }
   }
 
-  characterBuffer()
-  buildPortal()
-  buildNeighbors()
-  buildWaves()
-
-  portalChars = new Array(cols * rows)
-  for (let i = 0; i < cols * rows; i++) portalChars[i] = portalLookup[portalCodes[i]]
+  buildChars()
+  
+  // build swipe waves
+  for (let y = 0; y < rows; y++) {
+    swipeSine[y] = Math.sin(y * 0.25)
+    swipeCosine[y] = Math.cos(y * 0.25)
+  }
+  
+  // buildneighbors
+  neighborsMap = new Array(total).fill(null)
+  for (let idx = 0; idx < total; idx++) {
+    const x = indexToX[idx]
+    const y = indexToY[idx]
+    const neighbors = []
+    if (x > 0) neighbors.push(idx - 1)
+    if (x < cols - 1) neighbors.push(idx + 1)
+    if (y > 0) neighbors.push(idx - cols)
+    if (y < rows - 1) neighbors.push(idx + cols)
+    neighborsMap[idx] = neighbors
+  }
 
   // set alpha cache
-  trailColors = new Array(trailLength + 1)
-  for (let i = 0; i <= trailLength; i++) {
-    const alpha = 1 - i / Math.max(1, trailLength)
+  rainColors = new Array(rainLength + 1)
+  for (let i = 0; i <= rainLength; i++) {
+    const alpha = 1 - i / Math.max(1, rainLength)
     const a = Math.pow(Math.max(0, alpha), 1.2)
-    trailColors[i] = `rgba(126,189,196,${a.toFixed(3)})`
+    rainColors[i] = `rgba(126,189,196,${a.toFixed(3)})`
   }
 
   // set noisemap
@@ -276,232 +496,29 @@ function setGrid() {                                                    // creat
     for (let x = 0; x < cols; x++) {
       const nx = x / Math.max(1, cols)
       const noise = Math.sin(nx * 12 + ny * 12) + Math.cos(nx * 7 - ny * 9)
-      const n = clamp(noise * 0.5 + 0.5, 0, 1)
+      const n = clampValue(noise * 0.5 + 0.5, 0, 1)
       noiseMap[y * cols + x] = n
     }
   }
 
   // ensure aligned expansion
-  secureMasks()
-  secureExpand()
+  initMasks()
 
-}
-
-// ANIMATIONS
-
-function updatePortal(tick) {                                           // render next portal frame 
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      const idx = y * cols + x
-      const v = cosCache[x] + sinCache[y] + tick * 0.001
-      const n = Math.floor(v * 16)
-      portalCodes[idx] = ((n % charRangeMax) + charRangeMax) % charRangeMax
-      portalChars[idx] = portalLookup[portalCodes[idx]]
-    }
-  }
-}
-
-function updateRain() {                                                 // render next rain frame 
-  for (let c = 0; c < cols; c++) {
-    const rowPos = Math.floor(heads[c] + speed)
-    heads[c] += speed
-    if (rowPos >= 0 && rowPos < rows) charBuffers[c][rowPos] = pickChar()
-    if (heads[c] > rows + trailLength && Math.random() < resetChance) {
-      heads[c] = -Math.random() * rows
-      charBuffers[c].fill(null)
-    }
-  }
-}
-
-function updateCircle() {                                               // render next circle frame 
-  
-  outroRadius += 1
-
-  const rCurr = outroRadius
-  const yStart = Math.max(0, Math.floor(outroCenter.y - rCurr))
-  const yEnd = Math.min(rows - 1, Math.ceil(outroCenter.y + rCurr))
-  const xStart = Math.max(0, Math.floor(outroCenter.x - rCurr))
-  const xEnd = Math.min(cols - 1, Math.ceil(outroCenter.x + rCurr))
-
-  for (let y = yStart; y <= yEnd; y++) {
-    const yOff = y * cols
-    for (let x = xStart; x <= xEnd; x++) {
-      const idx = yOff + x
-      const dx = x - outroCenter.x
-      const dy = y - outroCenter.y
-      const dist2 = dx * dx + dy * dy
-      const n = noiseMap[idx] * 5
-      const radiusNoise2 = (rCurr + n) * (rCurr + n)
-
-      if (dist2 <= radiusNoise2) circleCells[idx] = 1
-    }
-  }
-
-  for (let i = 0; i < rows * cols; i++) circleFrontier[i] = 0
-  for (let y = 0; y < rows; y++) {
-    const yOff = y * cols
-    for (let x = 0; x < cols; x++) {
-      const idx = yOff + x
-      if (!circleCells[idx]) continue
-      if (
-        (x > 0 && !circleCells[idx - 1]) ||
-        (x < cols - 1 && !circleCells[idx + 1]) ||
-        (y > 0 && !circleCells[idx - cols]) ||
-        (y < rows - 1 && !circleCells[idx + cols])
-      ) circleFrontier[idx] = 1
-    }
-  }
-
-  for (let i = 0; i < rows * cols; i++) baseMask[i] = circleCells[i] ? 0 : 1
-}
-
-function updateGerm(total) {                                            // render next germ frame 
-  const oldRatio = updateGerm.lastRatio || 0
-  const newRatio = clamp(revealFrame / revealMaxFrames, 0, 1)
-
-  for (let i = 0; i < total; i++) { const n = noiseMap[i]; if (n >= oldRatio && n < newRatio) baseMask[i] = 1 }
-  updateGerm.lastRatio = newRatio
-
-}
-
-function updateGermInv(total) {                                         // render next inverted germ frame 
-  
-  const ratio = clamp(revealFrame / revealMaxFrames, 0, 1)
-  
-  for (let i = 0; i < total; i++) { if (baseMask[i] === 1 && noiseMap[i] < ratio) baseMask[i] = 0 }
-
-  if (ratio >= 1) {
-    if (!updateGermInv.frontierQueue) updateGermInv.frontierQueue = []
-    const q = updateGermInv.frontierQueue
-
-    for (let y = 0; y < rows; y++) {
-      const yOff = y * cols
-      for (let x = 0; x < cols; x++) {
-        const i = yOff + x
-        if (baseMask[i] !== 1) continue
-        if (
-          (x > 0 && baseMask[i - 1] === 0) ||
-          (x < cols - 1 && baseMask[i + 1] === 0) ||
-          (y > 0 && baseMask[i - cols] === 0) ||
-          (y < rows - 1 && baseMask[i + cols] === 0)
-        ) {
-          if (!q.includes(i)) q.push(i)
-        }
-      }
-    }
-
-    if (q.length > 0) {
-      const perFrame = Math.max(1, Math.floor(total / revealMaxFrames))
-      let count = 0
-      for (let k = 0; k < q.length && count < perFrame; k++) {
-        const idx = q[k]
-        if (baseMask[idx] === 1) {
-          baseMask[idx] = 0
-          count++
-        }
-      }
-
-      updateGermInv.frontierQueue = q.filter(i => baseMask[i] === 1)
-    }
-  }
-}
-
-function updateSwipe() {                                                // render next swipe frame 
-
-  secureMasks()
-
-  const line = Math.floor(transFrame)
-  tmpMask.fill(0)
-
-  if (transPhase === 0) {
-    for (let y = 0; y < rows; y++) {
-      const wave = sinCache[y]
-      const noiseOffset = Math.floor(wave * 2)
-      const xLimit = Math.min(line + noiseOffset, cols - 1)
-      for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
-    }
-  } else if (transPhase === 1) {
-    for (let y = 0; y < rows; y++) {
-      const wave = cosCache[y]
-      const noiseOffset = Math.floor(wave * 2)
-      const xStart = Math.max(line - noiseOffset, 0)
-      for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
-    }
-  }
-
-  transFrame += 1.0
-
-  if (transFrame >= cols) {
-
-    if (transPhase === 0) {
-
-      baseMask = copyMasks(baseMask, tmpMask)
-      if (autoOutro) { transPhase = 1; transFrame = 0 } else { mode = 'static' }
-
-    } else if (transPhase === 1) {
-
-      baseMask.fill(0)
-      tmpMask.fill(0)
-      transFrame = cols
-      transPhase = 1
-      mode = 'hidden'
-
-    }
-
-  }
-
-}
-
-function expandMask(src, steps) {                                       // render next mask frame with buffer 
-
-  secureExpand();
-
-  const total = cols * rows
-  let a = expandA, b = expandB
-  a.set(src)
-
-  let frontier = frontierBufA
-  let nextFrontier = frontierBufB
-  let frontierLen = 0
-  let nextLen = 0
-
-  for (let i = 0; i < total; i++) { if (a[i]) frontier[frontierLen++] = i }
-
-  for (let s = 0; s < steps; s++) {
-
-    b.set(a)
-    nextLen = 0
-
-    for (let f = 0; f < frontierLen; f++) {
-      const idx = frontier[f]
-      const neighbors = neighborsMap[idx]
-      for (let n of neighbors) { if (!b[n]) { b[n] = 1; nextFrontier[nextLen++] = n } }
-    }
-
-    if (nextLen === 0) break;
-
-    [frontier, nextFrontier] = [nextFrontier, frontier];
-    frontierLen = nextLen;
-    [a, b] = [b, a];
-  }
-
-  expandA.set(a);
-  return expandA;
 }
 
 // MAIN RENDER
 
 function updateMasks(total) {                                           // handle mask mode 
 
-  secureMasks()
+  initMasks()
 
   switch (mode) {
-    case 'intro':       { updateGerm(total); break }
-    case 'static':      { tmpMask = copyMasks(tmpMask, baseMask); break }
-    case 'outro':       { updateCircle(); break }
-    case 'direct':      { updateGermInv(total); break }
-    case 'transition':  { updateSwipe(); break }
-    case 'hidden':      { tmpMask.fill(0); break }
+    case 'intro':       { animateGerm(total); break }
+    case 'static':      { secureCopy(tmpMask, baseMask); break }
+    case 'outro':       { animateCircle(); break }
+    case 'direct':      { animateGermInv(total); break }
+    case 'transition':  { animateSwipe(); break }
+    case 'hidden':      { secureCopy(tmpMask, new Uint8Array(tmpMask.length)); break }
   }
 
 }
@@ -509,7 +526,7 @@ function updateMasks(total) {                                           // handl
 function cellRender(x, y, headPos, colBuf, resultMask) {                // render mode cells 
 
   const idx = y * cols + x
-  const portalCh = portalChars ? portalChars[idx] : portalLookup[portalCodes[idx]]
+  const portalCh = portalChars[idx]
   const matrixCh = colBuf[y]
   const revealed = !!resultMask[idx]
   const frontier = !!frontierMap[idx]
@@ -522,29 +539,29 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
   switch (mode) {
 
     case 'intro': {
-      if (!revealed) color = COLOR_BG
+      if (!revealed) color = COLOR_BACKGR
       if (frontier) color = COLOR_BORDER
-      if (matrixCh && revealed && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); needsBg = true }
+      if (matrixCh && revealed && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
       break
     }
 
     case 'static': {
-      if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true } break }
+      if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } break }
       break
     }
 
     case 'outro': {
-      if (matrixCh && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true }
-      if (circleCells[idx] && !circleFrontier[idx]) drawCh = null; else if (circleFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
+      if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true }
+      if (outroCells[idx] && !outroFrontier[idx]) drawCh = null; else if (outroFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
       break
     }
 
     case 'direct': {
       if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true }
-      if (!revealed) { drawCh = null; color = frontier ? COLOR_BORDER : COLOR_BG }
+      if (!revealed) { drawCh = null; color = frontier ? COLOR_BORDER : COLOR_BACKGR }
       else {
         drawCh = matrixCh || portalCh
-        if (matrixCh && dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); needsBg = true }
+        if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
       }
       break
     }
@@ -554,7 +571,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
       else {
         drawCh = portalCh
         if (frontier) color = COLOR_BORDER
-        if (matrixCh) { if (dist >= 0 && dist <= trailLength) { color = trailAlphas(dist); drawCh = matrixCh; needsBg = true } }
+        if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } }
       }
       break
     }
@@ -569,19 +586,17 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 
 function drawFrame(ts) {                                                // draw shader 
 
-  if (!ctx) return
+  if (!context) return
   const total = rows * cols
-  ctx.clearRect(0, 0, width, height)
 
-  if (!headInts || headInts.length !== cols) headInts = new Int16Array(cols)
-  for (let i = 0; i < cols; i++) headInts[i] = Math.floor(heads[i])
+  for (let i = 0; i < cols; i++) rainColumn[i] = Math.floor(rainHeads[i])
 
   // update animations only when not hidden
-  if (mode !== 'hidden') { updatePortal(ts); updateRain(); updateMasks(total) }
+  if (mode !== 'hidden') { animatePortal(ts); animateRain(); updateMasks(total) }
 
   const steps = Math.min(
-    maxDilateSteps,
-    Math.floor((mode === 'intro' ? clamp(revealFrame / revealMaxFrames, 0, 1) : 1) * maxDilateSteps)
+    outroFramesMax,
+    Math.floor((mode === 'intro' ? clampValue(introFrame / introFramesMax, 0, 1) : 1) * outroFramesMax)
   )
 
   let resultMask = (mode === 'direct' || mode === 'static') ? baseMask : (mode === 'transition') ? tmpMask : expandMask(baseMask, steps)
@@ -595,50 +610,52 @@ function drawFrame(ts) {                                                // draw 
     const py = y * fontSize
 
     for (let x = 0; x < cols; x++) {
-      const headPos = headInts[x]
+
+      const idx = yOff + x
+      const headPos = rainColumn[x]
       const px = x * fontSize
-      const colBuf = charBuffers[x]
-      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
+      const colBuf = rainBuffer[x]
+      const { drawCh, color } = cellRender(x, y, headPos, colBuf, resultMask)
 
-      if (drawCh === null) continue
+      // chequeo contra backbuffer
+      if (drawCh === prevChars[idx] && color === prevColors[idx]) continue
 
-      const isRain = !!(matrixCh && dist >= 0 && dist <= trailLength)
-      const isPortal = drawCh === portalCh
-      const isFront = !!frontier
+      if (drawCh !== prevChars[idx] || color !== prevColors[idx]) {
+        context.fillStyle = COLOR_BACKGR
+        context.fillRect(px, py, fontSize, fontSize)
 
-      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
-      else if (mode === 'intro') { if (revealed) { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) } }
-      else { ctx.fillStyle = '#1B1C1C'; ctx.fillRect(px, py, fontSize + 1, fontSize + 1) }
-      
-      if (drawCh != null) { ctx.fillStyle = color; ctx.fillText(drawCh, px, py) }
+        if (drawCh) { context.fillStyle = color; context.fillText(drawCh, px, py) }
+
+        prevChars[idx] = drawCh
+        prevColors[idx] = color
+      }
     }
   }
 
   // end states
   switch (mode) {
-    case 'intro':         if (revealFrame < revealMaxFrames)                  { revealFrame++ }    else { mode = 'static' }   break
-    case 'direct':        if (revealFrame < revealMaxFrames + extraFrames)    { revealFrame++ }    else { mode = 'hidden' }   break
-    case 'outro':         if (outroRadius < Math.hypot(cols, rows))           { outroFrame++  }    else { mode = 'hidden' }   break
-    case 'transition':    updateSwipe(); break
-    default:
-      break
+    // case 'outro':         if (outroRadius < Math.hypot(cols, rows))           { outroFrame++  }    else { mode = 'hidden' }   break
+    case 'intro':         if (introFrame < introFramesMax)                  { introFrame++ }    else { mode = 'static' }   break
+    case 'direct':        if (introFrame < introFramesMax + directFramesExtra)    { introFrame++ }    else { mode = 'hidden' }   break
+    case 'transition':    animateSwipe(); break
+    default: break
   }
 
   // promise handling
-  if (pendingTask) {
+  if (taskPromise) {
     try {
-      if (mode === 'hidden' || mode === 'static' || (typeof pendingTask.finish === 'function' && pendingTask.finish())) {
-        const r = pendingResolve
-        pendingTask = null
-        pendingResolve = null
+      if (mode === 'hidden' || mode === 'static' || (typeof taskPromise.finish === 'function' && taskPromise.finish())) {
+        const r = taskResolve
+        taskPromise = null
+        taskResolve = null
         if (r) r()
       }
-    } catch (err) { pendingTask = null; pendingResolve = null }
+    } catch (err) { taskPromise = null; taskResolve = null }
   }
 
 }
 
-function mainLoop(ts) { drawFrame(ts); animationId = requestAnimationFrame(mainLoop) }
+function mainLoop(ts) { drawFrame(ts); animationID = requestAnimationFrame(mainLoop) }
 
 // TASKS
 
@@ -661,53 +678,32 @@ function runQueue(name) {                                               // run q
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
   return new Promise((resolve, reject) => {
     try { task.impl() } catch (err) { return reject(err) }
-    pendingTask = task
-    pendingResolve = resolve
+    taskPromise = task
+    taskResolve = resolve
   })
 }
 
-function runIntro()             { mode = 'intro'; revealFrame = 0 }
+function runIntro()             { mode = 'intro'; introFrame = 0; }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
-function runDirect()            { mode = 'direct'; revealFrame = 0; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = copyMasks(tmpMask, baseMask) }
-function runTransitionFull()    { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = true }
-function runTransitionIntro()   { mode = 'transition'; secureMasks(); baseMask.fill(0); tmpMask.fill(0); transFrame = 0; transPhase = 0; autoOutro = false }
-function runTransitionOutro()   { mode = 'transition'; secureMasks(); tmpMask = copyMasks(tmpMask, baseMask); transFrame = 0; transPhase = 1; autoOutro = false }
-function runStatic()            { mode = 'static'; secureMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; tmpMask = copyMasks(tmpMask, baseMask) }
+function runDirect()            { mode = 'direct'; introFrame = 0; resetMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; secureCopy(tmpMask, baseMask) }
+function runTransitionFull()    { mode = 'transition'; resetMasks(); secureCopy(baseMask, new Uint8Array(baseMask.length)); secureCopy(tmpMask, new Uint8Array(tmpMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = true }
+function runTransitionIntro()   { mode = 'transition'; resetMasks(); secureCopy(baseMask, new Uint8Array(baseMask.length)); secureCopy(tmpMask, new Uint8Array(tmpMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = false }
+function runTransitionOutro()   { mode = 'transition'; resetMasks(); secureCopy(tmpMask, baseMask); swipeFrame = 0; swipePhase = 1; outroAuto = false }
+function runStatic()            { mode = 'static'; resetMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; secureCopy(tmpMask, baseMask) }
 function runHidden()            { mode = 'hidden' }
-
-function checkIntro()           { return mode === 'intro' && revealFrame >= revealMaxFrames * 0.65 }
+function checkIntro()           { return mode === 'intro' && introFrame >= introFramesMax * 0.65 }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
-function checkDirect()          { return mode === 'direct' && revealFrame >= revealMaxFrames + extraFrames }
-function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
-function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && transPhase === 1 && transFrame >= cols) }
+function checkDirect()          { return mode === 'direct' && introFrame >= introFramesMax + directFramesExtra }
+function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
+function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
 function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
 function checkStatic()          { return true }
 function checkHidden()          { return true }
 
 defineExpose({ runQueue })
-
-onMounted(() => {
-  updateSize()
-  window.addEventListener('resize', updateSize)
-  secureMasks()
-  animationId = requestAnimationFrame(mainLoop)
-  runQueue('outro')
-})
-
-onBeforeUnmount(() => {
-  cancelAnimationFrame(animationId)
-  window.removeEventListener('resize', updateSize)
-})
+onMounted(() => { updateSize(); window.addEventListener('resize', updateSize);animationID = requestAnimationFrame(mainLoop) })
+onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', updateSize) })
 
 </script>
-
-<template>
-  <div ref="containerRef" class="container">
-    <canvas ref="canvasRef"></canvas>
-  </div>
-</template>
-
-<style>
-.container { overflow: hidden; width: 100%; height: 100%; }
-canvas { display: block; width: 100%; height: 100%; }
-</style>
+<template> <div ref="containerRef" class="container"> <canvas ref="canvasRef"></canvas> </div> </template>
+<style> .container { overflow: hidden; width: 100%; height: 100%; } canvas { display: block; width: 100%; height: 100%; } </style>
