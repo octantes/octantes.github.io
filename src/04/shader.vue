@@ -587,6 +587,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // rende
 function drawFrame(ts) {                                                // draw shader 
 
   if (!context) return
+  context.clearRect(0, 0, width, height)
   const total = rows * cols
 
   for (let i = 0; i < cols; i++) rainColumn[i] = Math.floor(rainHeads[i])
@@ -611,24 +612,23 @@ function drawFrame(ts) {                                                // draw 
 
     for (let x = 0; x < cols; x++) {
 
-      const idx = yOff + x
       const headPos = rainColumn[x]
       const px = x * fontSize
       const colBuf = rainBuffer[x]
-      const { drawCh, color } = cellRender(x, y, headPos, colBuf, resultMask)
+      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
 
-      // chequeo contra backbuffer
-      if (drawCh === prevChars[idx] && color === prevColors[idx]) continue
+      if (drawCh === null) continue
 
-      if (drawCh !== prevChars[idx] || color !== prevColors[idx]) {
-        context.fillStyle = COLOR_BACKGR
-        context.fillRect(px, py, fontSize, fontSize)
+      const isRain = !!(matrixCh && dist >= 0 && dist <= rainLength)
+      const isPortal = drawCh === portalCh
+      const isFront = !!frontier
 
-        if (drawCh) { context.fillStyle = color; context.fillText(drawCh, px, py) }
+      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else if (mode === 'intro') { if (revealed) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) }
+      
+      if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, px, py) }
 
-        prevChars[idx] = drawCh
-        prevColors[idx] = color
-      }
     }
   }
 
@@ -701,7 +701,7 @@ function checkStatic()          { return true }
 function checkHidden()          { return true }
 
 defineExpose({ runQueue })
-onMounted(() => { updateSize(); window.addEventListener('resize', updateSize);animationID = requestAnimationFrame(mainLoop) })
+onMounted(() => { updateSize(); window.addEventListener('resize', updateSize); animationID = requestAnimationFrame(mainLoop) })
 onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', updateSize) })
 
 </script>
