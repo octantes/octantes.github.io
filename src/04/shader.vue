@@ -499,10 +499,7 @@ function animateRain() {                                                // rende
     rainHeads[c] += rainSpeed
     rainColumn[c] = Math.floor(rainHeads[c])
     if (rowPos >= 0 && rowPos < rows) rainBuffer[c][rowPos] = pickChar()
-    if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) {
-      rainHeads[c] = -Math.random() * rows
-      rainBuffer[c].fill(null)
-    }
+    if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) { rainHeads[c] = -Math.random() * rows }
   }
 }
 
@@ -609,7 +606,6 @@ function animateSwipe() {                                               // rende
 
   const line = Math.floor(swipeFrame)
   visualMask.fill(0)
-  secureCopy(visualMask, new Uint8Array(visualMask.length))
 
   if (swipePhase === 0) {
     for (let y = 0; y < rows; y++) {
@@ -633,13 +629,11 @@ function animateSwipe() {                                               // rende
 
     if (swipePhase === 0) {
 
-      secureCopy(logicMask, visualMask)
+      logicMask.set(visualMask)
       if (outroAuto) { swipePhase = 1; swipeFrame = 0 } else { mode = 'static' }
 
     } else if (swipePhase === 1) {
 
-      secureCopy(logicMask, new Uint8Array(logicMask.length))
-      secureCopy(visualMask, new Uint8Array(visualMask.length))
       logicMask.fill(0)
       visualMask.fill(0)
       swipeFrame = cols
