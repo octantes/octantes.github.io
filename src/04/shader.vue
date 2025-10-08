@@ -189,7 +189,7 @@ function drawFrame(ts) {                                                // draw 
   }
 
   switch (mode) {
-    case 'outro':         if (outroRadius < Math.hypot(cols, rows))               { outroFrame++ }    else { mode = 'hidden' }   break
+    // case 'outro':         if (outroRadius < Math.hypot(cols, rows))               { outroFrame++ }    else { mode = 'hidden' }   break
     case 'intro':         if (introFrame < introFramesMax)                        { introFrame++ }    else { mode = 'static' }   break
     case 'direct':        if (introFrame < introFramesMax + directFramesExtra)    { introFrame++ }    else { mode = 'hidden' }   break
     case 'transition':    animateSwipe(); break
