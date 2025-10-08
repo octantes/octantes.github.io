@@ -9,7 +9,7 @@ const COLOR_PORTAL = '#986C98'                                          // solid
 const COLOR_RAIN   = '#7EBDC4'                                          // solid rain color
 const charRangeStart    = 33                                            // unicode starting character
 const charRangeCount    = 126 - charRangeStart + 1                      // max possible characters
-const germFramesMax    = 160                                           // intro total frames counter
+const germFramesMax     = 160                                           // intro total frames counter
 const outroFramesMax    = 32                                            // outro animation max frames
 const directFramesExtra = 42                                            // direct animation extra frames
 
@@ -29,17 +29,18 @@ let dpr = 1                                                             // devic
 let cols = 0                                                            // char grid columns
 let rows = 0                                                            // char grid rows
 
+let portalTime   = 0                                                    // portal delta speed calculation
 let portalCodes  = null                                                 // portal cell int char codes
 let portalChars  = null                                                 // portal characters
 let portalSine   = null                                                 // portal trigo cache sine
 let portalCosine = null                                                 // portal trigo cache cosine
-let rainHeads  = []                                                     // first rain char position
-let rainBuffer = []                                                     // rain column chars positions
-let rainColumn = null                                                   // full rain column position array
-let rainColors = null                                                   // alpha color cache
-let rainChance = 0.005                                                  // column reset chance
-let rainLength = 25                                                     // rain trail char length
-let rainSpeed  = 0.7                                                    // rain trail fall speed
+let rainHeads    = []                                                   // first rain char position
+let rainBuffer   = []                                                   // rain column chars positions
+let rainColumn   = null                                                 // full rain column position array
+let rainColors   = null                                                 // alpha color cache
+let rainChance   = 0.005                                                // column reset chance
+let rainLength   = 25                                                   // rain trail char length
+let rainSpeed    = 0.7                                                  // rain trail fall speed
 
 let germFrame     = 0                                                   // frame counter for intro & direct
 let swipeFrame    = 0                                                   // swipe animation line counter
@@ -59,6 +60,7 @@ let expandB    = null                                                   // dilat
 let indexToX   = null                                                   // maps linear index to x coord
 let indexToY   = null                                                   // maps linear index to y coord
 let textGroups = null                                                   // map for text drawing
+
 let noiseMap        = null                                              // static noise map for distortion
 let neighborsMap    = null                                              // stores each cell neighbors
 let frontierMap     = null                                              // mask for cells in borders
@@ -80,53 +82,59 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
   let color = COLOR_PORTAL
   let needsBg = false
 
-  const isRain = !!(matrixCh && dist >= 0 && dist <= rainLength)
+  const isRain = (dist >= 0 && dist <= rainLength)
+  const isRainHead = !!matrixCh
 
   switch (mode) {
 
     case 'intro': {
       needsBg = revealed || frontier
-      if (isRain && revealed) { color = rainColors[dist]; drawCh = matrixCh }
       if (frontier) color = COLOR_BORDER
       if (!revealed) drawCh = null
+      if (isRain && revealed) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
       break
     }
 
     case 'static': {
       needsBg = true
-      if (isRain) { color = rainColors[dist]; drawCh = matrixCh }
+      if (isRain) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
       else { drawCh = portalCh; color = COLOR_PORTAL }
       break
     }
 
     case 'outro': {
       const isInsideCircle = outroCells[idx] && !outroFrontier[idx]
-      const isFrontier = outroFrontier[idx]
-      needsBg = !isInsideCircle; 
-      if (isRain) { color = rainColors[dist]; drawCh = matrixCh }
-      if (isInsideCircle) { drawCh = null; needsBg = false } 
-      else if (isFrontier) { color = COLOR_BORDER; drawCh = portalCh }
+      needsBg = !isInsideCircle
+      if (isInsideCircle) { drawCh = null; needsBg = false } else if (outroFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
+      if (isRain && !isInsideCircle) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
       break
     }
 
     case 'direct': {
       needsBg = revealed || frontier
       if (frontier) { drawCh = portalCh; color = COLOR_BORDER }
-      if (!revealed) { drawCh = null; needsBg = frontier }
-      else { drawCh = matrixCh || portalCh; if (isRain) { color = rainColors[dist] } }
+      else if (!revealed) { drawCh = null; needsBg = frontier }
+      else { drawCh = portalCh; color = COLOR_PORTAL }
+      if (isRain && (revealed || frontier)) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
       break
     }
 
     case 'transition': {
       needsBg = revealed || frontier
       if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER } else { drawCh = null; needsBg = false } }
-      else { drawCh = portalCh; if (frontier) color = COLOR_BORDER; if (isRain) { color = rainColors[dist]; drawCh = matrixCh } }
+      else { drawCh = portalCh; if (frontier) color = COLOR_BORDER }
+      if (isRain && revealed) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
       break
     }
 
     case 'hidden': { drawCh = null; needsBg = false; break }
     
-    default: { if (frontier) color = COLOR_BORDER; needsBg = true; break }
+    default: { 
+      if (frontier) color = COLOR_BORDER; 
+      needsBg = true; 
+      if (isRain) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break 
+    }
 
   }
   
@@ -140,11 +148,11 @@ function drawFrame(ts, deltaTime) {                                         // d
   context.clearRect(0, 0, width, height)
 
   const total = rows * cols
-  const frameFactor = (deltaTime / 16.666) * 0.8
+  const frameFactor = (deltaTime / 16.666)
 
   if (mode !== 'hidden') {
 
-    animatePortal(ts * 0.75)
+    animatePortal(frameFactor)
     animateRain(frameFactor)
 
     switch (mode) {
@@ -442,14 +450,15 @@ function buildChars() {                                                 // init 
 
 // ANIMATIONS
 
-function animatePortal(tick) {                                          // render next portal frame
+function animatePortal(frameFactor) {                                          // render next portal frame
 
-  const timeOffset = tick * 0.001
+  const portalAdvance = 0.0125 * frameFactor
+  portalTime += portalAdvance
 
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const idx = y * cols + x
-      const v = portalCosine[x] + portalSine[y] + timeOffset
+      const v = portalCosine[x] + portalSine[y] + portalTime
       const rawCode = v * 16 | 0
       portalCodes[idx] = ((rawCode % charRangeCount) + charRangeCount) % charRangeCount
       portalChars[idx] = charTable[portalCodes[idx]]
