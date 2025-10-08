@@ -1,6 +1,12 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const TIER_CONFIGS = {
+    high: { maxCols: 80, maxRows: 100, minCores: 8, minMemory: 8 },
+    medium: { maxCols: 60, maxRows: 80, minCores: 4, minMemory: 4 },
+    low: { maxCols: 40, maxRows: 60, minCores: 2, minMemory: 2 }
+}
+
 const canvasRef    = ref(null)                                          // dom << canvas >> ref
 const containerRef = ref(null)                                          // container div ref
 const COLOR_BACKGR = '#1B1C1C'                                          // solid background color
@@ -28,6 +34,8 @@ let width = 0                                                           // canva
 let dpr = 1                                                             // device px ratio
 let cols = 0                                                            // char grid columns
 let rows = 0                                                            // char grid rows
+let maxCols = 40                                                        // max char grid columns
+let maxRows = 60                                                        // max char grid rows
 
 let portalTime   = 0                                                    // portal delta speed calculation
 let portalCodes  = null                                                 // portal cell int char codes
@@ -142,7 +150,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
 
 }
 
-function drawFrame(ts, deltaTime) {                                         // draw shader (Optimized)
+function drawFrame(ts, deltaTime) {                                     // draw shader (Optimized)
 
   if (!context) return
   context.clearRect(0, 0, width, height)
@@ -269,6 +277,14 @@ function resetMasks() {                                                 // reset
 
 function initContext() {                                                // prepare context 
 
+  // cols + rows based on cpu
+  const cores = navigator.hardwareConcurrency || 2;
+  const memory = navigator.deviceMemory || 2;
+  
+  if (cores >= TIER_CONFIGS.high.minCores && memory >= TIER_CONFIGS.high.minMemory) { maxCols = TIER_CONFIGS.high.maxCols; maxRows = TIER_CONFIGS.high.maxRows; console.log('1') }
+  else if (cores >= TIER_CONFIGS.medium.minCores && memory >= TIER_CONFIGS.medium.minMemory) { maxCols = TIER_CONFIGS.medium.maxCols; maxRows = TIER_CONFIGS.medium.maxRows; console.log('2') }
+  else { maxCols = TIER_CONFIGS.low.maxCols; maxRows = TIER_CONFIGS.low.maxRows; console.log('3') }
+
   // container div size
   if (!canvasRef.value || !containerRef.value) return
   const rect = containerRef.value.getBoundingClientRect()
@@ -303,9 +319,6 @@ function initGrid() {                                                   // creat
   // set size
   let tempCols = Math.ceil(width / fontSize)
   let tempRows = Math.ceil(height / fontSize)
-
-  const maxCols = 80
-  const maxRows = 100
 
   // dynamic font size for large screen
   if (tempCols > maxCols || tempRows > maxRows) {
