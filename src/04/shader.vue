@@ -36,8 +36,8 @@ let rainHeads  = []                                                     // first
 let rainBuffer = []                                                     // rain column chars positions
 let rainColumn = null                                                   // full rain column position array
 let rainColors = null                                                   // alpha color cache
-let rainChance = 0.02                                                   // column reset chance
-let rainLength = 40                                                     // rain trail char length
+let rainChance = 0.005                                                  // column reset chance
+let rainLength = 25                                                     // rain trail char length
 let rainSpeed  = 0.7                                                    // rain trail fall speed
 
 let introFrame    = 0                                                   // frame counter for intro
@@ -160,7 +160,6 @@ function drawFrame(ts) {                                                // draw 
 
   } else { visualMask.fill(0) }
 
-  const maxSteps = 4;
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(introFrame / introFramesMax, 0, 1) : 1) * outroFramesMax))
   let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
 
@@ -281,6 +280,8 @@ function initContext() {                                                // prepa
   context = canvasRef.value.getContext('2d')
   context.setTransform(dpr, 0, 0, dpr, 0, 0)
 
+  initGrid();
+
 }
 
 function resetContext() {                                               // update context 
@@ -299,8 +300,8 @@ function initGrid() {                                                   // creat
   let tempCols = Math.ceil(width / fontSize)
   let tempRows = Math.ceil(height / fontSize)
 
-  const maxCols = 80
-  const maxRows = 100
+  const maxCols = 40
+  const maxRows = 60
 
   // dynamic font size for large screen
   if (tempCols > maxCols || tempRows > maxRows) {
@@ -336,7 +337,7 @@ function initGrid() {                                                   // creat
   rainHeads = new Array(cols)
   rainBuffer = new Array(cols)
   for (let c = 0; c < cols; c++) {
-    rainHeads[c] = Math.random() * rows * -1
+    rainHeads[c] = -Math.random() * rows * 10
     rainBuffer[c] = new Array(rows).fill(null)
   }
 
@@ -706,7 +707,7 @@ function checkHidden()          { return true }
 function mainLoop(ts) { drawFrame(ts); animationID = requestAnimationFrame(mainLoop) }
 
 defineExpose({ runQueue })
-onMounted(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) })
+onMounted(() => { initContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) })
 onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
 
 </script>
