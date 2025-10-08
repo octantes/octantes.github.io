@@ -2,9 +2,9 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const TIER_CONFIGS = {
-    high: { maxCols: 80, maxRows: 100, minCores: 8, minMemory: 8 },
-    medium: { maxCols: 60, maxRows: 80, minCores: 4, minMemory: 4 },
-    low: { maxCols: 40, maxRows: 60, minCores: 2, minMemory: 2 }
+    high: { maxCols: 50, maxRows: 70, minCores: 8, minMemory: 8 },
+    medium: { maxCols: 40, maxRows: 60, minCores: 4, minMemory: 4 },
+    low: { maxCols: 30, maxRows: 50, minCores: 2, minMemory: 2 }
 }
 
 const canvasRef    = ref(null)                                          // dom << canvas >> ref
