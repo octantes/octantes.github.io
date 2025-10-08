@@ -432,15 +432,14 @@ function computeFrontier(mask) {                                        // front
 
 function buildChars() {                                                 // init char buffer 
 
-  charBuffer = new Array(charRangeCount * 2)
+  charBuffer = new Array(charRangeCount)
 
   for (let i = 0; i < charRangeCount; i++) {
     charBuffer[i] = charTable[i]
-    charBuffer[i  + charRangeCount] = charTable[i]
   }
 
   charIndex = 0
-
+  
 }
 
 // ANIMATIONS
@@ -692,7 +691,7 @@ function checkHidden()          { return true }
 function mainLoop(ts) { drawFrame(ts); animationID = requestAnimationFrame(mainLoop) }
 
 defineExpose({ runQueue })
-onMounted(() => { resetContext(); window.addEventListener('resize', resetContext); runanimationID = requestAnimationFrame(mainLoop) })
+onMounted(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) })
 onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
 
 </script>
