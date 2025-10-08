@@ -66,6 +66,9 @@ let frontierMap     = null                                              // mask 
 let frontierCurrent = null                                              // buffer for last frontier indexes
 let frontierNext    = null                                              // buffer for next frontier indexes
 
+let textDrawGroups = null                                               // map for text drawing
+
+
 // MAIN RENDER
 
 function cellRender(x, y, headPos, colBuf, resultMask) {                // cell style definitions by mode 
@@ -86,64 +89,43 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
   switch (mode) {
 
     case 'intro': {
-
       needsBg = revealed || frontier
-
       if (frontier) color = COLOR_BORDER
       if (isRain && revealed) { color = rainColors[dist]; drawCh = matrixCh }
       if (!revealed) drawCh = null
-
       break
-
     }
 
     case 'static': {
-
       needsBg = true
-
       if (isRain) { color = rainColors[dist]; drawCh = matrixCh }
       else { drawCh = portalCh; color = COLOR_PORTAL }
-
       break
-
     }
 
     case 'outro': {
-
       const isInsideCircle = outroCells[idx] && !outroFrontier[idx]
       const isFrontier = outroFrontier[idx]
-
       needsBg = !isInsideCircle; 
-
       if (isRain) { color = rainColors[dist]; drawCh = matrixCh }
       if (isInsideCircle) { drawCh = null; needsBg = false } 
       else if (isFrontier) { color = COLOR_BORDER; drawCh = portalCh }
-
       break
-
     }
 
     case 'direct': {
-
       needsBg = revealed || frontier
-
       if (frontier) { drawCh = portalCh; color = COLOR_BORDER }
       if (!revealed) { drawCh = null; needsBg = frontier }
       else { drawCh = matrixCh || portalCh; if (isRain) { color = rainColors[dist] } }
-
       break
-
     }
 
     case 'transition': {
-
       needsBg = revealed || frontier
-
       if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER } else { drawCh = null; needsBg = false } }
       else { drawCh = portalCh; if (frontier) color = COLOR_BORDER; if (isRain) { color = rainColors[dist]; drawCh = matrixCh } }
-
       break
-
     }
 
     case 'hidden': { drawCh = null; needsBg = false; break }
@@ -152,11 +134,11 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
 
   }
   
-  return { drawCh, color, needsBg } 
+  return [drawCh, color, needsBg]
 
 }
 
-function drawFrame(ts) {                                                // draw shader 
+function drawFrame(ts) {                                                // draw shader (Optimized)
 
   if (!context) return
   context.clearRect(0, 0, width, height)
@@ -169,62 +151,52 @@ function drawFrame(ts) {                                                // draw 
     animateRain()
 
     switch (mode) {
-      
       case 'intro':       { animateGerm(total); break }
       case 'static':      { secureCopy(visualMask, logicMask); break }
       case 'outro':       { animateCircle(); break }
       case 'direct':      { animateGermInv(total); break }
       case 'transition':  { animateSwipe(); break }
-
     }
 
   } else { visualMask.fill(0) }
 
+  const maxSteps = 4;
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(introFrame / introFramesMax, 0, 1) : 1) * outroFramesMax))
-
   let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
 
   computeFrontier(resultMask)
+  
+  if (!textDrawGroups) textDrawGroups = new Map()
 
+  textDrawGroups.clear()
   context.fillStyle = COLOR_BACKGR
   context.beginPath()
 
-  const cellData = []
-
   for (let y = 0; y < rows; y++) {
-
     const py = y * fontSize
-
     for (let x = 0; x < cols; x++) {
 
       const headPos = rainColumn[x]
       const colBuf = rainBuffer[x]
-      const cell = cellRender(x, y, headPos, colBuf, resultMask)
-      cellData.push(cell)
+      const [drawCh, color, needsBg] = cellRender(x, y, headPos, colBuf, resultMask)
       
-      if (cell.needsBg) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
+      if (needsBg) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
+      if (drawCh != null) {
+        let group = textDrawGroups.get(color)
+        if (!group) { group = []; textDrawGroups.set(color, group) }
+        group.push({ drawCh, x, py })
+      }
 
     }
   }
 
   context.fill()
 
-  let i = 0;
-
-  for (let y = 0; y < rows; y++) {
-
-    const py = y * fontSize
-    
-    for (let x = 0; x < cols; x++) {
-
-      const { drawCh, color } = cellData[i++]
-
-      if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, x * fontSize, py) }
-
-    }
-
+  for (const [color, chars] of textDrawGroups) {
+    context.fillStyle = color
+    for (const { drawCh, x, py } of chars) { context.fillText(drawCh, x * fontSize, py) }
   }
-
+  
   switch (mode) {
 
     case 'intro':         if (introFrame < introFramesMax)                        { introFrame++ }    else { mode = 'static' }   break
@@ -244,7 +216,6 @@ function drawFrame(ts) {                                                // draw 
       }
     } catch (err) { taskPromise = null; taskResolve = null }
   }
-
 }
 
 // INIT
@@ -439,14 +410,6 @@ function secureCopy(destination, source) {                              // preve
 
 }
 
-function pickChar() {                                                   // return character from charBuffer 
-
-  const ch = charBuffer[charIndex]
-  charIndex = (charIndex + 1) % charRangeCount
-  return ch
-
-}
-
 // BUILDERS
 
 function computeFrontier(mask) {                                        // frontier from cells touching inactive 
@@ -482,25 +445,37 @@ function buildChars() {                                                 // init 
 
 // ANIMATIONS
 
-function animatePortal(tick) {                                          // render next portal frame 
+function animatePortal(tick) {                                          // render next portal frame
+
+  const timeOffset = tick * 0.001
+
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const idx = y * cols + x
-      const v = portalCosine[x] + portalSine[y] + tick * 0.001
-      portalCodes[idx] = ((v * 16 | 0) % charRangeCount + charRangeCount) % charRangeCount
+      const v = portalCosine[x] + portalSine[y] + timeOffset
+      const rawCode = v * 16 | 0
+      portalCodes[idx] = ((rawCode % charRangeCount) + charRangeCount) % charRangeCount
       portalChars[idx] = charTable[portalCodes[idx]]
     }
   }
+
 }
 
 function animateRain() {                                                // render next rain frame 
+
+  let localCharIndex = charIndex
+  const charCount = charRangeCount
+
   for (let c = 0; c < cols; c++) {
     const rowPos = Math.floor(rainHeads[c] + rainSpeed)
     rainHeads[c] += rainSpeed
     rainColumn[c] = Math.floor(rainHeads[c])
-    if (rowPos >= 0 && rowPos < rows) rainBuffer[c][rowPos] = pickChar()
+    if (rowPos >= 0 && rowPos < rows) { rainBuffer[c][rowPos] = charBuffer[localCharIndex]; localCharIndex = (localCharIndex + 1) % charCount }
     if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) { rainHeads[c] = -Math.random() * rows }
   }
+
+  charIndex = localCharIndex
+
 }
 
 function animateCircle() {                                              // render next circle frame 
@@ -735,5 +710,5 @@ onMounted(() => { resetContext(); window.addEventListener('resize', resetContext
 onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
 
 </script>
-<template> <div ref="containerRef" class="container"> <canvas ref="canvasRef"></canvas> </div> </template>
+<template> <div ref="containerRef" class="container"> <canvas ref="canvasRef"> </canvas> </div> </template>
 <style> .container { overflow: hidden; width: 100%; height: 100%; } canvas { display: block; width: 100%; height: 100%; } </style>
