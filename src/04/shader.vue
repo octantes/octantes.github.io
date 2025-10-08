@@ -51,8 +51,8 @@ let outroAuto     = false                                               // swipe
 let outroCells    = null                                                // guarda indices dentro del circulo
 let outroFrontier = null                                                // guarda indices del limite del circulo
 
-let baseMask   = null                                                   // binary active cell mask
-let tmpMask    = null                                                   // buffer mask for basemask
+let logicMask   = null                                                  // binary active cell mask
+let visualMask    = null                                                // buffer mask for basemask
 let prevChars  = null                                                   // backbuffer for last cell char
 let prevColors = null                                                   // backbuffer for last cell color
 let expandA    = null                                                   // dilation buffer for expandMask
@@ -66,6 +66,149 @@ let frontierMap     = null                                              // mask 
 let frontierCurrent = null                                              // buffer for last frontier indexes
 let frontierNext    = null                                              // buffer for next frontier indexes
 
+// MAIN RENDER
+
+function cellRender(x, y, headPos, colBuf, resultMask) {                // cell style definitions by mode 
+
+  const idx = y * cols + x
+  const portalCh = portalChars[idx]
+  const matrixCh = colBuf[y]
+  const revealed = !!resultMask[idx]
+  const frontier = !!frontierMap[idx]
+  const dist = headPos - y
+
+  let drawCh = portalCh
+  let color = COLOR_PORTAL
+  let needsBg = false
+
+  switch (mode) {
+
+    case 'intro': {
+      if (!revealed) color = COLOR_BACKGR
+      if (frontier) color = COLOR_BORDER
+      if (matrixCh && revealed && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
+      break
+    }
+
+    case 'static': {
+      if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } break }
+      break
+    }
+
+    case 'outro': {
+      if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true }
+      if (outroCells[idx] && !outroFrontier[idx]) drawCh = null; else if (outroFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
+      break
+    }
+
+    case 'direct': {
+      if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true }
+      if (!revealed) { drawCh = null; color = frontier ? COLOR_BORDER : COLOR_BACKGR }
+      else {
+        drawCh = matrixCh || portalCh
+        if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
+      }
+      break
+    }
+
+    case 'transition': {
+      if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true } else { drawCh = null } }
+      else {
+        drawCh = portalCh
+        if (frontier) color = COLOR_BORDER
+        if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } }
+      }
+      break
+    }
+
+    case 'hidden': { drawCh = null; break }
+    
+    default: { if (frontier) color = COLOR_BORDER; break }
+
+  }
+
+  return { drawCh, color, needsBg, frontier, revealed, dist, matrixCh, portalCh }
+
+}
+
+function drawFrame(ts) {                                                // draw shader 
+
+  if (!context) return
+  context.clearRect(0, 0, width, height)
+
+  const total = rows * cols
+
+  if (mode !== 'hidden') { 
+
+    animatePortal(ts)
+    animateRain()
+
+    switch (mode) {
+      
+      case 'intro':       { animateGerm(total); break }
+      case 'static':      { secureCopy(visualMask, logicMask); break }
+      case 'outro':       { animateCircle(); break }
+      case 'direct':      { animateGermInv(total); break }
+      case 'transition':  { animateSwipe(); break }
+
+    }
+
+  } else { secureCopy(visualMask, new Uint8Array(visualMask.length)) }
+
+  const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(introFrame / introFramesMax, 0, 1) : 1) * outroFramesMax))
+
+  let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
+
+  computeFrontier(resultMask)
+
+  // cell draw loop
+  for (let y = 0; y < rows; y++) {
+
+    const py = y * fontSize
+
+    for (let x = 0; x < cols; x++) {
+
+      const headPos = rainColumn[x]
+      const px = x * fontSize
+      const colBuf = rainBuffer[x]
+      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
+
+      if (drawCh === null) continue
+
+      const isRain = !!(matrixCh && dist >= 0 && dist <= rainLength)
+      const isPortal = drawCh === portalCh
+      const isFront = !!frontier
+
+      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else if (mode === 'intro') { if (revealed) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) }
+      
+      if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, px, py) }
+
+    }
+  }
+
+  switch (mode) {
+    case 'outro':         if (outroRadius < Math.hypot(cols, rows))               { outroFrame++ }    else { mode = 'hidden' }   break
+    case 'intro':         if (introFrame < introFramesMax)                        { introFrame++ }    else { mode = 'static' }   break
+    case 'direct':        if (introFrame < introFramesMax + directFramesExtra)    { introFrame++ }    else { mode = 'hidden' }   break
+    case 'transition':    animateSwipe(); break
+    default: break
+  }
+
+  if (taskPromise) {
+    try {
+      if (mode === 'hidden' || mode === 'static' || (typeof taskPromise.finish === 'function' && taskPromise.finish())) {
+        const r = taskResolve
+        taskPromise = null
+        taskResolve = null
+        if (r) r()
+      }
+    } catch (err) { taskPromise = null; taskResolve = null }
+  }
+
+}
+
 // INIT
 
 function initMasks() {                                                  // initialize all arrays 
@@ -78,8 +221,8 @@ function initMasks() {                                                  // initi
   if (!indexToX         || indexToX.length          !== total) indexToX          = new Int16Array(total)
   if (!indexToY         || indexToY.length          !== total) indexToY          = new Int16Array(total)
   if (!portalCodes      || portalCodes.length       !== total) portalCodes       = new Int16Array(total)
-  if (!baseMask         || baseMask.length          !== total) baseMask          = new Uint8Array(total)
-  if (!tmpMask          || tmpMask.length           !== total) tmpMask           = new Uint8Array(total)
+  if (!logicMask        || logicMask.length         !== total) logicMask         = new Uint8Array(total)
+  if (!visualMask       || visualMask.length        !== total) visualMask        = new Uint8Array(total)
   if (!expandA          || expandA.length           !== total) expandA           = new Uint8Array(total)
   if (!expandB          || expandB.length           !== total) expandB           = new Uint8Array(total)
   if (!outroCells       || outroCells.length        !== total) outroCells        = new Uint8Array(total)
@@ -101,8 +244,8 @@ function resetMasks() {                                                 // reset
 
   const total = cols * rows
 
-  if (!baseMask       || baseMask.length       !== total) baseMask       = new Uint8Array(total)
-  if (!tmpMask        || tmpMask.length        !== total) tmpMask        = new Uint8Array(total)
+  if (!logicMask      || logicMask.length      !== total) logicMask      = new Uint8Array(total)
+  if (!visualMask     || visualMask.length     !== total) visualMask     = new Uint8Array(total)
   if (!outroCells     || outroCells.length     !== total) outroCells     = new Uint8Array(total)
   if (!outroFrontier  || outroFrontier.length  !== total) outroFrontier  = new Uint8Array(total)
   if (!frontierMap    || frontierMap.length    !== total) frontierMap    = new Uint8Array(total)
@@ -110,276 +253,7 @@ function resetMasks() {                                                 // reset
 
 }
 
-// HELPERS
-
-function clampValue(value, min = 0, max = 1) {                          // constrain value between max and min 
-  
-  return Math.min(max, Math.max(min, value))
-
-}
-
-function secureCopy(destination, source) {                              // prevent overwrite on UINT8 array copy 
-
-  if (!source) return null
-  if (!destination || destination.length !== source.length) {
-    destination = new Uint8Array(source.length)
-  }
-  
-  destination.set(source)
-  return destination
-
-}
-
-function pickChar() {                                                   // return character from charBuffer 
-
-  const ch = charBuffer[charIndex]
-  charIndex = (charIndex + 1) % charRangeCount
-  return ch
-
-}
-
-// BUILDERS
-
-function computeFrontier(mask) {                                        // frontier from cells touching inactive 
-
-  if (!mask) { frontierMap && frontierMap.fill(0); return }
-  frontierMap.fill(0)
-  
-  for (let y = 0; y < rows; y++) {
-    const yOff = y * cols
-    for (let x = 0; x < cols; x++) {
-      const i = yOff + x
-      if (!mask[i]) continue
-      if (x > 0        && !mask[i - 1])    { frontierMap[i] = 1; continue }
-      if (y > 0        && !mask[i - cols]) { frontierMap[i] = 1; continue }
-      if (x < cols - 1 && !mask[i + 1])    { frontierMap[i] = 1; continue }
-      if (y < rows - 1 && !mask[i + cols]) { frontierMap[i] = 1; continue }
-    }
-  }
-
-}
-
-function buildChars() {                                                 // init char buffer 
-
-  charBuffer = new Array(charRangeCount * 2)
-
-  for (let i = 0; i < charRangeCount; i++) {
-    charBuffer[i] = charTable[i]
-    charBuffer[i  + charRangeCount] = charTable[i]
-  }
-
-  charIndex = 0
-
-}
-
-// ANIMATIONS
-
-function animatePortal(tick) {                                          // render next portal frame 
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      const idx = y * cols + x
-      const v = portalCosine[x] + portalSine[y] + tick * 0.001
-      portalCodes[idx] = ((v * 16 | 0) % charRangeCount + charRangeCount) % charRangeCount
-      portalChars[idx] = charTable[portalCodes[idx]]
-    }
-  }
-}
-
-function animateRain() {                                                // render next rain frame 
-  for (let c = 0; c < cols; c++) {
-    const rowPos = Math.floor(rainHeads[c] + rainSpeed)
-    rainHeads[c] += rainSpeed
-    if (rowPos >= 0 && rowPos < rows) rainBuffer[c][rowPos] = pickChar()
-    if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) {
-      rainHeads[c] = -Math.random() * rows
-      rainBuffer[c].fill(null)
-    }
-  }
-}
-
-function animateCircle() {                                              // render next circle frame 
-  
-  outroRadius += 1
-
-  const rCurr = outroRadius
-  const yStart = Math.max(0, Math.floor(outroCenter.y - rCurr))
-  const yEnd = Math.min(rows - 1, Math.ceil(outroCenter.y + rCurr))
-  const xStart = Math.max(0, Math.floor(outroCenter.x - rCurr))
-  const xEnd = Math.min(cols - 1, Math.ceil(outroCenter.x + rCurr))
-
-  for (let y = yStart; y <= yEnd; y++) {
-    const yOff = y * cols
-    for (let x = xStart; x <= xEnd; x++) {
-      const idx = yOff + x
-      const dx = x - outroCenter.x
-      const dy = y - outroCenter.y
-      const dist2 = dx * dx + dy * dy
-      const n = noiseMap[idx] * 5
-      const radiusNoise2 = (rCurr + n) * (rCurr + n)
-
-      if (dist2 <= radiusNoise2) outroCells[idx] = 1
-    }
-  }
-
-  for (let i = 0; i < rows * cols; i++) outroFrontier[i] = 0
-
-  for (let y = 0; y < rows; y++) {
-    const yOff = y * cols
-    for (let x = 0; x < cols; x++) {
-      const idx = yOff + x
-      if (!outroCells[idx]) continue
-      if (
-        (x > 0 && !outroCells[idx - 1]) ||
-        (x < cols - 1 && !outroCells[idx + 1]) ||
-        (y > 0 && !outroCells[idx - cols]) ||
-        (y < rows - 1 && !outroCells[idx + cols])
-      ) outroFrontier[idx] = 1
-    }
-  }
-
-  for (let i = 0; i < rows * cols; i++) baseMask[i] = outroCells[i] ? 0 : 1
-
-}
-
-function animateGerm(total) {                                           // render next germ frame 
-
-  const oldRatio = animateGerm.lastRatio || 0
-  const newRatio = clampValue(introFrame / introFramesMax, 0, 1)
-
-  for (let i = 0; i < total; i++) { const n = noiseMap[i]; if (n >= oldRatio && n < newRatio) baseMask[i] = 1 }
-  animateGerm.lastRatio = newRatio
-
-}
-
-function animateGermInv(total) {                                        // render next inverted germ frame 
-  
-  const ratio = clampValue(introFrame / introFramesMax, 0, 1)
-  
-  for (let i = 0; i < total; i++) { if (baseMask[i] === 1 && noiseMap[i] < ratio) baseMask[i] = 0 }
-
-  if (ratio >= 1) {
-
-    if (!animateGermInv.frontierQueue) animateGermInv.frontierQueue = []
-    const q = animateGermInv.frontierQueue
-
-    for (let y = 0; y < rows; y++) {
-      const yOff = y * cols
-      for (let x = 0; x < cols; x++) {
-        const i = yOff + x
-        if (baseMask[i] !== 1) continue
-        if (
-          (x > 0        && baseMask[i - 1]    === 0) ||
-          (x < cols - 1 && baseMask[i + 1]    === 0) ||
-          (y > 0        && baseMask[i - cols] === 0) ||
-          (y < rows - 1 && baseMask[i + cols] === 0)
-        ) { if (!q.includes(i)) q.push(i) }
-      }
-    }
-
-    if (q.length > 0) {
-      const perFrame = Math.max(1, Math.floor(total / introFramesMax))
-      let count = 0
-      for (let k = 0; k < q.length && count < perFrame; k++) {
-        const idx = q[k]
-        if (baseMask[idx] === 1) { baseMask[idx] = 0; count++ }
-      }
-      animateGermInv.frontierQueue = q.filter(i => baseMask[i] === 1)
-    }
-  }
-}
-
-function animateSwipe() {                                               // render next swipe frame 
-
-  initMasks()
-
-  const line = Math.floor(swipeFrame)
-  tmpMask.fill(0)
-  secureCopy(tmpMask, new Uint8Array(tmpMask.length))
-
-  if (swipePhase === 0) {
-    for (let y = 0; y < rows; y++) {
-      const wave = swipeSine[y]
-      const noiseOffset = Math.floor(wave * 2)
-      const xLimit = Math.min(line + noiseOffset, cols - 1)
-      for (let x = 0; x <= xLimit; x++) tmpMask[y * cols + x] = 1
-    }
-  } else if (swipePhase === 1) {
-    for (let y = 0; y < rows; y++) {
-      const wave = swipeCosine[y]
-      const noiseOffset = Math.floor(wave * 2)
-      const xStart = Math.max(line - noiseOffset, 0)
-      for (let x = xStart; x < cols; x++) tmpMask[y * cols + x] = 1
-    }
-  }
-
-  swipeFrame += 1.0
-
-  if (swipeFrame >= cols) {
-
-    if (swipePhase === 0) {
-
-      secureCopy(baseMask, tmpMask)
-      if (outroAuto) { swipePhase = 1; swipeFrame = 0 } else { mode = 'static' }
-
-    } else if (swipePhase === 1) {
-
-      secureCopy(baseMask, new Uint8Array(baseMask.length))
-      secureCopy(tmpMask, new Uint8Array(tmpMask.length))
-      baseMask.fill(0)
-      tmpMask.fill(0)
-      swipeFrame = cols
-      swipePhase = 1
-      mode = 'hidden'
-
-    }
-
-  }
-
-}
-
-function expandMask(source, steps) {                                    // render next mask frame with buffer 
-
-  initMasks()
-
-  const total = cols * rows
-  let a = expandA, b = expandB
-  a.set(source)
-  
-  let frontier = frontierCurrent
-  let nextFrontier = frontierNext
-  let frontierLen = 0
-  let nextLen = 0
-
-  for (let i = 0; i < total; i++) { if (a[i]) frontier[frontierLen++] = i }
-
-  for (let s = 0; s < steps; s++) {
-
-    b.set(a)
-    nextLen = 0
-
-    for (let f = 0; f < frontierLen; f++) {
-      const idx = frontier[f]
-      const neighbors = neighborsMap[idx]
-      for (let n of neighbors) { if (!b[n]) { b[n] = 1; nextFrontier[nextLen++] = n } }
-    }
-
-    if (nextLen === 0) break
-
-    [frontier, nextFrontier] = [nextFrontier, frontier]
-    frontierLen = nextLen
-    const tmp = a
-    a = b
-    b = tmp
-
-  }
-
-  expandA.set(a);
-  return expandA;
-}
-
-// CONTEXT
-
-function setSize() {                                                    // prepare context 
+function initContext() {                                                // prepare context 
 
   // container div size
   if (!canvasRef.value || !containerRef.value) return
@@ -400,13 +274,17 @@ function setSize() {                                                    // prepa
 
 }
 
-function updateSize() {                                                 // update context 
-  setSize()
+function resetContext() {                                               // update context 
+
+  initContext()
+
   fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
-  setGrid()
+
+  initGrid()
+
 }
 
-function setGrid() {                                                    // create grid + animate rain 
+function initGrid() {                                                   // create grid + animate rain 
 
   // set size
   let tempCols = Math.ceil(width / fontSize)
@@ -501,161 +379,271 @@ function setGrid() {                                                    // creat
     }
   }
 
-  // ensure aligned expansion
-  initMasks()
+}
+
+// HELPERS
+
+function clampValue(value, min = 0, max = 1) {                          // constrain value between max and min 
+  
+  return Math.min(max, Math.max(min, value))
 
 }
 
-// MAIN RENDER
+function secureCopy(destination, source) {                              // prevent overwrite on UINT8 array copy 
 
-function updateMasks(total) {                                           // handle mask mode 
-
-  initMasks()
-
-  switch (mode) {
-    case 'intro':       { animateGerm(total); break }
-    case 'static':      { secureCopy(tmpMask, baseMask); break }
-    case 'outro':       { animateCircle(); break }
-    case 'direct':      { animateGermInv(total); break }
-    case 'transition':  { animateSwipe(); break }
-    case 'hidden':      { secureCopy(tmpMask, new Uint8Array(tmpMask.length)); break }
+  if (!source) return null
+  if (!destination || destination.length !== source.length) {
+    destination = new Uint8Array(source.length)
   }
+  
+  destination.set(source)
+  return destination
 
 }
 
-function cellRender(x, y, headPos, colBuf, resultMask) {                // render mode cells 
+function pickChar() {                                                   // return character from charBuffer 
 
-  const idx = y * cols + x
-  const portalCh = portalChars[idx]
-  const matrixCh = colBuf[y]
-  const revealed = !!resultMask[idx]
-  const frontier = !!frontierMap[idx]
-  const dist = headPos - y
+  const ch = charBuffer[charIndex]
+  charIndex = (charIndex + 1) % charRangeCount
+  return ch
 
-  let drawCh = portalCh
-  let color = COLOR_PORTAL
-  let needsBg = false
-
-  switch (mode) {
-
-    case 'intro': {
-      if (!revealed) color = COLOR_BACKGR
-      if (frontier) color = COLOR_BORDER
-      if (matrixCh && revealed && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
-      break
-    }
-
-    case 'static': {
-      if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } break }
-      break
-    }
-
-    case 'outro': {
-      if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true }
-      if (outroCells[idx] && !outroFrontier[idx]) drawCh = null; else if (outroFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
-      break
-    }
-
-    case 'direct': {
-      if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true }
-      if (!revealed) { drawCh = null; color = frontier ? COLOR_BORDER : COLOR_BACKGR }
-      else {
-        drawCh = matrixCh || portalCh
-        if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
-      }
-      break
-    }
-
-    case 'transition': {
-      if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true } else { drawCh = null } }
-      else {
-        drawCh = portalCh
-        if (frontier) color = COLOR_BORDER
-        if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } }
-      }
-      break
-    }
-
-    case 'hidden': { drawCh = null; break }
-    default: { if (frontier) color = COLOR_BORDER; break }
-
-  }
-
-  return { drawCh, color, needsBg, frontier, revealed, dist, matrixCh, portalCh }
 }
 
-function drawFrame(ts) {                                                // draw shader 
+// BUILDERS
 
-  if (!context) return
-  context.clearRect(0, 0, width, height)
-  const total = rows * cols
+function computeFrontier(mask) {                                        // frontier from cells touching inactive 
 
-  for (let i = 0; i < cols; i++) rainColumn[i] = Math.floor(rainHeads[i])
-
-  // update animations only when not hidden
-  if (mode !== 'hidden') { animatePortal(ts); animateRain(); updateMasks(total) }
-
-  const steps = Math.min(
-    outroFramesMax,
-    Math.floor((mode === 'intro' ? clampValue(introFrame / introFramesMax, 0, 1) : 1) * outroFramesMax)
-  )
-
-  let resultMask = (mode === 'direct' || mode === 'static') ? baseMask : (mode === 'transition') ? tmpMask : expandMask(baseMask, steps)
-
-  computeFrontier(resultMask)
-
-  // cell draw loop
+  if (!mask) { frontierMap && frontierMap.fill(0); return }
+  frontierMap.fill(0)
+  
   for (let y = 0; y < rows; y++) {
-
     const yOff = y * cols
-    const py = y * fontSize
-
     for (let x = 0; x < cols; x++) {
-
-      const headPos = rainColumn[x]
-      const px = x * fontSize
-      const colBuf = rainBuffer[x]
-      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
-
-      if (drawCh === null) continue
-
-      const isRain = !!(matrixCh && dist >= 0 && dist <= rainLength)
-      const isPortal = drawCh === portalCh
-      const isFront = !!frontier
-
-      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
-      else if (mode === 'intro') { if (revealed) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
-      else { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) }
-      
-      if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, px, py) }
-
+      const i = yOff + x
+      if (!mask[i]) continue
+      if (x > 0        && !mask[i - 1])    { frontierMap[i] = 1; continue }
+      if (y > 0        && !mask[i - cols]) { frontierMap[i] = 1; continue }
+      if (x < cols - 1 && !mask[i + 1])    { frontierMap[i] = 1; continue }
+      if (y < rows - 1 && !mask[i + cols]) { frontierMap[i] = 1; continue }
     }
-  }
-
-  // end states
-  switch (mode) {
-    // case 'outro':         if (outroRadius < Math.hypot(cols, rows))           { outroFrame++  }    else { mode = 'hidden' }   break
-    case 'intro':         if (introFrame < introFramesMax)                  { introFrame++ }    else { mode = 'static' }   break
-    case 'direct':        if (introFrame < introFramesMax + directFramesExtra)    { introFrame++ }    else { mode = 'hidden' }   break
-    case 'transition':    animateSwipe(); break
-    default: break
-  }
-
-  // promise handling
-  if (taskPromise) {
-    try {
-      if (mode === 'hidden' || mode === 'static' || (typeof taskPromise.finish === 'function' && taskPromise.finish())) {
-        const r = taskResolve
-        taskPromise = null
-        taskResolve = null
-        if (r) r()
-      }
-    } catch (err) { taskPromise = null; taskResolve = null }
   }
 
 }
 
-function mainLoop(ts) { drawFrame(ts); animationID = requestAnimationFrame(mainLoop) }
+function buildChars() {                                                 // init char buffer 
+
+  charBuffer = new Array(charRangeCount * 2)
+
+  for (let i = 0; i < charRangeCount; i++) {
+    charBuffer[i] = charTable[i]
+    charBuffer[i  + charRangeCount] = charTable[i]
+  }
+
+  charIndex = 0
+
+}
+
+// ANIMATIONS
+
+function animatePortal(tick) {                                          // render next portal frame 
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const idx = y * cols + x
+      const v = portalCosine[x] + portalSine[y] + tick * 0.001
+      portalCodes[idx] = ((v * 16 | 0) % charRangeCount + charRangeCount) % charRangeCount
+      portalChars[idx] = charTable[portalCodes[idx]]
+    }
+  }
+}
+
+function animateRain() {                                                // render next rain frame 
+  for (let c = 0; c < cols; c++) {
+    const rowPos = Math.floor(rainHeads[c] + rainSpeed)
+    rainHeads[c] += rainSpeed
+    rainColumn[c] = Math.floor(rainHeads[c])
+    if (rowPos >= 0 && rowPos < rows) rainBuffer[c][rowPos] = pickChar()
+    if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) {
+      rainHeads[c] = -Math.random() * rows
+      rainBuffer[c].fill(null)
+    }
+  }
+}
+
+function animateCircle() {                                              // render next circle frame 
+  
+  outroRadius += 1
+
+  const rCurr = outroRadius
+  const yStart = Math.max(0, Math.floor(outroCenter.y - rCurr))
+  const yEnd = Math.min(rows - 1, Math.ceil(outroCenter.y + rCurr))
+  const xStart = Math.max(0, Math.floor(outroCenter.x - rCurr))
+  const xEnd = Math.min(cols - 1, Math.ceil(outroCenter.x + rCurr))
+
+  for (let y = yStart; y <= yEnd; y++) {
+    const yOff = y * cols
+    for (let x = xStart; x <= xEnd; x++) {
+      const idx = yOff + x
+      const dx = x - outroCenter.x
+      const dy = y - outroCenter.y
+      const dist2 = dx * dx + dy * dy
+      const n = noiseMap[idx] * 5
+      const radiusNoise2 = (rCurr + n) * (rCurr + n)
+
+      if (dist2 <= radiusNoise2) outroCells[idx] = 1
+    }
+  }
+
+  for (let i = 0; i < rows * cols; i++) outroFrontier[i] = 0
+
+  for (let y = 0; y < rows; y++) {
+    const yOff = y * cols
+    for (let x = 0; x < cols; x++) {
+      const idx = yOff + x
+      if (!outroCells[idx]) continue
+      if (
+        (x > 0 && !outroCells[idx - 1]) ||
+        (x < cols - 1 && !outroCells[idx + 1]) ||
+        (y > 0 && !outroCells[idx - cols]) ||
+        (y < rows - 1 && !outroCells[idx + cols])
+      ) outroFrontier[idx] = 1
+    }
+  }
+
+  for (let i = 0; i < rows * cols; i++) logicMask[i] = outroCells[i] ? 0 : 1
+
+}
+
+function animateGerm(total) {                                           // render next germ frame 
+
+  const oldRatio = animateGerm.lastRatio || 0
+  const newRatio = clampValue(introFrame / introFramesMax, 0, 1)
+
+  for (let i = 0; i < total; i++) { const n = noiseMap[i]; if (n >= oldRatio && n < newRatio) logicMask[i] = 1 }
+  animateGerm.lastRatio = newRatio
+
+}
+
+function animateGermInv(total) {                                        // render next inverted germ frame 
+  
+  const ratio = clampValue(introFrame / introFramesMax, 0, 1)
+  
+  for (let i = 0; i < total; i++) { if (logicMask[i] === 1 && noiseMap[i] < ratio) logicMask[i] = 0 }
+
+  if (ratio >= 1) {
+
+    if (!animateGermInv.frontierQueue) animateGermInv.frontierQueue = []
+    const q = animateGermInv.frontierQueue
+
+    for (let y = 0; y < rows; y++) {
+      const yOff = y * cols
+      for (let x = 0; x < cols; x++) {
+        const i = yOff + x
+        if (logicMask[i] !== 1) continue
+        if (
+          (x > 0        && logicMask[i - 1]    === 0) ||
+          (x < cols - 1 && logicMask[i + 1]    === 0) ||
+          (y > 0        && logicMask[i - cols] === 0) ||
+          (y < rows - 1 && logicMask[i + cols] === 0)
+        ) { if (!q.includes(i)) q.push(i) }
+      }
+    }
+
+    if (q.length > 0) {
+      const perFrame = Math.max(1, Math.floor(total / introFramesMax))
+      let count = 0
+      for (let k = 0; k < q.length && count < perFrame; k++) {
+        const idx = q[k]
+        if (logicMask[idx] === 1) { logicMask[idx] = 0; count++ }
+      }
+      animateGermInv.frontierQueue = q.filter(i => logicMask[i] === 1)
+    }
+  }
+}
+
+function animateSwipe() {                                               // render next swipe frame 
+
+  const line = Math.floor(swipeFrame)
+  visualMask.fill(0)
+  secureCopy(visualMask, new Uint8Array(visualMask.length))
+
+  if (swipePhase === 0) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeSine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xLimit = Math.min(line + noiseOffset, cols - 1)
+      for (let x = 0; x <= xLimit; x++) visualMask[y * cols + x] = 1
+    }
+  } else if (swipePhase === 1) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeCosine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xStart = Math.max(line - noiseOffset, 0)
+      for (let x = xStart; x < cols; x++) visualMask[y * cols + x] = 1
+    }
+  }
+
+  swipeFrame += 1.0
+
+  if (swipeFrame >= cols) {
+
+    if (swipePhase === 0) {
+
+      secureCopy(logicMask, visualMask)
+      if (outroAuto) { swipePhase = 1; swipeFrame = 0 } else { mode = 'static' }
+
+    } else if (swipePhase === 1) {
+
+      secureCopy(logicMask, new Uint8Array(logicMask.length))
+      secureCopy(visualMask, new Uint8Array(visualMask.length))
+      logicMask.fill(0)
+      visualMask.fill(0)
+      swipeFrame = cols
+      swipePhase = 1
+      mode = 'hidden'
+
+    }
+
+  }
+
+}
+
+function expandMask(source, steps) {                                    // render next mask frame with buffer 
+
+  const total = cols * rows
+  let a = expandA, b = expandB
+  a.set(source)
+  
+  let frontier = frontierCurrent
+  let nextFrontier = frontierNext
+  let frontierLen = 0
+  let nextLen = 0
+
+  for (let i = 0; i < total; i++) { if (a[i]) frontier[frontierLen++] = i }
+
+  for (let s = 0; s < steps; s++) {
+
+    b.set(a)
+    nextLen = 0
+
+    for (let f = 0; f < frontierLen; f++) {
+      const idx = frontier[f]
+      const neighbors = neighborsMap[idx]
+      for (let n of neighbors) { if (!b[n]) { b[n] = 1; nextFrontier[nextLen++] = n } }
+    }
+
+    if (nextLen === 0) break
+
+    [frontier, nextFrontier] = [nextFrontier, frontier]
+    frontierLen = nextLen
+    const tmp = a
+    a = b
+    b = tmp
+
+  }
+
+  expandA.set(a);
+  return expandA;
+}
 
 // TASKS
 
@@ -685,12 +673,13 @@ function runQueue(name) {                                               // run q
 
 function runIntro()             { mode = 'intro'; introFrame = 0; }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
-function runDirect()            { mode = 'direct'; introFrame = 0; resetMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; secureCopy(tmpMask, baseMask) }
-function runTransitionFull()    { mode = 'transition'; resetMasks(); secureCopy(baseMask, new Uint8Array(baseMask.length)); secureCopy(tmpMask, new Uint8Array(tmpMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = true }
-function runTransitionIntro()   { mode = 'transition'; resetMasks(); secureCopy(baseMask, new Uint8Array(baseMask.length)); secureCopy(tmpMask, new Uint8Array(tmpMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = false }
-function runTransitionOutro()   { mode = 'transition'; resetMasks(); secureCopy(tmpMask, baseMask); swipeFrame = 0; swipePhase = 1; outroAuto = false }
-function runStatic()            { mode = 'static'; resetMasks(); for (let i = 0; i < rows * cols; i++) baseMask[i] = 1; secureCopy(tmpMask, baseMask) }
+function runDirect()            { mode = 'direct'; introFrame = 0; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
+function runTransitionFull()    { mode = 'transition'; resetMasks(); secureCopy(logicMask, new Uint8Array(logicMask.length)); secureCopy(visualMask, new Uint8Array(visualMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = true }
+function runTransitionIntro()   { mode = 'transition'; resetMasks(); secureCopy(logicMask, new Uint8Array(logicMask.length)); secureCopy(visualMask, new Uint8Array(visualMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = false }
+function runTransitionOutro()   { mode = 'transition'; resetMasks(); secureCopy(visualMask, logicMask); swipeFrame = 0; swipePhase = 1; outroAuto = false }
+function runStatic()            { mode = 'static'; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
 function runHidden()            { mode = 'hidden' }
+
 function checkIntro()           { return mode === 'intro' && introFrame >= introFramesMax * 0.65 }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && introFrame >= introFramesMax + directFramesExtra }
@@ -700,9 +689,11 @@ function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' 
 function checkStatic()          { return true }
 function checkHidden()          { return true }
 
+function mainLoop(ts) { drawFrame(ts); animationID = requestAnimationFrame(mainLoop) }
+
 defineExpose({ runQueue })
-onMounted(() => { updateSize(); window.addEventListener('resize', updateSize); animationID = requestAnimationFrame(mainLoop) })
-onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', updateSize) })
+onMounted(() => { resetContext(); window.addEventListener('resize', resetContext); runanimationID = requestAnimationFrame(mainLoop) })
+onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
 
 </script>
 <template> <div ref="containerRef" class="container"> <canvas ref="canvasRef"></canvas> </div> </template>
