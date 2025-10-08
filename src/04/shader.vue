@@ -509,6 +509,8 @@ function animateCircle() {                                              // rende
 
   const rCurr = outroRadius
 
+  outroCells.fill(0); 
+
   for (let y = 0; y < rows; y++) {
 
     const yOff = y * cols
@@ -523,7 +525,6 @@ function animateCircle() {                                              // rende
       const radiusNoise2 = (rCurr + n) * (rCurr + n)
 
       if (dist2 <= radiusNoise2) outroCells[idx] = 1
-      else outroCells[idx] = 0
 
     }
 
@@ -538,8 +539,8 @@ function animateCircle() {                                              // rende
     for (let x = 0; x < cols; x++) {
 
       const idx = yOff + x
+      
       if (!outroCells[idx]) continue
-
       if (
 
         (x > 0 && !outroCells[idx - 1]) || (x < cols - 1 && !outroCells[idx + 1]) || 
