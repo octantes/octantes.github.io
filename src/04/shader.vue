@@ -281,9 +281,9 @@ function initContext() {                                                // prepa
   const cores = navigator.hardwareConcurrency || 2;
   const memory = navigator.deviceMemory || 2;
   
-  if (cores >= TIER_CONFIGS.high.minCores && memory >= TIER_CONFIGS.high.minMemory) { maxCols = TIER_CONFIGS.high.maxCols; maxRows = TIER_CONFIGS.high.maxRows; console.log('1') }
-  else if (cores >= TIER_CONFIGS.medium.minCores && memory >= TIER_CONFIGS.medium.minMemory) { maxCols = TIER_CONFIGS.medium.maxCols; maxRows = TIER_CONFIGS.medium.maxRows; console.log('2') }
-  else { maxCols = TIER_CONFIGS.low.maxCols; maxRows = TIER_CONFIGS.low.maxRows; console.log('3') }
+  if (cores >= TIER_CONFIGS.high.minCores && memory >= TIER_CONFIGS.high.minMemory) { maxCols = TIER_CONFIGS.high.maxCols; maxRows = TIER_CONFIGS.high.maxRows }
+  else if (cores >= TIER_CONFIGS.medium.minCores && memory >= TIER_CONFIGS.medium.minMemory) { maxCols = TIER_CONFIGS.medium.maxCols; maxRows = TIER_CONFIGS.medium.maxRows }
+  else { maxCols = TIER_CONFIGS.low.maxCols; maxRows = TIER_CONFIGS.low.maxRows }
 
   // container div size
   if (!canvasRef.value || !containerRef.value) return
