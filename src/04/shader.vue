@@ -508,14 +508,13 @@ function animateCircle() {                                              // rende
   outroRadius += 1
 
   const rCurr = outroRadius
-  const yStart = Math.max(0, Math.floor(outroCenter.y - rCurr))
-  const yEnd = Math.min(rows - 1, Math.ceil(outroCenter.y + rCurr))
-  const xStart = Math.max(0, Math.floor(outroCenter.x - rCurr))
-  const xEnd = Math.min(cols - 1, Math.ceil(outroCenter.x + rCurr))
 
-  for (let y = yStart; y <= yEnd; y++) {
+  for (let y = 0; y < rows; y++) {
+
     const yOff = y * cols
-    for (let x = xStart; x <= xEnd; x++) {
+
+    for (let x = 0; x < cols; x++) {
+
       const idx = yOff + x
       const dx = x - outroCenter.x
       const dy = y - outroCenter.y
@@ -524,22 +523,30 @@ function animateCircle() {                                              // rende
       const radiusNoise2 = (rCurr + n) * (rCurr + n)
 
       if (dist2 <= radiusNoise2) outroCells[idx] = 1
+      else outroCells[idx] = 0
+
     }
+
   }
 
   for (let i = 0; i < rows * cols; i++) outroFrontier[i] = 0
 
   for (let y = 0; y < rows; y++) {
+
     const yOff = y * cols
+
     for (let x = 0; x < cols; x++) {
+
       const idx = yOff + x
       if (!outroCells[idx]) continue
+
       if (
-        (x > 0 && !outroCells[idx - 1]) ||
-        (x < cols - 1 && !outroCells[idx + 1]) ||
-        (y > 0 && !outroCells[idx - cols]) ||
-        (y < rows - 1 && !outroCells[idx + cols])
+
+        (x > 0 && !outroCells[idx - 1]) || (x < cols - 1 && !outroCells[idx + 1]) || 
+        (y > 0 && !outroCells[idx - cols]) || (y < rows - 1 && !outroCells[idx + cols]) 
+
       ) outroFrontier[idx] = 1
+
     }
   }
 
@@ -726,7 +733,7 @@ function checkHidden()          { return true }
 function mainLoop(ts) { drawFrame(ts); animationID = requestAnimationFrame(mainLoop) }
 
 defineExpose({ runQueue })
-onMounted(() => { resetContext(); window.addEventListener('resize', resetContext); runQueue('outro'); animationID = requestAnimationFrame(mainLoop) })
+onMounted(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) })
 onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
 
 </script>
