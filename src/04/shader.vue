@@ -209,7 +209,7 @@ function drawFrame(ts) {                                                // draw 
 
   context.fill()
 
-  let charIndex = 0;
+  let i = 0;
 
   for (let y = 0; y < rows; y++) {
 
@@ -217,7 +217,7 @@ function drawFrame(ts) {                                                // draw 
     
     for (let x = 0; x < cols; x++) {
 
-      const { drawCh, color } = cellData[charIndex++]
+      const { drawCh, color } = cellData[i++]
 
       if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, x * fontSize, py) }
 
@@ -713,8 +713,8 @@ function runQueue(name) {                                               // run q
 function runIntro()             { mode = 'intro'; introFrame = 0; }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
 function runDirect()            { mode = 'direct'; introFrame = 0; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
-function runTransitionFull()    { mode = 'transition'; resetMasks(); secureCopy(logicMask, new Uint8Array(logicMask.length)); secureCopy(visualMask, new Uint8Array(visualMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = true }
-function runTransitionIntro()   { mode = 'transition'; resetMasks(); secureCopy(logicMask, new Uint8Array(logicMask.length)); secureCopy(visualMask, new Uint8Array(visualMask.length)); swipeFrame = 0; swipePhase = 0; outroAuto = false }
+function runTransitionFull()    { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = true }
+function runTransitionIntro()   { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = false }
 function runTransitionOutro()   { mode = 'transition'; resetMasks(); secureCopy(visualMask, logicMask); swipeFrame = 0; swipePhase = 1; outroAuto = false }
 function runStatic()            { mode = 'static'; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
 function runHidden()            { mode = 'hidden' }
