@@ -189,6 +189,8 @@ function drawFrame(ts) {                                                // draw 
   context.fillStyle = COLOR_BACKGR
   context.beginPath()
 
+  const cellData = []
+
   for (let y = 0; y < rows; y++) {
 
     const py = y * fontSize
@@ -197,14 +199,17 @@ function drawFrame(ts) {                                                // draw 
 
       const headPos = rainColumn[x]
       const colBuf = rainBuffer[x]
-      const { needsBg } = cellRender(x, y, headPos, colBuf, resultMask)
+      const cell = cellRender(x, y, headPos, colBuf, resultMask)
+      cellData.push(cell)
       
-      if (needsBg) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
+      if (cell.needsBg) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
 
     }
   }
 
   context.fill()
+
+  let charIndex = 0;
 
   for (let y = 0; y < rows; y++) {
 
@@ -212,9 +217,7 @@ function drawFrame(ts) {                                                // draw 
     
     for (let x = 0; x < cols; x++) {
 
-      const headPos = rainColumn[x]
-      const colBuf = rainBuffer[x]
-      const { drawCh, color } = cellRender(x, y, headPos, colBuf, resultMask)
+      const { drawCh, color } = cellData[charIndex++]
 
       if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, x * fontSize, py) }
 
