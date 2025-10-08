@@ -127,7 +127,7 @@ watch(
 
 <style>
 
-.container { position: relative; }
+.container { position: relative; background-color: aliceblue;}
 
 .post {
   position: relative;
