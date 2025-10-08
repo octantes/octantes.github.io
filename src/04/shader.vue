@@ -81,78 +81,53 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
   let color = COLOR_PORTAL
   let needsBg = false
 
-  const isRain = !!(matrixCh && dist >= 0 && dist <= rainLength)
-
   switch (mode) {
 
     case 'intro': {
-
-      needsBg = revealed || frontier
-
+      if (!revealed) color = COLOR_BACKGR
       if (frontier) color = COLOR_BORDER
-      if (isRain && revealed) { color = rainColors[dist]; drawCh = matrixCh }
-      if (!revealed) drawCh = null
-
+      if (matrixCh && revealed && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
       break
-
     }
 
     case 'static': {
-
-      needsBg = true
-
-      if (isRain) { color = rainColors[dist]; drawCh = matrixCh }
-      else { drawCh = portalCh; color = COLOR_PORTAL }
-
+      if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } break }
       break
-
     }
 
     case 'outro': {
-
-      const isInsideCircle = outroCells[idx] && !outroFrontier[idx]
-      const isFrontier = outroFrontier[idx]
-
-      needsBg = !isInsideCircle; 
-
-      if (isRain) { color = rainColors[dist]; drawCh = matrixCh }
-      if (isInsideCircle) { drawCh = null; needsBg = false } 
-      else if (isFrontier) { color = COLOR_BORDER; drawCh = portalCh }
-
+      if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true }
+      if (outroCells[idx] && !outroFrontier[idx]) drawCh = null; else if (outroFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
       break
-
     }
 
     case 'direct': {
-
-      needsBg = revealed || frontier
-
-      if (frontier) { drawCh = portalCh; color = COLOR_BORDER }
-      if (!revealed) { drawCh = null; needsBg = frontier }
-      else { drawCh = matrixCh || portalCh; if (isRain) { color = rainColors[dist] } }
-
+      if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true }
+      if (!revealed) { drawCh = null; color = frontier ? COLOR_BORDER : COLOR_BACKGR }
+      else {
+        drawCh = matrixCh || portalCh
+        if (matrixCh && dist >= 0 && dist <= rainLength) { color = rainColors[dist]; needsBg = true }
+      }
       break
-
     }
 
     case 'transition': {
-
-      needsBg = revealed || frontier
-
-      if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER } else { drawCh = null; needsBg = false } }
-      else { drawCh = portalCh; if (frontier) color = COLOR_BORDER; if (isRain) { color = rainColors[dist]; drawCh = matrixCh } }
-
+      if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER; needsBg = true } else { drawCh = null } }
+      else {
+        drawCh = portalCh
+        if (frontier) color = COLOR_BORDER
+        if (matrixCh) { if (dist >= 0 && dist <= rainLength) { color = rainColors[dist]; drawCh = matrixCh; needsBg = true } }
+      }
       break
-
     }
 
-    case 'hidden': { drawCh = null; needsBg = false; break }
+    case 'hidden': { drawCh = null; break }
     
-    default: { if (frontier) color = COLOR_BORDER; needsBg = true; break }
+    default: { if (frontier) color = COLOR_BORDER; break }
 
   }
-  
-  return { drawCh, color, needsBg } 
+
+  return { drawCh, color, needsBg, frontier, revealed, dist, matrixCh, portalCh }
 
 }
 
@@ -163,7 +138,7 @@ function drawFrame(ts) {                                                // draw 
 
   const total = rows * cols
 
-  if (mode !== 'hidden') {
+  if (mode !== 'hidden') { 
 
     animatePortal(ts)
     animateRain()
@@ -178,7 +153,7 @@ function drawFrame(ts) {                                                // draw 
 
     }
 
-  } else { visualMask.fill(0) }
+  } else { secureCopy(visualMask, new Uint8Array(visualMask.length)) }
 
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(introFrame / introFramesMax, 0, 1) : 1) * outroFramesMax))
 
@@ -186,9 +161,7 @@ function drawFrame(ts) {                                                // draw 
 
   computeFrontier(resultMask)
 
-  context.fillStyle = COLOR_BACKGR
-  context.beginPath()
-
+  // cell draw loop
   for (let y = 0; y < rows; y++) {
 
     const py = y * fontSize
@@ -196,39 +169,31 @@ function drawFrame(ts) {                                                // draw 
     for (let x = 0; x < cols; x++) {
 
       const headPos = rainColumn[x]
+      const px = x * fontSize
       const colBuf = rainBuffer[x]
-      const { needsBg } = cellRender(x, y, headPos, colBuf, resultMask)
+      const { drawCh, color, frontier, revealed, dist, matrixCh, portalCh } = cellRender(x, y, headPos, colBuf, resultMask)
+
+      if (drawCh === null) continue
+
+      const isRain = !!(matrixCh && dist >= 0 && dist <= rainLength)
+      const isPortal = drawCh === portalCh
+      const isFront = !!frontier
+
+      if (mode === 'outro' || mode === 'transition') { if (isRain || isPortal || isFront) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else if (mode === 'intro') { if (revealed) { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) } }
+      else { context.fillStyle = '#1B1C1C'; context.fillRect(px, py, fontSize + 1, fontSize + 1) }
       
-      if (needsBg) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
+      if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, px, py) }
 
     }
-  }
-
-  context.fill()
-
-  for (let y = 0; y < rows; y++) {
-
-    const py = y * fontSize
-    
-    for (let x = 0; x < cols; x++) {
-
-      const headPos = rainColumn[x]
-      const colBuf = rainBuffer[x]
-      const { drawCh, color } = cellRender(x, y, headPos, colBuf, resultMask)
-
-      if (drawCh != null) { context.fillStyle = color; context.fillText(drawCh, x * fontSize, py) }
-
-    }
-
   }
 
   switch (mode) {
-
+    // case 'outro':         if (outroRadius < Math.hypot(cols, rows))               { outroFrame++ }    else { mode = 'hidden' }   break
     case 'intro':         if (introFrame < introFramesMax)                        { introFrame++ }    else { mode = 'static' }   break
     case 'direct':        if (introFrame < introFramesMax + directFramesExtra)    { introFrame++ }    else { mode = 'hidden' }   break
     case 'transition':    animateSwipe(); break
     default: break
-
   }
 
   if (taskPromise) {
@@ -508,15 +473,14 @@ function animateCircle() {                                              // rende
   outroRadius += 1
 
   const rCurr = outroRadius
+  const yStart = Math.max(0, Math.floor(outroCenter.y - rCurr))
+  const yEnd = Math.min(rows - 1, Math.ceil(outroCenter.y + rCurr))
+  const xStart = Math.max(0, Math.floor(outroCenter.x - rCurr))
+  const xEnd = Math.min(cols - 1, Math.ceil(outroCenter.x + rCurr))
 
-  outroCells.fill(0); 
-
-  for (let y = 0; y < rows; y++) {
-
+  for (let y = yStart; y <= yEnd; y++) {
     const yOff = y * cols
-
-    for (let x = 0; x < cols; x++) {
-
+    for (let x = xStart; x <= xEnd; x++) {
       const idx = yOff + x
       const dx = x - outroCenter.x
       const dy = y - outroCenter.y
@@ -525,29 +489,22 @@ function animateCircle() {                                              // rende
       const radiusNoise2 = (rCurr + n) * (rCurr + n)
 
       if (dist2 <= radiusNoise2) outroCells[idx] = 1
-
     }
-
   }
 
   for (let i = 0; i < rows * cols; i++) outroFrontier[i] = 0
 
   for (let y = 0; y < rows; y++) {
-
     const yOff = y * cols
-
     for (let x = 0; x < cols; x++) {
-
       const idx = yOff + x
-      
       if (!outroCells[idx]) continue
       if (
-
-        (x > 0 && !outroCells[idx - 1]) || (x < cols - 1 && !outroCells[idx + 1]) || 
-        (y > 0 && !outroCells[idx - cols]) || (y < rows - 1 && !outroCells[idx + cols]) 
-
+        (x > 0 && !outroCells[idx - 1]) ||
+        (x < cols - 1 && !outroCells[idx + 1]) ||
+        (y > 0 && !outroCells[idx - cols]) ||
+        (y < rows - 1 && !outroCells[idx + cols])
       ) outroFrontier[idx] = 1
-
     }
   }
 
