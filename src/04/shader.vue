@@ -729,7 +729,7 @@ function checkHidden()          { return true }
 function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(ts, deltaTime); animationID = requestAnimationFrame(mainLoop) }
 
 defineExpose({ runQueue })
-onMounted(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) })
+onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
 onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
 
 </script>
