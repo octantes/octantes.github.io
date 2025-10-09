@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "crypto": "1.0.1",
+    "ffmpeg-static": "^5.2.0",
     "front-matter": "4.0.2",
     "image-size": "2.0.2",
     "markdown-it": "14.1.0",

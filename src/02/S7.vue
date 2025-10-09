@@ -20,11 +20,13 @@ defineProps({ html: String })
   word-break: break-word;
 }
 
-.S7 img {
+.S7 img,
+.S7 video {
   display: block;
   max-width: 100%;
   width: 100%;
   height: auto;
+  object-fit: cover;
 }
 
 .S7TEXT {
