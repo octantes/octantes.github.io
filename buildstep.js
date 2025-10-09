@@ -1,3 +1,6 @@
+import { fileURLToPath } from 'url';
+import { spawn } from 'child_process';
+import ffmpegStatic from 'ffmpeg-static';
 import fs from 'fs/promises'
 import path from 'path'
 import crypto from 'crypto'
@@ -33,6 +36,65 @@ function renderType(body, type, portada) {
     default: return md.render(body)
 
   }
+
+}
+
+function convertWebm(inputPath, outputPath) {
+
+  return new Promise((resolve, reject) => {
+    
+    const finalOutputPath = outputPath.replace(/\.(mov|mp4|avi|webm)$/i, '.webm');
+
+    const args = [
+      '-i', inputPath,             // input file
+      '-c:v', 'libvpx-vp9',        // VP9 codec
+      '-b:v', '1M',                // video bitrate
+      '-pix_fmt', 'yuv420p',       // pixel format compatibility
+      '-c:a', 'libopus',           // audio codec
+      '-an',                       // strip audio
+      '-y',                        // overwrite output files without asking
+      finalOutputPath              // output file
+    ]
+    
+    const ffmpegProcess = spawn(ffmpegStatic, args)
+
+    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFmpeg conversion failed with code ${code} for ${inputPath}`)) } })
+    ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFmpeg process: ${err.message}`)) })
+
+  })
+}
+
+function processAssets(tag, attrs, type, slug, portada) {
+
+  const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
+  if (!srcMatch) return tag
+
+  let filename = srcMatch[1]
+  const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
+  const altText = altMatch ? altMatch[1] : ''
+  const isImage = /\.(jpe?g|png)$/i.test(filename)
+  const isVideo = /\.(mov|mp4|avi|webm)$/i.test(filename)
+
+  if (isImage) {
+
+    let dimensions = { width: 600, height: 400 }
+    if (filename === portada) dimensions = { width: 1200, height: 630 }
+    filename = filename.replace(/\.(jpe?g|png)$/i, '.webp') 
+    const absUrl = `${siteUrl}/posts/${type}/${slug}/${filename}`
+    
+    return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
+
+  } 
+  
+  else if (isVideo) {
+
+    filename = filename.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
+    const absUrl = `${siteUrl}/posts/${type}/${slug}/${filename}`
+    return `<video src="${absUrl}" autoplay muted loop playsinline preload="auto" alt="${altText}"></video>`
+
+  } 
+  
+  else { return `<img ${attrs}>` }
 
 }
 
@@ -113,25 +175,7 @@ for (const key of Object.keys(cache)) {
 
 const indexItems = []
 
-function processImgTag(attrs, type, slug, portada) {
 
-  const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
-  const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
-
-  if (!srcMatch) return `<img ${attrs}>`
-
-  let filename = srcMatch[1]
-  let dimensions = { width: 600, height: 400 }
-  
-  if (filename === portada) dimensions = { width: 1200, height: 630 }
-  if (/\.(jpe?g|png)$/i.test(filename)) filename = filename.replace(/\.(jpe?g|png)$/i, '.webp')
-
-  const absUrl = `${siteUrl}/posts/${type}/${slug}/${filename}`
-  const altText = altMatch ? altMatch[1] : ''
-  
-  return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
-
-}
 
 // main post processing
 
@@ -157,26 +201,37 @@ for (const slug of postDirs) {
     for (const asset of assets) {
 
       if (!asset.isFile() || asset.name === 'index.md') continue
-      const assetPath = path.join(postFolder, asset.name)
-      const destPath = path.join(noteOutputDir, asset.name)
-      const data = await fs.readFile(assetPath)
-      hash.update(data)
 
-      if (/\.(jpe?g|png)$/i.test(asset.name)) {
+      const assetPath = path.join(postFolder, asset.name)
+      const destPath  = path.join(noteOutputDir, asset.name)
+      const isImage   = /\.(jpe?g|png)$/i.test(asset.name)
+      const isVideo   = /\.(mov|mp4|avi|webm)$/i.test(asset.name)
+
+      if (isImage) {
+
         const outputPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
-        await sharp(assetPath)
-          .resize({ width: 1200 })
-          .webp({ quality: 80 })
-          .toFile(outputPath)
+        await sharp(assetPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(outputPath)
         const finalData = await fs.readFile(outputPath)
         hash.update(finalData)
-      } else {
+
+      } else if (isVideo) {
+
+        const outputPath = destPath.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
+        console.log(`Converting video ${asset.name} to WebM...`)
+        await convertWebm(assetPath, outputPath) 
+        const finalData = await fs.readFile(outputPath)
+        hash.update(finalData)
+
+      } 
+      else {
+
+        const data = await fs.readFile(assetPath)
         await fs.writeFile(destPath, data)
         hash.update(data)
-      }
 
+      }
     }
-  } catch {}
+  } catch(e) { console.error(`Error processing assets for ${slug}:`, e) }
 
   const finalHash = hash.digest('hex')
 
@@ -184,9 +239,7 @@ for (const slug of postDirs) {
 
     let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
 
-    htmlContent = htmlContent.replace(/<img\s+([^>]+?)\/?>/gi, (match, attrs) =>
-      processImgTag(attrs, type, slug, attributes.portada)
-    )
+    htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssetTag(match, attrs, type, slug, attributes.portada))
     
     const title = attributes.title || slug
     const description = attributes.description || ''
