@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+      <loc>https://octantes.github.io/</loc>
+      <lastmod>2025-10-09T07:04:28.927Z</lastmod>
+    </url>
 <url>
-    <loc>https://octantes.github.io/</loc>
-    <lastmod>2025-10-09T05:06:42.561Z</lastmod>
-  </url>
+      <loc>https://octantes.github.io/about/</loc>
+      <lastmod>2025-10-09T07:04:28.927Z</lastmod>
+    </url>
 <url>
-    <loc>https://octantes.github.io/about/</loc>
-    <lastmod>2025-10-09T05:06:42.561Z</lastmod>
-  </url>
+      <loc>https://octantes.github.io/contact/</loc>
+      <lastmod>2025-10-09T07:04:28.927Z</lastmod>
+    </url>
 <url>
-    <loc>https://octantes.github.io/contact/</loc>
-    <lastmod>2025-10-09T05:06:42.561Z</lastmod>
-  </url>
+      <loc>https://octantes.github.io/posts/design/testdesign/</loc>
+      <lastmod>2025-10-09T07:04:28.925Z</lastmod>
+    </url>
 <url>
-    <loc>https://octantes.github.io/posts/design/testdesign/</loc>
-    <lastmod>2025-10-09T05:06:42.561Z</lastmod>
-  </url>
+      <loc>https://octantes.github.io/posts/note/test/</loc>
+      <lastmod>2025-10-09T07:04:28.786Z</lastmod>
+    </url>
 <url>
-    <loc>https://octantes.github.io/posts/note/test/</loc>
-    <lastmod>2025-10-09T05:06:42.561Z</lastmod>
-  </url>
-<url>
-    <loc>https://octantes.github.io/posts/note/octantes/</loc>
-    <lastmod>2025-10-09T05:06:42.561Z</lastmod>
-  </url>
-</urlset>
+      <loc>https://octantes.github.io/posts/note/octantes/</loc>
+      <lastmod>2025-10-09T07:04:28.623Z</lastmod>
+    </url>
+  </urlset>
