@@ -250,18 +250,17 @@ async function processPosts() {                                                 
     } catch(e) { console.error(`Error processing assets for ${slug}:`, e) }
 
     const finalHash = hash.digest('hex')
+    const dateObj = attributes.date ? new Date(attributes.date) : new Date()
+    const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
+    const portadaUrl = attributes.portada ? `${webURL}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
+    const canonicalUrl = `${webURL}/${type}/${slug}/`
+    const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
+    const authorJson = handle ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}` : `{"@type":"Person","name":"Desconocido"}`
 
     if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
 
       let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
       htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(match, attrs, type, slug, attributes.portada))
-
-      const dateObj = attributes.date ? new Date(attributes.date) : new Date()
-      const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
-      const portadaUrl = attributes.portada ? `${webURL}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
-      const canonicalUrl = `${webURL}/${type}/${slug}/`
-      const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
-      const authorJson = handle ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}` : `{"@type":"Person","name":"Desconocido"}`
 
       let fullHtml = template
         .replace(/{{title}}/g, attributes.title || slug)
