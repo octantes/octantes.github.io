@@ -40,10 +40,12 @@ defineProps({ html: String })
   padding: 1rem 2rem 0rem 2rem;
 }
 
-.S7TEXT img {
+.S7TEXT img
+.S7TEXT video {
   display: block;
   max-width: 100%;
   height: auto;
+  object-fit: cover;
 }
 
 </style>
