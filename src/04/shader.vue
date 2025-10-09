@@ -223,7 +223,7 @@ function drawFrame(deltaTime) {                                     // draw shad
     case 'intro':         germFrame += frameAdvancement; if (germFrame >= germFramesMax) { germFrame = germFramesMax; mode = 'static' } break
     case 'direct':        germFrame += frameAdvancement; const directLimit = germFramesMax + directFramesExtra; if (germFrame >= directLimit) { germFrame = directLimit; mode = 'hidden' } break
     case 'transition':    animateSwipe(frameFactor); break
-    
+
     default: break
 
   }
@@ -734,7 +734,7 @@ function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' 
 function checkStatic()          { return true }
 function checkHidden()          { return true }
 
-function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(ts, deltaTime); animationID = requestAnimationFrame(mainLoop) }
+function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(deltaTime); animationID = requestAnimationFrame(mainLoop) }
 
 defineExpose({ runQueue })
 onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
