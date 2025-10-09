@@ -252,6 +252,7 @@ async function processPosts() {                                                 
     const finalHash = hash.digest('hex')
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
     const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
+    const isoDate = attributes.date || dateObj.toISOString() 
     const portadaUrl = attributes.portada ? `${webURL}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const canonicalUrl = `${webURL}/${type}/${slug}/`
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
@@ -285,7 +286,8 @@ async function processPosts() {                                                 
       tags: attributes.tags || [],
       portada: portadaUrl,
       handle: attributes.handle || 'kaste',
-      date: attributes.date || dateObj.toISOString(),
+      date: formatted,
+      isoDate: isoDate,
       url: `/posts/${type}/${slug}/`,
     })
 
@@ -317,7 +319,7 @@ async function writeSitemap() {                                                 
     { url: '/contact/', lastmod: new Date().toISOString() }
   ]
 
-  const postPages = indexItems.map(post=>({url:post.url,lastmod:post.date||new Date().toISOString()}))
+  const postPages = indexItems.map( post => ({ url:post.url,lastmod:post.isoDate }) )
   const allPages = [...staticPages,...postPages]
   const sitemapItems = allPages.map( p =>
     `<url>
