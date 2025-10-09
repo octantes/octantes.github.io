@@ -21,7 +21,7 @@ const indexItems = []
 
 // MD TO HTML BODY PROCESSING
 
-function renderType(body, type, portada) {                                                // render body applying type logic 
+function renderType(body, type, portada) {                                       // render body applying type logic 
 
   switch (type) {
 
@@ -55,8 +55,10 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
   const altText = altMatch ? altMatch[1] : ''
+
   const isImage = /\.(jpe?g|png)$/i.test(filename)
   const isVideo = /\.(mov|mp4|avi|webm)$/i.test(filename)
+  const isAudio = /\.(mp3|wav)$/i.test(filename) 
 
   if (isImage) {
 
@@ -75,9 +77,17 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
     return `<video src="${absUrl}" autoplay muted loop playsinline preload="auto" alt="${altText}"></video>`
 
-  } 
+  }
+
+  else if (isAudio) {
+
+    filename = filename.replace(/\.(mp3|wav)$/i, '.ogg')
+    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
+    return `<audio controls preload="auto" src="${absUrl}" aria-label="${altText}"></audio>`
+
+  }
   
-  else { return `<img ${attrs}>` }
+  else { return `<${tag} ${attrs}>` }
 
 }
 
@@ -104,7 +114,7 @@ async function convertVideo(inputPath, outputPath) {                            
 
     const args = [
       '-i', inputPath,             // input file
-      '-c:v', 'libvpx-vp9',        // VP9 codec
+      '-c:v', 'libvpx',            // VP8 codec
       '-b:v', '1M',                // video bitrate
       '-pix_fmt', 'yuv420p',       // pixel format compatibility
       '-c:a', 'libopus',           // audio codec
@@ -117,6 +127,32 @@ async function convertVideo(inputPath, outputPath) {                            
 
     ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFMPEG conversion failed with code ${code} for ${inputPath}`)) } })
     ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process: ${err.message}`)) })
+
+  })
+
+}
+
+async function convertAudio(inputPath, outputPath) {                             // convert input audio files to OGG 
+
+  return new Promise((resolve, reject) => {
+    
+    const finalOutputPath = outputPath.replace(/\.(mp3|wav)$/i, '.ogg');
+
+    const args = [
+      '-i', inputPath,             // input file
+      '-c:a', 'libopus',           // audio codec: opus
+      '-b:a', '96k',               // audio bitrate
+      '-y',                        // overwrite output files without asking
+      finalOutputPath              // output file
+    ]
+    
+    const ffmpegProcess = spawn(ffmpegStatic, args)
+
+    ffmpegProcess.on('close', (code) => { 
+      if (code === 0) { resolve(finalOutputPath) }
+      else { reject(new Error(`FFMPEG audio conversion failed with code ${code} for ${inputPath}`)) } 
+    })
+    ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process for audio: ${err.message}`)) })
 
   })
 
@@ -233,6 +269,12 @@ async function processPosts() {                                                 
           finalOutputPath = destPath.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
           await convertVideo(assetPath, finalOutputPath)
 
+        } else if (isAudio) {
+
+          console.log(`Converting audio ${asset.name} to OGG (Opus)...`)
+          finalOutputPath = destPath.replace(/\.(mp3|wav)$/i, '.ogg') 
+          await convertAudio(assetPath, finalOutputPath)
+        
         } else {
 
           const data = await fs.readFile(assetPath)
