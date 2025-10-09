@@ -239,7 +239,7 @@ for (const slug of postDirs) {
 
     let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
 
-    htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssetTag(match, attrs, type, slug, attributes.portada))
+    htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(match, attrs, type, slug, attributes.portada))
     
     const title = attributes.title || slug
     const description = attributes.description || ''
