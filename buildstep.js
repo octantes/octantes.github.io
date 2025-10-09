@@ -21,7 +21,7 @@ const indexItems = []
 
 // MD TO HTML BODY PROCESSING
 
-function renderType(body, type) {                                                // render body applying type logic 
+function renderType(body, type, portada) {                                                // render body applying type logic 
 
   switch (type) {
 
