@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "testdesign",
+    "title": "testdesign",
+    "description": "",
+    "type": "design",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/design/testdesign/portal.webp",
+    "handle": "kaste",
+    "date": "09/10/2025",
+    "isoDate": "2025-10-09T07:19:49.703Z",
+    "url": "/posts/design/testdesign/"
+  },
+  {
+    "slug": "test",
+    "title": "test",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/note/test/portal.webp",
+    "handle": "kaste",
+    "date": "09/10/2025",
+    "isoDate": "2025-10-09T07:19:49.565Z",
+    "url": "/posts/note/test/"
+  },
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "",
+    "handle": "kaste",
+    "date": "09/10/2025",
+    "isoDate": "2025-10-09T07:19:49.383Z",
+    "url": "/posts/note/octantes/"
+  }
+]
