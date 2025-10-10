@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "test",
+    "title": "test",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/note/test/portal.webp",
+    "handle": "kaste",
+    "date": "10/10/2025",
+    "isoDate": "2025-10-10T07:34:49.326Z",
+    "url": "/posts/note/test/"
+  },
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "",
+    "handle": "kaste",
+    "date": "10/10/2025",
+    "isoDate": "2025-10-10T07:34:49.169Z",
+    "url": "/posts/note/octantes/"
+  }
+]
