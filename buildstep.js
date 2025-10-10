@@ -1,5 +1,4 @@
 import { spawn } from 'child_process'
-import ffmpegStatic from 'ffmpeg-static'
 import fs from 'fs/promises'
 import path from 'path'
 import crypto from 'crypto'
@@ -135,7 +134,7 @@ async function convertVideo(inputPath, outputPath) {                            
       finalOutputPath              // output file
     ]
     
-    const ffmpegProcess = spawn(ffmpegStatic, args)
+    const ffmpegProcess = spawn('ffmpeg', args)
 
     ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFMPEG conversion failed with code ${code} for ${inputPath}`)) } })
     ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process: ${err.message}`)) })
@@ -155,7 +154,7 @@ async function convertGif(inputPath, outputPath) {                              
       '-c:v', 'libvpx-vp9', '-b:v', '1M', '-pix_fmt', 'yuv420p', '-an', '-y', finalOutputPath
     ]
 
-    const ffmpegProcess = spawn(ffmpegStatic, args)
+    const ffmpegProcess = spawn('ffmpeg', args)
 
     ffmpegProcess.stderr.on('data', (data) => { ffmpegErrorOutput += data.toString() })
 
@@ -184,7 +183,7 @@ async function convertAudio(inputPath, outputPath) {                            
       finalOutputPath              // output file
     ]
     
-    const ffmpegProcess = spawn(ffmpegStatic, args)
+    const ffmpegProcess = spawn('ffmpeg', args)
 
     ffmpegProcess.on('close', (code) => { 
       if (code === 0) { resolve(finalOutputPath) }
