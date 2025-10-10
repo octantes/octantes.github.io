@@ -149,6 +149,7 @@ async function convertGif(inputPath, outputPath) {                              
   return new Promise((resolve, reject) => {
     
     const finalOutputPath = outputPath.replace(/\.gif$/i, '.webm')
+    let ffmpegErrorOutput = ''
 
     const args = [
       '-i', inputPath,
@@ -164,7 +165,11 @@ async function convertGif(inputPath, outputPath) {                              
 
     const ffmpegProcess = spawn(ffmpegStatic, args)
 
-    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFMPEG GIF conversion failed with code ${code} for ${inputPath}`)) } })
+    ffmpegProcess.stderr.on('data', (data) => { ffmpegErrorOutput += data.toString() })
+    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { 
+      const fullError = `FFMPEG GIF conversion failed with code ${code} for ${inputPath}.\nFFMPEG Output:\n${ffmpegErrorOutput}`
+      reject(new Error(fullError)) 
+    }})
     ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process for GIF: ${err.message}`)) })
 
   })
