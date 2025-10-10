@@ -265,9 +265,13 @@ async function processPosts() {                                                 
 
           const data = await fs.readFile(assetPath)
           await fs.writeFile(destPath, data)
+          hash.update(data)
           continue
 
         }
+
+        const finalData = await fs.readFile(finalOutputPath)
+        hash.update(finalData)
 
       }
 
@@ -385,33 +389,6 @@ async function finalizeBuild() {                                                
 
 }
 
-async function cleanAssets() {                                                   // clean all assets from content folder 
-
-  const typeDirs = (await fs.readdir(contentDir, { withFileTypes: true })).filter(d => d.isDirectory())
-
-  for (const tdir of typeDirs) {
-    if (tdir.name === 'assets') continue
-    const typePath = path.join(contentDir, tdir.name)
-    const postsInTypeDir = (await fs.readdir(typePath, { withFileTypes: true })).filter(d => d.isDirectory())
-    
-    for (const post of postsInTypeDir) {
-      const postFolder = path.join(typePath, post.name)
-      const assets = await fs.readdir(postFolder, { withFileTypes: true })
-
-      for (const asset of assets) {
-        if (asset.isFile() && asset.name !== 'index.md') {
-          const assetPath = path.join(postFolder, asset.name)
-          await fs.rm(assetPath)
-          console.log(`eliminado asset de origen: ${path.join(tdir.name, post.name, asset.name)}`)
-        }
-      }
-    }
-  }
-
-  console.log('limpieza de assets de origen completada.')
-
-}
-
 main().catch(err => { console.error('BUILD FAILED:', err); process.exit(1) })
 
 async function main() {
@@ -423,7 +400,6 @@ async function main() {
   await writeIndex()
   await writeSitemap()
   await finalizeBuild()
-  await cleanAssets()
 
   console.log('build completed successfully: static notes, index, SEO files, and cache updated.')
 
