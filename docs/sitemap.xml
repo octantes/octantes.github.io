@@ -2,22 +2,30 @@
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
       <loc>https://octantes.github.io/</loc>
-      <lastmod>2025-10-10T09:07:22.710Z</lastmod>
+      <lastmod>2025-10-10T09:12:04.723Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/about/</loc>
-      <lastmod>2025-10-10T09:07:22.710Z</lastmod>
+      <lastmod>2025-10-10T09:12:04.723Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/contact/</loc>
-      <lastmod>2025-10-10T09:07:22.710Z</lastmod>
+      <lastmod>2025-10-10T09:12:04.723Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/note/test/</loc>
-      <lastmod>2025-10-10T09:07:22.707Z</lastmod>
+      <lastmod>2025-10-10T09:12:04.721Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/note/octantes/</loc>
-      <lastmod>2025-10-10T09:07:22.544Z</lastmod>
+      <lastmod>2025-10-10T09:12:04.587Z</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/note/test/</loc>
+      <lastmod>2025-10-10T09:12:04.586Z</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/design/enuna/</loc>
+      <lastmod>2025-10-10T09:12:04.428Z</lastmod>
     </url>
   </urlset>
