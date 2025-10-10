@@ -57,8 +57,9 @@ function processAssets(tag, attrs, type, slug, portada) {                       
   const altText = altMatch ? altMatch[1] : ''
 
   const isImage = /\.(jpe?g|png)$/i.test(filename)
-  const isVideo = /\.(mov|mp4|avi|webm)$/i.test(filename)
-  const isAudio = /\.(mp3|wav)$/i.test(filename) 
+  const isVideo = /\.(mov|mp4|avi|webm|gif)$/i.test(filename)
+  const isAudio = /\.(mp3|wav)$/i.test(filename)
+  const isYoutube = /(youtube\.com|youtu\.be)\/(embed\/|v\/|watch\?v=|\/)/i.test(filename)
 
   if (isImage) {
 
@@ -69,22 +70,26 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     
     return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
 
-  } 
-  
-  else if (isVideo) {
+  } else if (isVideo) {
 
-    filename = filename.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
+    filename = filename.replace(/\.(mov|mp4|avi|webm|gif)$/i, '.webm')
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
-    return `<video src="${absUrl}" autoplay muted loop playsinline preload="auto" alt="${altText}"></video>`
+    return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" alt="${altText}"></video>`
 
-  }
-
-  else if (isAudio) {
+  } else if (isAudio) {
 
     filename = filename.replace(/\.(mp3|wav)$/i, '.ogg')
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
     return `<audio controls preload="auto" src="${absUrl}" aria-label="${altText}"></audio>`
 
+  } else if (isYoutube) {
+
+    let videoId = ''
+    const ytMatch = filename.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
+    if (ytMatch && ytMatch[1]) { videoId = ytMatch[1] } else { return `<${tag} ${attrs}>` }
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
+    return `<div class="YTFrame"> <iframe src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe> </div>`
+    
   }
   
   else { return `<${tag} ${attrs}>` }
@@ -115,7 +120,7 @@ async function convertVideo(inputPath, outputPath) {                            
     const args = [
       '-i', inputPath,             // input file
       '-c:v', 'libvpx',            // VP8 codec
-      '-b:v', '1M',                // video bitrate
+      '-b:v', '4M',                // video bitrate
       '-pix_fmt', 'yuv420p',       // pixel format compatibility
       '-c:a', 'libopus',           // audio codec
       '-an',                       // strip audio
@@ -165,8 +170,16 @@ async function setupBuild() {                                                   
   try { cache = JSON.parse(await fs.readFile(cacheFile, 'utf-8')) }
   catch { console.log("Hash cache not found, recreating") }
 
-  try { postDirs = (await fs.readdir(contentDir, { withFileTypes: true })).filter(d => d.isDirectory()).map(d => d.name) } 
-  catch { postDirs = []; console.log("Posts directory not found, returning empty array") }
+  postDirs = []
+  
+  try { 
+    const typeDirs = (await fs.readdir(contentDir, { withFileTypes: true })).filter(d => d.isDirectory())
+    for (const tdir of typeDirs) {
+        if (tdir.name === 'assets') continue
+        const postsInTypeDir = (await fs.readdir(path.join(contentDir, tdir.name), { withFileTypes: true })).filter(d => d.isDirectory()).map(d => ({ slug: d.name, typeDir: tdir.name }))
+        postDirs.push(...postsInTypeDir)
+    }
+  } catch (e) { postDirs = []; console.error("Error reading content directory:", e.message) }
 
   const postsDir = path.join(outputDir, 'posts')
   
@@ -213,32 +226,35 @@ async function cleanOrphans() {                                                 
 
         if (!child.isDirectory()) continue
         const slug = child.name
+        const isPostActive = postDirs.some(p => p.slug === slug) 
 
-        if (!postDirs.includes(slug)) { await fs.rm(path.join(typePath, slug), { recursive: true, force: true }) }
+        if (!isPostActive) { await fs.rm(path.join(typePath, slug), { recursive: true, force: true }) }
 
       }
     }
   } catch {}
 
-  for (const key of Object.keys(cache)) { const slug = key.split('/')[0]; if (!postDirs.includes(slug)) delete cache[key] }
+  for (const key of Object.keys(cache)) { const slug = key.split('/')[0]; const isPostActive = postDirs.some(p => p.slug === slug); if (!isPostActive) delete cache[key] }
 
 }
 
 async function processPosts() {                                                  // process and convert images from markdown and assets 
 
-  for (const slug of postDirs) {
+  for (const post of postDirs) {
 
-    const postFolder = path.join(contentDir, slug)
+    const slug = post.slug
+    const typeFolder = post.typeDir
+    const postFolder = path.join(contentDir, typeFolder, slug)
     const mdPath = path.join(postFolder, 'index.md')
 
     let raw
 
     try { raw = await fs.readFile(mdPath, 'utf-8') }
-    catch { console.warn(`index.md not found in ${slug}, skipping`); continue }
+    catch { console.warn(`index.md not found in ${typeFolder}, skipping`); continue }
 
     const { attributes, body } = fm(raw)
-    const type = attributes.type || 'note'
-    const noteOutputDir = path.join(outputDir, 'posts', type, slug)
+    const postType = attributes.type || typeFolder
+    const noteOutputDir = path.join(outputDir, 'posts', postType, slug)
 
     await fs.mkdir(noteOutputDir, { recursive: true })
 
@@ -255,7 +271,7 @@ async function processPosts() {                                                 
         const assetPath = path.join(postFolder, asset.name)
         const destPath  = path.join(noteOutputDir, asset.name)
         const isImage   = /\.(jpe?g|png)$/i.test(asset.name)
-        const isVideo   = /\.(mov|mp4|avi|webm)$/i.test(asset.name)
+        const isVideo   = /\.(mov|mp4|avi|webm|gif)$/i.test(asset.name)
 
         let finalOutputPath = destPath;
 
@@ -266,7 +282,7 @@ async function processPosts() {                                                 
         } else if (isVideo) {
 
           console.log(`Converting video ${asset.name} to WEBM...`)
-          finalOutputPath = destPath.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
+          finalOutputPath = destPath.replace(/\.(mov|mp4|avi|webm|gif)$/i, '.webm')
           await convertVideo(assetPath, finalOutputPath)
 
         } else if (isAudio) {
@@ -295,15 +311,15 @@ async function processPosts() {                                                 
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
     const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
     const isoDate = attributes.date || dateObj.toISOString() 
-    const portadaUrl = attributes.portada ? `${webURL}/posts/${type}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
-    const canonicalUrl = `${webURL}/${type}/${slug}/`
+    const portadaUrl = attributes.portada ? `${webURL}/posts/${postType}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
+    const canonicalUrl = `${webURL}/${postType}/${slug}/`
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
     const authorJson = handle ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}` : `{"@type":"Person","name":"Desconocido"}`
 
     if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
 
       let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
-      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(match, attrs, type, slug, attributes.portada))
+      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(match, attrs, postType, slug, attributes.portada))
 
       let fullHtml = template
         .replace(/{{title}}/g, attributes.title || slug)
@@ -324,13 +340,13 @@ async function processPosts() {                                                 
       slug,
       title: attributes.title || slug,
       description: attributes.description || '',
-      type: attributes.type || 'note',
+      type: postType || 'note',
       tags: attributes.tags || [],
       portada: portadaUrl,
       handle: attributes.handle || 'kaste',
       date: formatted,
       isoDate: isoDate,
-      url: `/posts/${type}/${slug}/`,
+      url: `/posts/${postType}/${slug}/`,
     })
 
   }
