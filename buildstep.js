@@ -147,33 +147,27 @@ async function convertVideo(inputPath, outputPath) {                            
 async function convertGif(inputPath, outputPath) {                               // convert input gif files to WEBM 
 
   return new Promise((resolve, reject) => {
-    
+
     const finalOutputPath = outputPath.replace(/\.gif$/i, '.webm')
     let ffmpegErrorOutput = ''
 
-    const args = [
-      '-i', inputPath,
-      '-c:v', 'libvpx',
-      '-b:v', '1M',
-      '-pix_fmt', 'yuv420p',
-      '-an',
-      '-loop', '0',
-      '-vsync', '0',
-      '-y',
-      finalOutputPath
+    const args = [ '-f', 'gif', '-ignore_loop', '0', '-analyzeduration', '100M', '-probesize', '100M', '-i', inputPath,
+      '-c:v', 'libvpx-vp9', '-b:v', '1M', '-pix_fmt', 'yuv420p', '-an', '-y', finalOutputPath
     ]
 
     const ffmpegProcess = spawn(ffmpegStatic, args)
 
     ffmpegProcess.stderr.on('data', (data) => { ffmpegErrorOutput += data.toString() })
-    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { 
-      const fullError = `FFMPEG GIF conversion failed with code ${code} for ${inputPath}.\nFFMPEG Output:\n${ffmpegErrorOutput}`
-      reject(new Error(fullError)) 
-    }})
+
+    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else {
+        const fullError = `FFMPEG GIF conversion failed with code ${code} for ${inputPath}.\nFFMPEG Output:\n${ffmpegErrorOutput}`
+        reject(new Error(fullError))
+      }
+    })
+
     ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process for GIF: ${err.message}`)) })
-
   })
-
+  
 }
 
 async function convertAudio(inputPath, outputPath) {                             // convert input audio files to OGG 
