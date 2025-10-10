@@ -57,7 +57,8 @@ function processAssets(tag, attrs, type, slug, portada) {                       
   const altText = altMatch ? altMatch[1] : ''
 
   const isImage = /\.(jpe?g|png)$/i.test(filename)
-  const isVideo = /\.(mov|mp4|avi|webm|gif)$/i.test(filename)
+  const isVideo = /\.(mov|mp4|avi|webm)$/i.test(filename)
+  const isGif = /\.gif$/i.test(filename)
   const isAudio = /\.(mp3|wav)$/i.test(filename)
   const isYoutube = /(youtube\.com|youtu\.be)\/(embed\/|v\/|watch\?v=|\/)/i.test(filename)
 
@@ -72,7 +73,13 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
   } else if (isVideo) {
 
-    filename = filename.replace(/\.(mov|mp4|avi|webm|gif)$/i, '.webm')
+    filename = filename.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
+    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
+    return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" alt="${altText}"></video>`
+
+  } else if (isGif) {
+
+    filename = filename.replace(/\.gif$/i, '.webm')
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
     return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" alt="${altText}"></video>`
 
@@ -132,6 +139,34 @@ async function convertVideo(inputPath, outputPath) {                            
 
     ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFMPEG conversion failed with code ${code} for ${inputPath}`)) } })
     ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process: ${err.message}`)) })
+
+  })
+
+}
+
+async function convertGif(inputPath, outputPath) {                               // convert input gif files to WEBM 
+
+  return new Promise((resolve, reject) => {
+    
+    const finalOutputPath = outputPath.replace(/\.gif$/i, '.webm')
+
+    const args = [
+      '-i', inputPath,             // input file
+      '-c:v', 'libvpx',            // vp8 codec
+      '-crf', '10',                // constant rate factor
+      '-b:v', '0',                 // bitrate cero replaced for crf
+      '-pix_fmt', 'yuv420p',       // pixel format
+      '-an',                       // no audio
+      '-loop', '0',                // set loop
+      '-vsync', '0',               // deshabilitar vsync
+      '-y',                        // overwrite
+      finalOutputPath              // output file
+    ]
+    
+    const ffmpegProcess = spawn(ffmpegStatic, args)
+
+    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFMPEG GIF conversion failed with code ${code} for ${inputPath}`)) } })
+    ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process for GIF: ${err.message}`)) })
 
   })
 
@@ -271,7 +306,8 @@ async function processPosts() {                                                 
         const assetPath = path.join(postFolder, asset.name)
         const destPath  = path.join(noteOutputDir, asset.name)
         const isImage   = /\.(jpe?g|png)$/i.test(asset.name)
-        const isVideo   = /\.(mov|mp4|avi|webm|gif)$/i.test(asset.name)
+        const isVideo   = /\.(mov|mp4|avi|webm)$/i.test(asset.name)
+        const isGif     = /\.gif$/i.test(asset.name)
 
         let finalOutputPath = destPath;
 
@@ -281,13 +317,19 @@ async function processPosts() {                                                 
 
         } else if (isVideo) {
 
-          console.log(`Converting video ${asset.name} to WEBM...`)
-          finalOutputPath = destPath.replace(/\.(mov|mp4|avi|webm|gif)$/i, '.webm')
+          console.log(`converting video ${asset.name} to webm...`)
+          finalOutputPath = destPath.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
           await convertVideo(assetPath, finalOutputPath)
+
+        } else if (isGif) {
+
+          console.log(`converting gif ${asset.name} to webm...`)
+          finalOutputPath = destPath.replace(/\.gif$/i, '.webm')
+          await convertGif(assetPath, finalOutputPath)
 
         } else if (isAudio) {
 
-          console.log(`Converting audio ${asset.name} to OGG (Opus)...`)
+          console.log(`converting audio ${asset.name} to OGG (Opus)...`)
           finalOutputPath = destPath.replace(/\.(mp3|wav)$/i, '.ogg') 
           await convertAudio(assetPath, finalOutputPath)
         
