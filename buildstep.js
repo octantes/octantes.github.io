@@ -151,18 +151,17 @@ async function convertGif(inputPath, outputPath) {                              
     const finalOutputPath = outputPath.replace(/\.gif$/i, '.webm')
 
     const args = [
-      '-i', inputPath,             // input file
-      '-c:v', 'libvpx',            // vp8 codec
-      '-crf', '10',                // constant rate factor
-      '-b:v', '0',                 // bitrate cero replaced for crf
-      '-pix_fmt', 'yuv420p',       // pixel format
-      '-an',                       // no audio
-      '-loop', '0',                // set loop
-      '-vsync', '0',               // deshabilitar vsync
-      '-y',                        // overwrite
-      finalOutputPath              // output file
+      '-i', inputPath,
+      '-c:v', 'libvpx',
+      '-b:v', '1M',
+      '-pix_fmt', 'yuv420p',
+      '-an',
+      '-loop', '0',
+      '-vsync', '0',
+      '-y',
+      finalOutputPath
     ]
-    
+
     const ffmpegProcess = spawn(ffmpegStatic, args)
 
     ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFMPEG GIF conversion failed with code ${code} for ${inputPath}`)) } })
