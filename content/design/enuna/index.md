@@ -7,13 +7,13 @@ cerradura:
   - "[[°pagina]]"
 portada: "portal.png"
 ---
-![1](header.webm)
-![2](explainer.webm)
-![3](marquee.webm)
-![4](iconography.webm)
-![5](identity.webm)
+![1](header.gif)
+![2](explainer.gif)
+![3](marquee.gif)
+![4](iconography.gif)
+![5](identity.gif)
 ![6](break.png)
-![7](credts.png)
+![7](credits.png)
 
 [!TEXT]
 
