@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "test",
+    "title": "test",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/note/test/portal.webp",
+    "handle": "kaste",
+    "date": "10/10/2025",
+    "isoDate": "2025-10-10T09:28:04.896Z",
+    "url": "/posts/note/test/"
+  },
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "",
+    "handle": "kaste",
+    "date": "10/10/2025",
+    "isoDate": "2025-10-10T09:28:04.741Z",
+    "url": "/posts/note/octantes/"
+  },
+  {
+    "slug": "test",
+    "title": "test",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/note/test/portal.webp",
+    "handle": "kaste",
+    "date": "10/10/2025",
+    "isoDate": "2025-10-10T09:28:04.738Z",
+    "url": "/posts/note/test/"
+  },
+  {
+    "slug": "enuna",
+    "title": "enuna",
+    "description": "",
+    "type": "design",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/design/enuna/portal.webp",
+    "handle": "kaste",
+    "date": "10/10/2025",
+    "isoDate": "2025-10-10T09:28:04.553Z",
+    "url": "/posts/design/enuna/"
+  }
+]
