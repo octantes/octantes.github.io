@@ -54,10 +54,8 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
   const altText = altMatch ? altMatch[1] : ''
-
   const isImage = /\.(jpe?g|png)$/i.test(filename)
-  const isVideo = /\.(mov|mp4|avi|webm)$/i.test(filename)
-  const isGif = /\.gif$/i.test(filename)
+  const isVideo = /\.(mov|mp4|avi|webm|gif)$/i.test(filename) 
   const isAudio = /\.(mp3|wav)$/i.test(filename)
   const isYoutube = /(youtube\.com|youtu\.be)\/(embed\/|v\/|watch\?v=|\/)/i.test(filename)
 
@@ -67,18 +65,10 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     if (filename === portada) dimensions = { width: 1200, height: 630 }
     filename = filename.replace(/\.(jpe?g|png)$/i, '.webp') 
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
-    
     return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
 
   } else if (isVideo) {
-
-    filename = filename.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
-    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
-    return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" alt="${altText}"></video>`
-
-  } else if (isGif) {
-
-    filename = filename.replace(/\.gif$/i, '.webm')
+    
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
     return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" alt="${altText}"></video>`
 
@@ -108,10 +98,7 @@ async function convertImage(assetPath, destPath) {                              
 
   const outputPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
 
-  await sharp(assetPath)
-    .resize({ width: 1200 })       // max width
-    .webp({ quality: 80 })         // optimized convert
-    .toFile(outputPath)
+  await sharp(assetPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(outputPath)
 
   return outputPath
 
@@ -119,69 +106,16 @@ async function convertImage(assetPath, destPath) {                              
 
 async function convertVideo(inputPath, outputPath) {                             // convert input video files to WEBM 
 
-  return new Promise((resolve, reject) => {
-    
-    const finalOutputPath = outputPath.replace(/\.(mov|mp4|avi|webm)$/i, '.webm');
+  const finalOutputPath = outputPath
+  
+  try {
 
-    const args = [
-      '-i', inputPath,             // input file
-      '-c:v', 'libvpx',            // VP8 codec
-      '-b:v', '4M',                // video bitrate
-      '-pix_fmt', 'yuv420p',       // pixel format compatibility
-      '-c:a', 'libopus',           // audio codec
-      '-an',                       // strip audio
-      '-y',                        // overwrite output files without asking
-      finalOutputPath              // output file
-    ]
-    
-    const ffmpegProcess = spawn('ffmpeg', args)
+    const data = await fs.readFile(inputPath)
+    await fs.writeFile(finalOutputPath, data)
+    return finalOutputPath
 
-    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve() } else { reject(new Error(`FFMPEG conversion failed with code ${code} for ${inputPath}`)) } })
-    ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process: ${err.message}`)) })
+  } catch(e) { throw new Error(`Error copiando archivo de video ${inputPath}: ${e.message}`) }
 
-  })
-
-}
-
-async function convertGif(inputPath, outputPath) {                               // convert input gif files to WEBM 
-
-  return new Promise(async (resolve, reject) => {
-
-    const finalOutputPath = outputPath.replace(/\.gif$/i, '.webm')
-    let ffmpegErrorOutput = ''
-
-    const gifBuffer = await fs.readFile(inputPath).catch(err => { reject(new Error(`Error reading input file before piping: ${err.message}`)); return null })
-
-    if (!gifBuffer) return
-
-    const args = [ 
-      '-f', 'gif',
-      '-i', 'pipe:0',
-      '-c:v', 'libvpx',
-      '-b:v', '1M',
-      '-pix_fmt', 'yuv420p',
-      '-an',
-      '-loop', '0',
-      '-vsync', '0',
-      '-y',
-      finalOutputPath
-    ]
-
-    const ffmpegProcess = spawn('ffmpeg', args)
-    
-    ffmpegProcess.stderr.on('data', (data) => { ffmpegErrorOutput += data.toString() })
-
-    ffmpegProcess.on('close', (code) => { 
-      if (code === 0) { resolve() } else {
-        const fullError = `FFMPEG GIF conversion failed with code ${code} for ${inputPath}.\nFFMPEG Output:\n${ffmpegErrorOutput}`
-        reject(new Error(fullError))
-      }
-    })
-
-    ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process: ${err.message}`)) })
-    ffmpegProcess.stdin.write(gifBuffer)
-    ffmpegProcess.stdin.end()
-  })
 }
 
 async function convertAudio(inputPath, outputPath) {                             // convert input audio files to OGG 
@@ -189,21 +123,10 @@ async function convertAudio(inputPath, outputPath) {                            
   return new Promise((resolve, reject) => {
     
     const finalOutputPath = outputPath.replace(/\.(mp3|wav)$/i, '.ogg');
-
-    const args = [
-      '-i', inputPath,             // input file
-      '-c:a', 'libopus',           // audio codec: opus
-      '-b:a', '96k',               // audio bitrate
-      '-y',                        // overwrite output files without asking
-      finalOutputPath              // output file
-    ]
-    
+    const args = [ '-i', inputPath, '-c:a', 'libopus', '-b:a', '96k', '-y', finalOutputPath ]
     const ffmpegProcess = spawn('ffmpeg', args)
 
-    ffmpegProcess.on('close', (code) => { 
-      if (code === 0) { resolve(finalOutputPath) }
-      else { reject(new Error(`FFMPEG audio conversion failed with code ${code} for ${inputPath}`)) } 
-    })
+    ffmpegProcess.on('close', (code) => { if (code === 0) { resolve(finalOutputPath) } else { reject(new Error(`FFMPEG audio conversion failed with code ${code} for ${inputPath}`)) } })
     ffmpegProcess.on('error', (err) => { reject(new Error(`Failed to start FFMPEG process for audio: ${err.message}`)) })
 
   })
@@ -327,17 +250,10 @@ async function processPosts() {                                                 
 
           finalOutputPath = await convertImage(assetPath, destPath)
 
-        } else if (isVideo) {
+        } else if (isVideo || isGif) {
 
-          console.log(`converting video ${asset.name} to webm...`)
-          finalOutputPath = destPath.replace(/\.(mov|mp4|avi|webm)$/i, '.webm')
-          await convertVideo(assetPath, finalOutputPath)
-
-        } else if (isGif) {
-
-          console.log(`converting gif ${asset.name} to webm...`)
-          finalOutputPath = destPath.replace(/\.gif$/i, '.webm')
-          await convertGif(assetPath, finalOutputPath)
+          console.log(`copiando video/gif ${asset.name} sin procesar...`)
+          finalOutputPath = await convertVideo(assetPath, destPath)
 
         } else if (isAudio) {
 
@@ -349,13 +265,9 @@ async function processPosts() {                                                 
 
           const data = await fs.readFile(assetPath)
           await fs.writeFile(destPath, data)
-          hash.update(data)
           continue
 
         }
-
-        const finalData = await fs.readFile(finalOutputPath)
-        hash.update(finalData)
 
       }
 
@@ -473,6 +385,33 @@ async function finalizeBuild() {                                                
 
 }
 
+async function cleanAssets() {                                                   // clean all assets from content folder 
+
+  const typeDirs = (await fs.readdir(contentDir, { withFileTypes: true })).filter(d => d.isDirectory())
+
+  for (const tdir of typeDirs) {
+    if (tdir.name === 'assets') continue
+    const typePath = path.join(contentDir, tdir.name)
+    const postsInTypeDir = (await fs.readdir(typePath, { withFileTypes: true })).filter(d => d.isDirectory())
+    
+    for (const post of postsInTypeDir) {
+      const postFolder = path.join(typePath, post.name)
+      const assets = await fs.readdir(postFolder, { withFileTypes: true })
+
+      for (const asset of assets) {
+        if (asset.isFile() && asset.name !== 'index.md') {
+          const assetPath = path.join(postFolder, asset.name)
+          await fs.rm(assetPath)
+          console.log(`eliminado asset de origen: ${path.join(tdir.name, post.name, asset.name)}`)
+        }
+      }
+    }
+  }
+
+  console.log('limpieza de assets de origen completada.')
+
+}
+
 main().catch(err => { console.error('BUILD FAILED:', err); process.exit(1) })
 
 async function main() {
@@ -484,7 +423,8 @@ async function main() {
   await writeIndex()
   await writeSitemap()
   await finalizeBuild()
-  
+  await cleanAssets()
+
   console.log('build completed successfully: static notes, index, SEO files, and cache updated.')
 
 }
