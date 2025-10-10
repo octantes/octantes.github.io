@@ -24,6 +24,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
       - name: install deps
         run: npm ci
 
