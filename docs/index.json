@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "",
+    "handle": "kaste",
+    "date": "11/10/2025",
+    "isoDate": "2025-10-11T04:53:33.417Z",
+    "url": "/posts/note/octantes/"
+  },
+  {
+    "slug": "musica",
+    "title": "musica",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/note/musica/portal.webp",
+    "handle": "kaste",
+    "date": "11/10/2025",
+    "isoDate": "2025-10-11T04:53:33.414Z",
+    "url": "/posts/note/musica/"
+  },
+  {
+    "slug": "test",
+    "title": "test",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/note/test/portal.webp",
+    "handle": "kaste",
+    "date": "11/10/2025",
+    "isoDate": "2025-10-11T04:53:33.400Z",
+    "url": "/posts/note/test/"
+  },
+  {
+    "slug": "enuna",
+    "title": "enuna",
+    "description": "",
+    "type": "design",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/design/enuna/portal.webp",
+    "handle": "kaste",
+    "date": "11/10/2025",
+    "isoDate": "2025-10-11T04:53:33.252Z",
+    "url": "/posts/design/enuna/"
+  }
+]
