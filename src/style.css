@@ -1,7 +1,7 @@
 /* CUSTOM STYLES */
 
-/* audio[controls] { background: #1B1C1C; width: 100%;                                             border: 1px solid #7EBDC4; } */
-audio::-webkit-media-controls-enclosure { background-color: #1B1C1C;                            border: 1px solid #AAABAC25; border-radius: 3px; }
+audio[controls] { background: #1B1C1C; width: 100%; } audio::-webkit-media-controls-enclosure { background-color: #1B1C1C; }
+
 .YTVideo         { position: relative; width: 100%;                                               border: 1px solid #AAABAC25; border-radius: 3px; }
 .S7TEXT   img    { display: block; max-width: 100%; height: auto;                                 border: 1px solid #AAABAC25; border-radius: 3px; }
 .S6       img    { display: block; max-width: 100%; height: auto;                                 border: 1px solid #AAABAC25; border-radius: 3px; }
