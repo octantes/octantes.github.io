@@ -4,4 +4,4 @@ defineProps({ html: String })
 
 </script>
 
-<template> <div class="text" v-html="html"> </div> </template>
+<template> <div class="S6" v-html="html"> </div> </template>
