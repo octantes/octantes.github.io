@@ -12,7 +12,7 @@ import sharp from 'sharp'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
-// N9EMBED |  yt or spotify url   | reduced embed iframe |  unchanged  | <div> <iframe>
+// EMBED   |  yt or spotify url   | reduced embed iframe |  unchanged  | <div> <iframe>
 // VIDEOS  | .mov .mp4 .avi .webm | direct copy          |  unchanged  | <video muted loop playsinline preload="auto" class="videosync">
 // GIFS    | .gif                 | direct copy          |  unchanged  | <img loading="lazy">
 // OTHER   |  any other           | direct copy          |  unchanged  | doesnt change original tag
@@ -104,7 +104,7 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     const ytMatch = filename.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
     if (ytMatch && ytMatch[1]) { videoId = ytMatch[1] } else { return `<${tag} ${attrs}>` }
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
-    return `<iframe src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe>`
+    return `<div class="YTFrame"> <iframe src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe> </div>`
     
   } else if (isSpotify) {
 
