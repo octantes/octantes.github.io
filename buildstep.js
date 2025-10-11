@@ -6,10 +6,6 @@ import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
 
-// all files must be under 10MB and most should be under 5MB
-// embeds will be processed in any note type as long as the url is from youtube or spotify
-// optimization is handled only for images and audios, preprocess vidos and gifs before uploading
-
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
 // EMBED   |  yt or spotify url   | reduced embed iframe |  unchanged  | <div> <iframe>
@@ -17,7 +13,24 @@ import sharp from 'sharp'
 // GIFS    | .gif                 | direct copy          |  unchanged  | <img loading="lazy">
 // OTHER   |  any other           | direct copy          |  unchanged  | doesnt change original tag
 
+// all files must be under 10MB and most should be under 5MB
+// embeds will be processed in any note type as long as the url is from youtube or spotify
+// optimization is handled only for images and audios, preprocess vidos and gifs before uploading
 // for DESIGN use [!TEXT] to divide from project assets to actual note
+
+/* METADATA TEMPLATE
+
+---
+tags: [a, b, c]
+type: design, dev, note, music
+title: titulo de la nota
+description: descripcion corta para seo
+portada: portada.png
+date: YYYY-MM-DD
+handle: kaste
+---
+
+*/
 
 const md = new MarkdownIt()
 const cacheFile = path.resolve('.build-cache.json')
@@ -104,7 +117,7 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     const ytMatch = filename.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
     if (ytMatch && ytMatch[1]) { videoId = ytMatch[1] } else { return `<${tag} ${attrs}>` }
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
-    return `<div class="YTFrame"> <iframe src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe> </div>`
+    return `<iframe width="560" height="315" src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe>`
     
   } else if (isSpotify) {
 

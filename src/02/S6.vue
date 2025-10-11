@@ -1,17 +1,17 @@
 <script setup>
+
 defineProps({ html: String })
+
 </script>
 
-<template>
-
-  <div class="S6" v-html="html"></div>
-
-</template>
+<template> <div class="S6" v-html="html"> </div> </template>
 
 <style>
 
-.YTFrame { position: relative; width: 100%; height: auto; }
-.YTVideo { position: absolute; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.YTVideo { position: relative; width: 100%; height: auto; }
+
+.S6 img { display: block; max-width: 100%; height: auto; }
+.S7 img, .S7 video { display: block; max-width: 100%; width: 100%; height: auto; object-fit: cover; }
 
 .S6 {
   width: 100%;
@@ -24,12 +24,6 @@ defineProps({ html: String })
   padding: 1rem 2rem 0rem 2rem;
 }
 
-.S6 img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
 .S7 {
   width: 100%;
   z-index: 1;
@@ -38,15 +32,6 @@ defineProps({ html: String })
   line-height: 1.5;
   overflow-wrap: break-word;
   word-break: break-word;
-}
-
-.S7 img,
-.S7 video {
-  display: block;
-  max-width: 100%;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
 }
 
 .S7TEXT {
@@ -58,14 +43,6 @@ defineProps({ html: String })
   overflow-wrap: break-word;
   word-break: break-word;
   padding: 1rem 2rem 0rem 2rem;
-}
-
-.S7TEXT img
-.S7TEXT video {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
 }
 
 </style>

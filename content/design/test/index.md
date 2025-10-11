@@ -5,7 +5,7 @@ id:
 cerradura:
   - "[[°pagina]]"
 portada: "portal.png"
-type: note
+type: design
 ---
 la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
 de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
