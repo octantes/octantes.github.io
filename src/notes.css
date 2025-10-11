@@ -2,12 +2,7 @@
 .S6 img  { display: block; max-width: 100%; height: auto; }
 .S7 img, .S7 video { display: block; max-width: 100%; width: 100%; height: auto; object-fit: cover; }
 
-audio[controls] {
-  background: #1B1C1C;
-  border: 1px solid #7EBDC4;
-  width: 100%;
-  padding: 5px;
-}
+audio::-webkit-media-controls-enclosure { background-color: #986c98; border-radius: 0%; }
 
 .S6 {
   width: 100%;

@@ -24,8 +24,6 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
 
 <template>
 
-  <audio controls preload="auto" aria-label="test audio"></audio>
-
   <div class="navigation">
 
     <h1>navegacion</h1>
