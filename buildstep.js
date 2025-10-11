@@ -109,7 +109,7 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
     filename = filename.replace(/\.(mp3|wav)$/i, '.ogg')
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
-    return `<audio controls preload="auto" src="${absUrl}" aria-label="${altText}"></audio>`
+    return `<audio controls style="width: 100%" preload="auto" src="${absUrl}" aria-label="${altText}"></audio>`
 
   } else if (isYoutube) {
 
