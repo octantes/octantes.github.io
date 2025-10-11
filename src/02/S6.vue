@@ -10,14 +10,8 @@ defineProps({ html: String })
 
 <style>
 
-.YTVideo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-}
+.YTFrame { position: relative; width: 100%; height: auto; }
+.YTVideo { position: absolute; width: 100%; height: auto; aspect-ratio: 16 / 9; }
 
 .S6 {
   width: 100%;
