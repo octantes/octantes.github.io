@@ -26,20 +26,60 @@ let lastSlug = null
 
 async function loadIndex() { try { const res = await fetch('/index.json'); postsIndex.value = await res.json() } catch { postsIndex.value = [] } }
 
-async function loadNote(slug) {
+async function loadNote(slug) { 
+
   if (!slug) { noteContent.value = ''; currentPost.value = null; return }
+
   currentPost.value = postsIndex.value.find(p => p.slug === slug) || { type: 'note', slug }
+
   try {
+
     const fetchPath = currentPost.value.url || `/posts/${currentPost.value.type || 'note'}/${slug}/`
     const res = await fetch(fetchPath)
     const html = await res.text()
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
     noteContent.value = html
     if (currentPost.value.title && currentPost.value.title !== document.title) document.title = currentPost.value.title
-  } catch (e) {
-    noteContent.value = `<p>error cargando la nota</p>`
-    console.error(`error fetching slug "${slug}":`, e)
-  }
+    
+    await nextTick()
+    
+    const contentEl = document.querySelector('.content')
+
+    if (contentEl) {
+      
+      const mediaLoadPromises = []
+      
+      const mediaElements = contentEl.querySelectorAll('img, video, iframe')
+      
+      mediaElements.forEach(el => {
+        
+        if ((el.tagName === 'IMG' && !el.complete) || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
+            
+          mediaLoadPromises.push(new Promise(resolve => {
+            
+            if (el.tagName === 'IMG' || el.tagName === 'IFRAME') {
+              el.addEventListener('load', resolve, { once: true })
+              el.addEventListener('error', resolve, { once: true })
+              if (el.complete || el.readyState === 'complete') { resolve() }
+            }
+            
+            else if (el.tagName === 'VIDEO') {
+              el.addEventListener('loadedmetadata', resolve, { once: true })
+              el.addEventListener('error', resolve, { once: true })
+              if (el.readyState >= 3) { resolve() }
+            }
+            
+          }))
+          
+        }
+      })
+      
+      await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
+      
+    }
+    
+  } catch (e) { noteContent.value = `<p>error cargando la nota</p>`; console.error(`error fetching slug "${slug}":`, e) }
+
 }
 
 watch(
@@ -127,7 +167,7 @@ watch(
 
 <style>
 
-.container { position: relative; }
+.container { position: relative; border-radius: 5px; }
 
 .post {
   position: relative;
