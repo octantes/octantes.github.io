@@ -104,7 +104,7 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     const ytMatch = filename.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
     if (ytMatch && ytMatch[1]) { videoId = ytMatch[1] } else { return `<${tag} ${attrs}>` }
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
-    return `<div class="YTFrame"> <iframe src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe> </div>`
+    return `<iframe src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe>`
     
   } else if (isSpotify) {
 
