@@ -1,12 +1,19 @@
 ---
-tags:
-id:
-  - llave
-cerradura:
-  - "[[°pagina]]"
-portada: "portal.png"
+tags: [branding, portfolio]
 type: design
+title: cruzar - cordillera cripto
+description: descripcion corta para seo
+portada: portada.png
+date: 2024-09-19
+handle: kaste
 ---
+
+![1](header.gif)
+![2](explainer.gif)
+![3](marquee.gif)
+![4](iconography.gif)
+![5](identity.gif)
+![6](footer.gif)
 
 [!TEXT]
 
