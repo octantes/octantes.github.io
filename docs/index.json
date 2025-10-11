@@ -8,7 +8,7 @@
     "portada": "",
     "handle": "kaste",
     "date": "11/10/2025",
-    "isoDate": "2025-10-11T12:27:50.091Z",
+    "isoDate": "2025-10-11T22:51:26.417Z",
     "url": "/posts/note/octantes/"
   },
   {
@@ -20,7 +20,7 @@
     "portada": "",
     "handle": "kaste",
     "date": "11/10/2025",
-    "isoDate": "2025-10-11T12:27:50.090Z",
+    "isoDate": "2025-10-11T22:51:26.416Z",
     "url": "/posts/music/octantes/"
   },
   {
@@ -32,7 +32,7 @@
     "portada": "https://octantes.github.io/posts/music/musica/portal.webp",
     "handle": "kaste",
     "date": "11/10/2025",
-    "isoDate": "2025-10-11T12:27:50.087Z",
+    "isoDate": "2025-10-11T22:51:26.414Z",
     "url": "/posts/music/musica/"
   },
   {
@@ -44,31 +44,37 @@
     "portada": "",
     "handle": "kaste",
     "date": "11/10/2025",
-    "isoDate": "2025-10-11T12:27:47.335Z",
+    "isoDate": "2025-10-11T22:51:23.526Z",
     "url": "/posts/dev/octantes/"
   },
   {
-    "slug": "test",
-    "title": "test",
-    "description": "",
+    "slug": "cruzar",
+    "title": "cruzar - cordillera cripto",
+    "description": "descripcion corta para seo",
     "type": "design",
-    "tags": [],
-    "portada": "https://octantes.github.io/posts/design/test/portal.webp",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/design/cruzar/portada.webp",
     "handle": "kaste",
-    "date": "11/10/2025",
-    "isoDate": "2025-10-11T12:27:47.332Z",
-    "url": "/posts/design/test/"
+    "date": "19/09/2024",
+    "isoDate": "2024-09-19T00:00:00.000Z",
+    "url": "/posts/design/cruzar/"
   },
   {
     "slug": "enuna",
-    "title": "enuna",
-    "description": "",
+    "title": "en una - branding",
+    "description": "descripcion corta para seo",
     "type": "design",
-    "tags": [],
-    "portada": "https://octantes.github.io/posts/design/enuna/portal.webp",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/design/enuna/portada.webp",
     "handle": "kaste",
-    "date": "11/10/2025",
-    "isoDate": "2025-10-11T12:27:47.178Z",
+    "date": "06/09/2023",
+    "isoDate": "2023-09-06T00:00:00.000Z",
     "url": "/posts/design/enuna/"
   }
 ]
