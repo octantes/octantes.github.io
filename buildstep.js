@@ -6,6 +6,19 @@ import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
 
+// all files must be under 10MB and most should be under 5MB
+// embeds will be processed in any note type as long as the url is from youtube or spotify
+// optimization is handled only for images and audios, preprocess vidos and gifs before uploading
+
+// IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
+// AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
+// N9EMBED |  yt or spotify url   | reduced embed iframe |  unchanged  | <div> <iframe>
+// VIDEOS  | .mov .mp4 .avi .webm | direct copy          |  unchanged  | <video muted loop playsinline preload="auto" class="videosync">
+// GIFS    | .gif                 | direct copy          |  unchanged  | <img loading="lazy">
+// OTHER   |  any other           | direct copy          |  unchanged  | doesnt change original tag
+
+// for DESIGN use [!TEXT] to divide from project assets to actual note
+
 const md = new MarkdownIt()
 const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
@@ -24,7 +37,7 @@ function renderType(body, type, portada) {                                      
 
   switch (type) {
 
-    case 'design': {                                                    // separar assets de texto con [!S7TEXT] 
+    case 'design': {
 
       let parts = body.split('[!TEXT]')
       let assetBlock = parts[0] || ''
@@ -55,9 +68,11 @@ function processAssets(tag, attrs, type, slug, portada) {                       
   const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
   const altText = altMatch ? altMatch[1] : ''
   const isImage = /\.(jpe?g|png)$/i.test(filename)
-  const isVideo = /\.(mov|mp4|avi|webm|gif)$/i.test(filename) 
+  const isGif = /\.gif$/i.test(filename)
+  const isVideo = /\.(mov|mp4|avi|webm)$/i.test(filename) 
   const isAudio = /\.(mp3|wav)$/i.test(filename)
   const isYoutube = /(youtube\.com|youtu\.be)\/(embed\/|v\/|watch\?v=|\/)/i.test(filename)
+  const isSpotify = /(spotify\.com\/(track|album|playlist|episode)\/|spotify:)/i.test(filename)
 
   if (isImage) {
 
@@ -67,10 +82,15 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
     return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
 
+  } else if (isGif) {
+    
+    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
+    return `<img src="${absUrl}" loading="lazy" alt="${altText}">`
+
   } else if (isVideo) {
     
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
-    return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" alt="${altText}"></video>`
+    return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" aria-label="${altText}"></video>`
 
   } else if (isAudio) {
 
@@ -86,6 +106,22 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
     return `<div class="YTFrame"> <iframe src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe> </div>`
     
+  } else if (isSpotify) {
+
+    let spotifyUrl = filename
+    let embedUrl = ''
+    if (spotifyUrl.includes('/embed/')) { embedUrl = spotifyUrl.replace(/\/embed\/?/, '/embed/') }
+    else {
+      const match = spotifyUrl.match(/spotify\.com\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/)
+      if (match && match[1] && match[2]) { 
+        const contentType = match[1]
+        const contentId = match[2]
+        embedUrl = `https://open.spotify.com/embed/${contentType}/${contentId}?utm_source=generator`
+      } else { return `<${tag} ${attrs}>` }
+    }
+
+    return `<iframe style="border-radius:12px" src="${embedUrl}" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`
+
   }
   
   else { return `<${tag} ${attrs}>` }
@@ -94,35 +130,23 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
 // ASSET CONVERSION UTILITIES
 
-async function convertImage(assetPath, destPath) {                               // convert input image files to WEBP 
+async function convertImage(inputPath, destPath) {                               // convert input image files to WEBP 
 
-  const outputPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
-
-  await sharp(assetPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(outputPath)
-
-  return outputPath
-
-}
-
-async function convertVideo(inputPath, outputPath) {                             // convert input video files to WEBM 
-
-  const finalOutputPath = outputPath
-  
   try {
 
-    const data = await fs.readFile(inputPath)
-    await fs.writeFile(finalOutputPath, data)
+    const finalOutputPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
+    await sharp(inputPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(finalOutputPath)
     return finalOutputPath
 
-  } catch(e) { throw new Error(`Error copiando archivo de video ${inputPath}: ${e.message}`) }
+  } catch(e) { throw new Error(`error processing image ${inputPath}: ${e.message}`) }
 
 }
 
-async function convertAudio(inputPath, outputPath) {                             // convert input audio files to OGG 
+async function convertAudio(inputPath, destPath) {                               // convert input audio files to OGG 
 
   return new Promise((resolve, reject) => {
     
-    const finalOutputPath = outputPath.replace(/\.(mp3|wav)$/i, '.ogg');
+    const finalOutputPath = destPath.replace(/\.(mp3|wav)$/i, '.ogg');
     const args = [ '-i', inputPath, '-c:a', 'libopus', '-b:a', '96k', '-y', finalOutputPath ]
     const ffmpegProcess = spawn('ffmpeg', args)
 
@@ -133,12 +157,38 @@ async function convertAudio(inputPath, outputPath) {                            
 
 }
 
+async function convertVideo(inputPath, destPath) {                               // just copies video files to output 
+
+  try {
+
+    const finalOutputPath = destPath
+    const data = await fs.readFile(inputPath)
+    await fs.writeFile(finalOutputPath, data)
+    return finalOutputPath
+
+  } catch(e) { throw new Error(`error copying video ${inputPath}: ${e.message}`) }
+
+}
+
+async function convertGif(inputPath, destPath) {                                 // just copies video files to output 
+
+  try {
+
+    const finalOutputPath = destPath
+    const data = await fs.readFile(inputPath)
+    await fs.writeFile(finalOutputPath, data)
+    return finalOutputPath
+
+  } catch(e) { throw new Error(`error copying gif ${inputPath}: ${e.message}`) }
+
+}
+
 // SETUP BUILD AND PROCESS
 
 async function setupBuild() {                                                    // load cache and prepare output directory 
 
   try { cache = JSON.parse(await fs.readFile(cacheFile, 'utf-8')) }
-  catch { console.log("Hash cache not found, recreating") }
+  catch { console.log("hash cache not found, recreating") }
 
   postDirs = []
   
@@ -149,7 +199,7 @@ async function setupBuild() {                                                   
         const postsInTypeDir = (await fs.readdir(path.join(contentDir, tdir.name), { withFileTypes: true })).filter(d => d.isDirectory()).map(d => ({ slug: d.name, typeDir: tdir.name }))
         postDirs.push(...postsInTypeDir)
     }
-  } catch (e) { postDirs = []; console.error("Error reading content directory:", e.message) }
+  } catch (e) { postDirs = []; console.error("error reading content directory:", e.message) }
 
   const postsDir = path.join(outputDir, 'posts')
   
@@ -171,9 +221,9 @@ async function copyAssets() {                                                   
 
     for (const asset of assets) { await fs.copyFile(path.join(assetsSrc, asset), path.join(assetsDest, asset)) }
 
-    console.log('Assets copied to dist/assets')
+    console.log('assets copied to dist/assets')
 
-  } catch(e) { console.warn('Global assets not copied:', e) }
+  } catch(e) { console.warn('global assets not copied:', e) }
 
 }
 
@@ -240,6 +290,7 @@ async function processPosts() {                                                 
 
         const assetPath = path.join(postFolder, asset.name)
         const destPath  = path.join(noteOutputDir, asset.name)
+        const isAudio = /\.(mp3|wav)$/i.test(asset.name)
         const isImage   = /\.(jpe?g|png)$/i.test(asset.name)
         const isVideo   = /\.(mov|mp4|avi|webm)$/i.test(asset.name)
         const isGif     = /\.gif$/i.test(asset.name)
@@ -248,16 +299,22 @@ async function processPosts() {                                                 
 
         if (isImage) {
 
+          console.log(`converting image ${asset.name} to WEBP...`)
           finalOutputPath = await convertImage(assetPath, destPath)
 
-        } else if (isVideo || isGif) {
+        } else if (isVideo) {
 
-          console.log(`copiando video/gif ${asset.name} sin procesar...`)
+          console.log(`copying video ${asset.name} without processing...`)
           finalOutputPath = await convertVideo(assetPath, destPath)
+
+        } else if (isGif) {
+
+          console.log(`copying gif ${asset.name} without processing...`)
+          finalOutputPath = await convertGif(assetPath, destPath)
 
         } else if (isAudio) {
 
-          console.log(`converting audio ${asset.name} to OGG (Opus)...`)
+          console.log(`converting audio ${asset.name} to OGG...`)
           finalOutputPath = destPath.replace(/\.(mp3|wav)$/i, '.ogg') 
           await convertAudio(assetPath, finalOutputPath)
         
@@ -275,7 +332,7 @@ async function processPosts() {                                                 
 
       }
 
-    } catch(e) { console.error(`Error processing assets for ${slug}:`, e) }
+    } catch(e) { console.error(`error processing assets for ${slug}:`, e) }
 
     const finalHash = hash.digest('hex')
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
@@ -286,10 +343,18 @@ async function processPosts() {                                                 
     const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
     const authorJson = handle ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}` : `{"@type":"Person","name":"Desconocido"}`
 
-    if (fullRebuild || cache[`${slug}/index.md`] !== finalHash) {
+    if (fullRebuild || cache[`${postType}/${slug}/index.md`] !== finalHash) {
 
       let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
-      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(match, attrs, postType, slug, attributes.portada))
+      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+
+      const internalLinkRegex = new RegExp(`href=['"](${webURL}|\\/)`, 'i')
+
+      htmlContent = htmlContent.replace(/<a\s+(.*?)href=['"](.*?)['"](.*?)\s*>/gi, (match, before, href, after) => {
+          if (internalLinkRegex.test(match) || href.startsWith('#')) { return match }
+          if (!/(target\s*=\s*['"]_blank['"])/i.test(match)) { return `<a ${before}href="${href}"${after} target="_blank" rel="noopener noreferrer">` }
+          return match
+      })
 
       let fullHtml = template
         .replace(/{{title}}/g, attributes.title || slug)
@@ -302,9 +367,9 @@ async function processPosts() {                                                 
         .replace(/{{htmlContent}}/g, htmlContent)
 
       await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
-      cache[`${slug}/index.md`] = finalHash
+      cache[`${postType}/${slug}/index.md`] = finalHash
 
-    } else { console.log(`Skipping ${slug}/index.md (unchanged)`) }
+    } else { console.log(`skipping ${slug}/index.md (unchanged)`) }
 
     indexItems.push({
       slug,
@@ -328,14 +393,14 @@ async function writeIndex() {                                                   
   await fs.mkdir(outputDir, { recursive: true })
   const indexPath = path.join(outputDir, 'index.json')
   
-  indexItems.sort((a,b)=> (a.date ? new Date(a.date) : new Date(0)) - (b.date ? new Date(b.date) : new Date(0))).reverse()
+  indexItems.sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
   const newIndexStr = JSON.stringify(indexItems, null, 2)
   
   let prevIndex = '[]'
   try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch {}
 
-  if (prevIndex !== newIndexStr) { await fs.writeFile(indexPath, newIndexStr); console.log('index.json actualizado') }
-  else { console.log('Skipping index.json (unchanged)') }
+  if (prevIndex !== newIndexStr) { await fs.writeFile(indexPath, newIndexStr); console.log('index.json updated') }
+  else { console.log('skipping index.json (unchanged)') }
 
 }
 
@@ -363,7 +428,7 @@ async function writeSitemap() {                                                 
   </urlset>`
 
   await fs.writeFile(path.join(outputDir,'sitemap.xml'),sitemap)
-  console.log('sitemap.xml actualizado')
+  console.log('sitemap.xml updated')
 
   const robots = `User-agent: *
   Disallow:
@@ -384,14 +449,12 @@ async function finalizeBuild() {                                                
     const notFoundPath = path.join(outputDir, '404.html')
     const indexHtmlPath = path.join(outputDir, 'index.html') 
     await fs.copyFile(indexHtmlPath, notFoundPath)
-    console.log('404.html generado a partir de index.html')
-  } catch (e) { console.warn('Could not generate 404.html (index.html missing, is Vite build complete?):', e.message) }
+    console.log('404.html generated from index.html')
+  } catch (e) { console.warn('could not generate 404.html (index.html missing, did vite build?):', e.message) }
 
 }
 
-main().catch(err => { console.error('BUILD FAILED:', err); process.exit(1) })
-
-async function main() {
+async function main() {                                                          // main build process 
 
   await setupBuild()
   await copyAssets()
@@ -404,3 +467,5 @@ async function main() {
   console.log('build completed successfully: static notes, index, SEO files, and cache updated.')
 
 }
+
+main().catch(err => { console.error('BUILD FAILED:', err); process.exit(1) })
