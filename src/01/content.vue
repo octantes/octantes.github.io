@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import Shader from '../04/shader.vue'
+import Shader from '../03/shader.vue'
 import Portada from '../02/portada.vue'
 import A2 from '../02/A2.vue'
 import S6 from '../02/S6.vue'
