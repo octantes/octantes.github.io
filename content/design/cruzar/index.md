@@ -8,12 +8,11 @@ date: 2024-09-19
 handle: kaste
 ---
 
-![1](header.gif)
-![2](explainer.gif)
-![3](marquee.gif)
-![4](iconography.gif)
-![5](identity.gif)
-![6](footer.gif)
+![banner del proyecto de diseño](banner.gif)
+![fundamentos de la marca](fundamentos.gif)
+![ubicacion de los centros](topografico.gif)
+![paquetes de servicio](servicios.gif)
+![final de la presentacion](footer.gif)
 
 [!TEXT]
 

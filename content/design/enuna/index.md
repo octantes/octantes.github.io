@@ -8,11 +8,13 @@ date: 2023-09-06
 handle: kaste
 ---
 
-![1](banner.gif)
-![2](fundamentos.gif)
-![3](topografico.gif)
-![4](servicios.gif)
-![5](footer.gif)
+![header del proyecto de diseño](header.gif)
+![concepto de la marca explicado](explainer.gif)
+![divisor de presentacion](marquee.gif)
+![presentacion del icono](iconography.gif)
+![assets de identidad para redes](identity.gif)
+![separador de presentacion](break.png)
+1[creditos del proyecto de branding](credits.png)
 
 [!TEXT]
 
