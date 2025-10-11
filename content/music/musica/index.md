@@ -5,10 +5,13 @@ id:
 cerradura:
   - "[[°pagina]]"
 portada: "portal.png"
-type: note
+type: music
 ---
 la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
 de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
+
+![embed youtube](https://www.youtube.com/watch?v=dINpNVg0hiw)
+
 es importante vincular los proyectos principales a través de notas que aporten contexto
 elevando el valor final de la publicación al integrar soportes visuales, referencias y datos
 
