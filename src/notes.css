@@ -1,6 +1,5 @@
-.YTVideo { position: relative; width: 100%; height: auto; }
-
-.S6 img { display: block; max-width: 100%; height: auto; }
+.YTVideo { position: relative; width: 100%; }
+.S6 img  { display: block; max-width: 100%; height: auto; }
 .S7 img, .S7 video { display: block; max-width: 100%; width: 100%; height: auto; object-fit: cover; }
 
 .S6 {
