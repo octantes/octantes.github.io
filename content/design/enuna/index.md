@@ -1,19 +1,18 @@
 ---
-tags:
+tags: [branding, portfolio]
 type: design
-id:
-  - llave
-cerradura:
-  - "[[°pagina]]"
-portada: "portal.png"
+title: en una - branding
+description: descripcion corta para seo
+portada: portada.png
+date: 2023-09-06
+handle: kaste
 ---
-![1](header.gif)
-![2](explainer.gif)
-![3](marquee.gif)
-![4](iconography.gif)
-![5](identity.gif)
-![6](break.png)
-![7](credits.png)
+
+![1](banner.gif)
+![2](fundamentos.gif)
+![3](topografico.gif)
+![4](servicios.gif)
+![5](footer.gif)
 
 [!TEXT]
 
