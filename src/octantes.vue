@@ -64,9 +64,9 @@ function updateProcessing(val) { processing.value = val }
 @media (max-width: 1080px) {
 
   .pagina { height: auto; }
-  .layout { grid-template-columns: 1fr; grid-auto-rows: auto auto; }
+  .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
   .navigation { height: auto; }
-  .articulos { overflow-y: visible; height: auto; }
+  .content { aspect-ratio: 3/5;}
   
 }
 
