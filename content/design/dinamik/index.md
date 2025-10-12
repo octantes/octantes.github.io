@@ -8,13 +8,13 @@ date: 2024-11-30
 handle: kaste
 ---
 
-![informacion del proyecto](top.webp)
+![informacion del proyecto](top.png)
 ![banner del proyecto de diseño](banner.gif)
 ![concepto de la marca explicado](tagline.gif)
 ![tesis sobre interfaces](presentacion.gif)
 ![presentacion de las interfaces](explicacion.gif)
 ![assets estaticos y reticulas](assets.png)
-![presentacion del logo para la marca](bot.webp)
+![presentacion del logo para la marca](bot.png)
 
 [!TEXT]
 
