@@ -154,7 +154,7 @@ watch(
       
       <div class="content">
         
-        <Portada v-if="currentPost && currentPost.type !== 'design'" :metadata="currentPost || {}" />
+        <Portada v-if="currentPost && currentPost.value?.type !== 'design'" :metadata="currentPost || {}" />
         <component :is="currentComponent" :html="noteContent" />
         
       </div>
@@ -167,7 +167,7 @@ watch(
 
 <style>
 
-@media (max-width: 1080px) { .post { height: auto; overflow-y: visible; } }
+@media (max-width: 1080px) { .post { height: auto; overflow-y: visible; } .content { height: auto; } .container { min-height: 50vh; }}
 
 .container { position: relative; border-radius: 5px; }
 .post::-webkit-scrollbar-thumb { background-color: #8AB6BB !important; }
