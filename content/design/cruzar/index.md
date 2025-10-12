@@ -25,8 +25,6 @@ elevando el valor final de la publicación al integrar soportes visuales, refere
 - visor dinámico de contenido para presentar todos los artículos y los proyectos
 - statusbar integrando elementos dinámicos, datos en real time y toggle idioma
 
-![holahola](portal.png)
-
 el visor de **proyectos** integra distintos layouts según el contenido que debe presentar
 se suman funcionalidades exclusivas, como una barra de scroll o el shader de espera
 
