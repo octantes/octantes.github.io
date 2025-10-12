@@ -10,8 +10,8 @@ handle: kaste
 
 ![informacion del proyecto](top.png)
 ![banner del proyecto de diseño](banner.gif)
-![tesis sobre interfaces](presentacion.gif)
 ![concepto de la marca explicado](tagline.gif)
+![tesis sobre interfaces](presentacion.gif)
 ![presentacion de las interfaces](explicacion.gif)
 ![animacion de la reticula logo](footer.gif)
 ![assets estaticos y reticulas](assets.png)
