@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>arch-hud</title>
+
+    <meta name="description" content="simple set of linux tools for a heads-up display desktop feel, based around suckless's dwm">
+    <link rel="canonical" href="https://octantes.github.io/dev/arch-hud/">
+
+    <!-- Open Graph -->
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="arch-hud">
+    <meta property="og:description" content="simple set of linux tools for a heads-up display desktop feel, based around suckless's dwm">
+    <meta property="og:url" content="https://octantes.github.io/dev/arch-hud/">
+    <meta property="og:image" content="">
+
+    <!-- Twitter Card -->
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="arch-hud">
+    <meta name="twitter:description" content="simple set of linux tools for a heads-up display desktop feel, based around suckless's dwm">
+    <meta name="twitter:image" content="">
+    <meta name="twitter:creator" content="@kaste">
+
+    <!-- JSON-LD Structured Data -->
+
+    <script type="application/ld+json">
+
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "arch-hud",
+      "description": "simple set of linux tools for a heads-up display desktop feel, based around suckless's dwm",
+      "image": "",
+      "url": "https://octantes.github.io/dev/arch-hud/",
+      "datePublished": "14/09/2025",
+      "author": {"@type":"Person","name":"kaste","url":"https://twitter.com/kaste"}
+    }
+
+    </script>
+
+  </head>
+
+  <body>
+
+    <p><a href="https://github.com/octantes/arch-hud" target="_blank" rel="noopener noreferrer">arch-hud</a> is a personal build of <a href="https://suckless.org/" target="_blank" rel="noopener noreferrer">suckless</a> tools for daily use on Arch Linux.</p>
+<p>Built around the concept of a <em>heads-up display</em>, trying to make the computer feel like a tool again and not a cognitive black hole.
+Implements a few minimal patches (listed below) with a low tech feel based around an 8bit palette and pixel fonts.</p>
+<p>No gaps, no transparency, no compositor, <strong>no distractions</strong>. Do add <a href="https://github.com/yshui/picom" target="_blank" rel="noopener noreferrer">picom</a> if you experience screen tearing.</p>
+<p>To install just go into each directory and sudo make clean install (script pending).</p>
+<ul>
+<li><a href="https://github.com/dunst-project/dunst" target="_blank" rel="noopener noreferrer">dunst</a> - simple notification daemon</li>
+</ul>
+<h3><a href="https://dwm.suckless.org/" target="_blank" rel="noopener noreferrer">dwm</a> - tiling windows manager</h3>
+<ul>
+<li><a href="https://dwm.suckless.org/patches/mainmon/" target="_blank" rel="noopener noreferrer">main monitor only statusbar</a></li>
+<li><a href="https://dwm.suckless.org/patches/tagothermonitor/" target="_blank" rel="noopener noreferrer">tag to other monitors</a></li>
+<li><a href="https://dwm.suckless.org/patches/hide_vacant_tags/" target="_blank" rel="noopener noreferrer">hide unused tabs</a></li>
+<li><a href="https://dwm.suckless.org/patches/taglabels/" target="_blank" rel="noopener noreferrer">executable name in tag</a></li>
+<li><a href="https://dwm.suckless.org/patches/statuscmd/" target="_blank" rel="noopener noreferrer">signal statusbar location and button</a></li>
+</ul>
+<h3><a href="https://tools.suckless.org/dmenu/" target="_blank" rel="noopener noreferrer">dmenu</a> - dynamic menu</h3>
+<ul>
+<li><a href="https://tools.suckless.org/dmenu/patches/highlight/" target="_blank" rel="noopener noreferrer">highlight searched chars</a></li>
+<li><a href="https://tools.suckless.org/dmenu/patches/sort_by_popularity/" target="_blank" rel="noopener noreferrer">sort by popularity cache</a></li>
+</ul>
+<h3><a href="https://st.suckless.org/" target="_blank" rel="noopener noreferrer">st</a> - simple terminal emulator</h3>
+<ul>
+<li><a href="https://st.suckless.org/patches/scrollback/" target="_blank" rel="noopener noreferrer">scrollback &amp; scrollback mouse</a></li>
+<li><a href="https://st.suckless.org/patches/drag-n-drop/" target="_blank" rel="noopener noreferrer">drag and drop filepaths and urls</a></li>
+<li><a href="https://st.suckless.org/patches/workingdir/" target="_blank" rel="noopener noreferrer">specify opening working dir</a></li>
+<li><a href="https://st.suckless.org/patches/newterm/" target="_blank" rel="noopener noreferrer">open a new terminal in current working directory</a></li>
+</ul>
+<h3><a href="https://surf.suckless.org/" target="_blank" rel="noopener noreferrer">surf</a> - minimal browser</h3>
+<ul>
+<li><a href="https://surf.suckless.org/patches/homepage/" target="_blank" rel="noopener noreferrer">homepage</a></li>
+<li><a href="https://surf.suckless.org/patches/short-title/" target="_blank" rel="noopener noreferrer">short title for tabs</a></li>
+<li><a href="https://surf.suckless.org/patches/web-search/" target="_blank" rel="noopener noreferrer">websearch keymap</a></li>
+</ul>
+<h3><a href="https://tools.suckless.org/tabbed/" target="_blank" rel="noopener noreferrer">tabbed</a> - tab builder</h3>
+<ul>
+<li><a href="https://tools.suckless.org/tabbed/patches/drag/" target="_blank" rel="noopener noreferrer">drag tabs left or right</a></li>
+<li><a href="https://tools.suckless.org/tabbed/patches/move-clamped/" target="_blank" rel="noopener noreferrer">clamp large tab numbers</a></li>
+<li><a href="https://tools.suckless.org/tabbed/patches/cwd/" target="_blank" rel="noopener noreferrer">open new terminal tabs on current working directory</a></li>
+</ul>
+<h3>dwmblocks</h3>
+<ul>
+<li>username</li>
+<li>date</li>
+<li>status</li>
+<li>disk space</li>
+<li>mpv (currently playing)</li>
+</ul>
+    
+  </body>
+
+</html>
