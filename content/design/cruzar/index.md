@@ -16,6 +16,8 @@ handle: kaste
 
 [!TEXT]
 
+![embed youtube](https://www.youtube.com/watch?v=KFb_frFm8F8)
+
 la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
 de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
 es importante vincular los proyectos principales a través de notas que aporten contexto
