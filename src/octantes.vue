@@ -1,10 +1,14 @@
 <script setup>
 import { ref } from 'vue'
 import Navigation from './01/navigation.vue'
-import Footer from './01/footer.vue'
+import Status from './01/status.vue'
+import Side from './01/side.vue'
 
 const processing = ref(false)
+const isCentered = ref(false)
+
 function updateProcessing(val) { processing.value = val }
+function toggleView() { isCentered.value = !isCentered.value }
 
 </script>
 
@@ -12,9 +16,9 @@ function updateProcessing(val) { processing.value = val }
 
   <div class="pagina">
 
-    <div class="layout">
+    <div class="layout" :class="{ centered: isCentered }" >
 
-        <Navigation class="navigation" :disabled="processing" />
+        <Navigation class="navigation" :disabled="processing" :is-centered="isCentered"/>
 
         <RouterView v-slot="{ Component }" >
 
@@ -22,11 +26,13 @@ function updateProcessing(val) { processing.value = val }
           
         </RouterView>
 
+        <Side v-if="isCentered" class="side" :disabled="processing" />
+
     </div>
 
     <div class="footer">
 
-        <Footer/>
+        <Status @toggle-view="toggleView" />
         
     </div>
 
@@ -35,6 +41,19 @@ function updateProcessing(val) { processing.value = val }
 </template>
 
 <style>
+
+@media (max-width: 1080px) {
+
+  .pagina { height: auto; }
+  .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
+  .navigation { height: auto; }
+  .content { aspect-ratio: 3/5;}
+  
+}
+
+.navigation { grid-column: 1; }
+.articulos { grid-column: 2; }
+.side { grid-column: 3; }
 
 .layout {
   display: grid;
@@ -45,6 +64,8 @@ function updateProcessing(val) { processing.value = val }
   min-height: 0;
   gap: 1rem;
 }
+
+.layout.centered { grid-template-columns: 2.5fr 3fr 2.5fr; }
 
 .pagina {
   display: flex;
@@ -59,15 +80,7 @@ function updateProcessing(val) { processing.value = val }
   flex: 1 1 auto;
   overflow-y: auto;
   min-height: 0;
-}
-
-@media (max-width: 1080px) {
-
-  .pagina { height: auto; }
-  .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
-  .navigation { height: auto; }
-  .content { aspect-ratio: 3/5;}
-  
+  grid-column: 2;
 }
 
 </style>

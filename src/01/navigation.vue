@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-const props = defineProps({ disabled: Boolean })
+const props = defineProps({ disabled: Boolean, isCentered: Boolean })
 const router = useRouter()
 const notes = ref([])
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -49,6 +49,11 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
       </tbody>
 
     </table>
+
+    <div v-if="!isCentered" class="contenido-extra">
+      <h3>contenido extra</h3>
+      <p>lo que tenga este if desaparece si cambiamos layout</p>
+    </div>
     
   </div>
 
