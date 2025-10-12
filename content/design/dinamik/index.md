@@ -3,16 +3,17 @@ tags: [branding, portfolio]
 type: design
 title: dinamik - branding
 description: descripcion corta para seo
-portada: portada.png
+portada:
 date: 2024-11-30
 handle: kaste
 ---
 
 ![informacion del proyecto](top.png)
 ![banner del proyecto de diseño](banner.gif)
-![concepto de la marca explicado](tagline.gif)
 ![tesis sobre interfaces](presentacion.gif)
+![concepto de la marca explicado](tagline.gif)
 ![presentacion de las interfaces](explicacion.gif)
+![animacion de la reticula logo](footer.gif)
 ![assets estaticos y reticulas](assets.png)
 ![presentacion del logo para la marca](bot.png)
 

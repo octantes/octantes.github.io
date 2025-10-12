@@ -14,7 +14,7 @@ handle: kaste
 ![presentacion del icono](iconography.gif)
 ![assets de identidad para redes](identity.gif)
 ![separador de presentacion](break.png)
-1[creditos del proyecto de branding](credits.png)
+![creditos del proyecto de branding](credits.png)
 
 [!TEXT]
 
