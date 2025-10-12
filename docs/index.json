@@ -1,0 +1,95 @@
+[
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "type": "note",
+    "tags": [],
+    "portada": "",
+    "handle": "kaste",
+    "date": "12/10/2025",
+    "isoDate": "2025-10-12T01:26:41.255Z",
+    "url": "/posts/note/octantes/"
+  },
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "type": "music",
+    "tags": [],
+    "portada": "",
+    "handle": "kaste",
+    "date": "12/10/2025",
+    "isoDate": "2025-10-12T01:26:41.254Z",
+    "url": "/posts/music/octantes/"
+  },
+  {
+    "slug": "musica",
+    "title": "musica",
+    "description": "",
+    "type": "music",
+    "tags": [],
+    "portada": "https://octantes.github.io/posts/music/musica/portal.webp",
+    "handle": "kaste",
+    "date": "12/10/2025",
+    "isoDate": "2025-10-12T01:26:41.252Z",
+    "url": "/posts/music/musica/"
+  },
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "",
+    "type": "dev",
+    "tags": [],
+    "portada": "",
+    "handle": "kaste",
+    "date": "12/10/2025",
+    "isoDate": "2025-10-12T01:26:38.689Z",
+    "url": "/posts/dev/octantes/"
+  },
+  {
+    "slug": "dinamik",
+    "title": "dinamik - branding",
+    "description": "descripcion corta para seo",
+    "type": "design",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/design/dinamik/portada.webp",
+    "handle": "kaste",
+    "date": "30/11/2024",
+    "isoDate": "2024-11-30T00:00:00.000Z",
+    "url": "/posts/design/dinamik/"
+  },
+  {
+    "slug": "cruzar",
+    "title": "cruzar - cordillera cripto",
+    "description": "descripcion corta para seo",
+    "type": "design",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/design/cruzar/portada.webp",
+    "handle": "kaste",
+    "date": "19/09/2024",
+    "isoDate": "2024-09-19T00:00:00.000Z",
+    "url": "/posts/design/cruzar/"
+  },
+  {
+    "slug": "enuna",
+    "title": "en una - branding",
+    "description": "descripcion corta para seo",
+    "type": "design",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/design/enuna/portada.webp",
+    "handle": "kaste",
+    "date": "06/09/2023",
+    "isoDate": "2023-09-06T00:00:00.000Z",
+    "url": "/posts/design/enuna/"
+  }
+]
