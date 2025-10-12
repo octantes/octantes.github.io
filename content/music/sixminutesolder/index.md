@@ -2,7 +2,7 @@
 tags: [branding, portfolio]
 type: music
 title: six minutes older
-description: descripcion corta para seo
+description: experimentos midi
 portada: 
 date: 2021-12-08
 handle: kaste

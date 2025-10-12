@@ -2,11 +2,13 @@
 tags: [branding, portfolio]
 type: music
 title: seance
-description: descripcion corta para seo
+description: primer disquito con guitarra y visualizer
 portada: 
 date: 2022-05-08
 handle: kaste
 ---
+
+que queres *cambiar*? tiramos las cartas?
 
 ![embed de seance en youtube](https://www.youtube.com/watch?v=Ud0ZK6ZfOqk)
 
