@@ -3,7 +3,7 @@ tags: [branding, portfolio]
 type: design
 title: cruzar - cordillera cripto
 description: descripcion corta para seo
-portada: portada.png
+portada: 
 date: 2024-09-19
 handle: kaste
 ---
