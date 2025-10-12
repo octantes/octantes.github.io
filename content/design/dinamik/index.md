@@ -12,12 +12,14 @@ handle: kaste
 ![banner del proyecto de diseño](banner.gif)
 ![concepto de la marca explicado](tagline.gif)
 ![tesis sobre interfaces](presentacion.gif)
-![presentacion de las interfaces](explicacion.gif)
 ![animacion de la reticula logo](footer.gif)
+![presentacion de las interfaces](explicacion.gif)
 ![assets estaticos y reticulas](assets.png)
 ![presentacion del logo para la marca](bot.png)
 
 [!TEXT]
+
+![embed youtube](https://www.youtube.com/watch?v=fi6v9nSxeZQ)
 
 la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
 de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
