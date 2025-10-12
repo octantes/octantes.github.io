@@ -2,7 +2,7 @@
 import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Shader from '../03/shader.vue'
-import Portada from '../02/portada.vue'
+import Portada from '../03/portada.vue'
 import A2 from '../02/A2.vue'
 import S6 from '../02/S6.vue'
 import S7 from '../02/S7.vue'
@@ -167,8 +167,10 @@ watch(
 
 <style>
 
+@media (max-width: 1080px) { .post { height: auto; overflow-y: visible; } }
+
 .container { position: relative; border-radius: 5px; }
-.container::-webkit-scrollbar-thumb { background-color: #8AB6BB; }
+.post::-webkit-scrollbar-thumb { background-color: #8AB6BB !important; }
 
 .post {
   position: relative;
