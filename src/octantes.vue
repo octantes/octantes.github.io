@@ -42,15 +42,6 @@ function toggleView() { isCentered.value = !isCentered.value }
 
 <style>
 
-@media (max-width: 1080px) {
-
-  .pagina { height: auto; }
-  .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
-  .navigation { height: auto; }
-  .content { aspect-ratio: 3/5;}
-  
-}
-
 .navigation { grid-column: 1; }
 .articulos { grid-column: 2; }
 .side { grid-column: 3; }
@@ -81,6 +72,16 @@ function toggleView() { isCentered.value = !isCentered.value }
   overflow-y: auto;
   min-height: 0;
   grid-column: 2;
+}
+
+@media (max-width: 1080px) {
+
+  .pagina { height: auto; }
+  .layout { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
+  .navigation { height: auto; }
+  .content { aspect-ratio: 3/5;}
+  .navigation, .articulos, .side { grid-column: 1; }
+  
 }
 
 </style>
