@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({ disabled: Boolean, isCentered: Boolean })
@@ -10,6 +10,17 @@ const activeFilter = ref('full')
 const tabs = ['full', 'posts', 'design', 'dev', 'music']
 const sortKey = ref('isoDate')
 const sortOrder = ref('desc')
+const itemsPerPage = 15
+const visibleItemsCount = ref(itemsPerPage)
+
+const paginatedNotes = computed(() => { return noteSortFilter.value.slice(0, visibleItemsCount.value) })
+
+function loadMore() { visibleItemsCount.value += itemsPerPage }
+
+const showLoadMoreButton = computed(() => { return visibleItemsCount.value < noteSortFilter.value.length })
+
+watch([activeFilter, sortKey, sortOrder], () => { visibleItemsCount.value = itemsPerPage })
+
 
 onMounted(async () => {
   try {
@@ -103,12 +114,22 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
         </thead>
 
         <tbody>
-          <tr v-for="note in noteSortFilter" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ disabled: props.disabled }" >
+          <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
             <td>{{ note.tags.join(' - ') }}</td>
           </tr>
         </tbody>
+
+        <tfoot>
+          <tr v-if="showLoadMoreButton">
+            <td :colspan="3">
+              <button class="load-more-button" @click="loadMore" :disabled="props.disabled">
+                ↓
+              </button>
+            </td>
+          </tr>
+        </tfoot>
 
       </table>
 
@@ -146,10 +167,10 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
 
 table { width: 100%; border-collapse: separate; border-spacing: 0; }
 
-thead tr { display: flex; box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
-th, td { padding: 0.5rem; text-align: left; user-select: none; }
+thead tr { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
+th, td { padding: 0.5rem 1rem; text-align: left; user-select: none; }
 
-th { color:#AAABAC; font-weight: normal; flex: 1; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; transition: background-color 0.25s ease; }
+th { color:#AAABAC; font-weight: normal; justify-content: center; align-items: center; cursor: pointer; position: relative; transition: background-color 0.25s ease; }
 th:hover { background-color: #2C2C2C; }
 th.active { color:#D8DADE; background-color: #986C9825; }
 
@@ -162,5 +183,26 @@ tbody tr.disabled:hover { background-color: transparent; }
 th.active::after { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
 th.active[data-order="asc"]::after { content: '↑'; }
 th.active[data-order="desc"]::after { content: '↓'; }
+
+tfoot td {
+  padding: 0;
+}
+
+/* Estilos para el botón de cargar más */
+.load-more-button {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: transparent;
+  color: #AAABAC;
+  cursor: pointer;
+  border: 1px solid #AAABAC25;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.load-more-button:hover {
+  background-color: #2B2C2C;
+  color: #D8DADE;
+}
 
 </style>
