@@ -1,16 +1,17 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const props = defineProps({ disabled: Boolean, isCentered: Boolean })
 const router = useRouter()
+const route = useRoute()
 const notes = ref([])
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 const activeFilter = ref('full')
 const tabs = ['full', 'posts', 'design', 'dev', 'music']
 const sortKey = ref('isoDate')
 const sortOrder = ref('desc')
-const itemsPerPage = 15
+const itemsPerPage = 5
 const visibleItemsCount = ref(itemsPerPage)
 
 const paginatedNotes = computed(() => { return noteSortFilter.value.slice(0, visibleItemsCount.value) })
@@ -114,10 +115,10 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
         </thead>
 
         <tbody>
-          <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ disabled: props.disabled }" >
+          <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
-            <td>{{ note.tags.join(' - ') }}</td>
+            <td>{{ note.tags.join(', ') }}</td>
           </tr>
         </tbody>
 
@@ -163,7 +164,7 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
 .tabs                    { display: flex; gap: 1rem; overflow: hidden; flex-grow: 1; }
 .tabs button             { flex-grow: 1;                                             }
 
-table { width: 100%; border-spacing: 0; user-select: none; }
+table { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; }
 
 thead tr         { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
 th, td           { padding: 0.5rem 1rem; text-align: left;                                                                             }
@@ -177,7 +178,7 @@ th.active[data-order="asc"]::after  { content: '↑'; }
 th.active[data-order="desc"]::after { content: '↓'; }
 
 tbody tr          { cursor: pointer;                    }
-tbody tr:hover    { color: #986C9850;                 }
+tbody tr:hover    { color: #986C9880;                 }
 tbody tr.active   { color: #986C98;                   }
 tbody tr.disabled { opacity: 0.25; cursor: not-allowed; }
 
