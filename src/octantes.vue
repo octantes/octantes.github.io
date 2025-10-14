@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'
 import Side from './01/side.vue'
@@ -7,6 +7,10 @@ import Side from './01/side.vue'
 const processing = ref(false)
 const isCentered = ref(false)
 
+onMounted(() => { window.addEventListener('resize', handleResize); handleResize() })
+onUnmounted(() => { window.removeEventListener('resize', handleResize) })
+
+function handleResize() { if (window.innerWidth <= 1080) { isCentered.value = false } }
 function updateProcessing(val) { processing.value = val }
 function toggleView() { isCentered.value = !isCentered.value }
 

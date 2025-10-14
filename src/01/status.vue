@@ -19,6 +19,8 @@ function toggleLayout() { emit('toggle-view'); }
 
 <style scoped>
 
+@media (max-width: 1080px) { button { display: none; } }
+
 .set { color: #d8dade; }
 
 button { background-color: #1B1C1C; padding: 0.5rem 1rem; border: none; box-shadow: inset 0 0 0 1px #AAABAC25; color: #AAABAC; cursor: pointer; border-radius: 5px;}
