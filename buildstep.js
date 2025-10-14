@@ -30,6 +30,9 @@ date: YYYY-MM-DD
 handle: kaste
 ---
 
+- usar como maximo tres tags
+- en la tabla solo se muestra hasta la primera coma- bloque de "novedades"
+
 */
 
 const md = new MarkdownIt()

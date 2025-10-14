@@ -134,7 +134,7 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
           <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
-            <td>{{ note.description }}</td>
+            <td>{{ note.description.split(',')[0] }}</td>
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
 
