@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
+const emit = defineEmits(['toggle-view'])                                                                        // emit centered view toggle
 const props = defineProps({ disabled: Boolean, isCentered: Boolean })                                            // layout states
 const router = useRouter()                                                                                       // handles note open
 const route = useRoute()                                                                                         // current url
@@ -22,6 +23,7 @@ const tabs = [                                                                  
   { label: 'música', value: 'music' }
 ]
 
+function toggleLayout() { emit('toggle-view'); }
 function prevPage() { if (currentPage.value > 1 && !props.disabled) { currentPage.value-- } }                    // changes to previous page
 function nextPage() { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }     // changes to next page
 function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                 // opens note in content
@@ -102,7 +104,7 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 </script>
 
 <template>
-
+  
   <div class="navigation">
 
     <div class="filters">
@@ -168,6 +170,10 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 
     </div>
 
+    <div class="layoutcontrol">
+      <button @click="toggleLayout">centrar</button>
+    </div>
+
     <div v-if="!isCentered" class="contenido-extra">
       <p>lo que tenga este if desaparece si cambiamos layout</p>
     </div>
@@ -177,6 +183,21 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 </template>
 
 <style>
+
+.layoutcontrol button { 
+    background-color: #1B1C1C;
+    padding: 0.5rem 1rem;
+    border: none;
+    box-shadow: inset 0 0 0 1px #AAABAC25;
+    color: #AAABAC;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.25s ease;
+}
+
+.layoutcontrol button:hover { background-color: #2B2C2C; color: #D8DADE; }
+.layoutcontrol button:active { background-color: #AAABAC25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
+.layoutcontrol button:disabled { cursor: not-allowed; opacity: 0.25; }
 
 .navigation {
   display: flex;
