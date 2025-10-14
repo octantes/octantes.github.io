@@ -149,7 +149,7 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
   flex-direction: column;
   background-color: #1B1C1C;
   color: #D8DADE;
-  padding: 1rem;
+  padding: 2rem;
   border: 1px solid #AAABAC25;
   border-radius: 5px;
   gap: 1rem;
@@ -164,7 +164,7 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
 .tabs                    { display: flex; gap: 1rem; overflow: hidden; flex-grow: 1; }
 .tabs button             { flex-grow: 1;                                             }
 
-table { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; }
+table { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed; }
 
 thead tr         { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
 th, td           { padding: 0.5rem 1rem; text-align: left;                                                                             }
@@ -178,8 +178,8 @@ th.active[data-order="asc"]::after  { content: '↑'; }
 th.active[data-order="desc"]::after { content: '↓'; }
 
 tbody tr          { cursor: pointer;                    }
-tbody tr:hover    { color: #986C9880;                 }
-tbody tr.active   { color: #986C98;                   }
+tbody tr:hover    { color: #986C9899;                 }
+tbody tr.active   { color: #8AB6BB;                   }
 tbody tr.disabled { opacity: 0.25; cursor: not-allowed; }
 
 tfoot td          { padding: 1rem; width: 100%; text-align: center;}
