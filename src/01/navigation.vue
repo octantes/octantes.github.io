@@ -121,11 +121,17 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
         </thead>
 
         <tbody>
+
           <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
+
+          <tr v-if="paginatedNotes.length < itemsPerPage" v-for="i in (itemsPerPage - paginatedNotes.length)" :key="`placeholder-${i}`" class="bodyfill">
+            <td colspan="3">&nbsp;</td>
+          </tr>
+
         </tbody>
 
         <tfoot>
@@ -175,7 +181,7 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
 
 table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed; }
 thead tr                            { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
-th, td                              { padding: 0.5rem 1rem; text-align: left;                                                                             }
+th, td                              { padding: 0.5rem 1rem; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;             }
 th                                  { color:#AAABAC; font-weight: normal; cursor: pointer; position: relative; transition: background-color 0.25s ease; }
 th:hover                            { background-color: #AAABAC25; color: #D8DADE;                                                                    }
 th.active                           { background-color: #986C9825; color:#D8DADE; border-left: 5px;                                                   }
@@ -188,7 +194,8 @@ tbody tr                            { cursor: pointer;                    }
 tbody tr:hover                      { color: #986C9899;                 }
 tbody tr.active                     { color: #8AB6BB;                   }
 tbody tr.disabled                   { opacity: 0.25; cursor: not-allowed; }
-tfoot td                            { padding: 1rem; width: 100%; text-align: center;}
+.bodyfill                           { pointer-events: none; opacity: 0;   }
+tfoot td                            { padding: 1rem; width: 100%; text-align: center; }
 
 .pagecontrols      { display: flex; justify-content: center; align-items: center; gap: 1rem; user-select: none; }
 .pagecontrols span { color: #AAABAC; }

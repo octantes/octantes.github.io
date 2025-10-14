@@ -42,16 +42,15 @@ function toggleView() { isCentered.value = !isCentered.value }
 
 <style>
 
-.navigation { grid-column: 1; }
-.articulos { grid-column: 2; }
-.side { grid-column: 3; }
+.navigation { grid-column: 1; overflow-y: auto; min-height: 0;                 }
+.articulos  { grid-column: 2; overflow-y: auto; min-height: 0; flex: 1 1 auto; }
+.side       { grid-column: 3; overflow-y: auto; min-height: 0;                 }
 
 .layout {
   display: grid;
   grid-template-columns: 5fr 3fr;
   flex: 1 1 auto;
   width: 100%;
-  height: 100%;
   min-height: 0;
   gap: 1rem;
 }
@@ -65,14 +64,10 @@ function toggleView() { isCentered.value = !isCentered.value }
   height: 100%;
   padding: 1rem;
   gap: 1rem;
+  overflow: hidden;
 }
 
-.articulos {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  min-height: 0;
-  grid-column: 2;
-}
+
 
 @media (max-width: 1080px) {
 
