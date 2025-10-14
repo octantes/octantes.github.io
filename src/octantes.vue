@@ -22,7 +22,7 @@ function toggleView() { isCentered.value = !isCentered.value }
 
     <div class="layout" :class="{ centered: isCentered }" >
 
-        <Navigation class="navigation" :disabled="processing" :is-centered="isCentered"/>
+        <Navigation @toggle-view="toggleView" class="navigation" :disabled="processing" :is-centered="isCentered"/>
 
         <RouterView v-slot="{ Component }" >
 
@@ -36,7 +36,7 @@ function toggleView() { isCentered.value = !isCentered.value }
 
     <div class="footer">
 
-        <Status @toggle-view="toggleView" />
+        <Status />
         
     </div>
 
