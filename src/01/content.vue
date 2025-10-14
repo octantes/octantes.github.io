@@ -167,8 +167,9 @@ watch(
 
 <style>
 
+@media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: #8AB6BB !important; } }
+
 .container { position: relative; border-radius: 5px; }
-.post::-webkit-scrollbar-thumb { background-color: #8AB6BB !important; }
 
 .post {
   position: relative;
