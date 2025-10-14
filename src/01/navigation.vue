@@ -197,10 +197,10 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .tabs                    { display: flex; gap: 1rem; overflow: hidden; flex-grow: 1; }
 .tabs button             { flex-grow: 1;                                             }
 
-.col-fecha       { width: 20%; }
+.col-fecha       { width: 12%; }
 .col-titulo      { width: 35%; }
-.col-descripcion { width: 25%; }
-.col-tags        { width: 25%; }
+.col-descripcion { width: 33%; }
+.col-tags        { width: 15%; }
 
 table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed; }
 thead tr                            { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
