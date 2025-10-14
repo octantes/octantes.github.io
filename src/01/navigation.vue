@@ -2,58 +2,37 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-const props = defineProps({ disabled: Boolean, isCentered: Boolean })
-const router = useRouter()
-const route = useRoute()
-const notes = ref([])
+const props = defineProps({ disabled: Boolean, isCentered: Boolean })                                            // layout states
+const router = useRouter()                                                                                       // handles note open
+const route = useRoute()                                                                                         // current url
+const notes = ref([])                                                                                            // full note array
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')                                                         // url base
+const activeFilter = ref('full')                                                                                 // active category
+const sortKey = ref('isoDate')                                                                                   // current order col
+const sortOrder = ref('desc')                                                                                    // current sort order
+const itemsPerPage = 8                                                                                           // number of notes
+const currentPage = ref(1)                                                                                       // current page
+const totalPages = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })              // returns pages in filters
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, '')
-const activeFilter = ref('full')
-const tabs = ['full', 'posts', 'design', 'dev', 'music']
-const sortKey = ref('isoDate')
-const sortOrder = ref('desc')
-const itemsPerPage = 3
-const currentPage = ref(1)
+const tabs = [                                                                                                   // names for filters 
+  { label: 'todo', value: 'full' },
+  { label: 'notas', value: 'posts' },
+  { label: 'diseño', value: 'design' },
+  { label: 'código', value: 'dev' },
+  { label: 'música', value: 'music' }
+]
 
+function prevPage() { if (currentPage.value > 1 && !props.disabled) { currentPage.value-- } }                    // changes to previous page
+function nextPage() { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }     // changes to next page
+function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                 // opens note in content
 
-const totalPages = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })
-
-const paginatedNotes = computed(() => {
+const paginatedNotes = computed(() => {                                                                          // returns current page notes 
   const start = (currentPage.value - 1) * itemsPerPage
   const end = start + itemsPerPage
   return noteSortFilter.value.slice(start, end)
 })
 
-function prevPage() { if (currentPage.value > 1 && !props.disabled) { currentPage.value-- } }
-function nextPage() { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }
-
-watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })
-
-onMounted(async () => {
-  try {
-    const response = await fetch(`${base}/index.json`)
-    if (!response.ok) throw new Error(`http error ${response.status}`)
-    notes.value = await response.json()
-  } catch (e) {
-    console.error('error cargando índice de notas:', e)
-    notes.value = []
-  }
-})
-
-function navFilter(direction) {
-  if (props.disabled) return
-  const currentIndex = tabs.indexOf(activeFilter.value)
-  const newIndex = (currentIndex + direction + tabs.length) % tabs.length
-  activeFilter.value = tabs[newIndex]
-}
-
-function navSort(key) {
-  if (props.disabled) return
-  if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
-  else { sortKey.value = key; sortOrder.value = 'asc' }
-}
-
-const noteSortFilter = computed(() => {
+const noteSortFilter = computed(() => {                                                                          // applies filters and order to list 
 
   const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
   const filtered = activeFilter.value === 'full' ? notes.value : notes.value.filter(note => note.type === filterType)
@@ -88,7 +67,31 @@ const noteSortFilter = computed(() => {
   })
 })
 
-function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }
+function navFilter(direction) {                                                                                  // changes filter manually 
+  if (props.disabled) return
+  const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
+  const newIndex = (currentIndex + direction + tabs.length) % tabs.length
+  activeFilter.value = tabs[newIndex].value
+}
+
+function navSort(key) {                                                                                          // changes sorting column 
+  if (props.disabled) return
+  if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
+  else { sortKey.value = key; sortOrder.value = 'asc' }
+}
+
+onMounted(async () => {                                                                                          // searches notes on mount 
+  try {
+    const response = await fetch(`${base}/index.json`)
+    if (!response.ok) throw new Error(`http error ${response.status}`)
+    notes.value = await response.json()
+  } catch (e) {
+    console.error('error cargando índice de notas:', e)
+    notes.value = []
+  }
+})
+
+watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })                                       // resets pagination
 
 </script>
 
@@ -101,7 +104,7 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
       <button @click="navFilter(-1)" :disabled="props.disabled"> < </button>
 
       <div class="tabs">
-        <button v-for="tab in tabs" :key="tab" @click="activeFilter = tab" :class="{ active: activeFilter === tab }" :disabled="props.disabled" > {{ tab }} </button>
+        <button v-for="tab in tabs" :key="tab.value" @click="activeFilter = tab.value" :class="{ active: activeFilter === tab.value }" :disabled="props.disabled" > {{ tab.label }} </button>
       </div>
 
       <button @click="navFilter(+1)" :disabled="props.disabled"> > </button>
