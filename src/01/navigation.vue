@@ -121,6 +121,13 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 
       <table>
 
+          <colgroup>
+            <col class="col-fecha">
+            <col class="col-titulo">
+            <col v-if="!isCentered" class="col-descripcion">
+            <col class="col-tags">
+          </colgroup>
+
         <thead>
           <tr>
             <th @click="navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder">fecha</th>
@@ -189,6 +196,11 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .filters button:disabled { opacity: 0.25; cursor: not-allowed;                                                                                                                                }
 .tabs                    { display: flex; gap: 1rem; overflow: hidden; flex-grow: 1; }
 .tabs button             { flex-grow: 1;                                             }
+
+.col-fecha       { width: 20%; }
+.col-titulo      { width: 35%; }
+.col-descripcion { width: 25%; }
+.col-tags        { width: 25%; }
 
 table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed; }
 thead tr                            { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
