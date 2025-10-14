@@ -89,11 +89,11 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
 
   <div class="navigation">
 
-    <div class="tabs">
+    <div class="filters">
 
       <button @click="navFilter(-1)" :disabled="props.disabled"> < </button>
 
-      <div class="tabs-overflow">
+      <div class="tabs">
         <button v-for="tab in tabs" :key="tab" @click="activeFilter = tab" :class="{ active: activeFilter === tab }" :disabled="props.disabled" > {{ tab }} </button>
       </div>
 
@@ -122,11 +122,9 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
         </tbody>
 
         <tfoot>
-          <tr v-if="showLoadMoreButton">
+          <tr>
             <td :colspan="3">
-              <button class="load-more-button" @click="loadMore" :disabled="props.disabled">
-                ↓
-              </button>
+              <button class="plusbutton" @click="loadMore" :disabled="!showLoadMoreButton || props.disabled"> + </button>
             </td>
           </tr>
         </tfoot>
@@ -156,53 +154,48 @@ function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${typ
   gap: 1rem;
 }
 
-.tabs { display: flex; width: 100%; gap: 1rem; align-items: center; }
-.tabs-overflow { display: flex; gap: 1rem; flex-grow: 1; min-width: 0; overflow: hidden; }
-.tabs-overflow button { flex-grow: 1; flex-basis: 0; text-align: center; transition: background-color 0.2s ease; }
-.tabs-overflow button:hover { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
-.tabs button { background-color: transparent; padding: 0.5rem 1rem; border: none; color: #AAABAC; cursor: pointer; border-radius: 5px; }
-.tabs button:hover { background-color: #2B2C2C; color: #D8DADE; }
-.tabs button.active { background-color: #8AB6BB25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
-.tabs button:disabled { cursor: not-allowed; opacity: 0.25; }
+.filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none;                                                                                     }
+.filters button          { background-color: transparent; color: #AAABAC; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.25s ease; }
+.filters button:hover    { background-color: #AAABAC25; color: #D8DADE;                                                                                                                   }
+.filters button.active   { background-color: #8AB6BB25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25;                                                                          }
+.filters button:disabled { opacity: 0.25; cursor: not-allowed;                                                                                                                                }
 
-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.tabs                    { display: flex; gap: 1rem; overflow: hidden; flex-grow: 1; }
+.tabs button             { flex-grow: 1;                                             }
 
-thead tr { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
-th, td { padding: 0.5rem 1rem; text-align: left; user-select: none; }
+table { width: 100%; border-spacing: 0; user-select: none; }
 
-th { color:#AAABAC; font-weight: normal; justify-content: center; align-items: center; cursor: pointer; position: relative; transition: background-color 0.25s ease; }
-th:hover { background-color: #2C2C2C; }
-th.active { color:#D8DADE; background-color: #986C9825; }
-
-tbody tr { cursor: pointer; }
-tbody tr:hover { background-color: #2B2C2C; }
-tbody tr:hover { background-color: #2B2C2C; }
-tbody tr.disabled { cursor: not-allowed; opacity: 0.6; }
-tbody tr.disabled:hover { background-color: transparent; }
-
-th.active::after { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
-th.active[data-order="asc"]::after { content: '↑'; }
+thead tr         { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
+th, td           { padding: 0.5rem 1rem; text-align: left;                                                                             }
+th               { color:#AAABAC; font-weight: normal; cursor: pointer; position: relative; transition: background-color 0.25s ease; }
+th:hover         { background-color: #AAABAC25; color: #D8DADE;                                                                    }
+th.active        { background-color: #986C9825; color:#D8DADE; border-left: 5px;                                                   }
+th:first-child   { border-top-left-radius: 5px; border-bottom-left-radius: 5px;                                                        }
+th:last-child    { border-top-right-radius: 5px; border-bottom-right-radius: 5px;                                                      }
+th.active::after { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);                                             }
+th.active[data-order="asc"]::after  { content: '↑'; }
 th.active[data-order="desc"]::after { content: '↓'; }
 
-tfoot td {
-  padding: 0;
-}
+tbody tr          { cursor: pointer;                    }
+tbody tr:hover    { color: #986C9850;                 }
+tbody tr.active   { color: #986C98;                   }
+tbody tr.disabled { opacity: 0.25; cursor: not-allowed; }
 
-/* Estilos para el botón de cargar más */
-.load-more-button {
-  width: 100%;
-  padding: 0.5rem;
+tfoot td          { padding: 1rem; width: 100%; text-align: center;}
+
+.plusbutton { 
+  font-size: 1.5rem;
+  padding: 0rem .5rem;
   background-color: transparent;
-  color: #AAABAC;
-  cursor: pointer;
-  border: 1px solid #AAABAC25;
+  color: #986C98;
+  border: none;
+  box-shadow: inset 0 0 0 1px #986C9825;
   border-radius: 5px;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
 }
 
-.load-more-button:hover {
-  background-color: #2B2C2C;
-  color: #D8DADE;
-}
+.plusbutton:hover { background-color: #AAABAC25; color: #986C98; box-shadow: inset 0 0 0 1px #986C9825; }
+.plusbutton:disabled { opacity: 0.25; cursor: not-allowed; }
 
 </style>
