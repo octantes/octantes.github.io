@@ -2,7 +2,7 @@
 import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Shader from '../03/shader.vue'
-import Portada from '../03/portada.vue'
+import Portada from './portada.vue'
 import A2 from '../02/A2.vue'
 import S6 from '../02/S6.vue'
 import S7 from '../02/S7.vue'
@@ -146,26 +146,33 @@ watch(
 
 <template>
 
-  <div class="container">
-
-    <Shader class ="shader" ref="shaderRef"/>
+  <div class="test">
+  
+    <Portada :metadata="currentPost || {}" />
     
-    <div class="post">
+    <div class="container">
+
+      <Shader class ="shader" ref="shaderRef"/>
       
-      <div class="content">
+      <div class="post">
         
-        <Portada v-if="currentPost && currentPost.type !== 'design'" :metadata="currentPost || {}" />
-        <component :is="currentComponent" :html="noteContent" />
+        <div class="content">
+          
+          <component :is="currentComponent" :html="noteContent" />
+          
+        </div>
         
       </div>
       
     </div>
-    
+
   </div>
 
 </template>
 
 <style>
+
+.test { display: flex; flex-direction: column; gap: 1rem; height: 100%; }
 
 @media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: #8AB6BB !important; } }
 
@@ -192,7 +199,6 @@ watch(
 .content {
   position: relative;
   top: 0; left: 0;
-  height: 100%;
   width: 100%;
 }
 

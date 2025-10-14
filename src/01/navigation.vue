@@ -96,7 +96,8 @@ onMounted(async () => {                                                         
   }
 })
 
-watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })                                       // resets pagination
+watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })                                                            // resets pagination
+watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value === 'description') { sortKey.value = 'isoDate' } })   // resets order on hidden col
 
 </script>
 
@@ -124,7 +125,7 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
           <tr>
             <th @click="navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder">fecha</th>
             <th @click="navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
-            <th @click="navSort('description')" :class="{ active: sortKey === 'description' }" :data-order="sortOrder">descripción</th>
+            <th v-if="!isCentered" @click="navSort('description')" :class="{ active: sortKey === 'description' }" :data-order="sortOrder">descripción</th>
             <th @click="navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
           </tr>
         </thead>
@@ -134,19 +135,19 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
           <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
-            <td>{{ note.description.split(',')[0] }}</td>
+            <td v-if="!isCentered">{{ note.description.split(',')[0] }}</td>
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
 
           <tr v-if="paginatedNotes.length < itemsPerPage" v-for="i in (itemsPerPage - paginatedNotes.length)" :key="`placeholder-${i}`" class="bodyfill">
-            <td colspan="4">&nbsp;</td>
+            <td :colspan="isCentered ? 3 : 4">&nbsp;</td>
           </tr>
 
         </tbody>
 
         <tfoot>
           <tr>
-            <td :colspan="4">
+            <td :colspan="isCentered ? 3 : 4">
               <div class="pagecontrols">
                 <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || props.disabled"> < </button>
                 <span>{{ currentPage }} / {{ totalPages || 1 }}</span>

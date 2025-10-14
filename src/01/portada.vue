@@ -11,10 +11,10 @@ const data = computed(() => {
         octantes: { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
     }
     return {
-        title: props.metadata.title || 'titulo de la nota',
-        description: props.metadata.description || 'descripcion de la nota',
+        title: props.metadata.title || 'bienvenido a octantes.net!',
+        description: props.metadata.description || 'toca una nota de la tabla para cargarla',
         author: authors[handle] || { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
-        date: props.metadata.date || '10/10/25',
+        date: props.metadata.date || '2025',
         portada: props.metadata.portada || '',
         handle,
     }
@@ -52,7 +52,7 @@ const data = computed(() => {
 
 <style>
 
-.card { display: flex; flex-direction: row; width: 100%; align-items: stretch; }
+.card { display: flex; flex-direction: row; width: 100%; align-items: stretch; max-height: 25%;}
 .title { font-size: 1.25rem; }
 .description { font-style: italic; }
 .author { width: 25px; height: auto; border-radius: 50%; }
@@ -60,7 +60,7 @@ const data = computed(() => {
 .cover img { display: block; width: 100%; height: 100%; object-fit: cover;}
 .cover:hover { filter: grayscale() }
 
-.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; transition: filter 0.3s ease; }
+.text { background: linear-gradient(125deg, #8AB6BB 0%, #986C98 100%); width: 100%; transition: filter 0.3s ease; border-radius: 3px;}
 .text:hover { filter: brightness(95%); }
 
 .info {
@@ -74,7 +74,7 @@ const data = computed(() => {
     transition: transform 0.3s ease;
 }
 .info hr { border:none; border-top: 1px solid #1B1C1C; margin: 0;  }
-.info:hover { transform: scale(0.975); }
+.info:hover { transform: scale(0.99); }
 
 .profile { 
     display: inline-flex;
