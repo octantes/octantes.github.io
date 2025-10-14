@@ -47,6 +47,11 @@ const noteSortFilter = computed(() => {                                         
         valB = b.title.toLowerCase()
         break
 
+      case 'description':
+        valA = a.description.toLowerCase()
+        valB = b.description.toLowerCase()
+        break
+
       case 'tags':
         valA = a.tags[0]?.toLowerCase() || ''
         valB = b.tags[0]?.toLowerCase() || ''
@@ -119,6 +124,7 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
           <tr>
             <th @click="navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder">fecha</th>
             <th @click="navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
+            <th @click="navSort('description')" :class="{ active: sortKey === 'description' }" :data-order="sortOrder">descripción</th>
             <th @click="navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
           </tr>
         </thead>
@@ -128,18 +134,19 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
           <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
+            <td>{{ note.description }}</td>
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
 
           <tr v-if="paginatedNotes.length < itemsPerPage" v-for="i in (itemsPerPage - paginatedNotes.length)" :key="`placeholder-${i}`" class="bodyfill">
-            <td colspan="3">&nbsp;</td>
+            <td colspan="4">&nbsp;</td>
           </tr>
 
         </tbody>
 
         <tfoot>
           <tr>
-            <td :colspan="3">
+            <td :colspan="4">
               <div class="pagecontrols">
                 <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || props.disabled"> < </button>
                 <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
