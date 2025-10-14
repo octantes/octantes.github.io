@@ -176,7 +176,7 @@ watch(
 
 @media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: #8AB6BB !important; } }
 
-.container { position: relative; border-radius: 5px; }
+.container { position: relative; }
 
 .post {
   position: relative;
@@ -185,6 +185,7 @@ watch(
   background-color: #1B1C1C;
   border: 1px solid #AAABAC25;
   overflow-x: hidden;
+  border-radius: 5px;
 }
 
 .shader {
