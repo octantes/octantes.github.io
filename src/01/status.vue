@@ -124,10 +124,12 @@ onMounted(() => {
   padding: 1rem 1.5rem;
   background-color: #1B1C1C;
   color: #AAABAC;
-  border: 1px solid #AAABAC25;
+  border: 1px solid #AAABAC10;
   border-radius: 5px;
   user-select: none;
   gap: 1.5rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .stcenter {
@@ -137,12 +139,17 @@ onMounted(() => {
 }
 
 .stleft, .stright {
+  min-width: 0;
   color: #AAABAC;
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
 }
+
+.stleft, .stright a { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .live-status { display: flex; align-items: center; gap: 0.5rem; transition: opacity 0.25s ease; }
 .live-status.disabled { opacity: 0.5; pointer-events: none; cursor: default; }
