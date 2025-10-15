@@ -205,7 +205,7 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
   background-color: #1B1C1C;
   color: #D8DADE;
   padding: 2rem;
-  border: 1px solid #AAABAC25;
+  border: 1px solid #AAABAC10;
   border-radius: 5px;
   gap: 1rem;
 }
@@ -219,9 +219,9 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .tabs button             { flex-grow: 1;                                             }
 
 .col-fecha       { width: 12%; }
-.col-titulo      { width: 35%; }
-.col-descripcion { width: 33%; }
-.col-tags        { width: 15%; }
+.col-titulo      { width: 25%; }
+.col-descripcion { width: 35%; }
+.col-tags        { width: 28%; }
 
 table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed; }
 thead tr                            { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
