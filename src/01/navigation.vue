@@ -203,7 +203,8 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 
 <style>
 
-@media (max-width: 1080px) { .layoutcontrol button { display: none; } }
+@media (max-width: 1080px) { .layoutcontrol button { display: none; }  }
+@media (max-width: 580px) { .tabs button { display: none; } .tabs button.active { display: flex; } }
 
 .navigation {
   display: flex;
@@ -217,7 +218,7 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
   gap: 1rem;
 }
 
-.banner { display: flex; flex-direction: column; font-size: clamp(8px, .8vw, 24px); width: 100%; overflow: hidden; align-items: center; user-select: none; }
+.banner { display: flex; flex-direction: column; font-size: .8vw; width: 100%; overflow: hidden; align-items: center; user-select: none; }
 .banner pre { 
   background: linear-gradient(125deg, #8AB6BB, #986C98); 
   margin: 0;
@@ -239,7 +240,7 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
   margin-top: auto;
 }
 
-.banner.bcentered { font-size: clamp(6px, .25vw, 10px); }
+.banner.bcentered { font-size: .5vw; }
 
 .layoutcontrol button { 
     background-color: #1B1C1C;

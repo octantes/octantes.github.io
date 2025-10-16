@@ -5,19 +5,23 @@ const props = defineProps({ metadata: { type: Object, default: () => ({}) } })
 function openAuthor() { window.open(data.value.author.link, '_blank', 'noopener,noreferrer') }
 
 const data = computed(() => {
+
     const handle = props.metadata.handle || 'kaste'
+
     const authors = { 
         kaste: { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
         octantes: { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
     }
+
     return {
         title: props.metadata.title || 'bienvenido a octantes.net!',
-        description: props.metadata.description || 'toca una nota de la tabla para cargarla',
+        description: props.metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
         author: authors[handle] || { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
         date: props.metadata.date || '2025',
         portada: props.metadata.portada || '',
         handle,
     }
+
 })
 
 </script>
@@ -52,9 +56,9 @@ const data = computed(() => {
 
 <style>
 
-.card { display: flex; flex-direction: row; width: 100%; align-items: stretch; max-height: 25%;}
+.card { display: flex; flex-direction: row; width: 100%; align-items: stretch;  }
 .title { font-size: 1.25rem; }
-.description { font-style: italic; }
+.description { font-style: italic; font-style: italic; overflow: hidden; line-height: 1.25rem; height: calc(1.25rem * 2);}
 .author { width: 25px; height: auto; border-radius: 50%; }
 .cover { max-width: 50%; background-color: #986C98; transition: filter .5s ease;}
 .cover img { display: block; width: 100%; height: 100%; object-fit: cover;}
