@@ -37,7 +37,7 @@ const paginatedNotes = computed(() => {                                         
 const noteSortFilter = computed(() => {                                                                                               // applies filters and order to list 
 
   const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
-  const filtered = activeFilter.value === 'full' ? notes.value : notes.value.filter(note => note.type === filterType)
+  let filtered = activeFilter.value === 'full' ? notes.value : notes.value.filter(note => note.type === filterType)
   const query = searchQuery.value.toLowerCase().trim()
 
   if (query) {
