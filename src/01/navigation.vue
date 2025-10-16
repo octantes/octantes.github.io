@@ -13,7 +13,11 @@ const sortKey = ref('isoDate')                                                  
 const sortOrder = ref('desc')                                                                                                         // current sort order
 const itemsPerPage = 8                                                                                                                // number of notes
 const currentPage = ref(1)                                                                                                            // current page
+const currentTagline = ref('')
+
 const totalPages = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                                   // returns pages in filters
+
+const taglines = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]
 
 const tabs = [                                                                                                                        // names for filters 
   { label: 'todo', value: 'full' },
@@ -88,14 +92,18 @@ function navSort(key) {                                                         
 }
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
+
+  const randomIndex = Math.floor(Math.random() * taglines.length)
+  currentTagline.value = taglines[randomIndex]
+
   try {
+
     const response = await fetch(`${base}/index.json`)
     if (!response.ok) throw new Error(`http error ${response.status}`)
     notes.value = await response.json()
-  } catch (e) {
-    console.error('error cargando índice de notas:', e)
-    notes.value = []
-  }
+
+  } catch (e) { console.error('error cargando índice de notas:', e); notes.value = [] }
+
 })
 
 watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })                                                            // resets pagination
@@ -109,14 +117,14 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 
     <div class="banner" :class="{'bcentered': isCentered}">
 
-      <pre>
+<pre>
  ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
 ██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝██╔════╝██╔════╝
 ██║   ██║██║        ██║   ███████║██╔██╗ ██║   ██║   █████╗  ███████╗
 ██║   ██║██║        ██║   ██╔══██║██║╚██╗██║   ██║   ██╔══╝  ╚════██║
 ╚██████╔╝╚██████╗   ██║   ██║  ██║██║ ╚████║   ██║   ███████╗███████║
  ╚═════╝  ╚═════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝
-      </pre>
+</pre>
       
     </div>
 
@@ -178,14 +186,16 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
             </td>
           </tr>
         </tfoot>
-
+        
       </table>
 
     </div>
-
+    
     <div class="layoutcontrol">
       <button @click="toggleLayout">centrar</button>
     </div>
+
+    <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
 
   </div>
 
@@ -198,24 +208,35 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .navigation {
   display: flex;
   flex-direction: column;
+  align-items: center;
   background-color: #1B1C1C;
   color: #D8DADE;
-  padding: 2rem;
+  padding: 3rem 2rem 2rem 2rem;
   border: 1px solid #AAABAC10;
   border-radius: 5px;
   gap: 1rem;
 }
 
-.banner { display: flex; font-size: clamp(8px, .8vw, 24px); width: 100%; overflow: hidden; justify-content: center; user-select: none; }
+.banner { display: flex; flex-direction: column; font-size: clamp(8px, .8vw, 24px); width: 100%; overflow: hidden; align-items: center; user-select: none; }
 .banner pre { 
-  white-space: pre; 
+  background: linear-gradient(125deg, #8AB6BB, #986C98); 
+  margin: 0;
   overflow: visible; 
   font-family: monospace; 
-  background: linear-gradient(125deg, #8AB6BB, #986C98); 
   color: #986C98; 
   -webkit-background-clip: text; 
   -webkit-text-fill-color: transparent; 
   background-clip: text;
+}
+
+.tagline {
+  background: linear-gradient(125deg, #8AB6BB, #986C98);
+  font-size: clamp(16px, .9vw, 24px);
+  background-clip: text;
+  font-style: italic;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: auto;
 }
 
 .banner.bcentered { font-size: clamp(6px, .25vw, 10px); }
@@ -235,13 +256,12 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .layoutcontrol button:active { background-color: #AAABAC25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
 .layoutcontrol button:disabled { cursor: not-allowed; opacity: 0.25; }
 
-.filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none;                                                                                     }
+.filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none; justify-content: center; margin-top: .5rem;                                                           }
 .filters button          { background-color: transparent; color: #AAABAC; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.25s ease; }
 .filters button:hover    { background-color: #AAABAC25; color: #D8DADE;                                                                                                                   }
 .filters button.active   { background-color: #8AB6BB25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25;                                                                          }
 .filters button:disabled { opacity: 0.25; cursor: not-allowed;                                                                                                                                }
-.tabs                    { display: flex; gap: 1rem; overflow: hidden; flex-grow: 1; }
-.tabs button             { flex-grow: 1;                                             }
+.tabs                    { display: flex; gap: 1rem; overflow: hidden; }
 
 .col-fecha       { width: 12%; }
 .col-titulo      { width: 25%; }
