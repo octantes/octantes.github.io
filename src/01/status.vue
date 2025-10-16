@@ -56,7 +56,7 @@ async function fetchLatest() {
     const response = await fetch('/index.json')
     if (!response.ok) throw new Error('no se encontró el index.json')
     const index = await response.json()
-    if (index.length > 0) { latestPost.value = { title: index[0].title, url: index[0].url } }
+    if (index.length > 0) { const cleanUrl = index[0].url.replace(/^\/posts/, ''); latestPost.value = { title: index[0].title, url: cleanUrl } }
 
   } catch (e) { console.error('error buscando la última nota:', e); latestPost.value.title = 'error cargando ultima nota' }
 

@@ -152,10 +152,10 @@ watch(
     
     <div class="container">
 
-      <Shader class ="shader" ref="shaderRef"/>
-      
       <div class="post">
         
+        <Shader class ="shader" ref="shaderRef"/>
+
         <div class="content">
           
           <component :is="currentComponent" :html="noteContent" />
@@ -184,7 +184,7 @@ watch(
   width: 100%;
   background-color: #1B1C1C;
   border: 1px solid #AAABAC10;
-  overflow-x: hidden;
+  overflow: hidden;
   border-radius: 5px;
 }
 
@@ -192,7 +192,7 @@ watch(
   pointer-events: none;
   position: absolute;
   top: 0; left: 0;
-  height: 100%;
+  height: 105%;
   width: 100%;
   z-index: 10;
 }
