@@ -203,14 +203,4 @@ watch(
   width: 100%;
 }
 
-.post::after {
-  content: '';
-  display: block;
-  height: 3rem;
-  margin-top: -1rem;
-  background: linear-gradient(to bottom, #1B1C1C00 0%, #1B1C1CFF 100%);
-  position: sticky;
-  bottom: 0;
-}
-
 </style>
