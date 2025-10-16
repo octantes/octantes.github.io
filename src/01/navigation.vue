@@ -2,20 +2,20 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-const emit = defineEmits(['toggle-view'])                                                                        // emit centered view toggle
-const props = defineProps({ disabled: Boolean, isCentered: Boolean })                                            // layout states
-const router = useRouter()                                                                                       // handles note open
-const route = useRoute()                                                                                         // current url
-const notes = ref([])                                                                                            // full note array
-const base = import.meta.env.BASE_URL.replace(/\/$/, '')                                                         // url base
-const activeFilter = ref('full')                                                                                 // active category
-const sortKey = ref('isoDate')                                                                                   // current order col
-const sortOrder = ref('desc')                                                                                    // current sort order
-const itemsPerPage = 8                                                                                           // number of notes
-const currentPage = ref(1)                                                                                       // current page
-const totalPages = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })              // returns pages in filters
+const emit = defineEmits(['toggle-view'])                                                                                             // emit centered view toggle
+const props = defineProps({ disabled: Boolean, isCentered: Boolean })                                                                 // layout states
+const router = useRouter()                                                                                                            // handles note open
+const route = useRoute()                                                                                                              // current url
+const notes = ref([])                                                                                                                 // full note array
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')                                                                              // url base
+const activeFilter = ref('full')                                                                                                      // active category
+const sortKey = ref('isoDate')                                                                                                        // current order col
+const sortOrder = ref('desc')                                                                                                         // current sort order
+const itemsPerPage = 8                                                                                                                // number of notes
+const currentPage = ref(1)                                                                                                            // current page
+const totalPages = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                                   // returns pages in filters
 
-const tabs = [                                                                                                   // names for filters 
+const tabs = [                                                                                                                        // names for filters 
   { label: 'todo', value: 'full' },
   { label: 'notas', value: 'posts' },
   { label: 'diseño', value: 'design' },
@@ -23,18 +23,13 @@ const tabs = [                                                                  
   { label: 'música', value: 'music' }
 ]
 
-function toggleLayout() { emit('toggle-view'); }
-function prevPage() { if (currentPage.value > 1 && !props.disabled) { currentPage.value-- } }                    // changes to previous page
-function nextPage() { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }     // changes to next page
-function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                 // opens note in content
-
-const paginatedNotes = computed(() => {                                                                          // returns current page notes 
+const paginatedNotes = computed(() => {                                                                                               // returns current page notes 
   const start = (currentPage.value - 1) * itemsPerPage
   const end = start + itemsPerPage
   return noteSortFilter.value.slice(start, end)
 })
 
-const noteSortFilter = computed(() => {                                                                          // applies filters and order to list 
+const noteSortFilter = computed(() => {                                                                                               // applies filters and order to list 
 
   const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
   const filtered = activeFilter.value === 'full' ? notes.value : notes.value.filter(note => note.type === filterType)
@@ -74,20 +69,25 @@ const noteSortFilter = computed(() => {                                         
   })
 })
 
-function navFilter(direction) {                                                                                  // changes filter manually 
+function toggleLayout() { emit('toggle-view'); }
+function prevPage() { if (currentPage.value > 1 && !props.disabled) { currentPage.value-- } }                                         // changes to previous page
+function nextPage() { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }                          // changes to next page
+function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                                      // opens note in content
+
+function navFilter(direction) {                                                                                                       // changes filter manually 
   if (props.disabled) return
   const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
   const newIndex = (currentIndex + direction + tabs.length) % tabs.length
   activeFilter.value = tabs[newIndex].value
 }
 
-function navSort(key) {                                                                                          // changes sorting column 
+function navSort(key) {                                                                                                               // changes sorting column 
   if (props.disabled) return
   if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
   else { sortKey.value = key; sortOrder.value = 'asc' }
 }
 
-onMounted(async () => {                                                                                          // searches notes on mount 
+onMounted(async () => {                                                                                                               // searches notes on mount 
   try {
     const response = await fetch(`${base}/index.json`)
     if (!response.ok) throw new Error(`http error ${response.status}`)
@@ -107,6 +107,19 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
   
   <div class="navigation">
 
+    <div class="banner" :class="{'bcentered': isCentered}">
+
+      <pre>
+ ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
+██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝██╔════╝██╔════╝
+██║   ██║██║        ██║   ███████║██╔██╗ ██║   ██║   █████╗  ███████╗
+██║   ██║██║        ██║   ██╔══██║██║╚██╗██║   ██║   ██╔══╝  ╚════██║
+╚██████╔╝╚██████╗   ██║   ██║  ██║██║ ╚████║   ██║   ███████╗███████║
+ ╚═════╝  ╚═════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝
+      </pre>
+      
+    </div>
+
     <div class="filters">
 
       <button @click="navFilter(-1)" :disabled="props.disabled"> < </button>
@@ -123,12 +136,12 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 
       <table>
 
-          <colgroup>
-            <col class="col-fecha">
-            <col class="col-titulo">
-            <col v-if="!isCentered" class="col-descripcion">
-            <col class="col-tags">
-          </colgroup>
+        <colgroup>
+          <col class="col-fecha">
+          <col class="col-titulo">
+          <col v-if="!isCentered" class="col-descripcion">
+          <col class="col-tags">
+        </colgroup>
 
         <thead>
           <tr>
@@ -174,15 +187,38 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
       <button @click="toggleLayout">centrar</button>
     </div>
 
-    <div v-if="!isCentered" class="contenido-extra">
-      <p>lo que tenga este if desaparece si cambiamos layout</p>
-    </div>
-
   </div>
 
 </template>
 
 <style>
+
+@media (max-width: 1080px) { .layoutcontrol button { display: none; } }
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  background-color: #1B1C1C;
+  color: #D8DADE;
+  padding: 2rem;
+  border: 1px solid #AAABAC10;
+  border-radius: 5px;
+  gap: 1rem;
+}
+
+.banner { display: flex; font-size: clamp(8px, .8vw, 24px); width: 100%; overflow: hidden; justify-content: center; user-select: none; }
+.banner pre { 
+  white-space: pre; 
+  overflow: visible; 
+  font-family: monospace; 
+  background: linear-gradient(125deg, #8AB6BB, #986C98); 
+  color: #986C98; 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  background-clip: text;
+}
+
+.banner.bcentered { font-size: clamp(6px, .25vw, 10px); }
 
 .layoutcontrol button { 
     background-color: #1B1C1C;
@@ -199,17 +235,6 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .layoutcontrol button:active { background-color: #AAABAC25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
 .layoutcontrol button:disabled { cursor: not-allowed; opacity: 0.25; }
 
-.navigation {
-  display: flex;
-  flex-direction: column;
-  background-color: #1B1C1C;
-  color: #D8DADE;
-  padding: 2rem;
-  border: 1px solid #AAABAC10;
-  border-radius: 5px;
-  gap: 1rem;
-}
-
 .filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none;                                                                                     }
 .filters button          { background-color: transparent; color: #AAABAC; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.25s ease; }
 .filters button:hover    { background-color: #AAABAC25; color: #D8DADE;                                                                                                                   }
@@ -223,7 +248,7 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .col-descripcion { width: 35%; }
 .col-tags        { width: 28%; }
 
-table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed; }
+table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed;           }
 thead tr                            { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
 th, td                              { padding: 0.5rem 1rem; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;             }
 th                                  { color:#AAABAC; font-weight: normal; cursor: pointer; position: relative; transition: background-color 0.25s ease; }
@@ -238,7 +263,7 @@ tbody tr                            { cursor: pointer;                    }
 tbody tr:hover                      { color: #986C9899;                 }
 tbody tr.active                     { color: #8AB6BB;                   }
 tbody tr.disabled                   { opacity: 0.25; cursor: not-allowed; }
-.bodyfill                           { pointer-events: none; opacity: 0;   }
+.bodyfill                           { pointer-events: none; opacity: 0;               }
 tfoot td                            { padding: 1rem; width: 100%; text-align: center; }
 
 .pagecontrols      { display: flex; justify-content: center; align-items: center; gap: 1rem; user-select: none; }

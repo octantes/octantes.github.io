@@ -112,9 +112,7 @@ onMounted(() => {
 
 </template>
 
-<style>
-
-@media (max-width: 1080px) { button { display: none; } }
+<style scoped>
 
 .statusbar {
   display: flex;

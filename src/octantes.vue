@@ -71,8 +71,6 @@ function toggleView() { isCentered.value = !isCentered.value }
   overflow: hidden;
 }
 
-
-
 @media (max-width: 1080px) {
 
   .pagina { height: auto; }
