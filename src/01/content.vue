@@ -146,7 +146,7 @@ watch(
 
 <template>
 
-  <div class="test">
+  <div class="notedisplay">
   
     <Portada :metadata="currentPost || {}" />
     
@@ -172,7 +172,7 @@ watch(
 
 <style>
 
-.test { display: flex; flex-direction: column; gap: 1rem; height: 100%; }
+.notedisplay { display: flex; flex-direction: column; gap: 1rem; height: 100%; }
 
 @media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: #8AB6BB !important; } }
 
@@ -203,7 +203,7 @@ watch(
   width: 100%;
 }
 
-.content::after {
+.post::after {
   content: '';
   display: block;
   height: 3rem;
