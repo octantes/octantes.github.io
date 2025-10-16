@@ -183,7 +183,7 @@ watch(
   height: 100%;
   width: 100%;
   background-color: #1B1C1C;
-  border: 1px solid #AAABAC25;
+  border: 1px solid #AAABAC10;
   overflow-x: hidden;
   border-radius: 5px;
 }
