@@ -203,4 +203,13 @@ watch(
   width: 100%;
 }
 
+.post::after {
+  content: '';
+  display: block;
+  height: 3rem;
+  margin-top: -1rem;
+  position: sticky;
+  bottom: 0;
+}
+
 </style>
