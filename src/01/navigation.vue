@@ -165,28 +165,24 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
         <tbody>
 
-          <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
-            <td colspan="3">no hay notas que coincidan con "{{ searchQuery }}"</td>
-          </tr>
-
-          <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
+          <tr v-for="note in paginatedNotes" 
+              :key="note.slug" 
+              @click="openNote(note.type, note.slug)" 
+              :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
-          
-          <template v-if="noteSortFilter.length === 0 && searchQuery">
-             <tr v-for="i in (itemsPerPage - 1)" :key="`placeholder-no-results-${i}`" class="bodyfill">
-              <td colspan="3">&nbsp;</td>
-            </tr>
-          </template>
-          
-          <template v-else>
-            <tr v-for="i in (itemsPerPage - paginatedNotes.length)" :key="`placeholder-${i}`" class="bodyfill">
-              <td colspan="3">&nbsp;</td>
-            </tr>
-          </template>
 
+          <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
+            <td colspan="3">no hay notas que coincidan con "{{ searchQuery }}"</td>
+          </tr>
+
+          <tr v-for="i in (itemsPerPage - (noteSortFilter.length > 0 ? paginatedNotes.length : (searchQuery ? 1 : 0)))" 
+              :key="`placeholder-${i}`" class="bodyfill">
+            <td colspan="3">&nbsp;</td>
+          </tr>
+          
         </tbody>
 
         <tfoot>
@@ -292,7 +288,7 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
 .searchbox:focus { background-color: #986C9825; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; outline: none; }
 
-.no-results td { text-align: center; color: #AAABAC; padding: 1rem; font-style: italic; opacity: 0.5; }
+.no-results td { text-align: center; color: #AAABAC; font-style: italic; opacity: 0.5; }
 
 .filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none; justify-content: center; margin-top: .5rem;                                                           }
 .filters button          { background-color: transparent; color: #AAABAC; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.25s ease; }
