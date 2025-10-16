@@ -14,16 +14,17 @@ const sortOrder = ref('desc')                                                   
 const itemsPerPage = 8                                                                                                                // number of notes
 const currentPage = ref(1)                                                                                                            // current page
 const currentTagline = ref('')
+const searchQuery = ref('')
 
 const totalPages = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                                   // returns pages in filters
 
 const taglines = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]
 
 const tabs = [                                                                                                                        // names for filters 
-  { label: 'todo', value: 'full' },
-  { label: 'notas', value: 'posts' },
+  { label: 'completo', value: 'full' },
+  { label: 'textos', value: 'posts' },
   { label: 'diseño', value: 'design' },
-  { label: 'código', value: 'dev' },
+  { label: 'desarrollo', value: 'dev' },
   { label: 'música', value: 'music' }
 ]
 
@@ -37,6 +38,16 @@ const noteSortFilter = computed(() => {                                         
 
   const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
   const filtered = activeFilter.value === 'full' ? notes.value : notes.value.filter(note => note.type === filterType)
+  const query = searchQuery.value.toLowerCase().trim()
+
+  if (query) {
+    filtered = filtered.filter(note =>
+      note.title.toLowerCase().includes(query) ||
+      note.description.toLowerCase().includes(query) ||
+      note.tags.some(tag => tag.toLowerCase().includes(query)) ||
+      note.date.includes(query)
+    )
+  }
 
   return [...filtered].sort((a, b) => {
     let valA, valB
@@ -101,7 +112,7 @@ onMounted(async () => {                                                         
 
 })
 
-watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })                                                            // resets pagination
+watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })                                               // resets pagination
 
 </script>
 
@@ -160,6 +171,10 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
 
+          <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
+            <td colspan="3">no hay notas que coincidan con "{{ searchQuery }}"</td>
+          </tr>
+
           <tr v-if="paginatedNotes.length < itemsPerPage" v-for="i in (itemsPerPage - paginatedNotes.length)" :key="`placeholder-${i}`" class="bodyfill">
             <td :colspan="isCentered ? 3 : 4">&nbsp;</td>
           </tr>
@@ -169,11 +184,13 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
         <tfoot>
           <tr>
             <td :colspan="3">
+
               <div class="pagecontrols">
                 <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || props.disabled"> < </button>
                 <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
                 <button class="navbutton" @click="nextPage" :disabled="currentPage >= totalPages || props.disabled"> > </button>
               </div>
+
             </td>
           </tr>
         </tfoot>
@@ -183,7 +200,8 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
     </div>
     
     <div class="layoutcontrol">
-      <button @click="toggleLayout">centrar</button>
+      <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="props.disabled" />
+      <!--<button @click="toggleLayout">centrar</button>-->
     </div>
 
     <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
@@ -203,7 +221,7 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
   align-items: center;
   background-color: #1B1C1C;
   color: #D8DADE;
-  padding: 3rem 8rem 2rem 8rem;
+  padding: 3rem 2rem 2rem 2rem;
   border: 1px solid #AAABAC10;
   border-radius: 5px;
   gap: 1rem;
@@ -219,7 +237,10 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
   -webkit-background-clip: text; 
   -webkit-text-fill-color: transparent; 
   background-clip: text;
+  flex-shrink: 0;
 }
+
+.banner.bcentered { font-size: .5vw; }
 
 .tagline {
   background: linear-gradient(125deg, #8AB6BB, #986C98);
@@ -231,8 +252,7 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
   margin-top: auto;
 }
 
-.banner.bcentered { font-size: .5vw; }
-
+.layoutcontrol { width: 100%; padding-left: 4rem; padding-right: 4rem;}
 .layoutcontrol button { 
     background-color: #1B1C1C;
     padding: 0.5rem 1rem;
@@ -244,9 +264,27 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
     transition: background-color 0.25s ease;
 }
 
-.layoutcontrol button:hover { background-color: #2B2C2C; color: #D8DADE; }
+.layoutcontrol button:hover { background-color: #AAABAC25; color: #D8DADE; }
 .layoutcontrol button:active { background-color: #AAABAC25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px; }
 .layoutcontrol button:disabled { cursor: not-allowed; opacity: 0.25; }
+
+.searchbox { 
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    border: none;
+    box-shadow: inset 0 0 0 1px #AAABAC10;
+    color: #AAABAC;
+    font-style: italic;
+    cursor: text;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.searchbox:focus { background-color: #986C9825; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; outline: none; }
+
+.no-results td { text-align: center; color: #AAABAC; padding: 1rem; font-style: italic; opacity: 0.5; }
 
 .filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none; justify-content: center; margin-top: .5rem;                                                           }
 .filters button          { background-color: transparent; color: #AAABAC; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.25s ease; }
@@ -259,6 +297,7 @@ watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })      
 .col-titulo      { width: 50%; }
 .col-tags        { width: 30%; }
 
+.tablediv                           { padding-left: 4rem; padding-right: 4rem;                                                                            }
 table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed;           }
 thead tr                            { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
 th, td                              { padding: 0.5rem 1rem; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;             }
@@ -274,8 +313,8 @@ tbody tr                            { cursor: pointer;                    }
 tbody tr:hover                      { color: #986C9899;                 }
 tbody tr.active                     { color: #8AB6BB;                   }
 tbody tr.disabled                   { opacity: 0.25; cursor: not-allowed; }
-.bodyfill                           { pointer-events: none; opacity: 0;               }
-tfoot td                            { padding: 1rem; width: 100%; text-align: center; }
+.bodyfill                           { pointer-events: none; opacity: 0;   }
+tfoot td                            { padding-top: 1rem; padding-bottom: 0; width: 100%; text-align: center; }
 
 .pagecontrols      { display: flex; justify-content: center; align-items: center; gap: 1rem; user-select: none; }
 .pagecontrols span { color: #AAABAC; }
