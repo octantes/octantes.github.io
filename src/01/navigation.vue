@@ -48,11 +48,6 @@ const noteSortFilter = computed(() => {                                         
         valB = b.title.toLowerCase()
         break
 
-      case 'description':
-        valA = a.description.toLowerCase()
-        valB = b.description.toLowerCase()
-        break
-
       case 'tags':
         valA = a.tags[0]?.toLowerCase() || ''
         valB = b.tags[0]?.toLowerCase() || ''
@@ -107,7 +102,6 @@ onMounted(async () => {                                                         
 })
 
 watch([activeFilter, sortKey, sortOrder], () => { currentPage.value = 1 })                                                            // resets pagination
-watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value === 'description') { sortKey.value = 'isoDate' } })   // resets order on hidden col
 
 </script>
 
@@ -147,7 +141,6 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
         <colgroup>
           <col class="col-fecha">
           <col class="col-titulo">
-          <col v-if="!isCentered" class="col-descripcion">
           <col class="col-tags">
         </colgroup>
 
@@ -155,7 +148,6 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
           <tr>
             <th @click="navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder">fecha</th>
             <th @click="navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
-            <th v-if="!isCentered" @click="navSort('description')" :class="{ active: sortKey === 'description' }" :data-order="sortOrder">descripción</th>
             <th @click="navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
           </tr>
         </thead>
@@ -165,7 +157,6 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
           <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
-            <td v-if="!isCentered">{{ note.description.split(',')[0] }}</td>
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
 
@@ -177,7 +168,7 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 
         <tfoot>
           <tr>
-            <td :colspan="isCentered ? 3 : 4">
+            <td :colspan="3">
               <div class="pagecontrols">
                 <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || props.disabled"> < </button>
                 <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
@@ -212,7 +203,7 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
   align-items: center;
   background-color: #1B1C1C;
   color: #D8DADE;
-  padding: 3rem 2rem 2rem 2rem;
+  padding: 3rem 8rem 2rem 8rem;
   border: 1px solid #AAABAC10;
   border-radius: 5px;
   gap: 1rem;
@@ -264,10 +255,9 @@ watch(() => props.isCentered, (isCentered) => { if (isCentered && sortKey.value 
 .filters button:disabled { opacity: 0.25; cursor: not-allowed;                                                                                                                                }
 .tabs                    { display: flex; gap: 1rem; overflow: hidden; }
 
-.col-fecha       { width: 12%; }
-.col-titulo      { width: 25%; }
-.col-descripcion { width: 35%; }
-.col-tags        { width: 28%; }
+.col-fecha       { width: 20%; }
+.col-titulo      { width: 50%; }
+.col-tags        { width: 30%; }
 
 table                               { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; user-select: none; table-layout: fixed;           }
 thead tr                            { box-shadow: inset 0 0 0 1px #AAABAC25; border-radius: 5px;                                                        }
