@@ -18,7 +18,7 @@ const searchQuery = ref('')
 
 const totalPages = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                                   // returns pages in filters
 
-const taglines = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]
+const taglines = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                                // random taglines
 
 const tabs = [                                                                                                                        // names for filters 
   { label: 'completo', value: 'full' },
@@ -165,19 +165,27 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
         <tbody>
 
+          <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
+            <td colspan="3">no hay notas que coincidan con "{{ searchQuery }}"</td>
+          </tr>
+
           <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
             <td>{{ note.tags.join(', ') }}</td>
           </tr>
-
-          <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
-            <td colspan="3">no hay notas que coincidan con "{{ searchQuery }}"</td>
-          </tr>
-
-          <tr v-if="paginatedNotes.length < itemsPerPage" v-for="i in (itemsPerPage - paginatedNotes.length)" :key="`placeholder-${i}`" class="bodyfill">
-            <td :colspan="isCentered ? 3 : 4">&nbsp;</td>
-          </tr>
+          
+          <template v-if="noteSortFilter.length === 0 && searchQuery">
+             <tr v-for="i in (itemsPerPage - 1)" :key="`placeholder-no-results-${i}`" class="bodyfill">
+              <td colspan="3">&nbsp;</td>
+            </tr>
+          </template>
+          
+          <template v-else>
+            <tr v-for="i in (itemsPerPage - paginatedNotes.length)" :key="`placeholder-${i}`" class="bodyfill">
+              <td colspan="3">&nbsp;</td>
+            </tr>
+          </template>
 
         </tbody>
 
