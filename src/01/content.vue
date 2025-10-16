@@ -184,7 +184,8 @@ watch(
   width: 100%;
   background-color: #1B1C1C;
   border: 1px solid #AAABAC10;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   border-radius: 5px;
 }
 
@@ -192,7 +193,7 @@ watch(
   pointer-events: none;
   position: absolute;
   top: 0; left: 0;
-  height: 105%;
+  height: 100%;
   width: 100%;
   z-index: 10;
 }
