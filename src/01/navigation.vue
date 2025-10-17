@@ -97,13 +97,6 @@ function navSort(key) {                                                         
   else { sortKey.value = key; sortOrder.value = 'asc' }
 }
 
-function tagFilter(tag) { 
-  if (props.disabled) return; 
-  searchQuery.value = tag; 
-  activeFilter.value = 'full'; 
-  currentPage.value = 1 
-}
-
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
   const randomIndex = Math.floor(Math.random() * taglines.length)
@@ -178,7 +171,7 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
               :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
-            <td> <button v-for="(tag, index) in note.tags" :key="index" @click.stop="tagFilter(tag)" class="tagfilter" :disabled="props.disabled"> {{ tag }} </button> </td>
+            <td>{{ note.tags.join(', ') }}</td>
           </tr>
 
           <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
@@ -222,35 +215,6 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 </template>
 
 <style>
-
-.tagfilter {
-  background-color: transparent;
-  color: #986C98;
-  padding: 0.2rem 0.4rem;
-  border: 1px solid #986C9825;
-  border-radius: 3px;
-  font-size: 0.8em;
-  cursor: pointer;
-  transition: background-color 0.25s ease, color 0.25s ease;
-  margin-right: 0.3rem;
-  white-space: nowrap;
-  line-height: 1;
-}
-
-tbody tr .tagfilter:hover { color: #D8DADE; background-color: #986C9825; }
-
-tbody tr td:nth-child(3) {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    height: 100%;
-    cursor: default;
-}
-
-tbody tr td:nth-child(1),
-tbody tr td:nth-child(2) { cursor: pointer; }
 
 @media (max-width: 1080px) { .layoutcontrol button { display: none; }  }
 @media (max-width: 580px) { .tabs button { display: none; } .tabs button.active { display: flex; } }
