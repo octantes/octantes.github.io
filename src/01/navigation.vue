@@ -84,6 +84,8 @@ function prevPage() { if (currentPage.value > 1 && !props.disabled) { currentPag
 function nextPage() { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }                          // changes to next page
 function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                                      // opens note in content
 
+function tagFilter(tag) { if (props.disabled) return; searchQuery.value = tag; activeFilter.value = 'full'; currentPage.value = 1 }
+
 function navFilter(direction) {                                                                                                       // changes filter manually 
   if (props.disabled) return
   const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
@@ -165,13 +167,10 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
         <tbody>
 
-          <tr v-for="note in paginatedNotes" 
-              :key="note.slug" 
-              @click="openNote(note.type, note.slug)" 
-              :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
+          <tr v-for="note in paginatedNotes" :key="note.slug" @click="openNote(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
-            <td>{{ note.tags.join(', ') }}</td>
+            <td> <button v-for="(tag, index) in note.tags" :key="index" @click.stop="filterByTag(tag)" class="tag-button" :disabled="props.disabled"> {{ tag }} </button> </td>
           </tr>
 
           <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
@@ -319,6 +318,25 @@ tbody tr.active                     { color: #8AB6BB;                   }
 tbody tr.disabled                   { opacity: 0.25; cursor: not-allowed; }
 .bodyfill                           { pointer-events: none; opacity: 0;   }
 tfoot td                            { padding-top: 1rem; padding-bottom: 0; width: 100%; text-align: center; }
+
+.tag-button {
+  background-color: transparent;
+  color: #986C98;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid #986C9825;
+  border-radius: 3px;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  margin-right: 0.3rem;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+tbody tr .tag-button:hover { color: #D8DADE; background-color: #986C9825; }
+tbody tr td:nth-child(1),
+tbody tr td:nth-child(2) { cursor: pointer; }
+tbody tr td:nth-child(3) { display: flex; flex-wrap: nowrap; overflow-x: auto; align-items: center; padding: 0.5rem 1rem; height: 100%; cursor: default; }
 
 .pagecontrols      { display: flex; justify-content: center; align-items: center; gap: 1rem; user-select: none; }
 .pagecontrols span { color: #AAABAC; }
