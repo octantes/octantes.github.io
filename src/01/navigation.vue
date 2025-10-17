@@ -97,6 +97,13 @@ function navSort(key) {                                                         
   else { sortKey.value = key; sortOrder.value = 'asc' }
 }
 
+function tagFilter(tag) { 
+  if (props.disabled) return; 
+  searchQuery.value = tag; 
+  activeFilter.value = 'full'; 
+  currentPage.value = 1 
+}
+
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
   const randomIndex = Math.floor(Math.random() * taglines.length)
