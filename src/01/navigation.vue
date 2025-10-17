@@ -84,6 +84,8 @@ function prevPage() { if (currentPage.value > 1 && !props.disabled) { currentPag
 function nextPage() { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }                          // changes to next page
 function openNote(type, slug) { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                                      // opens note in content
 
+function setSearchQuery(tag) { if (!props.disabled) { searchQuery.value = tag } }
+
 function navFilter(direction) {                                                                                                       // changes filter manually 
   if (props.disabled) return
   const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
@@ -171,7 +173,9 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
               :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
-            <td>{{ note.tags.join(', ') }}</td>
+            <td class="tagcol">
+              <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="setSearchQuery(tag)" :disabled="props.disabled"> {{ tag }} </button>
+            </td>
           </tr>
 
           <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
@@ -215,6 +219,24 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 </template>
 
 <style>
+
+.tagcol { cursor: default !important; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.tagfilter {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: #AAABAC;
+  transition: color 0.2s ease;
+  white-space: nowrap; 
+  text-align: left;
+}
+.tagfilter:hover { color: #8AB6BB; text-decoration: underline; }
+.tagfilter:disabled { cursor: not-allowed; opacity: 0.5; text-decoration: none; }
+
+tbody tr td:nth-child(3) { cursor: default; }
 
 @media (max-width: 1080px) { .layoutcontrol button { display: none; }  }
 @media (max-width: 580px) { .tabs button { display: none; } .tabs button.active { display: flex; } }
