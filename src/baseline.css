@@ -1,0 +1,61 @@
+/* DEFAULTS */
+
+html, body, #octantes {
+  box-sizing: border-box;
+  background-color: #1b1c1c;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#octantes > .root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+*, *::before, *::after { box-sizing: inherit; }
+
+/* fonts and styles */
+
+body, i, strong { font-family: 'Outfit', sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+code, pre { font-family: 'Inconsolata', monospace; }
+
+strong { color: #986C98; }
+i { color: #8AB6BB; margin: 0.1rem; }
+
+/* links */
+
+a { 
+  font-family: 'Outfit';
+  background: linear-gradient(125deg, #8AB6BB, #986C98);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: underline;
+  text-decoration-color: #8AB6BB80;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.25s ease;
+}
+
+a:hover { 
+  background: linear-gradient(250deg, #8AB6BB, #986C98);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: underline;
+  text-decoration-color: #986C9880;
+}
+
+/* highlighting */
+
+::selection { background-color: #986C98; color: #1B1C1C; }
+::-moz-selection { background-color: #986C98; color: #1B1C1C; }
+
+/* scrollbars */
+
+::-webkit-scrollbar { background-color: #3C3C3C; width: 4px; }
+::-webkit-scrollbar-thumb { background-color: #986C98; }
