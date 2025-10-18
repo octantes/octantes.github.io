@@ -220,33 +220,12 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
 <style>
 
-.tagcol { cursor: default !important; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-
-.tagfilter {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  color: #AAABAC;
-  transition: color 0.2s ease;
-  white-space: nowrap; 
-  text-align: left;
-}
-.tagfilter:hover { color: #8AB6BB; text-decoration: underline; }
-.tagfilter:disabled { cursor: not-allowed; opacity: 0.5; text-decoration: none; }
-
-tbody tr td:nth-child(3) { cursor: default; }
-
 @media (max-width: 1080px) { .layoutcontrol button { display: none; }  }
 @media (max-width: 580px) { .tabs button { display: none; } .tabs button.active { display: flex; } }
 
-.navigation {
-  display: flex;
+.navigation { display: flex; background-color: #1B1C1C; color: #D8DADE;
   flex-direction: column;
   align-items: center;
-  background-color: #1B1C1C;
-  color: #D8DADE;
   padding: 3rem 2rem 2rem 2rem;
   border: 1px solid #AAABAC10;
   border-radius: 5px;
@@ -305,15 +284,15 @@ tbody tr td:nth-child(3) { cursor: default; }
     cursor: text;
     border-radius: 5px;
     text-align: center;
+    font-family: 'Outfit', Outfit;
     transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
-
 .searchbox:focus { background-color: #986C9825; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25; outline: none; }
 
 .no-results td { text-align: center; color: #AAABAC; font-style: italic; opacity: 0.5; }
 
-.filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none; justify-content: center; margin-top: .5rem;                                                           }
-.filters button          { background-color: transparent; color: #AAABAC; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.25s ease; }
+.filters                 { display: flex; align-items: center; gap: 1rem; width: 100%; user-select: none; justify-content: center; margin-top: .5rem;                                         }
+.filters button          { background-color: transparent; color: #AAABAC; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.25s ease; font-family: 'Outfit', sans-serif; }
 .filters button:hover    { background-color: #AAABAC25; color: #D8DADE;                                                                                                                   }
 .filters button.active   { background-color: #8AB6BB25; color: #D8DADE; box-shadow: inset 0 0 0 1px #AAABAC25;                                                                          }
 .filters button:disabled { opacity: 0.25; cursor: not-allowed;                                                                                                                                }
@@ -339,8 +318,14 @@ tbody tr                            { cursor: pointer;                    }
 tbody tr:hover                      { color: #986C9899;                 }
 tbody tr.active                     { color: #8AB6BB;                   }
 tbody tr.disabled                   { opacity: 0.25; cursor: not-allowed; }
+tbody tr td:nth-child(3)            { cursor: default;                    }
 .bodyfill                           { pointer-events: none; opacity: 0;   }
 tfoot td                            { padding-top: 1rem; padding-bottom: 0; width: 100%; text-align: center; }
+
+.tagcol { cursor: default; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tagfilter { cursor: pointer; color: #986C98; background: none; border: none; padding: 0; margin: 0; transition: color 0.2s ease; }
+.tagfilter:hover { color: #8AB6BB; text-decoration: underline; }
+.tagfilter:disabled { cursor: not-allowed; opacity: 0.5; text-decoration: none; }
 
 .pagecontrols      { display: flex; justify-content: center; align-items: center; gap: 1rem; user-select: none; }
 .pagecontrols span { color: #AAABAC; }
