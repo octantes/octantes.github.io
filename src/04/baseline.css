@@ -1,0 +1,112 @@
+/* PALETTE */
+
+:root { 
+
+    --font-main:    'Outfit',        sans-serif;
+    --font-mono:    'Inconsolata',   monospace;
+    --font-grotesk: 'Space Grotesk', sans-serif;
+
+    --carbon25:  #1B1C1C25;
+    --carbon50:  #1B1C1C50;
+    --carbon:    #1B1C1C;
+    --ceniza:    #2B2C2C;
+    --polvo:     #3C3C3C;
+    --humo:      #AAABAC;
+    --humo10:    #AAABAC10;
+    --humo25:    #AAABAC25;
+    --humo50:    #AAABAC50;
+    --niebla:    #D8DADE;
+    --brillo:    #F2F2F2;
+    --lirio:     #986C98;
+    --lirio99:   #986C9899;
+    --lirio80:   #986C9880;
+    --lirio35:   #986C9835;
+    --lirio65:   #986C9865;
+    --lirio25:   #986C9825;
+    --cristal:   #8AB6BB;
+    --cristal80: #8AB6BB80;
+    --cristal25: #8AB6BB25;
+
+    --shadow-border: inset 0 0 0 1px;
+    --small-outline: 1px solid;
+
+    --radius-xs: 5px;
+    --radius-ss: 3px;
+
+    --animate-fast: 0.25s ease;
+    --animate-mid:  0.50s ease;
+
+    --alpha-invisible: 0.00;
+    --alpha-half:      0.50;
+    --alpha-disabled:  0.25;
+
+    --scale-min: scale(0.99);
+    --scale-low: scale(0.95);
+
+}
+
+/* RESET */
+
+html, body, #octantes { 
+
+  /* LAYOUT */ box-sizing: border-box;
+  /* BOX    */ width: 100%; height: 100%; margin: 0; padding: 0;
+  /* FILL   */ background-color: var(--carbon);
+
+}
+
+#octantes > .root { 
+
+  /* LAYOUT */ display: flex; flex-direction: column;
+  /* BOX    */ width: 100%; height: 100%;
+  
+}
+
+*, *::before, *::after { box-sizing: inherit;                   }
+body, i, strong        { font-family: var(--font-main);         }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-grotesk);      }
+code, pre              { font-family: var(--font-mono);         }
+strong                 { color: var(--lirio);                   }
+i                      { color: var(--cristal); margin: 0.1rem; }
+
+a { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;
+  /* FONT   */ font-family: var(--font-main); text-decoration: underline; text-decoration-color: var(--cristal80); text-underline-offset: 3px; 
+  /* MOTION */ transition: text-decoration-color 0.25s ease;
+  /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+  &:hover { 
+    
+    /* FILL   */ background: linear-gradient(250deg, var(--cristal), var(--lirio)); background-clip: text;
+    /* FONT   */ text-decoration: underline; text-decoration-color: var(--lirio);
+    /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  
+  }
+
+}
+
+::selection               { background-color: var(--lirio); color: var(--carbon); }
+::-moz-selection          { background-color: var(--lirio); color: var(--carbon); }
+::-webkit-scrollbar       { background-color: var(--polvo); width: 4px;           }
+::-webkit-scrollbar-thumb { background-color: var(--lirio);                       }
+
+audio[controls] { 
+
+  /* BOX    */ width: 100%;
+  /* FILL   */ background: var(--carbon);
+
+}
+
+audio::-webkit-media-controls-enclosure { 
+
+  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+  /* FILL   */ background-color: var(--lirio35);
+
+}
+
+audio::-webkit-media-controls-enclosure:hover { 
+
+  /* FILL   */ background-color: var(--lirio65);
+
+}

@@ -1,4 +1,4 @@
-<script setup>
+<script setup> 
 import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Shader from '../03/shader.vue'
@@ -144,7 +144,7 @@ watch(
 
 </script>
 
-<template>
+<template> 
 
   <div class="notedisplay">
   
@@ -169,3 +169,45 @@ watch(
   </div>
 
 </template>
+
+<style scoped> 
+
+@media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; } }
+
+.notedisplay { display: flex; flex-direction: column; height: 100%; gap: 1rem; }
+
+.container { position: relative; }
+
+.post { 
+
+  /* LAYOUT */ position: relative;
+  /* BOX    */ height: 100%; width: 100%; overflow-x: hidden; overflow-y: auto;
+  /* FILL   */ background-color: var(--carbon);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+
+  &::after {
+    
+    /* LAYOUT */ position: sticky; display: block; bottom: 0;
+    /* BOX    */ height: 3rem; margin-top: -1rem;
+    /* FONT   */ content: '';
+    
+  }
+
+}
+
+.shader { 
+  
+  /* CURSOR */ pointer-events: none;
+  /* LAYOUT */ position: absolute; top: 0; left: 0;
+  /* BOX    */ width: 100%; height: 100%; z-index: 10;
+  
+}
+
+.content { 
+
+  /* LAYOUT */ position: relative; top: 0; left: 0;
+  /* BOX    */ width: 100%;
+
+}
+
+</style>

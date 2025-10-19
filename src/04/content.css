@@ -1,0 +1,68 @@
+/* ARTICLES */
+
+.S6 { 
+
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+  
+  & img { 
+
+    /* LAYOUT */ display: block; 
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+/* DESIGN */
+
+.S7 { 
+
+  /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+
+  }
+
+  & video { 
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+.S7TEXT { 
+
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+  
+}
+
+/* EMBEDS */
+
+.YTVideo { 
+
+  /* LAYOUT */ position: relative; 
+  /* BOX    */ width: 100%; height: 100%; aspect-ratio: 16 / 9;
+  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+}
