@@ -505,8 +505,8 @@ table {
   .tablediv { padding-left: 0rem; padding-right: 0rem;}
 
   table .col-fecha  { width: 02%; }
-  table .col-titulo { width: 58%; }
-  table .col-tags   { width: 40%; }
+  table .col-titulo { width: 73%; }
+  table .col-tags   { width: 25%; }
 
   .tabs button        { display: none; }
   .tabs button.active { display: flex; }
