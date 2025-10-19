@@ -25,6 +25,13 @@ function nextPage()            { if (currentPage.value < totalPages.value && !pr
 function noteOpen(type, slug)  { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                                     // opens a note in content
 function noteSearch(tag)       { if (!props.disabled) { searchQuery.value = tag } }                                                   // searches terms in notes
 
+function navHome() {                                                                                                                  // navigates to root 
+
+    if (props.disabled) return
+    router.push({ path: '/' })
+
+}
+
 function navFilter(direction) {                                                                                                       // changes filter manually 
 
   if (props.disabled) return
@@ -124,7 +131,7 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
   
   <div class="navigation">
 
-    <div class="banner" :class="{'bcentered': isCentered}">
+    <div class="banner clickable" :class="{'bcentered': isCentered}" @click="navHome">
 
 <pre>
  ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
@@ -207,7 +214,9 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
       <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="props.disabled" />
     </div>
 
-    <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+    <div class="bottom">
+      <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+    </div>
 
   </div>
 
@@ -235,9 +244,11 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
 .banner { 
 
-  /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
   /* BOX    */ width: 100%; overflow: hidden;
   /* FONT   */ font-size: .8vw;
+
+  &.clickable { cursor: pointer; }
 
   & pre {
   
@@ -260,7 +271,7 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 .filters { 
 
   /* CURSOR */ user-select: none;
-  /* LAYOUT */ display: flex; align-items: center; justify-content: center;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   /* BOX    */ width: 100%; margin-top: .5rem; gap: 1rem;
 
   & button {
@@ -282,19 +293,21 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
 .tabs { 
 
-  /* LAYOUT */ display: flex;
+  /* LAYOUT */ display: flex; flex-shrink: 0;
   /* BOX    */ gap: 1rem; overflow: hidden;
 
 }
 
 .tablediv { 
 
+  /* LAYOUT */ flex-shrink: 0;
   /* BOX    */ padding-left: 4rem; padding-right: 4rem;
   
 }
 
 table { 
 
+  /* LAYOUT */ flex-shrink: 0;
   /* TABLE  */ table-layout: fixed;
   /* BOX    */ width: 100%;
   /* BORDER */ border-collapse: separate; border-spacing: 0 0.5rem;
@@ -393,7 +406,8 @@ table {
 }
 
 .layoutcontrol { 
-  
+
+  /* LAYOUT */ flex-shrink: 0;
   /* BOX    */ width: 100%; padding-left: 4rem; padding-right: 4rem;
   
 }
@@ -401,7 +415,7 @@ table {
 .pagecontrols {
 
   /* CURSOR */ user-select: none;
-  /* LAYOUT */ display: flex; justify-content: center; align-items: center;
+  /* LAYOUT */ display: flex; justify-content: center; align-items: center; flex-shrink: 0;
   /* BOX    */ gap: 1rem;
 
   & span { color: var(--humo); }
@@ -442,9 +456,10 @@ table {
 
 }
 
+.bottom { display:flex; height: 100%; align-items: center; justify-content: center; }
+
 .tagline { 
 
-  /* BOX    */ margin-top: auto;
   /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
   /* FONT   */ font-size: clamp(16px, .9vw, 24px); font-style: italic;
   /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
