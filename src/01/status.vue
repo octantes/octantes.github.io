@@ -72,7 +72,7 @@ onUnmounted(() => { clearInterval(timeInterval); clearInterval(btcInterval) })
 
     <div class="stleft">
 
-      <a href="#" @click.prevent="openLatest">{{ latestPost.title }}</a>
+      <a href="#" @click.prevent="openLatest">ultima nota - {{ latestPost.title }}</a>
 
     </div>
 
