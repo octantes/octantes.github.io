@@ -28,7 +28,8 @@ function noteSearch(tag)       { if (!props.disabled) { searchQuery.value = tag 
 function navHome() {                                                                                                                  // navigates to root 
 
     if (props.disabled) return
-    router.push({ path: '/' })
+    if (route.params.slug) { router.push({ path: '/' }); window.location.reload() }
+    else { router.push({ path: '/' }) }
 
 }
 
