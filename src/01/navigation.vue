@@ -307,8 +307,8 @@ table {
   /* BORDER */ border-collapse: separate; border-spacing: 0 0.5rem;
 
   & .col-fecha  { width: 20%; }
-  & .col-titulo { width: 50%; }
-  & .col-tags   { width: 30%; }
+  & .col-titulo { width: 60%; }
+  & .col-tags   { width: 20%; }
 
   & thead tr { 
 
@@ -464,11 +464,15 @@ table {
 
   .tablediv { padding-left: 2rem; padding-right: 2rem;}
 
+  table .col-fecha  { width: 20%; }
+  table .col-titulo { width: 50%; }
+  table .col-tags   { width: 30%; }
+
 }
 
-@media (max-width: 1080px) { 
+@media (max-width: 1400px) { 
 
-  .tablediv { padding-left: 1rem; padding-right: 1rem;}
+  .tablediv { padding-left: 2rem; padding-right: 2rem;}
 
   table .col-fecha  { width: 30%; }
   table .col-titulo { width: 40%; }
