@@ -1,4 +1,4 @@
-<script setup>
+<script setup> 
 import { ref, onMounted, onUnmounted } from 'vue'
 import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'
