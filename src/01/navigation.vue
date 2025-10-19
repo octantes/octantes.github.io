@@ -225,13 +225,6 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
 <style scoped> 
 
-@media (max-width: 580px) {
-
-  .tabs button        { display: none; }
-  .tabs button.active { display: flex; }
-
-}
-
 .navigation { 
 
   /* CURSOR */ user-select: none;
@@ -464,6 +457,29 @@ table {
   /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
   /* FONT   */ font-size: clamp(16px, .9vw, 24px); font-style: italic;
   /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
+
+}
+
+@media (max-width: 1600px) { 
+
+  .tablediv { padding-left: 2rem; padding-right: 2rem;}
+
+}
+
+@media (max-width: 1080px) { 
+
+  .tablediv { padding-left: 1rem; padding-right: 1rem;}
+
+  table .col-fecha  { width: 30%; }
+  table .col-titulo { width: 40%; }
+  table .col-tags   { width: 30%; }
+
+}
+
+@media (max-width: 580px) {
+
+  .tabs button        { display: none; }
+  .tabs button.active { display: flex; }
 
 }
 
