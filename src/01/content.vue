@@ -75,6 +75,8 @@ async function loadNote(slug) {
       })
       
       await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
+
+      if (window.innerWidth <= 1080) { const postEl = document.querySelector('.post'); if (postEl) { postEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
       
     }
     
