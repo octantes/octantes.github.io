@@ -1,18 +1,13 @@
 <script setup> 
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()                                                                                                            // handles note open route
 const btcPrice = ref('---')                                                                                                           // btc price fetch result
 const latestPost = ref({ title: 'cargando...', url: '' })                                                                             // latest note fetch result
 const currentTime = ref('--:--')                                                                                                      // current time fetch result
-const isLive = ref(false)                                                                                                             // streaming fetch result bool
-const liveUrl = ref('#')                                                                                                              // streaming fetch result url
 const barContent = ref('/ '.repeat(300))                                                                                              // progress bar animation content
-const liveStatusText = computed(() => isLive.value ? 'TRANSMITIENDO EN VIVO' : 'TRANSMISION OFFLINE')                                 // live block text
-const statusIndicatorClass = computed(() => isLive.value ? 'live' : 'offline')                                                        // live block text
 
-let statusInterval = null                                                                                                             // stream update interval
 let timeInterval = null                                                                                                               // time update interval
 let btcInterval = null                                                                                                                // btc update interval
 
@@ -28,19 +23,6 @@ function fetchTime() {                                                          
     hour: '2-digit',
     minute: '2-digit'
   })
-
-}
-
-async function fetchStream() { 
-  
-  try {
-
-    const shouldBeLive = Math.random() > 0.5
-    const mockApiResponse = { isLive: shouldBeLive, url: shouldBeLive ? 'https://www.twitch.tv/octantes' : '#' }
-    isLive.value = mockApiResponse.isLive
-    liveUrl.value = mockApiResponse.url
-
-  } catch (e) { console.error('error chequeando el estado en vivo:', e); isLive.value = false }
 
 }
 
@@ -75,13 +57,12 @@ async function fetchBTC() {
 onMounted(() => { 
 
   fetchLatest() ;
-  fetchStream() ; statusInterval = setInterval(fetchStream, 120000);
   fetchBTC()    ; btcInterval    = setInterval(fetchBTC, 60000);
   fetchTime()  ; timeInterval   = setInterval(fetchTime, 15000);
 
 })
 
-onUnmounted(() => { clearInterval(statusInterval); clearInterval(timeInterval); clearInterval(btcInterval) })
+onUnmounted(() => { clearInterval(timeInterval); clearInterval(btcInterval) })
 
 </script>
 
@@ -90,13 +71,6 @@ onUnmounted(() => { clearInterval(statusInterval); clearInterval(timeInterval); 
   <div class="statusbar">
 
     <div class="stleft">
-
-      <a :href="liveUrl" target="_blank" class="live-status" :class="{ 'disabled': !isLive }">
-        <div class="status-indicator" :class="statusIndicatorClass"></div>
-        <span>{{ liveStatusText }}</span>
-      </a>
-
-      <span>//</span>
 
       <a href="#" @click.prevent="openLatest">{{ latestPost.title }}</a>
 
@@ -155,39 +129,7 @@ onUnmounted(() => { clearInterval(statusInterval); clearInterval(timeInterval); 
 
 }
 
-.live-status { 
-
-  /* LAYOUT */ display: flex; align-items: center;
-  /* BOX    */ gap: 0.5rem;
-  /* MOTION */ transition: all var(--animate-fast);
-
-  &.disabled { 
-
-    /* CURSOR */ cursor: default; pointer-events: none;
-    /* FILL   */ opacity: var(--alpha-half);
-
-  }
-
-}
-
-.status-indicator { 
-
-  /* BOX    */ width: 10px; height: 10px;
-  /* BORDER */ border-radius: 50%; border: var(--small-outline) var(--humo25);
-  /* MOTION */ animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
-
-  &.live    { background-color: var(--cristal); }
-  &.offline { background-color: var(--lirio);   }
-
-}
-
-@keyframes pulse {
-
-  0%, 100% { transform: var(--scale-low); box-shadow: 0 0 0 0 rgba(170, 171, 172, 0.2); }
-  70%      { transform: scale(1);         box-shadow: 0 0 0 5px rgba(170, 171, 172, 0); }
-  80%      { transform: var(--scale-low);                                                 }
-
-}
+.stleft { margin-bottom: .25rem; }
 
 .progress-bar { 
 
@@ -207,7 +149,5 @@ onUnmounted(() => { clearInterval(statusInterval); clearInterval(timeInterval); 
 }
 
 @keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
-
-@media(max-width: 730px) { .stleft { display: none; } }
 
 </style>
