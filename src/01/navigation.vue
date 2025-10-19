@@ -474,8 +474,8 @@ table {
 
   .tablediv { padding-left: 0rem; padding-right: 0rem;}
 
-  table .col-fecha  { width: 30%; }
-  table .col-titulo { width: 40%; }
+  table .col-fecha  { width: 20%; }
+  table .col-titulo { width: 50%; }
   table .col-tags   { width: 30%; }
 
 }
@@ -484,8 +484,8 @@ table {
 
   .tablediv { padding-left: 2rem; padding-right: 2rem;}
 
-  table .col-fecha  { width: 30%; }
-  table .col-titulo { width: 40%; }
+  table .col-fecha  { width: 20%; }
+  table .col-titulo { width: 50%; }
   table .col-tags   { width: 30%; }
 
 }
@@ -494,7 +494,7 @@ table {
 
   .tablediv { padding-left: 0rem; padding-right: 0rem;}
 
-  table .col-fecha  { width: 30%; }
+  table .col-fecha  { width: 20%; }
   table .col-titulo { width: 40%; }
   table .col-tags   { width: 30%; }
 
