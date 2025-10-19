@@ -25,11 +25,11 @@ function nextPage()            { if (currentPage.value < totalPages.value && !pr
 function noteOpen(type, slug)  { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                                     // opens a note in content
 function noteSearch(tag)       { if (!props.disabled) { searchQuery.value = tag } }                                                   // searches terms in notes
 
-function navHome() {                                                                                                                  // navigates to root 
-
-    if (props.disabled) return
-    if (route.params.slug) { router.push({ path: '/' }); window.location.reload() }
-    else { router.push({ path: '/' }) }
+function navHome() {                                                                                                                  // navigates to root and reloads 
+  
+  if (props.disabled) return
+  if (route.params.slug) { router.push({ path: '/' }); setTimeout(() => { window.location.reload() }, 0) }
+  else { router.push({ path: '/' }) }
 
 }
 
