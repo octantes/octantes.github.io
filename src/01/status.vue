@@ -108,12 +108,28 @@ onUnmounted(() => { clearInterval(timeInterval); clearInterval(btcInterval) })
 
 .stcenter { 
 
-  /* LAYOUT */ flex-grow: 1;
+  /* LAYOUT */ flex-grow: 1; flex-basis: 0;
   /* BOX    */ min-width: 0; padding: 0.25rem 0;
 
 }
 
-.stleft, .stright { 
+.stleft { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 1; align-items: center;
+  /* BOX    */ min-width: 0; gap: 1rem; margin-bottom: .25rem; overflow: hidden;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ white-space: nowrap;
+
+  & a {
+
+    /* BOX    */ min-width: 0; overflow: hidden;
+    /* FONT   */ text-overflow: ellipsis; white-space: nowrap;
+
+  }
+
+}
+
+.stright { 
 
   /* LAYOUT */ display: flex; flex-shrink: 0; align-items: center;
   /* BOX    */ min-width: 0; gap: 1rem; overflow: hidden;
@@ -128,8 +144,6 @@ onUnmounted(() => { clearInterval(timeInterval); clearInterval(btcInterval) })
   }
 
 }
-
-.stleft { margin-bottom: .25rem; }
 
 .progress-bar { 
 
@@ -149,5 +163,8 @@ onUnmounted(() => { clearInterval(timeInterval); clearInterval(btcInterval) })
 }
 
 @keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
+
+@media (max-width: 590px) { .stcenter { display:none; } }
+@media (max-width: 312px) { .stleft { display:none; } .statusbar { justify-content: center; } }
 
 </style>
