@@ -1,4 +1,4 @@
-<script setup>
+<script setup> 
 import * as PIXI from 'pixi.js'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
@@ -32,5 +32,14 @@ defineExpose({ app })
 
 </script>
 
-<template> <div ref="containerRef" class="pixi"></div> </template>
-<style scoped> .pixi { width: 100%; height: 100%; } </style>
+<template> 
+
+    <div ref="containerRef" class="pixi" />
+
+</template>
+
+<style scoped> 
+
+.pixi { width: 100%; height: 100%; }
+
+</style>

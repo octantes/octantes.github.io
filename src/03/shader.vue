@@ -2,9 +2,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const TIER_CONFIGS = {
-    high: { maxCols: 50, maxRows: 70, minCores: 8, minMemory: 8 },
-    medium: { maxCols: 40, maxRows: 60, minCores: 4, minMemory: 4 },
-    low: { maxCols: 30, maxRows: 50, minCores: 2, minMemory: 2 }
+
+    high: { maxCols: 50, maxRows: 50, minCores: 8, minMemory: 8 },
+    medium: { maxCols: 40, maxRows: 40, minCores: 4, minMemory: 4 },
+    low: { maxCols: 30, maxRows: 30, minCores: 2, minMemory: 2 }
+    
 }
 
 const canvasRef    = ref(null)                                          // dom << canvas >> ref
@@ -12,7 +14,7 @@ const containerRef = ref(null)                                          // conta
 const COLOR_BACKGR = '#1B1C1C'                                          // solid background color
 const COLOR_BORDER = '#AAABAC'                                          // solid frontier color
 const COLOR_PORTAL = '#986C98'                                          // solid portal color
-const COLOR_RAIN   = '#7EBDC4'                                          // solid rain color
+const COLOR_RAIN   = '#8AB6BB'                                          // solid rain color
 const charRangeStart    = 33                                            // unicode starting character
 const charRangeCount    = 126 - charRangeStart + 1                      // max possible characters
 const germFramesMax     = 160                                           // intro total frames counter

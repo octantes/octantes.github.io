@@ -1,25 +1,35 @@
-<script setup>
+<script setup> 
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
+const router = useRouter()                                                                                                            // handles note open route
+const btcPrice = ref('---')                                                                                                           // btc price fetch result
+const latestPost = ref({ title: 'cargando...', url: '' })                                                                             // latest note fetch result
+const currentTime = ref('--:--')                                                                                                      // current time fetch result
+const isLive = ref(false)                                                                                                             // streaming fetch result bool
+const liveUrl = ref('#')                                                                                                              // streaming fetch result url
+const barContent = ref('/ '.repeat(300))                                                                                              // progress bar animation content
+const liveStatusText = computed(() => isLive.value ? 'TRANSMITIENDO EN VIVO' : 'TRANSMISION OFFLINE')                                 // live block text
+const statusIndicatorClass = computed(() => isLive.value ? 'live' : 'offline')                                                        // live block text
 
-const btcPrice = ref('---')
-const latestPost = ref({ title: 'cargando...', url: '' })
-const currentTime = ref('--:--')
-const isLive = ref(false)
-const liveUrl = ref('#')
-const barContent = ref('/ '.repeat(300))
-
-let statusInterval = null
-let timeInterval = null
-let btcInterval = null
-
-const liveStatusText = computed(() => isLive.value ? 'TRANSMITIENDO EN VIVO' : 'TRANSMISION OFFLINE')
-const statusIndicatorClass = computed(() => isLive.value ? 'live' : 'offline')
+let statusInterval = null                                                                                                             // stream update interval
+let timeInterval = null                                                                                                               // time update interval
+let btcInterval = null                                                                                                                // btc update interval
 
 function openLatest() { if (latestPost.value.url) { router.push(latestPost.value.url) } }
-function updateTime() { const now = new Date(); currentTime.value = now.toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour12: false, hour: '2-digit', minute: '2-digit' }) }
+
+function fetchTime() {                                                                                                                // fetch and update current time 
+
+  const now = new Date()
+
+  currentTime.value = now.toLocaleTimeString('es-AR', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+
+}
 
 async function fetchStream() { 
   
@@ -31,6 +41,19 @@ async function fetchStream() {
     liveUrl.value = mockApiResponse.url
 
   } catch (e) { console.error('error chequeando el estado en vivo:', e); isLive.value = false }
+
+}
+
+async function fetchLatest() { 
+
+  try {
+
+    const response = await fetch('/index.json')
+    if (!response.ok) throw new Error('no se encontró el index.json')
+    const index = await response.json()
+    if (index.length > 0) { const cleanUrl = index[0].url.replace(/^\/posts/, ''); latestPost.value = { title: index[0].title, url: cleanUrl } }
+
+  } catch (e) { console.error('error buscando la última nota:', e); latestPost.value.title = 'error cargando ultima nota' }
 
 }
 
@@ -49,33 +72,20 @@ async function fetchBTC() {
 
 }
 
-async function fetchLatest() { 
-
-  try {
-
-    const response = await fetch('/index.json')
-    if (!response.ok) throw new Error('no se encontró el index.json')
-    const index = await response.json()
-    if (index.length > 0) { const cleanUrl = index[0].url.replace(/^\/posts/, ''); latestPost.value = { title: index[0].title, url: cleanUrl } }
-
-  } catch (e) { console.error('error buscando la última nota:', e); latestPost.value.title = 'error cargando ultima nota' }
-
-}
-
-onUnmounted(() => { clearInterval(statusInterval); clearInterval(timeInterval); clearInterval(btcInterval) })
-
 onMounted(() => { 
 
-  fetchLatest()
-  fetchStream(); statusInterval = setInterval(fetchStream, 120000)
-  fetchBTC(); btcInterval = setInterval(fetchBTC, 60000)
-  updateTime(); timeInterval = setInterval(updateTime, 15000)
+  fetchLatest() ;
+  fetchStream() ; statusInterval = setInterval(fetchStream, 120000);
+  fetchBTC()    ; btcInterval    = setInterval(fetchBTC, 60000);
+  fetchTime()  ; timeInterval   = setInterval(fetchTime, 15000);
 
 })
 
+onUnmounted(() => { clearInterval(statusInterval); clearInterval(timeInterval); clearInterval(btcInterval) })
+
 </script>
 
-<template>
+<template> 
 
   <div class="statusbar">
 
@@ -101,9 +111,7 @@ onMounted(() => {
     <div class="stright">
 
       <span>BTC: {{ btcPrice }}</span>
-
       <span>//</span>
-
       <span>{{ currentTime }}</span>
 
     </div>
@@ -111,3 +119,95 @@ onMounted(() => {
   </div>
 
 </template>
+
+<style scoped> 
+
+.statusbar { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; justify-content: space-between; align-items: center;
+  /* BOX    */ min-width: 0; width: 100%; padding: 1rem 1.5rem; gap: 1.5rem; overflow: hidden;
+  /* FILL   */ background-color: var(--carbon); color: var(--humo);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+  
+}
+
+.stcenter { 
+
+  /* LAYOUT */ flex-grow: 1;
+  /* BOX    */ min-width: 0; padding: 0.25rem 0;
+
+}
+
+.stleft, .stright { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 0; align-items: center;
+  /* BOX    */ min-width: 0; gap: 1rem; overflow: hidden;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ white-space: nowrap;
+
+  & a {
+
+    /* BOX    */ min-width: 0; overflow: hidden;
+    /* FONT   */ text-overflow: ellipsis; white-space: nowrap;
+
+  }
+
+}
+
+.live-status { 
+
+  /* LAYOUT */ display: flex; align-items: center;
+  /* BOX    */ gap: 0.5rem;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &.disabled { 
+
+    /* CURSOR */ cursor: default; pointer-events: none;
+    /* FILL   */ opacity: var(--alpha-half);
+
+  }
+
+}
+
+.status-indicator { 
+
+  /* BOX    */ width: 10px; height: 10px;
+  /* BORDER */ border-radius: 50%; border: var(--small-outline) var(--humo25);
+  /* MOTION */ animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+
+  &.live    { background-color: var(--cristal); }
+  &.offline { background-color: var(--lirio);   }
+
+}
+
+@keyframes pulse {
+
+  0%, 100% { transform: var(--scale-low); box-shadow: 0 0 0 0 rgba(170, 171, 172, 0.2); }
+  70%      { transform: scale(1);         box-shadow: 0 0 0 5px rgba(170, 171, 172, 0); }
+  80%      { transform: var(--scale-low);                                                 }
+
+}
+
+.progress-bar { 
+
+  /* CURSOR */ user-select: none;
+  /* BOX    */ width: 100%; overflow: hidden;
+  /* FILL   */ background-color: var(--carbon); color: var(--humo50);
+  /* BORDER */ border-radius: var(--radius-xs);
+  /* FONT   */ font-family: var(--font-mono); line-height: 1.5; white-space: nowrap;
+  
+}
+
+.progress-track { 
+  
+  /* LAYOUT */ display: inline-block;
+  /* MOTION */ animation: scroll-progress 4s linear infinite;
+
+}
+
+@keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
+
+@media(max-width: 730px) { .stleft { display: none; } }
+
+</style>
