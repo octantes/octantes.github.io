@@ -76,7 +76,7 @@ async function loadNote(slug) {
       
       await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
 
-      if (window.innerWidth <= 1080) { const postEl = document.querySelector('.post'); if (postEl) { postEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
+      if (window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into'); if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
       
     }
     
@@ -150,7 +150,7 @@ watch(
 
   <div class="notedisplay">
   
-    <Portada :metadata="currentPost || {}" />
+    <Portada :metadata="currentPost || {}" class="scroll-into" />
     
     <div class="container">
 
