@@ -35,7 +35,27 @@ handle: kaste
 
 */
 
-const md = new MarkdownIt({ breaks: true })
+const md = new MarkdownIt()
+
+md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {             // render linebreaks only on text 
+
+    const token = tokens[idx]
+
+    if (token.level % 2 === 1) { return options.breaks ? '<br />' : '\n'; }
+
+    const prev = tokens[idx - 1]
+    const next = tokens[idx + 1]
+
+    const isAsset = (t) => t && t.type === 'inline' && (t.children.some(c => c.type === 'image') || t.content.match(/<iframe|<img/i))
+
+    if (isAsset(prev) || isAsset(next)) { return '\n' }
+
+    if (token.type === 'softbreak' && token.content.includes('\n')) { return '<br />' }
+
+    return '\n'
+
+}
+
 const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 const webURL = 'https://octantes.github.io'
