@@ -1,32 +1,31 @@
 ---
-tags: [branding, portfolio]
+tags: [herramientas, portfolio]
 type: dev
 title: shadewithseal
-description: simple shader playground to code, record and store GLSL shaders — runs entirely in the browser, no internet or install required
-portada: 
+description: playground para programar y grabar fragment shaders GLSL directamente en el navegador
+portada:
 date: 2025-07-04
 handle: kaste
 ---
 
-[seal](https://github.com/octantes/shadewithseal) is a local tool for creating, storing and recording glsl fragment shaders directly in your browser.  
-No internet connection or installation required — just download the html file and it will open as a web page.
+[seal](https://github.com/octantes/shadewithseal) es una herramienta local para crear, guardar y grabar fragment shaders GLSL directamente en el navegador
+no necesita instalarse ni una conexión a internet: solo descargá el HTML y se va a abrir como si fuera una página web normal
 
-Built for artists and coders who need a lightweight playground to prototype and archive shaders. Ideal for those who prefer simplicity, privacy and control. Not for highly specific professional use but some edge-cases are covered.
+armado pensando en artistas y programadores que necesiten un playground liviano para prototipar y archivar shaders
+ideal para quienes prefieren simplicidad y privacidad; no está pensada para uso profesional, pero se cubren algunos edge-cases
 
-All your data stays on your machine without accounts, servers or sync. Just remember to export frequently and before deleting browser data.
+toda la información se queda en tu máquina, sin cuentas, servidores o sincronización: solo recordá exportar frecuentemente
 
-![portada](assets/portada.png)
+**seal** es estable y funcional, con el objetivo de mantenerse minimalista: abrí el HTML y empezá a programar
 
-**seal** is stable and functional, aimed at staying minimal: just open the latest html released and start working.
+* *live-coding*: programá fragment shaders GLSL mientras ves los resultados en tiempo real con logs de errores en el canvas
+* *renderizado*: render-loop simple y minimalista basado en webGL - implementa la mayoría de las variables custom de shadertoy
+* *grabación*: funciones para grabar, reproducir, pausar y descargar el shader a .webm con solo un clic (aspect ratio fijo 1:1)
+* *almacenamiento*: organizá los shaders en carpetas y guardalos directamente en el browser usando indexedDB
+* *superligero*: compatible con cualquier navegador moderno, incluyendo móvil, pesando solo ~100 KB
 
-* **Live-coding**: Write GLSL fragment shaders and see results in real time with error logs on top of the canvas.
-* **Rendering**: Simple and minimal rendering loop powered by webgl. Support for most shadertoy custom variables.
-* **Recording**: Play, pause, restart, record and download the shader to .webm with one click (square aspect ratio).
-* **Local Saving**: Organize your shaders in folders and store them in your browser using indexedDB.
-* **Hiper-light**: Compatible with virtually any modern browser including mobile, at just ~100KB.
+**wip**: soporte para webGL2 > export de indexedDB a JSON > superposición de canvas y blending modes > aspect ratios ajustables
 
-**WIP**: webGL2 support > indexedDB to JSON export >  Canvas overlapping & blending modes > Custom aspect ratios
+recordá que **toda la información se queda en tu browser hasta que la exportás** - hacé backups regularmente
 
-Remember that **your data stays in the browser until you export it!** - back it up regularly if needed.
-
-Pro tip: *save as bookmark for easy access!*
+pro-tip: *guardá como favorito para acceder rápidamente*

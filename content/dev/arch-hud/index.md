@@ -1,54 +1,25 @@
 ---
-tags: [branding, portfolio]
+tags: [herramientas, portfolio]
 type: dev
 title: arch-hud
-description: simple set of linux tools for a heads-up display desktop feel, based around suckless's dwm
-portada: 
+description: pack de herramientas suckless para convertir arch linux en un heads up display
+portada:
 date: 2025-09-14
 handle: kaste
 ---
 
-[arch-hud](https://github.com/octantes/arch-hud) is a personal build of [suckless](https://suckless.org/) tools for daily use on Arch Linux.
+[arch-hud](https://github.com/octantes/arch-hud) es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch linux
 
-Built around the concept of a *heads-up display*, trying to make the computer feel like a tool again and not a cognitive black hole.
-Implements a few minimal patches (listed below) with a low tech feel based around an 8bit palette and pixel fonts.
+construido en base al concepto de un *heads-up display* para hacer que la compu se vuelva a sentir como una herramienta y no un agujero negro cognitivo
+implementa varios patches mínimos sobre DWM junto a una estética simple basada en una paleta de ocho colores y fuentes pixeladas
 
-No gaps, no transparency, no compositor, **no distractions**. Do add [picom](https://github.com/yshui/picom) if you experience screen tearing.
+sin gaps, transparencia ni compositor, **sin distracciones** - podés sumar [picom](https://github.com/yshui/picom) si experimentás screen tearing
 
-To install just go into each directory and sudo make clean install (script pending).
+para instalar simplemente entrás en cada directorio y ejecutá *sudo make clean install* (script para automatizar pendiente)
 
-- [dunst](https://github.com/dunst-project/dunst) - simple notification daemon
-
-### [dwm](https://dwm.suckless.org/) - tiling windows manager
-- [main monitor only statusbar](https://dwm.suckless.org/patches/mainmon/)
-- [tag to other monitors](https://dwm.suckless.org/patches/tagothermonitor/)
-- [hide unused tabs](https://dwm.suckless.org/patches/hide_vacant_tags/)
-- [executable name in tag](https://dwm.suckless.org/patches/taglabels/)
-- [signal statusbar location and button](https://dwm.suckless.org/patches/statuscmd/)
-
-### [dmenu](https://tools.suckless.org/dmenu/) - dynamic menu
-- [highlight searched chars](https://tools.suckless.org/dmenu/patches/highlight/)
-- [sort by popularity cache](https://tools.suckless.org/dmenu/patches/sort_by_popularity/)
-
-### [st](https://st.suckless.org/) - simple terminal emulator
-- [scrollback & scrollback mouse](https://st.suckless.org/patches/scrollback/)
-- [drag and drop filepaths and urls](https://st.suckless.org/patches/drag-n-drop/)
-- [specify opening working dir](https://st.suckless.org/patches/workingdir/)
-- [open a new terminal in current working directory](https://st.suckless.org/patches/newterm/)
-
-### [surf](https://surf.suckless.org/) - minimal browser
-- [homepage](https://surf.suckless.org/patches/homepage/)
-- [short title for tabs](https://surf.suckless.org/patches/short-title/)
-- [websearch keymap](https://surf.suckless.org/patches/web-search/)
-
-### [tabbed](https://tools.suckless.org/tabbed/) - tab builder
-- [drag tabs left or right](https://tools.suckless.org/tabbed/patches/drag/)
-- [clamp large tab numbers](https://tools.suckless.org/tabbed/patches/move-clamped/)
-- [open new terminal tabs on current working directory](https://tools.suckless.org/tabbed/patches/cwd/)
-
-### dwmblocks
-- username
-- date
-- status
-- disk space
-- mpv (currently playing)
+* [dwm](https://dwm.suckless.org/) - tiling windows manager
+* [dmenu](https://tools.suckless.org/dmenu/) - menú de scripts dinámico
+* [st](https://st.suckless.org/) - emulador de terminal simple
+* [surf](https://surf.suckless.org/) - navegador minimalista
+* [tabbed](https://tools.suckless.org/tabbed/) - implementa pestañas en la terminal y el browser
+* [dunst](https://github.com/dunst-project/dunst) - daemon de notificaciones super simple
