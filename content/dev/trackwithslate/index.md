@@ -6,7 +6,7 @@ description: herramienta simple para editar y organizar información tabular CSV
 portada:
 date: 2025-07-04
 handle: kaste
--------------
+---
 
 [slate](https://github.com/octantes/trackwithslate) es una herramienta local para *crear, organizar y exportar data tabular* en el browser
 no necesita instalarse ni una conexión a internet: solo descargá el HTML y se va a abrir como si fuera una página web normal
