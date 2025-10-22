@@ -232,7 +232,7 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
   /* BOX    */ padding: 2.25rem 2rem 1.5rem 2rem; gap: .8rem;
   /* FILL   */ background-color: var(--carbon); color: var(--niebla);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
-  /* FONT   */ font-family: var(--font-main);
+  /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
 
 }
 
