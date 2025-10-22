@@ -21,18 +21,14 @@ handle: kaste
 
 ![embed youtube](https://www.youtube.com/watch?v=fi6v9nSxeZQ)
 
-la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
-de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
-es importante vincular los proyectos principales a través de notas que aporten contexto
-elevando el valor final de la publicación al integrar soportes visuales, referencias y datos
+este fue mi *tercer* proyecto de diseño basado en identidades ficticias, una excusa para practicar figma
 
-- visor con la presentación del sitio, la navegacion, las novedades y links externos
-- visor dinámico de contenido para presentar todos los artículos y los proyectos
-- statusbar integrando elementos dinámicos, datos en real time y toggle idioma
+en este caso, el objetivo era ver cómo armar un diseño **dinámico** para que se ajuste al tamaño de la pantalla
+se me ocurrió pensar dinamik como una empresa que desarrolla interfaces para mejorar el workflow del usuario
+de esta forma, *la identidad puede ser revisitada* con distintas ideas de proyecto, cambiando el enfoque final
+el concepto toma inspiración del mundo de la óptica, que sorprendentemente tiene muchísimo atractivo estético
 
-el visor de **proyectos** integra distintos layouts según el contenido que debe presentar
-se suman funcionalidades exclusivas, como una barra de scroll o el shader de espera
+algunos diseños de logotipos no terminaron en el proyecto, pero los agregué en la última imagen del post
 
-1. asemicdos y sellosiete usan el layout de landing page, integrando sus stylesheets
-2. nubenueve usa el layout de nota pero integra los embeds de youtube y de spotify
-3. signoseis usa el layout de nota pero sin integrar embeds, con un stylesheet unico
+* proyecto realizado usando figma, photoshop y after effects
+* inspiraciones: todo el trabajo de [bn digital](https://www.behance.net/bn_digital), que me parece excelente y lejano

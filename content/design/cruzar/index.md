@@ -18,18 +18,13 @@ handle: kaste
 
 ![embed youtube](https://www.youtube.com/watch?v=KFb_frFm8F8)
 
-la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
-de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
-es importante vincular los proyectos principales a través de notas que aporten contexto
-elevando el valor final de la publicación al integrar soportes visuales, referencias y datos
+cruzar fue mi *segundo* proyecto de diseño basado en identidades ficticias, una excusa para seguir animando
 
-- visor con la presentación del sitio, la navegacion, las novedades y links externos
-- visor dinámico de contenido para presentar todos los artículos y los proyectos
-- statusbar integrando elementos dinámicos, datos en real time y toggle idioma
+en este caso, el concepto se apoderó completamente del proyecto y creo que le hizo bien al resultado final
+me parece que la idea de *instalar un datacenter en el medio de la cordillera* está latente en nuestro imaginario
+le sumé el costado cripto porque me parece parte de un mismo objetivo: aprovechar nuestros recursos al máximo
+realmente creo que es cuestión de tiempo para que algo así se dé, y ojalá que sea de la mano de un **argentino**
 
-el visor de **proyectos** integra distintos layouts según el contenido que debe presentar
-se suman funcionalidades exclusivas, como una barra de scroll o el shader de espera
+lamentablemente, por las limitaciones de la página, es muy posible que los gifs se vean desincronizados
 
-1. asemicdos y sellosiete usan el layout de landing page, integrando sus stylesheets
-2. nubenueve usa el layout de nota pero integra los embeds de youtube y de spotify
-3. signoseis usa el layout de nota pero sin integrar embeds, con un stylesheet unico
+* proyecto realizado usando figma, photoshop y after effects
