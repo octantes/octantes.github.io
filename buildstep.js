@@ -235,11 +235,22 @@ async function copyAssets() {                                                   
 
     const assets = await fs.readdir(assetsSrc)
 
-    for (const asset of assets) { await fs.copyFile(path.join(assetsSrc, asset), path.join(assetsDest, asset)) }
+    for (const asset of assets) {
 
-    console.log('assets copied to dist/assets')
+      const assetPath = path.join(assetsSrc, asset)
+      const destPath = path.join(assetsDest, asset)
+      const isImage = /\.(jpe?g|png)$/i.test(asset)
+      
+      if (isImage) {
+        console.log(`converting global image ${asset} to WEBP...`)
+        await sharp(assetPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(destPath.replace(/\.(jpe?g|png)$/i, '.webp'))
+      } else { await fs.copyFile(assetPath, destPath) }
 
-  } catch(e) { console.warn('global assets not copied:', e) }
+    }
+
+    console.log('assets copied and optimized to dist/assets')
+
+  } catch(e) { console.warn('global assets not copied or optimized:', e) }
 
 }
 
