@@ -29,4 +29,4 @@ hoy en día le veo varios problemas de espaciado y el texto de la identidad me p
 me gustaría revisitar esta *estética* más adelante, quizás con algún proyecto real que pueda aprovecharla
 
 * proyecto realizado usando figma, photoshop y after effects
-* inspiraciones: [cDc comms](https://cultdeadcow.com/about/), los [bumps](https://youtube.com/playlist?list=PL075thqiB6t9FE4pyy-2omH_rZMVhnp77&si=JR1lDU6VWQ2jujj9) de adult swim y las [animaciones](https://www.behance.net/gallery/47393655/Watch_Dogs-2-DEDSEC-Video) de dedsec (laburazo)
+* inspiraciones: [cdc comms](https://cultdeadcow.com/about/), los [bumps](https://youtube.com/playlist?list=PL075thqiB6t9FE4pyy-2omH_rZMVhnp77&si=JR1lDU6VWQ2jujj9) de adult swim y las [animaciones](https://www.behance.net/gallery/47393655/Watch_Dogs-2-DEDSEC-Video) de dedsec (laburazo)

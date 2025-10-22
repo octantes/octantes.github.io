@@ -1,34 +1,33 @@
 ---
-tags: [branding, portfolio]
+tags: [herramientas, portfolio]
 type: dev
 title: trackwithslate
-description: simple tool for editing and organizing personal tabular data as CSV — runs entirely in the browser, no internet or install required
-portada: 
+description: herramienta simple para editar y organizar información tabular CSV directamente en el navegador
+portada:
 date: 2025-07-04
 handle: kaste
----
+-------------
 
-[slate](https://github.com/octantes/trackwithslate) is a local tool for creating, organizing and exporting csv tabular data directly in your browser.  
-No internet connection or installation required — just download the html file and it will open as a web page.
+[slate](https://github.com/octantes/trackwithslate) es una herramienta local para *crear, organizar y exportar data tabular* en el browser
+no necesita instalarse ni una conexión a internet: solo descargá el HTML y se va a abrir como si fuera una página web normal
 
-Built for people who need a lightweight and local way to manage personal structured data without external dependencies. Ideal for those who prefer simplicity, privacy and control. Not for highly specific professional use but some edge-cases are covered.
+armado pensando en personas que necesitan una forma local y liviana de gestionar data personal sin dependencias externas
+ideal para quienes prefieren simplicidad y privacidad; no está pensada para uso profesional, pero se cubren algunos edge-cases
 
-All your data stays on your machine without accounts, servers or sync. Just remember to export frequently and before deleting browser data. 
+toda la información se queda en tu máquina, sin cuentas, servidores o sincronización: solo recordá exportar frecuentemente
 
-![portada](assets/portada.png)
+**slate** es estable y funcional, con el objetivo de mantenerse minimalista: abrí el HTML y empezá a trackear
 
-**slate** is stable and functional, aimed at staying minimal: just open the latest html released and start working.
+* *importar/exportar*: traé y guardá tu información en CSV, un formato plain text y totalmente abierto
+* *editar registros*: visualizá, modificá y organizá entradas en la tabla, incluyendo bulk-delete y fuzzy-search
+* *autocompletado de categorías*: etiquetá cualquier columna como una categoría para crear botones que las llenen automáticamente
+* *formatos de fecha*: marcá columnas como fecha para aplicar autocompletado con la fecha actual en el formato que quieras
+* *almacenamiento*: todo se guarda dentro del browser usando localstorage y puede ser fácilmente exportado a CSV
+* *tipos de datos*: definí columnas con restricciones de tipo de datos como texto, número, fecha o booleano
+* *superligero*: compatible con cualquier navegador moderno, incluyendo móvil, pesando solo ~100 KB
 
-* **Import/export**: Bring and keep your data in a future proof plain text format (csv with any separator).
-* **Record editing**: View, modify and organize entries with ease, including bulk delete and fuzzy search.
-* **Autofill categories**: Tag any column as a category to create autofill buttons for every entry under it.
-* **Date formats**: Configurable date input with custom format selector and optional autofill with current date.
-* **Storage**: Everything is saved in-browser using the built in localstorage and can be easily exported.
-* **Field types**: Define columns with custom field types like text, number, date or boolean.
-* **Hiper-light**: Compatible with virtually any modern browser including mobile, at just ~100KB.
+**wip**: campos internos con símbolos para subdividir > visualizaciones de datos > múltiples bases de datos
 
-**WIP**: Nested fields with sub-division symbols > Simple data visualization > Multiple databases
+recordá que **toda la información se queda en tu browser hasta que la exportás** - hacé backups regularmente
 
-Remember that **your data stays in the browser until you export it!** - back it up regularly if needed.
-
-Pro tip: *save as bookmark for easy access!*
+pro-tip: *guardá como favorito para acceder rápidamente*

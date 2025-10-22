@@ -35,7 +35,7 @@ handle: kaste
 
 */
 
-const md = new MarkdownIt()
+const md = new MarkdownIt({ breaks: true })
 const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 const webURL = 'https://octantes.github.io'
