@@ -20,18 +20,13 @@ handle: kaste
 
 ![embed youtube](https://www.youtube.com/watch?v=dINpNVg0hiw)
 
-la tesis del proyecto es pensar las **secciones** necesarias para presentarlas en dos visores
-de esta forma la pagina se mantiene coherente al ser siempre el mismo layout para todo
-es importante vincular los proyectos principales a través de notas que aporten contexto
-elevando el valor final de la publicación al integrar soportes visuales, referencias y datos
+este fue mi primer *proyecto de diseño* después de años de hacer pequeñas cosas sin profundizar tanto
+cerca de esta época se me ocurrió pensar pequeños conceptos de marcas ficticias para practicar skills
+en este caso, el objetivo era intentar diseñar una identidad y **animarla** usando after effects
+para eso, armé el proyecto excusa pensando en una publicación digital con una paleta de colores reducida
 
-- visor con la presentación del sitio, la navegacion, las novedades y links externos
-- visor dinámico de contenido para presentar todos los artículos y los proyectos
-- statusbar integrando elementos dinámicos, datos en real time y toggle idioma
+hoy en día le veo varios problemas de espaciado y el texto de la identidad me parece bastante básico
+me gustaría revisitar esta *estética* más adelante, quizás con algún proyecto real que pueda aprovecharla
 
-el visor de **proyectos** integra distintos layouts según el contenido que debe presentar
-se suman funcionalidades exclusivas, como una barra de scroll o el shader de espera
-
-1. asemicdos y sellosiete usan el layout de landing page, integrando sus stylesheets
-2. nubenueve usa el layout de nota pero integra los embeds de youtube y de spotify
-3. signoseis usa el layout de nota pero sin integrar embeds, con un stylesheet unico
+* proyecto realizado usando figma, photoshop y after effects
+* inspiraciones: [cDc comms](https://cultdeadcow.com/about/), los [bumps](https://youtube.com/playlist?list=PL075thqiB6t9FE4pyy-2omH_rZMVhnp77&si=JR1lDU6VWQ2jujj9) de adult swim y las [animaciones](https://www.behance.net/gallery/47393655/Watch_Dogs-2-DEDSEC-Video) de dedsec (laburazo)
