@@ -2,27 +2,39 @@
 import { computed } from 'vue'
 
 const props = defineProps({ metadata: { type: Object, default: () => ({}) } })
-function openAuthor() { window.open(data.value.author.link, '_blank', 'noopener,noreferrer') }
+function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
+
+const authorsMap = {
+    incognito: { img: '/assets/incognito.webp', link: 'https://x.com/octantes' },
+    kaste: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+    octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+}
 
 const data = computed(() => {
 
-    const handle = props.metadata.handle || 'kaste'
-    const authors = { 
+    let rawHandle = props.metadata.handle || 'kaste'
+    const handles = Array.isArray(rawHandle) ? rawHandle : [rawHandle]
+    
+    const postAuthors = handles.map(h => {
 
-        kaste: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
-        octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
-
-    }
+        const handleName = String(h).replace(/^@/, '')
+        const authorInfo = authorsMap[handleName] || authorsMap['kaste'] // fallback a kaste
+        
+        return {
+            handle: handleName,
+            img: authorInfo.img,
+            link: authorInfo.link,
+            // el primer autor lleva la fecha y el flag de full-width
+            full: h === handles[0], 
+            date: h === handles[0] ? props.metadata.date || '2026' : null,
+        }
+    })
 
     return {
-
         title: props.metadata.title || 'bienvenido a octantes.net!',
         description: props.metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
-        author: authors[handle] || { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
-        date: props.metadata.date || '2025',
+        authors: postAuthors,
         portada: props.metadata.portada || '',
-        handle,
-
     }
 
 })
@@ -42,14 +54,16 @@ const data = computed(() => {
 
             <hr />
 
-            <div class="profile" @click="openAuthor">
+            <div class="authors-list"> <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author.link)" >
 
-                <img class="author" :src="data.author.img" />
-                <span>@{{ data.handle }} - {{ data.date }}</span>
+                    <img class="author" :src="author.img" />
+                    <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
 
             </div>
 
         </div>
+
+      </div>
 
     </div>
 
@@ -110,6 +124,13 @@ const data = computed(() => {
 
 }
 
+.authors-list {
+
+    /* LAYOUT */ display: flex; flex-direction: row; gap: .25rem;
+    /* BOX    */ flex-wrap: wrap;
+
+}
+
 .profile { 
 
   /* CURSOR */ user-select: none;
@@ -124,7 +145,13 @@ const data = computed(() => {
   
 }
 
-.author { 
+.profile-full {
+
+  /* LAYOUT */ flex-grow: 1; justify-content: flex-start;
+
+}
+
+.author-img { 
 
   /* LAYOUT */ border-radius: 50%;
   /* BOX    */ width: 25px; height: auto;
