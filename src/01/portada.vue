@@ -5,7 +5,7 @@ const props = defineProps({ metadata: { type: Object, default: () => ({}) } })
 function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
 
 const authorsMap = {
-    incognito: { img: '/assets/incognito.webp', link: 'https://x.com/octantes' },
+    swim: { img: '/assets/swim.webp', link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
     kaste: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
     octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
 }
@@ -18,23 +18,27 @@ const data = computed(() => {
     const postAuthors = handles.map(h => {
 
         const handleName = String(h).replace(/^@/, '')
-        const authorInfo = authorsMap[handleName] || authorsMap['kaste'] // fallback a kaste
+        const authorInfo = authorsMap[handleName] || authorsMap['kaste']
         
         return {
+
             handle: handleName,
             img: authorInfo.img,
             link: authorInfo.link,
-            // el primer autor lleva la fecha y el flag de full-width
+
             full: h === handles[0], 
             date: h === handles[0] ? props.metadata.date || '2026' : null,
+
         }
     })
 
     return {
+
         title: props.metadata.title || 'bienvenido a octantes.net!',
         description: props.metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
         authors: postAuthors,
         portada: props.metadata.portada || '',
+
     }
 
 })
@@ -54,11 +58,11 @@ const data = computed(() => {
 
         <hr />
 
-        <div class="authors-list">
+        <div class="authors">
           
           <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author.link)" >
 
-                <img class="author" :src="author.img" />
+                <img class="userpic" :src="author.img" />
                 <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
 
           </div>
@@ -126,7 +130,7 @@ const data = computed(() => {
 
 }
 
-.authors-list {
+.authors {
 
     /* LAYOUT */ display: flex; flex-direction: row; gap: .25rem;
     /* BOX    */ flex-wrap: wrap;
@@ -153,7 +157,7 @@ const data = computed(() => {
 
 }
 
-.author { 
+.userpic { 
 
   /* LAYOUT */ border-radius: 50%;
   /* BOX    */ width: 25px; height: auto;
