@@ -96,6 +96,16 @@ watch(
     await nextTick()
     
     if (!postsIndex.value.length) await loadIndex()
+
+    const slugChanged = slug && lastSlug !== slug
+    const isFirstNoteLoad = slug && !noteLoaded && !firstLoad
+
+    if (slugChanged || isFirstNoteLoad) {
+
+      const postElement = document.querySelector('.post')
+      if (postElement) { postElement.scrollTop = 0 }
+      
+    }
     
     switch (true) {
       
