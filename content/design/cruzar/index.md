@@ -18,13 +18,14 @@ handle: kaste
 
 ![embed youtube](https://www.youtube.com/watch?v=KFb_frFm8F8)
 
-cruzar fue mi *segundo* proyecto de diseño basado en identidades ficticias, una excusa para seguir animando
+cruzar fue mi *segundo* proyecto de diseño basado en identidades de marca ficticias
+el objetivo era armarme una excusa para seguir animando y practicando herramientas
 
-en este caso, el concepto se apoderó completamente del proyecto y creo que le hizo bien al resultado final
-pienso que la idea de *instalar un datacenter en el medio de la cordillera* está latente en nuestro imaginario
-le sumé el costado cripto porque me parece parte de un mismo objetivo: lograr un uso positivo del entorno
-realmente creo que es cuestión de tiempo para que algo así se dé; ojalá que sea de la mano de un **argentino**
+en este caso, el concepto se apodero completamente del proyecto, creo que para bien
+armar un *datacenter en el medio de la cordillera* es una idea latente en nuestro imaginario
+la parte cripto me parece parte de un mismo objetivo, hacer buen uso de nuestro entorno
+siento que es cuestion de tiempo para que se de; ojala que sea de la mano de un **argentino**
 
-lamentablemente, por las limitaciones de la página, es muy posible que los gifs se vean desincronizados
+por las limitaciones de la pagina, es muy posible que los gifs se vean desincronizados
 
 * proyecto realizado usando figma, photoshop y after effects
