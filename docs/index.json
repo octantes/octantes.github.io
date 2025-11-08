@@ -1,5 +1,22 @@
 [
   {
+    "slug": "moodworktapes copy",
+    "title": "testing multi authors",
+    "description": "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "type": "note",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "",
+    "handle": [
+      "kaste, octantes"
+    ],
+    "date": "11/04/2026",
+    "isoDate": "2026-04-11T00:00:00.000Z",
+    "url": "/posts/note/moodworktapes copy/"
+  },
+  {
     "slug": "arch-hud",
     "title": "arch-hud",
     "description": "pack de herramientas suckless para convertir arch linux en un heads up display",
@@ -9,7 +26,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "14/09/2025",
     "isoDate": "2025-09-14T00:00:00.000Z",
     "url": "/posts/dev/arch-hud/"
@@ -24,7 +43,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "04/07/2025",
     "isoDate": "2025-07-04T00:00:00.000Z",
     "url": "/posts/dev/shadewithseal/"
@@ -39,7 +60,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "04/07/2025",
     "isoDate": "2025-07-04T00:00:00.000Z",
     "url": "/posts/dev/trackwithslate/"
@@ -54,7 +77,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "06/06/2025",
     "isoDate": "2025-06-06T00:00:00.000Z",
     "url": "/posts/music/geminis/"
@@ -69,7 +94,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "22/12/2024",
     "isoDate": "2024-12-22T00:00:00.000Z",
     "url": "/posts/music/viñetas/"
@@ -84,7 +111,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "30/11/2024",
     "isoDate": "2024-11-30T00:00:00.000Z",
     "url": "/posts/design/dinamik/"
@@ -99,7 +128,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "19/09/2024",
     "isoDate": "2024-09-19T00:00:00.000Z",
     "url": "/posts/design/cruzar/"
@@ -114,7 +145,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "06/09/2023",
     "isoDate": "2023-09-06T00:00:00.000Z",
     "url": "/posts/design/enuna/"
@@ -129,7 +162,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "08/05/2022",
     "isoDate": "2022-05-08T00:00:00.000Z",
     "url": "/posts/music/seance/"
@@ -144,7 +179,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "08/12/2021",
     "isoDate": "2021-12-08T00:00:00.000Z",
     "url": "/posts/music/sixminutesolder/"
@@ -159,7 +196,9 @@
       "portfolio"
     ],
     "portada": "",
-    "handle": "kaste",
+    "handle": [
+      "kaste"
+    ],
     "date": "11/04/2019",
     "isoDate": "2019-04-11T00:00:00.000Z",
     "url": "/posts/music/moodworktapes/"
