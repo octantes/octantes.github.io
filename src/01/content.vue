@@ -97,15 +97,7 @@ watch(
     
     if (!postsIndex.value.length) await loadIndex()
 
-    const slugChanged = slug && lastSlug !== slug
-    const isFirstNoteLoad = slug && !noteLoaded && !firstLoad
-
-    if (slugChanged || isFirstNoteLoad) {
-
-      const postElement = document.querySelector('.post')
-      if (postElement) { postElement.scrollTop = 0 }
-      
-    }
+    const postElement = document.querySelector('.post')
     
     switch (true) {
       
@@ -123,6 +115,7 @@ watch(
         firstLoad = false
         lastSlug = slug
         await loadNote(slug)
+        if (postElement) { postElement.scrollTop = 0 }
         await shaderRef.value?.runQueue('outro')
         break
       
@@ -133,6 +126,7 @@ watch(
         lastSlug = slug
         await shaderRef.value?.runQueue('static')
         await loadNote(slug)
+        if (postElement) { postElement.scrollTop = 0 }
         await new Promise(resolve => setTimeout(resolve, 500))
         await shaderRef.value?.runQueue('direct')
         break
@@ -144,6 +138,7 @@ watch(
         lastSlug = slug
         await shaderRef.value?.runQueue('transition-intro')
         await loadNote(slug)
+        if (postElement) { postElement.scrollTop = 0 }
         await shaderRef.value?.runQueue('transition-outro')
         break
       
