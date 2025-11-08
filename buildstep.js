@@ -37,6 +37,7 @@ handle: kaste OR [kaste, octantes] if multi-author
 
 const md = new MarkdownIt()
 
+/*
 md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {             // render linebreaks only on text 
 
     const token = tokens[idx]
@@ -53,6 +54,7 @@ md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {            
     return '<br />'
 
 }
+*/
 
 const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
