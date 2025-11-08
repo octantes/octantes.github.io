@@ -78,7 +78,7 @@ function renderType(body, type, portada) {                                      
       let noteBlock = parts.slice(1).join('[!TEXT]')
 
       const renderedAssets = md.render(assetBlock)
-        .replace(/<p>\s*((?:<img[^>]+\/?>\s*)+)<\/p>/gi, '$1')
+        .replace(/^\s*<p>(.*?)<\/p>\s*$/is, '$1')
         .replace(/<br\s*\/?>/gi, '')
 
       return `${renderedAssets}${ noteBlock ? `<div class="S7TEXT">${md.render(noteBlock)}</div>` : ''}`
