@@ -67,7 +67,8 @@ body, i, strong        { font-family: var(--font-main);         }
 h1, h2, h3, h4, h5, h6 { font-family: var(--font-grotesk);      }
 code, pre              { font-family: var(--font-mono);         }
 strong                 { color: var(--lirio);                   }
-i                      { color: var(--cristal); margin: 0.1rem; }
+
+i, em                  { color: var(--cristal); margin: 0.1rem; font-style: italic; }
 
 a { 
 

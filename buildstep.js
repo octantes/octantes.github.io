@@ -48,7 +48,7 @@ md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {            
 
     const isAsset = (t) => t && t.type === 'inline' && (t.children.some(c => c.type === 'image') || t.content.match(/<iframe|<img/i))
 
-    if (isAsset(prev) || isAsset(next)) { return '\n' }
+    if (isAsset(prev) || isAsset(next)) { return '' }
 
     return '<br />'
 
