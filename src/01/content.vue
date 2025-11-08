@@ -121,7 +121,9 @@ watch(
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
+        await shaderRef.value?.runQueue('static')
         await loadNote(slug)
+        await new Promise(resolve => setTimeout(resolve, 1000))
         await shaderRef.value?.runQueue('direct')
         break
       
