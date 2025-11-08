@@ -27,7 +27,7 @@ title: titulo de la nota
 description: descripcion corta para seo
 portada: portada.png
 date: YYYY-MM-DD
-handle: kaste
+handle: kaste OR [kaste, octantes] if multi-author
 ---
 
 - usar como maximo tres tags
@@ -387,8 +387,11 @@ async function processPosts() {                                                 
     const isoDate = attributes.date || dateObj.toISOString() 
     const portadaUrl = attributes.portada ? `${webURL}/posts/${postType}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const canonicalUrl = `${webURL}/${postType}/${slug}/`
-    const handle = attributes.handle ? attributes.handle.replace(/^@/, '') : ''
-    const authorJson = handle ? `{"@type":"Person","name":"${handle}","url":"https://twitter.com/${handle}"}` : `{"@type":"Person","name":"Desconocido"}`
+
+    const rawHandle = attributes.handle
+    const handles = (Array.isArray(rawHandle) ? rawHandle : (rawHandle ? [rawHandle] : ['kaste'])).map(h => String(h).replace(/^@/, ''))
+    const primaryHandle = handles[0] // only one handle in html for SEO
+    const authorJson = primaryHandle ? `{"@type":"Person","name":"${primaryHandle}","url":"https://twitter.com/${primaryHandle}"}` : `{"@type":"Person","name":"Desconocido"}`
 
     if (fullRebuild || cache[`${postType}/${slug}/index.md`] !== finalHash) {
 
@@ -408,7 +411,7 @@ async function processPosts() {                                                 
         .replace(/{{description}}/g, attributes.description || '')
         .replace(/{{portada}}/g, portadaUrl)
         .replace(/{{canonicalUrl}}/g, canonicalUrl)
-        .replace(/{{handle}}/g, handle)
+        .replace(/{{handle}}/g, primaryHandle)
         .replace(/{{date}}/g, formatted)
         .replace(/{{authorJson}}/g, authorJson)
         .replace(/{{htmlContent}}/g, htmlContent)
@@ -425,7 +428,7 @@ async function processPosts() {                                                 
       type: postType || 'note',
       tags: attributes.tags || [],
       portada: portadaUrl,
-      handle: attributes.handle || 'kaste',
+      handle: handles,
       date: formatted,
       isoDate: isoDate,
       url: `/posts/${postType}/${slug}/`,
