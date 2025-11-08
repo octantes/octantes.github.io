@@ -9,8 +9,8 @@ const data = computed(() => {
     const handle = props.metadata.handle || 'kaste'
     const authors = { 
 
-        kaste: { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
-        octantes: { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
+        kaste: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+        octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
 
     }
 
@@ -18,7 +18,7 @@ const data = computed(() => {
 
         title: props.metadata.title || 'bienvenido a octantes.net!',
         description: props.metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
-        author: authors[handle] || { img: '/assets/kaste.jpg', link: 'https://x.com/octantes' },
+        author: authors[handle] || { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
         date: props.metadata.date || '2025',
         portada: props.metadata.portada || '',
         handle,

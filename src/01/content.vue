@@ -123,7 +123,7 @@ watch(
         lastSlug = slug
         await shaderRef.value?.runQueue('static')
         await loadNote(slug)
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise(resolve => setTimeout(resolve, 500))
         await shaderRef.value?.runQueue('direct')
         break
       
@@ -156,9 +156,9 @@ watch(
     
     <div class="container">
 
+      <Shader class ="shader" ref="shaderRef"/>
+
       <div class="post">
-        
-        <Shader class ="shader" ref="shaderRef"/>
 
         <div class="content">
           
