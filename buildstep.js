@@ -33,6 +33,8 @@ handle: kaste OR [kaste, octantes] if multi-author
 - usar como maximo tres tags
 - en la tabla solo se muestra hasta la primera coma- bloque de "novedades"
 
+linea de ejemplo para el ancho: cruzar fue mi segundo proyecto de diseño basado en identidades ficticias, una excusa para seguir animando
+
 */
 
 const md = new MarkdownIt()
