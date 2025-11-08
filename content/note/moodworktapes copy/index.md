@@ -5,7 +5,7 @@ title: testing multi authors
 description: xxxxxxxxxxxxxxxxxxxxxxxxxxx
 portada: 
 date: 2026-04-11
-handle: kaste, octantes
+handle: [kaste, octantes]
 ---
 
 ![embed de mood worktapes en youtube](https://www.youtube.com/watch?v=DZ6w0VFpsbg)
