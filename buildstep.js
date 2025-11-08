@@ -41,7 +41,7 @@ md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {            
 
     const token = tokens[idx]
 
-    if (token.level % 2 === 1) { return options.breaks ? '<br />' : '\n'; }
+    if (token.level % 2 === 1) { return '<br />' }
 
     const prev = tokens[idx - 1]
     const next = tokens[idx + 1]
@@ -50,9 +50,7 @@ md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {            
 
     if (isAsset(prev) || isAsset(next)) { return '\n' }
 
-    if (token.type === 'softbreak' && token.content.includes('\n')) { return '<br />' }
-
-    return '\n'
+    return '<br />'
 
 }
 

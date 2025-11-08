@@ -132,7 +132,7 @@ const data = computed(() => {
 
 .authors {
 
-    /* LAYOUT */ display: flex; flex-direction: row; gap: .25rem;
+    /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem;
     /* BOX    */ flex-wrap: wrap;
 
 }
