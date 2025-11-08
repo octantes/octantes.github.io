@@ -47,19 +47,21 @@ const data = computed(() => {
 
     <div class="text">
 
-        <div class="info">
-            
-            <div class="title">{{ data.title }}</div>
-            <div class="description">{{ data.description }}</div>
+      <div class="info">
+          
+        <div class="title">{{ data.title }}</div>
+        <div class="description">{{ data.description }}</div>
 
-            <hr />
+        <hr />
 
-            <div class="authors-list"> <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author.link)" >
+        <div class="authors-list">
+          
+          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author.link)" >
 
-                    <img class="author" :src="author.img" />
-                    <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
+                <img class="author" :src="author.img" />
+                <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
 
-            </div>
+          </div>
 
         </div>
 
@@ -151,7 +153,7 @@ const data = computed(() => {
 
 }
 
-.author-img { 
+.author { 
 
   /* LAYOUT */ border-radius: 50%;
   /* BOX    */ width: 25px; height: auto;
