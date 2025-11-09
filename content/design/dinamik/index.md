@@ -32,4 +32,4 @@ la estética bebe de la óptica, que sorprendentemente tiene muchísimo atractiv
 algunos logotipos no terminaron en el proyecto, pero los agregué en la última imagen
 el proyecto fue realizado usando figma, photoshop y after effects, entre otras cosas
 
-* inspirado en el trabajo de [bn digital](https://www.behance.net/bn_digital), que me parece excelente e inalcanzable
+inspirado en el trabajo de [bn digital](https://www.behance.net/bn_digital), que me parece excelente e inalcanzable

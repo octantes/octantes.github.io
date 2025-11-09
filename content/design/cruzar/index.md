@@ -28,4 +28,4 @@ siento que es cuestión de tiempo para que se dé, y ojalá que sea un proyecto 
 
 por las limitaciones de la página, es muy posible que los gifs se vean desincronizados
 
-* proyecto realizado usando figma, photoshop y after effects
+proyecto realizado usando figma, photoshop y after effects, entre otras cosas
