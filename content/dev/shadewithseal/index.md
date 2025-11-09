@@ -11,12 +11,12 @@ handle: kaste
 [seal](https://github.com/octantes/shadewithseal) es una herramienta local para *crear, guardar y grabar frag shaders* en el browser
 no necesita instalación ni tener internet: solo descargá el HTML y abrilo con el navegador
 
-armado para artistas y programadores que quieran un playground liviano para prototipar
+armado para artistas/programadores que quieran un playground liviano para prototipar
 ideal para quienes buscan simplicidad y privacidad: no está pensada para uso profesional
 sin embargo, se cubren algunos edge-cases importantes
 
 toda la información se mantiene en tu máquina, sin cuentas, servidores o sincronización
-**la información queda en tu browser hasta que la exportás** - hacé backups regularmente
+la información *queda en tu browser hasta que la exportás* - hacé backups regularmente
 
 cada release es estable, con el objetivo de mantenerlo **simple**: abrilo y empezá a codear
 

@@ -21,7 +21,7 @@ handle: kaste
 ![embed youtube](https://www.youtube.com/watch?v=dINpNVg0hiw)
 
 este fue mi primer *proyecto* de diseño, después de años haciendo cosas sin profundizar
-se me ocurrió pensar pequeños conceptos de marcas ficticias, como excusa para practicar
+se me ocurrió pensar conceptos chicos de marcas ficticias, como excusa para practicar
 
 en este caso, el objetivo era diseñar una identidad y **animarla** usando after effects
 para eso, la excusa fue una revista de publicación digital con una paleta muy reducida
