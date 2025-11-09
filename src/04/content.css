@@ -5,7 +5,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: clamp(.8vw, 1rem, 2vw); line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: clamp(1rem, 0.8vw + 0.4rem, 1.25rem); line-height: 1.5; word-break: break-word;
   
   & img { 
 
@@ -47,7 +47,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: clamp(.8vw, 1rem, 2vw); line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: clamp(1rem, 0.8vw + 0.4rem, 1.25rem); line-height: 1.5; word-break: break-word;
 
   & img { 
 
@@ -67,4 +67,10 @@
   /* BOX    */ width: 100%; height: 100%; aspect-ratio: 16 / 9;
   /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
 
+}
+
+@media (min-width: 1081px) {
+
+  .S6, .S7TEXT { font-size: clamp(1rem, 1.5vw + 0.2rem, 1.25rem); }
+  
 }
