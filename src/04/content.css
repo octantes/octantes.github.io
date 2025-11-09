@@ -5,7 +5,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: clamp(.75vw, 0.8vw - 0.1vw, .8vw); line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
   
   & img { 
 
@@ -47,7 +47,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: clamp(.75vw, 0.8vw - 0.1vw, .8vw); line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
 
   & img { 
 
@@ -59,7 +59,7 @@
   
 }
 
-/* EMBEDS */
+/* EMBEDS */  
 
 .YTVideo { 
 
@@ -69,8 +69,6 @@
 
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1080px) { .S6, .S7TEXT { font-size: 2vw; } }
 
-  .S6, .S7TEXT { font-size: clamp(1.8vw, .8vw + 0.2rem, 3.20vw); }
-  
-}
+@media (max-width: 1405px) { .S6, .S7TEXT { font-size: .75vw } }
