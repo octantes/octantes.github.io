@@ -12,7 +12,6 @@ handle: kaste
 
 las herramientas fueron implementadas pensando en el concepto de un *heads up display*
 buscando que la pc vuelva a ser una herramienta y deje de ser un agujero negro cognitivo
-
 se implementaron varios parches sobre DWM junto a una estética simple de estilo retro
 sin gaps, transparencia ni compositor por defecto; **sin distracciones innecesarias**
 

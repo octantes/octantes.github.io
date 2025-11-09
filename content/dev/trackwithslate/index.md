@@ -16,7 +16,7 @@ ideal para quienes buscan simplicidad y privacidad: no está pensada para uso pr
 sin embargo, se cubren algunos edge-cases importantes
 
 toda la información se mantiene en tu máquina, sin cuentas, servidores o sincronización
-**la información queda en tu browser hasta que la exportás** - hacé backups regularmente
+la información *queda en tu browser hasta que la exportás* - hacé backups regularmente
 
 cada release es estable, con el objetivo de mantenerlo **simple**: abrilo y empezá a trackear
 
