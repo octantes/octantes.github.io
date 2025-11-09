@@ -8,24 +8,25 @@ date: 2025-07-04
 handle: kaste
 ---
 
-[seal](https://github.com/octantes/shadewithseal) es una herramienta local para crear, guardar y grabar fragment shaders GLSL directamente en el navegador
-no necesita instalarse ni una conexión a internet: solo descargá el HTML y se va a abrir como si fuera una página web normal
+[seal](https://github.com/octantes/shadewithseal) es una herramienta local para *crear, guardar y grabar frag shaders* en el browser
+no necesita instalación ni tener internet: solo descargá el HTML y abrilo con el navegador
 
-armado pensando en artistas y programadores que necesiten un playground liviano para prototipar y archivar shaders
-ideal para quienes prefieren simplicidad y privacidad; no está pensada para uso profesional, pero se cubren algunos edge-cases
+armado para artistas y programadores que quieran un playground liviano para prototipar
+ideal para quienes buscan simplicidad y privacidad: no está pensada para uso profesional
+sin embargo, se cubren algunos edge-cases importantes
 
-toda la información se queda en tu máquina, sin cuentas, servidores o sincronización: solo recordá exportar frecuentemente
+toda la información se mantiene en tu máquina, sin cuentas, servidores o sincronización
+**la información queda en tu browser hasta que la exportás** - hacé backups regularmente
 
-**seal** es estable y funcional, con el objetivo de mantenerse minimalista: abrí el HTML y empezá a programar
+cada release es estable, con el objetivo de mantenerlo **simple**: abrilo y empezá a codear
 
-* *live-coding*: programá fragment shaders GLSL mientras ves los resultados en tiempo real con logs de errores en el canvas
-* *renderizado*: render-loop simple y minimalista basado en webGL - implementa la mayoría de las variables custom de shadertoy
-* *grabación*: funciones para grabar, reproducir, pausar y descargar el shader a .webm con solo un clic (aspect ratio fijo 1:1)
-* *almacenamiento*: organizá los shaders en carpetas y guardalos directamente en el browser usando indexedDB
-* *superligero*: compatible con cualquier navegador moderno, incluyendo móvil, pesando solo ~100 KB
+*live-coding*: programá shaders en GLSL mientras ves los resultados en tiempo real
+*renderizado*: render-loop simple y minimalista basado en webGL (por ahora solo 1.0)
+*compatibilidad*: se implementaron la mayoría de las variables custom de shadertoy
+*grabación*: funciones para grabar, reproducir, pausar y descargar el shader a .webm
+*almacenamiento*: todo se guarda dentro del browser cache usando indexedDB
+*superligero*: compatible con cualquier navegador, incluyendo móvil; solo ~100 KB
 
-**wip**: soporte para webGL2 > export de indexedDB a JSON > superposición de canvas y blending modes > aspect ratios ajustables
+**wip**: webGL2 > export JSON > overlay de canvas + blending modes > aspect ratios
 
-recordá que **toda la información se queda en tu browser hasta que la exportás** - hacé backups regularmente
-
-pro-tip: *guardá como favorito para acceder rápidamente*
+pro-tip: *guardalo como favorito para acceder rápidamente*

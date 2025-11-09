@@ -8,26 +8,26 @@ date: 2025-07-04
 handle: kaste
 ---
 
-[slate](https://github.com/octantes/trackwithslate) es una herramienta local para *crear, organizar y exportar data tabular* en el browser
-no necesita instalarse ni una conexión a internet: solo descargá el HTML y se va a abrir como si fuera una página web normal
+[slate](https://github.com/octantes/trackwithslate) es una webapp local para *crear, organizar y exportar data tabular* en el browser
+no necesita instalación ni tener internet: solo descargá el HTML y abrilo con el navegador
 
-armado pensando en personas que necesitan una forma local y liviana de gestionar data personal sin dependencias externas
-ideal para quienes prefieren simplicidad y privacidad; no está pensada para uso profesional, pero se cubren algunos edge-cases
+armado para tener una forma local y liviana de gestionar data personal sin dependencias
+ideal para quienes buscan simplicidad y privacidad: no está pensada para uso profesional
+sin embargo, se cubren algunos edge-cases importantes
 
-toda la información se queda en tu máquina, sin cuentas, servidores o sincronización: solo recordá exportar frecuentemente
+toda la información se mantiene en tu máquina, sin cuentas, servidores o sincronización
+**la información queda en tu browser hasta que la exportás** - hacé backups regularmente
 
-**slate** es estable y funcional, con el objetivo de mantenerse minimalista: abrí el HTML y empezá a trackear
+cada release es estable, con el objetivo de mantenerlo **simple**: abrilo y empezá a trackear
 
-* *importar/exportar*: traé y guardá tu información en CSV, un formato plain text y totalmente abierto
-* *editar registros*: visualizá, modificá y organizá entradas en la tabla, incluyendo bulk-delete y fuzzy-search
-* *autocompletado de categorías*: etiquetá cualquier columna como una categoría para crear botones que las llenen automáticamente
-* *formatos de fecha*: marcá columnas como fecha para aplicar autocompletado con la fecha actual en el formato que quieras
-* *almacenamiento*: todo se guarda dentro del browser usando localstorage y puede ser fácilmente exportado a CSV
-* *tipos de datos*: definí columnas con restricciones de tipo de datos como texto, número, fecha o booleano
-* *superligero*: compatible con cualquier navegador moderno, incluyendo móvil, pesando solo ~100 KB
+*importar/exportar*: traé y guardá tu información en CSV, un formato plain text
+*editar registros*: visualizá, modificá y ordená la tabla con bulk-delete y fuzzy-find
+*autocompletado de categorías*: creá botones para llenar entradas rápidamente
+*formatos de fecha*: autocompleta con la fecha actual en el formato que quieras
+*almacenamiento*: todo se guarda dentro del browser cache usando localstorage
+*tipos de datos*: definí columnas con restricciones para tipos de datos específicos
+*superligero*: compatible con cualquier navegador, incluyendo móvil; solo ~100 KB
 
-**wip**: campos internos con símbolos para subdividir > visualizaciones de datos > múltiples bases de datos
+**wip**: campos con subdivisiones simbólicas > dataviz > múltiples databases
 
-recordá que **toda la información se queda en tu browser hasta que la exportás** - hacé backups regularmente
-
-pro-tip: *guardá como favorito para acceder rápidamente*
+pro-tip: *guardalo como favorito para acceder rápidamente*
