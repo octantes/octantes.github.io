@@ -30,7 +30,8 @@ date: YYYY-MM-DD
 handle: kaste OR [kaste, octantes] if multi-author
 ---
 
-OPCIONAL: sumar la propiedad vuecomp: "componente.vue" a la metadata monta el archivo e ignora todo el resto
+CUSTOM: add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
+GAMES: just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
 
 - usar como maximo tres tags
 - en la tabla solo se muestra hasta la primera coma- bloque de "novedades"
