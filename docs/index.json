@@ -72,24 +72,6 @@
     "vuecomp": null
   },
   {
-    "slug": "vuecomp",
-    "title": "test vuecomp",
-    "description": "la musica de mi hermano, sumando un tema mio al final",
-    "type": "note",
-    "tags": [
-      "branding",
-      "portfolio"
-    ],
-    "portada": "",
-    "handle": [
-      "kaste"
-    ],
-    "date": "06/06/2025",
-    "isoDate": "2025-06-06T00:00:00.000Z",
-    "url": "/posts/note/vuecomp/",
-    "vuecomp": "PortadaComp"
-  },
-  {
     "slug": "viñetas",
     "title": "viñetas",
     "description": "descripcion corta para seo",
