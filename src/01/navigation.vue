@@ -55,11 +55,11 @@ function navSort(key) {                                                         
 const tabs = [                                                                                                                        // names for filters 
 
   { label: 'completo',   value: 'full'   },
-  { label: 'textos',     value: 'posts'  },
+  // { label: 'textos',     value: 'posts'  },
   { label: 'diseño',     value: 'design' },
   { label: 'desarrollo', value: 'dev'    },
   { label: 'música',     value: 'music'  },
-  { label: 'juegos',     value: 'game'   }
+  // { label: 'juegos',     value: 'game'   }
 
 ]
 
