@@ -29,3 +29,6 @@ siento que es cuestion de tiempo para que se de, y ojala que sea un proyecto **a
 por las limitaciones de la pagina, es muy posible que los gifs se vean desincronizados
 
 * proyecto realizado usando figma, photoshop y after effects
+
+1. testeando lista de numeros
+2. testeando lista de numeros
