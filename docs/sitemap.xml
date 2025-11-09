@@ -2,15 +2,15 @@
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
       <loc>https://octantes.github.io/</loc>
-      <lastmod>2025-11-09T09:14:08.027Z</lastmod>
+      <lastmod>2025-11-09T09:53:32.142Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/about/</loc>
-      <lastmod>2025-11-09T09:14:08.027Z</lastmod>
+      <lastmod>2025-11-09T09:53:32.142Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/contact/</loc>
-      <lastmod>2025-11-09T09:14:08.027Z</lastmod>
+      <lastmod>2025-11-09T09:53:32.142Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/dev/arch-hud/</loc>
@@ -26,6 +26,10 @@
     </url>
 <url>
       <loc>https://octantes.github.io/posts/music/geminis/</loc>
+      <lastmod>Fri Jun 06 2025 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/note/vuecomp/</loc>
       <lastmod>Fri Jun 06 2025 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
     </url>
 <url>
