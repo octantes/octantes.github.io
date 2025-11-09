@@ -7,12 +7,30 @@ import A2 from '../02/A2.vue'
 import S6 from '../02/S6.vue'
 import S7 from '../02/S7.vue'
 import N9 from '../02/N9.vue'
+import PortadaComp from './portada.vue'
+
+// import vuecomps if needed for notes
 
 const emit = defineEmits(['updateProcessing'])
 const processing = ref(false)
 
-const components = { dev: A2, note: S6, design: S7, music: N9 }
-const currentComponent = computed (() => currentPost.value?.type ? components[currentPost.value.type] : components.note )
+const components = { dev: A2, note: S6, design: S7, music: N9, PortadaComp: PortadaComp } // add vuecomps if needed
+
+const currentComponent = computed(() => {
+  
+  if (currentPost.value) {
+    
+    const customCompName = currentPost.value.vuecomp
+    if (customCompName && components[customCompName]) { return components[customCompName] }
+    
+    const typeComp = components[currentPost.value.type]
+    if (typeComp) { return typeComp}
+
+  }
+
+  return components.note
+
+})
 
 const route = useRoute()
 const shaderRef = ref(null)

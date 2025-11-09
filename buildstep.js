@@ -22,13 +22,15 @@ import sharp from 'sharp'
 
 ---
 tags: [a, b, c]
-type: design, dev, note, music
+type: design, dev, note, music, game
 title: titulo de la nota
 description: descripcion corta para seo
 portada: portada.png
 date: YYYY-MM-DD
 handle: kaste OR [kaste, octantes] if multi-author
 ---
+
+OPCIONAL: sumar la propiedad vuecomp: "componente.vue" a la metadata monta el archivo e ignora todo el resto
 
 - usar como maximo tres tags
 - en la tabla solo se muestra hasta la primera coma- bloque de "novedades"
@@ -434,6 +436,7 @@ async function processPosts() {                                                 
       date: formatted,
       isoDate: isoDate,
       url: `/posts/${postType}/${slug}/`,
+      vuecomp: attributes.vuecomp || null,
     })
 
   }
