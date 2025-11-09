@@ -25,7 +25,6 @@ dinamik fue mi *tercer* proyecto de diseño basado en identidades de marca ficti
 
 en este caso, la idea era armar algo **responsive** que se ajuste al tamaño de la pantalla
 se me ocurrió pensar este branding para que pueda ser revisitado en proyectos futuros
-
 el concepto final es una empresa que desarrolla software para mejorar la productividad
 la estética bebe de la óptica, que sorprendentemente tiene muchísimo atractivo visual
 

@@ -25,7 +25,6 @@ se me ocurrió pensar pequeños conceptos de marcas ficticias, como excusa para 
 
 en este caso, el objetivo era diseñar una identidad y **animarla** usando after effects
 para eso, la excusa fue una revista de publicación digital con una paleta muy reducida
-
 hoy en día le veo problemas de espaciado, y el texto del copy me parece bastante básico
 me gustaría revisitar esta *estética*, quizás con algún proyecto real que la aproveche
 
