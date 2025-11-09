@@ -5,7 +5,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: clamp(.75vw, 0.8vw - 0.4rem, .8vw); line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: clamp(.75vw, 0.8vw - 0.1vw, .8vw); line-height: 1.5; word-break: break-word;
   
   & img { 
 
@@ -47,7 +47,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: clamp(1rem, 0.8vw + 0.4rem, 1.25rem); line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: clamp(.75vw, 0.8vw - 0.1vw, .8vw); line-height: 1.5; word-break: break-word;
 
   & img { 
 
