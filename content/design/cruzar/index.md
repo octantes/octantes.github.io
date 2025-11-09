@@ -22,9 +22,9 @@ cruzar fue mi *segundo* proyecto de diseño basado en identidades de marca ficti
 el objetivo era armarme una excusa para seguir animando y practicando herramientas
 
 en este caso, el concepto se apoderó completamente del proyecto, creo que para bien
-poner un *datacenter* en el medio de la cordillera es una idea latente en el imaginario
+poner un **datacenter** en el medio de la cordillera es una idea latente en el imaginario
 la parte cripto me parece parte de un mismo objetivo, hacer buen uso de nuestro entorno
-siento que es cuestión de tiempo para que se dé, y ojalá que sea un proyecto **argentino**
+siento que es cuestión de tiempo para que se dé, y ojalá que sea un proyecto *argentino*
 
 por las limitaciones de la página, es muy posible que los gifs se vean desincronizados
 
