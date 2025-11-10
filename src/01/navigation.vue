@@ -1,73 +1,46 @@
 <script setup> 
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
 
-function toggleLayout() { emit('toggle-view'); }
-
-const emit           = defineEmits(['toggle-view'])                                                                                   // emit centered view toggle
-const props          = defineProps({ disabled: Boolean, isCentered: Boolean })                                                        // recieve layout states
-const base           = import.meta.env.BASE_URL.replace(/\/$/, '')                                                                    // base url template
-const router         = useRouter()                                                                                                    // handles note open route
-const route          = useRoute()                                                                                                     // sets the current url route
-const notes          = ref([])                                                                                                        // reactive array of all the notes
-const activeFilter   = ref('full')                                                                                                    // active tab filter
-const sortKey        = ref('isoDate')                                                                                                 // current sort column
-const sortOrder      = ref('desc')                                                                                                    // current sort order
-const itemsPerPage   = 8                                                                                                              // number of notes per page
-const currentPage    = ref(1)                                                                                                         // current page number
-const currentTagline = ref('')                                                                                                        // current tagline phrase
-const searchQuery    = ref('')                                                                                                        // searchbox current search
-const totalPages     = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                               // returns total page number
-const taglines       = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                          // random taglines
-
-function prevPage()            { if (currentPage.value > 1 && !props.disabled) { currentPage.value-- } }                              // changes to previous table page
-function nextPage()            { if (currentPage.value < totalPages.value && !props.disabled) { currentPage.value++ } }               // changes to next table page
-function noteOpen(type, slug)  { if (!props.disabled) router.push({ path: `/${type}/${slug}` }) }                                     // opens a note in content
-function noteSearch(tag)       { if (!props.disabled) { searchQuery.value = tag } }                                                   // searches terms in notes
-
-function navHome() {                                                                                                                  // navigates to root and reloads 
-  
-  if (props.disabled) return
-  if (route.params.slug) { router.push({ path: '/' }); setTimeout(() => { window.location.reload() }, 0) }
-  else { router.push({ path: '/' }) }
-
-}
-
-function navFilter(direction) {                                                                                                       // changes filter manually 
-
-  if (props.disabled) return
-
-  const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
-  const newIndex = (currentIndex + direction + tabs.length) % tabs.length
-
-  activeFilter.value = tabs[newIndex].value
-
-}
-
-function navSort(key) {                                                                                                               // changes sorting column 
-
-  if (props.disabled) return
-  if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' }
-  else { sortKey.value = key; sortOrder.value = 'asc' }
-
-}
-
-const tabs = [                                                                                                                        // names for filters 
+const taglines = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                                // random taglines
+const tabs     = [                                                                                                                    // names for filters 
 
   { label: 'completo',   value: 'full'   },
-  // { label: 'textos',     value: 'posts'  },
   { label: 'diseño',     value: 'design' },
   { label: 'desarrollo', value: 'dev'    },
   { label: 'música',     value: 'music'  },
-  // { label: 'juegos',     value: 'game'   }
+  // { label: 'textos',     value: 'posts'  },
+  // { label: 'juegos',     value: 'game'   },
 
 ]
+
+const router                     = useRouter()                                                                                        // handles note open route
+const route                      = useRoute()                                                                                         // sets the current url route
+const store                      = useStore()                                                                                         // initializes global store
+const { isCentered, processing } = storeToRefs(store)                                                                                 // extracts reactive states
+
+const base           = import.meta.env.BASE_URL.replace(/\/$/, '')                                                                    // base url template
+const notes          = ref([])                                                                                                        // reactive array of all the notes
+const currentTagline = ref('')                                                                                                        // current tagline phrase
+const searchQuery    = ref('')                                                                                                        // searchbox current search
+const activeFilter   = ref('full')                                                                                                    // active tab filter
+const sortKey        = ref('isoDate')                                                                                                 // current sort column
+const sortOrder      = ref('desc')                                                                                                    // current sort order
+const currentPage    = ref(1)                                                                                                         // current page number
+const itemsPerPage   = 8                                                                                                              // number of notes per page
+const totalPages     = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                               // returns total page number
+
+function prevPage()           { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }                             // changes to previous table page
+function nextPage()           { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }              // changes to next table page
+function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // opens a note in content
+function noteSearch(tag)      { if (!processing.value) { searchQuery.value = tag } }                                                  // searches terms in notes
 
 const paginatedNotes = computed(() => {                                                                                               // returns current page notes 
 
   const start = (currentPage.value - 1) * itemsPerPage
   const end = start + itemsPerPage
-
   return noteSortFilter.value.slice(start, end)
 
 })
@@ -93,7 +66,7 @@ const noteSortFilter = computed(() => {                                         
 
     let valA, valB
 
-    switch (sortKey.value) { 
+    switch (sortKey.value) {
       case 'title': valA = a.title.toLowerCase()          ; valB = b.title.toLowerCase()          ; break
       case 'tags':  valA = a.tags[0]?.toLowerCase() || '' ; valB = b.tags[0]?.toLowerCase() || '' ; break
       default:      valA = new Date(a.isoDate)            ; valB = new Date(b.isoDate)            ; break
@@ -103,12 +76,37 @@ const noteSortFilter = computed(() => {                                         
 
     if (valA > valB)      comparison =  1
     else if (valA < valB) comparison = -1
-
     return sortOrder.value === 'asc' ? comparison : -comparison
 
   })
 
 })
+
+function navHome() {                                                                                                                  // navigates to root and reloads 
+
+  if (processing.value) return
+  if (route.params.slug) { router.push({ path: '/' })
+  setTimeout(() => { window.location.reload() }, 0) }
+  else { router.push({ path: '/' }) }
+
+}
+
+function navFilter(direction) {                                                                                                       // changes filter manually 
+
+  if (processing.value) return
+  const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
+  const newIndex = (currentIndex + direction + tabs.length) % tabs.length
+  activeFilter.value = tabs[newIndex].value
+
+}
+
+function navSort(key) {                                                                                                               // changes sorting column 
+
+  if (processing.value) return
+  if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' }
+  else { sortKey.value = key; sortOrder.value = 'asc' }
+
+}
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
@@ -148,13 +146,11 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
     <div class="filters">
 
-      <button @click="navFilter(-1)" :disabled="props.disabled"> < </button>
-
+      <button @click="navFilter(-1)" :disabled="processing"> < </button>
       <div class="tabs">
-        <button v-for="tab in tabs" :key="tab.value" @click="activeFilter = tab.value" :class="{ active: activeFilter === tab.value }" :disabled="props.disabled" > {{ tab.label }} </button>
+        <button v-for="tab in tabs" :key="tab.value" @click="activeFilter = tab.value" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
       </div>
-
-      <button @click="navFilter(+1)" :disabled="props.disabled"> > </button>
+      <button @click="navFilter(+1)" :disabled="processing"> > </button>
 
     </div>
 
@@ -178,11 +174,11 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
 
         <tbody>
 
-          <tr v-for="note in paginatedNotes" :key="note.slug" @click="noteOpen(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: props.disabled }" >
+          <tr v-for="note in paginatedNotes" :key="note.slug" @click="noteOpen(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: processing }" >
             <td>{{ note.date }}</td>
             <td>{{ note.title }}</td>
             <td class="tagcol">
-              <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="noteSearch(tag)" :disabled="props.disabled"> {{ tag }} </button>
+              <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="noteSearch(tag)" :disabled="processing"> {{ tag }} </button>
             </td>
           </tr>
 
@@ -200,9 +196,9 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
           <tr>
             <td :colspan="3">
               <div class="pagecontrols">
-                <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || props.disabled"> < </button>
+                <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || processing"> < </button>
                 <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
-                <button class="navbutton" @click="nextPage" :disabled="currentPage >= totalPages || props.disabled"> > </button>
+                <button class="navbutton" @click="nextPage" :disabled="currentPage >= totalPages || processing"> > </button>
               </div>
             </td>
           </tr>
@@ -213,7 +209,7 @@ watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value
     </div>
     
     <div class="layoutcontrol">
-      <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="props.disabled" />
+      <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
     </div>
 
     <div class="bottom">
