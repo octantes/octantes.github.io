@@ -1,18 +1,16 @@
 <script setup> 
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useStore } from './04/store.js'
 import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'
 import Side from './01/side.vue'
 
-const processing = ref(false)
-const isCentered = ref(false)
+const store = useStore()
 
 onMounted(() => { window.addEventListener('resize', handleResize); handleResize() })
 onUnmounted(() => { window.removeEventListener('resize', handleResize) })
 
-function handleResize() { if (window.innerWidth <= 1080) { isCentered.value = false } }
-function updateProcessing(val) { processing.value = val }
-function toggleView() { isCentered.value = !isCentered.value }
+function handleResize() { if (window.innerWidth <= 1080) { if (store.isCentered) { store.isCentered = false } } }
 
 </script>
 
@@ -20,17 +18,17 @@ function toggleView() { isCentered.value = !isCentered.value }
 
   <div class="pagina">
 
-    <div class="layout" :class="{ centered: isCentered }" >
+    <div class="layout" :class="{ centered: store.isCentered }" >
 
-        <Navigation @toggle-view="toggleView" class="navigation" :disabled="processing" :is-centered="isCentered"/>
+        <Navigation @toggle-view="store.toggleView" class="navigation" :disabled="store.processing" :is-centered="store.isCentered" />
 
         <RouterView v-slot="{ Component }" >
 
-          <component class="articulos" :is="Component" @updateProcessing="updateProcessing" />
+          <component class="articulos" :is="Component" @updateProcessing="store.setProcessing" />
           
         </RouterView>
 
-        <Side v-if="isCentered" class="side" :disabled="processing" />
+        <Side v-if="store.isCentered" class="side" :disabled="store.processing" />
 
     </div>
 

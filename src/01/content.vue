@@ -1,6 +1,7 @@
 <script setup> 
 import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from '../04/store.js'
 import Shader from '../03/shader.vue'
 import Portada from './portada.vue'
 import A2 from '../02/A2.vue'
@@ -10,9 +11,7 @@ import N9 from '../02/N9.vue'
 
 // import vuecomps if needed for notes
 
-const emit = defineEmits(['updateProcessing'])
-const processing = ref(false)
-
+const store = useStore()
 const components = { dev: A2, note: S6, design: S7, music: N9 } // add vuecomps if needed
 
 const currentComponent = computed(() => {
@@ -21,7 +20,6 @@ const currentComponent = computed(() => {
     
     const customVuecomp = currentPost.value.vuecomp
     if (customVuecomp && components[customVuecomp]) { return components[customVuecomp] }
-    
     const typeComp = components[currentPost.value.type]
     if (typeComp) { return typeComp}
 
@@ -46,7 +44,6 @@ async function loadIndex() { try { const res = await fetch('/index.json'); posts
 async function loadNote(slug) { 
 
   if (!slug) { noteContent.value = ''; currentPost.value = null; return }
-
   currentPost.value = postsIndex.value.find(p => p.slug === slug) || { type: 'note', slug }
 
   try {
@@ -57,16 +54,13 @@ async function loadNote(slug) {
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
     noteContent.value = html
     if (currentPost.value.title && currentPost.value.title !== document.title) document.title = currentPost.value.title
-    
     await nextTick()
-    
-    const contentEl = document.querySelector('.content')
+    const contentElement = document.querySelector('.content')
 
-    if (contentEl) {
+    if (contentElement) {
       
       const mediaLoadPromises = []
-      
-      const mediaElements = contentEl.querySelectorAll('img, video, iframe')
+      const mediaElements = contentElement.querySelectorAll('img, video, iframe')
       
       mediaElements.forEach(el => {
         
@@ -92,8 +86,8 @@ async function loadNote(slug) {
       })
       
       await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
-
-      if (window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into'); if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
+      if (window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into')
+      if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
       
     }
     
@@ -101,14 +95,14 @@ async function loadNote(slug) {
 
 }
 
-watch(
+watch( 
   
   () => route.params.slug,
   
   async slug => {
     
-    if (processing.value) return
-    processing.value = true; emit('updateProcessing', processing.value)
+    if (store.processing) return
+    store.setProcessing(true)
     document.body.style.cursor = 'wait'
     await nextTick()
     
@@ -162,7 +156,7 @@ watch(
       }
 
       document.body.style.cursor = ''
-      processing.value = false; emit('updateProcessing', processing.value)
+      store.setProcessing(false)
             
   }, { immediate: true }
 
