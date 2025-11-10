@@ -19,23 +19,21 @@ const tabs     = [                                                              
 const router                     = useRouter()                                                                                        // handles note open route
 const route                      = useRoute()                                                                                         // sets the current url route
 const store                      = useStore()                                                                                         // initializes global store
-const { isCentered, processing } = storeToRefs(store)                                                                                 // extracts reactive states
+const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                        // base url template
+const notes                      = ref([])                                                                                            // reactive array of all the notes
+const currentTagline             = ref('')                                                                                            // current tagline phrase
+const itemsPerPage               = 8                                                                                                  // number of notes per page
+const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                   // returns total page number
+const sortKey                    = ref('isoDate')                                                                                     // current sort column
+const sortOrder                  = ref('desc')                                                                                        // current sort order
+const currentPage                = ref(1)                                                                                             // current page number
 
-const base           = import.meta.env.BASE_URL.replace(/\/$/, '')                                                                    // base url template
-const notes          = ref([])                                                                                                        // reactive array of all the notes
-const currentTagline = ref('')                                                                                                        // current tagline phrase
-const searchQuery    = ref('')                                                                                                        // searchbox current search
-const activeFilter   = ref('full')                                                                                                    // active tab filter
-const sortKey        = ref('isoDate')                                                                                                 // current sort column
-const sortOrder      = ref('desc')                                                                                                    // current sort order
-const currentPage    = ref(1)                                                                                                         // current page number
-const itemsPerPage   = 8                                                                                                              // number of notes per page
-const totalPages     = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                               // returns total page number
+const { isCentered, processing, searchQuery, activeFilter } = storeToRefs(store)                     // extracts reactive states
 
-function prevPage()           { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }                             // changes to previous table page
-function nextPage()           { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }              // changes to next table page
-function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // opens a note in content
-function noteSearch(tag)      { if (!processing.value) { searchQuery.value = tag } }                                                  // searches terms in notes
+function prevPage()           { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
+function nextPage()           { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
+function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
+function noteSearch(tag)      { if (!processing.value) { store.setSearchQuery(tag) } }
 
 const paginatedNotes = computed(() => {                                                                                               // returns current page notes 
 
@@ -96,7 +94,8 @@ function navFilter(direction) {                                                 
   if (processing.value) return
   const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
   const newIndex = (currentIndex + direction + tabs.length) % tabs.length
-  activeFilter.value = tabs[newIndex].value
+  store.setActiveFilter(tabs[newIndex].value)
+  currentPage.value = 1
 
 }
 
@@ -123,7 +122,8 @@ onMounted(async () => {                                                         
 
 })
 
-watch([activeFilter, sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })                                               // resets pagination
+watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })                                               // resets pagination
+
 
 </script>
 
