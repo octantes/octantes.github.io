@@ -183,11 +183,11 @@ watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })       
           </tr>
 
           <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
-            <td colspan="3">no hay notas que coincidan con "{{ searchQuery }}"</td>
+            <td :colspan="isCentered ? 2 : 3">no hay notas que coincidan con "{{ searchQuery }}"</td>
           </tr>
 
           <tr v-for="i in (itemsPerPage - (noteSortFilter.length > 0 ? paginatedNotes.length : (searchQuery ? 1 : 0)))" :key="`placeholder-${i}`" class="bodyfill">
-            <td colspan="3">&nbsp;</td>
+            <td :colspan="isCentered ? 2 : 3">&nbsp;</td>
           </tr>
           
         </tbody>
@@ -380,6 +380,7 @@ table {
   /* BOX    */ padding: 0; margin: 0;
   /* FILL   */ color: var(--lirio); background: none;
   /* BORDER */ border: none;
+  /* FONT   */ white-space: nowrap;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:hover    { color: var(--cristal); text-decoration: underline; }
