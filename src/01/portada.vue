@@ -1,6 +1,8 @@
 <script setup> 
 import { computed } from 'vue'
+import { useStore } from '../04/store.js'
 
+const store = useStore()
 const props = defineProps({ metadata: { type: Object, default: () => ({}) } })
 function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
 
@@ -66,6 +68,8 @@ const data = computed(() => {
                 <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
 
           </div>
+
+          <button @click="store.toggleView()" class="sidebutton">{{ store.isCentered ? '<' : '>' }}</button>
 
         </div>
 
@@ -160,8 +164,22 @@ const data = computed(() => {
 .userpic { 
 
   /* LAYOUT */ border-radius: 50%;
-  /* BOX    */ width: 25px; height: auto;
+  /* BOX    */ width: 25px; height: 25px;
 
+}
+
+.sidebutton {
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center; justify-content: center;
+  /* BORDER */ border: none; border-radius: 9999px;
+  /* BOX    */ padding: .5rem 1.5rem .5rem 1.5rem;
+  /* FILL   */ background-color: var(--carbon25);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover  { cursor: pointer; background-color: var(--carbon50); }
+  &:active { transform: var(--scale-min); }
+  
 }
 
 .cover { 

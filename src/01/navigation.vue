@@ -332,10 +332,13 @@ table {
     &.active        { background-color: var(--lirio25); color: var(--niebla); }
     &:first-child   { border-top-left-radius: var(--radius-xs); border-bottom-left-radius: var(--radius-xs); }
     &:last-child    { border-top-right-radius: var(--radius-xs); border-bottom-right-radius: var(--radius-xs); }
-    &.active::after { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
 
+    &.active::after { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
     &.active[data-order="asc"]::after  { content: '↑'; }
     &.active[data-order="desc"]::after { content: '↓'; }
+
+    &.active[data-order="asc"]  { background: linear-gradient(0deg, var(--cristal25) 0%, var(--lirio35) 100%); }
+    &.active[data-order="desc"] { background: linear-gradient(180deg, var(--cristal25) 0%, var(--lirio35) 100%); }
   
   }
 
