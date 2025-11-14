@@ -4,8 +4,14 @@ import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
-const taglines = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                                // random taglines
-const tabs     = [                                                                                                                    // names for filters 
+const { isCentered, processing, searchQuery, activeFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
+
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+const currentTagline  = ref('')                                                                                                       // current tagline phrase
+const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                         // random taglines
+const tabs            = [                                                                                                             // names for filters 
 
   { label: 'completo',   value: 'full'   },
   { label: 'diseño',     value: 'design' },
@@ -16,14 +22,7 @@ const tabs     = [                                                              
 
 ]
 
-const router                     = useRouter()                                                                                        // handles note open route
-const route                      = useRoute()                                                                                         // sets the current url route
-const store                      = useStore()                                                                                         // initializes global store
-const currentTagline             = ref('')                                                                                            // current tagline phrase
-
-const { isCentered, processing, searchQuery, activeFilter, notesIndex, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
-
-function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
+function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // push notes to router
 
 function navHome() {                                                                                                                  // navigates to root and reloads 
 

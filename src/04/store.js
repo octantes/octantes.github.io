@@ -8,6 +8,9 @@ export const useStore = defineStore('store', () => {
   const notesIndex                 = ref([])                                                                                          // note index array
   const notesLoaded                = ref(false)                                                                                       // loaded index flag
 
+  const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')
+  const currentPost                = ref(null)
+
   // STATES                                                                                                                           // CHANGE STATES
 
   const processing                 = ref(false)                                                                                       // disabled component state
@@ -33,6 +36,8 @@ export const useStore = defineStore('store', () => {
   function setActiveFilter(filter) { activeFilter.value = filter; currentPage.value = 1 }
   function prevPage()              { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
   function nextPage()              { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
+
+  function setCurrentPost(postMetadata) { currentPost.value = postMetadata }
 
   const noteSortFilter = computed(() => { 
 
@@ -124,7 +129,7 @@ export const useStore = defineStore('store', () => {
     /* STATES     */ processing, setProcessing,
     /* LAYOUT     */ isCentered, toggleView,
     /* NAVIGATION */ searchQuery, activeFilter, setSearchQuery, setActiveFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, prevPage, nextPage, navSort, itemsPerPage,
-    /* DATA       */ notesIndex, notesLoaded, loadNotesIndex, loadLatestPost
+    /* DATA       */ notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base
 
   }
 

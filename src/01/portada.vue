@@ -1,9 +1,11 @@
 <script setup> 
 import { computed } from 'vue'
 import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
 
 const store = useStore()
-const props = defineProps({ metadata: { type: Object, default: () => ({}) } })
+const { currentPost } = storeToRefs(store)
+
 function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
 
 const authorsMap = {
@@ -14,7 +16,9 @@ const authorsMap = {
 
 const data = computed(() => {
 
-    let rawHandle = props.metadata.handle || 'kaste'
+    const metadata = currentPost.value || {}
+
+    let rawHandle = metadata.handle || 'kaste'
     const handles = Array.isArray(rawHandle) ? rawHandle : [rawHandle]
     
     const postAuthors = handles.map(h => {
@@ -29,17 +33,17 @@ const data = computed(() => {
             link: authorInfo.link,
 
             full: h === handles[0], 
-            date: h === handles[0] ? props.metadata.date || '2026' : null,
+            date: h === handles[0] ? metadata.date || '2026' : null,
 
         }
     })
 
     return {
 
-        title: props.metadata.title || 'bienvenido a octantes.net!',
-        description: props.metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
+        title: metadata.title || 'bienvenido a octantes.net!',
+        description: metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
         authors: postAuthors,
-        portada: props.metadata.portada || '',
+        portada: metadata.portada || '',
 
     }
 

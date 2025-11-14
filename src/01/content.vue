@@ -2,6 +2,7 @@
 import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
 import Shader from '../03/shader.vue'
 import Portada from './portada.vue'
 import A2 from '../02/A2.vue'
@@ -13,6 +14,15 @@ import N9 from '../02/N9.vue'
 
 const store = useStore()
 const components = { dev: A2, note: S6, design: S7, music: N9 } // add vuecomps if needed
+const { currentPost, notesIndex, base } = storeToRefs(store)
+const { loadNotesIndex, setCurrentPost, setProcessing } = store
+const route = useRoute()
+const shaderRef = ref(null)
+const noteContent = ref('')
+
+let noteLoaded = false
+let firstLoad = true
+let lastSlug = null
 
 const currentComponent = computed(() => {
   
@@ -29,24 +39,18 @@ const currentComponent = computed(() => {
 
 })
 
-const route = useRoute()
-const shaderRef = ref(null)
-const noteContent = ref('')
-const currentPost = ref(null)
-
-let noteLoaded = false
-let firstLoad = true
-let lastSlug = null
-
 async function loadNote(slug) { 
 
-  if (!slug) { noteContent.value = ''; currentPost.value = null; return }
-  const index = await store.loadNotesIndex()
-  currentPost.value = index.find(p => p.slug === slug) || { type: 'note', slug }
+  if (!slug) { noteContent.value = ''; setCurrentPost(null); return }
+  if (notesIndex.value.length === 0) { await loadNotesIndex() }
+
+  const postMetadata = notesIndex.value.find(p => p.slug === slug)
+  setCurrentPost(postMetadata || { type: 'note', slug })
+  const post = currentPost.value
 
   try {
 
-    const fetchPath = currentPost.value.url || `/posts/${currentPost.value.type || 'note'}/${slug}/`
+    const fetchPath = post.url || `${base.value}/posts/${post.type || 'note'}/${slug}/`
     const res = await fetch(fetchPath)
     const html = await res.text()
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
@@ -103,7 +107,7 @@ watch(
     store.setProcessing(true)
     document.body.style.cursor = 'wait'
     await nextTick()
-    await store.loadNotesIndex()
+    await loadNotesIndex()
 
     const postElement = document.querySelector('.post')
     
@@ -114,6 +118,7 @@ watch(
         noteLoaded = false
         firstLoad = false
         lastSlug = null
+        setCurrentPost(null)
         await shaderRef.value?.runQueue('intro')
         break
       

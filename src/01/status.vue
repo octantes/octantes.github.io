@@ -47,7 +47,7 @@ onMounted(() => {
 
   store.loadNotesIndex()
   fetchBTC()    ; btcInterval    = setInterval(fetchBTC, 60000);
-  fetchTime()  ; timeInterval   = setInterval(fetchTime, 15000);
+  fetchTime()   ; timeInterval   = setInterval(fetchTime, 15000);
 
 })
 
