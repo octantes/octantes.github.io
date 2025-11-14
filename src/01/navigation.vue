@@ -21,7 +21,7 @@ const route                      = useRoute()                                   
 const store                      = useStore()                                                                                         // initializes global store
 const currentTagline             = ref('')                                                                                            // current tagline phrase
 
-const { isCentered, processing, searchQuery, activeFilter, notesIndex, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter } = storeToRefs(store)
+const { isCentered, processing, searchQuery, activeFilter, notesIndex, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
 function noteSearch(tag)      { if (!processing.value) { store.setSearchQuery(tag) } }
