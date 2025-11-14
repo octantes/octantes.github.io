@@ -4,8 +4,6 @@ import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
-const { isCentered, processing, searchQuery, activeFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
-
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
@@ -21,6 +19,8 @@ const tabs            = [                                                       
   // { label: 'juegos',     value: 'game'   },
 
 ]
+
+const { isCentered, processing, searchQuery, activeFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // push notes to router
 
