@@ -39,6 +39,30 @@ export const useStore = defineStore('store', () => {
 
   function setCurrentPost(postMetadata) { currentPost.value = postMetadata }
 
+  async function fetchPost(slug) {
+
+    if (!slug) { setCurrentPost(null); return { html: '', error: null } }
+    if (!notesLoaded.value) { await loadNotesIndex() }
+
+    const postMetadata = notesIndex.value.find(p => p.slug === slug)
+    setCurrentPost(postMetadata || { type: 'note', slug })
+    const post = currentPost.value
+
+    try {
+
+      const fetchPath = post.url || `${base.value}/posts/${post.type || 'note'}/${slug}/`
+      const res = await fetch(fetchPath)
+      const html = await res.text()
+
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+      if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
+
+      return { html, error: null }
+
+    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: `<p>error cargando la nota</p>`, error: e } }
+    
+  }
+
   const noteSortFilter = computed(() => { 
 
     if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
@@ -129,7 +153,7 @@ export const useStore = defineStore('store', () => {
     /* STATES     */ processing, setProcessing,
     /* LAYOUT     */ isCentered, toggleView,
     /* NAVIGATION */ searchQuery, activeFilter, setSearchQuery, setActiveFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, prevPage, nextPage, navSort, itemsPerPage,
-    /* DATA       */ notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base
+    /* DATA       */ fetchPost, notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base
 
   }
 

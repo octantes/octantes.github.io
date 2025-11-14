@@ -15,8 +15,7 @@ import N9 from '../02/N9.vue'
 const store = useStore()
 const components = { dev: A2, note: S6, design: S7, music: N9 } // add vuecomps if needed
 const { currentPost, notesIndex, base } = storeToRefs(store)
-const { loadNotesIndex, setCurrentPost, setProcessing } = store
-const route = useRoute()
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store
 const shaderRef = ref(null)
 const noteContent = ref('')
 
@@ -39,61 +38,51 @@ const currentComponent = computed(() => {
 
 })
 
-async function loadNote(slug) { 
+async function handleLoadNote(slug) { 
+  
+  const postElement = document.querySelector('.post')
+  
+  const { html, error } = await fetchPost(slug)
+  noteContent.value = html
 
-  if (!slug) { noteContent.value = ''; setCurrentPost(null); return }
-  if (notesIndex.value.length === 0) { await loadNotesIndex() }
+  if (postElement) { postElement.scrollTop = 0 }
+  await nextTick()
 
-  const postMetadata = notesIndex.value.find(p => p.slug === slug)
-  setCurrentPost(postMetadata || { type: 'note', slug })
-  const post = currentPost.value
+  const contentElement = document.querySelector('.content')
 
-  try {
-
-    const fetchPath = post.url || `${base.value}/posts/${post.type || 'note'}/${slug}/`
-    const res = await fetch(fetchPath)
-    const html = await res.text()
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-    noteContent.value = html
-    if (currentPost.value.title && currentPost.value.title !== document.title) document.title = currentPost.value.title
-    await nextTick()
-    const contentElement = document.querySelector('.content')
-
-    if (contentElement) {
-      
-      const mediaLoadPromises = []
-      const mediaElements = contentElement.querySelectorAll('img, video, iframe')
-      
-      mediaElements.forEach(el => {
-        
-        if ((el.tagName === 'IMG' && !el.complete) || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
-            
-          mediaLoadPromises.push(new Promise(resolve => {
-            
-            if (el.tagName === 'IMG' || el.tagName === 'IFRAME') {
-              el.addEventListener('load', resolve, { once: true })
-              el.addEventListener('error', resolve, { once: true })
-              if (el.complete || el.readyState === 'complete') { resolve() }
-            }
-            
-            else if (el.tagName === 'VIDEO') {
-              el.addEventListener('loadedmetadata', resolve, { once: true })
-              el.addEventListener('error', resolve, { once: true })
-              if (el.readyState >= 3) { resolve() }
-            }
-            
-          }))
-          
-        }
-      })
-      
-      await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
-      if (window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into')
-      if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
-      
-    }
+  if (contentElement && !error) { 
     
-  } catch (e) { noteContent.value = `<p>error cargando la nota</p>`; console.error(`error fetching slug "${slug}":`, e) }
+    const mediaLoadPromises = []
+    const mediaElements = contentElement.querySelectorAll('img, video, iframe')
+    
+    mediaElements.forEach(el => {
+      
+      if ((el.tagName === 'IMG' && !el.complete) || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
+          
+        mediaLoadPromises.push(new Promise(resolve => {
+          
+          if (el.tagName === 'IMG' || el.tagName === 'IFRAME') {
+            el.addEventListener('load', resolve, { once: true })
+            el.addEventListener('error', resolve, { once: true })
+            if (el.complete || el.readyState === 'complete') { resolve() }
+          }
+          
+          else if (el.tagName === 'VIDEO') {
+            el.addEventListener('loadedmetadata', resolve, { once: true })
+            el.addEventListener('error', resolve, { once: true })
+            if (el.readyState >= 3) { resolve() }
+          }
+          
+        }))
+        
+      }
+    })
+    
+    await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
+    if (window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into')
+    if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
+    
+  }
 
 }
 
@@ -119,6 +108,7 @@ watch(
         firstLoad = false
         lastSlug = null
         setCurrentPost(null)
+        noteContent.value = ''
         await shaderRef.value?.runQueue('intro')
         break
       
@@ -127,7 +117,7 @@ watch(
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        await loadNote(slug)
+        await handleLoadNote(slug)
         if (postElement) { postElement.scrollTop = 0 }
         await shaderRef.value?.runQueue('outro')
         break
@@ -138,7 +128,7 @@ watch(
         firstLoad = false
         lastSlug = slug
         await shaderRef.value?.runQueue('static')
-        await loadNote(slug)
+        await handleLoadNote(slug)
         if (postElement) { postElement.scrollTop = 0 }
         await new Promise(resolve => setTimeout(resolve, 500))
         await shaderRef.value?.runQueue('direct')
@@ -150,7 +140,7 @@ watch(
         firstLoad = false
         lastSlug = slug
         await shaderRef.value?.runQueue('transition-intro')
-        await loadNote(slug)
+        await handleLoadNote(slug)
         if (postElement) { postElement.scrollTop = 0 }
         await shaderRef.value?.runQueue('transition-outro')
         break
