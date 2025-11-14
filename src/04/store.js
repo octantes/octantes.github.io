@@ -9,7 +9,6 @@ export const useStore = defineStore('store', () => {
   const isCentered   = ref(false)                                                                                                     // triple layout (centered note)
   const searchQuery  = ref('')                                                                                                        // searchbox current search
   const activeFilter = ref('full')                                                                                                    // active tab filter
-
   const notesIndex   = ref([])                                                                                                        // note index array
   const notesLoaded  = ref(false)                                                                                                     // loaded index flag
 
@@ -26,6 +25,8 @@ export const useStore = defineStore('store', () => {
   // acciones
 
   const noteSortFilter = computed(() => { 
+
+    if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
 
     const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
     let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
@@ -112,6 +113,8 @@ export const useStore = defineStore('store', () => {
     }
     currentPage.value = 1 // resetear página al ordenar
   }
+
+  watch(totalPages, (newTotalPages) => { if (currentPage.value > newTotalPages || newTotalPages === 0) { currentPage.value = 1 } })
 
   return {
 
