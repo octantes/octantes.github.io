@@ -31,7 +31,6 @@ const currentComponent = computed(() => {
 
 const route = useRoute()
 const shaderRef = ref(null)
-const postsIndex = ref([])
 const noteContent = ref('')
 const currentPost = ref(null)
 
@@ -39,12 +38,11 @@ let noteLoaded = false
 let firstLoad = true
 let lastSlug = null
 
-async function loadIndex() { try { const res = await fetch('/index.json'); postsIndex.value = await res.json() } catch { postsIndex.value = [] } }
-
 async function loadNote(slug) { 
 
   if (!slug) { noteContent.value = ''; currentPost.value = null; return }
-  currentPost.value = postsIndex.value.find(p => p.slug === slug) || { type: 'note', slug }
+  const index = await store.loadNotesIndex()
+  currentPost.value = index.find(p => p.slug === slug) || { type: 'note', slug }
 
   try {
 
@@ -105,8 +103,7 @@ watch(
     store.setProcessing(true)
     document.body.style.cursor = 'wait'
     await nextTick()
-    
-    if (!postsIndex.value.length) await loadIndex()
+    await store.loadNotesIndex()
 
     const postElement = document.querySelector('.post')
     
