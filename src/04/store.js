@@ -1,33 +1,42 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
-  // STATES
+  // DATA                                                                                                                             // LOAD NOTES
 
-  const processing   = ref(false)                                                                                                     // disabled component state
-  const isCentered   = ref(false)                                                                                                     // triple layout (centered note)
-  const searchQuery  = ref('')                                                                                                        // searchbox current search
-  const activeFilter = ref('full')                                                                                                    // active tab filter
-  const notesIndex   = ref([])                                                                                                        // note index array
-  const notesLoaded  = ref(false)                                                                                                     // loaded index flag
+  const notesIndex                 = ref([])                                                                                          // note index array
+  const notesLoaded                = ref(false)                                                                                       // loaded index flag
 
-  // NAVIGATION
+  // STATES                                                                                                                           // CHANGE STATES
+
+  const processing                 = ref(false)                                                                                       // disabled component state
+  const isCentered                 = ref(false)                                                                                       // triple layout (centered note)
+
+  // NAVIGATION                                                                                                                       // TABLE
 
   const defaultItemsPerPage        = 8                                                                                                // default number of notes per page
   const centeredItemsPerPage       = 10                                                                                               // number of notes per page when centered
+  const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                    // dynamic number of notes per page
+  const activeFilter               = ref('full')                                                                                      // active tab filter
   const sortKey                    = ref('isoDate')                                                                                   // current sort column
   const sortOrder                  = ref('desc')                                                                                      // current sort order
+  const searchQuery                = ref('')                                                                                          // searchbox current search
   const currentPage                = ref(1)                                                                                           // current page number
-  const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                    // dynamic number of notes per page
   const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })           // returns total page number
 
-  // acciones
+  // FUNCTIONS
+
+  function toggleView()            { isCentered.value = !isCentered.value }
+  function setProcessing(val)      { processing.value = val }
+  function setSearchQuery(query)   { searchQuery.value = query; currentPage.value = 1 }
+  function setActiveFilter(filter) { activeFilter.value = filter }
+  function prevPage()              { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
+  function nextPage()              { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
 
   const noteSortFilter = computed(() => { 
 
     if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
-
     const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
     let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
     const query = searchQuery.value.toLowerCase().trim()
@@ -48,9 +57,11 @@ export const useStore = defineStore('store', () => {
       let valA, valB
 
       switch (sortKey.value) {
+
         case 'title': valA = a.title.toLowerCase()          ; valB = b.title.toLowerCase()          ; break
         case 'tags':  valA = a.tags[0]?.toLowerCase() || '' ; valB = b.tags[0]?.toLowerCase() || '' ; break
         default:      valA = new Date(a.isoDate)            ; valB = new Date(b.isoDate)            ; break
+
       }
 
       let comparison = 0
@@ -60,6 +71,25 @@ export const useStore = defineStore('store', () => {
       return sortOrder.value === 'asc' ? comparison : -comparison
 
     })
+
+  })
+
+  const paginatedNotes = computed(() => { 
+
+    const start = (currentPage.value - 1) * itemsPerPage.value
+    const end = start + itemsPerPage.value
+
+    return noteSortFilter.value.slice(start, end)
+
+  })
+
+  const loadLatestPost = computed(() => {
+
+    if (notesIndex.value.length === 0) return { title: 'cargando...', url: '' }
+    const latest = notesIndex.value[0]
+    const cleanUrl = latest.url.replace(/^\/posts/, '') 
+
+    return { title: latest.title, url: cleanUrl }
 
   })
 
@@ -80,38 +110,13 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  const paginatedNotes = computed(() => {                                                                                              
-    const start = (currentPage.value - 1) * itemsPerPage.value
-    const end = start + itemsPerPage.value
-    return noteSortFilter.value.slice(start, end)
-  })
-
-  const loadLatestPost = computed(() => {
-
-    if (notesIndex.value.length === 0) return { title: 'cargando...', url: '' }
-    const latest = notesIndex.value[0]
-    const cleanUrl = latest.url.replace(/^\/posts/, '') 
-
-    return { title: latest.title, url: cleanUrl }
-
-  })
-
-  function toggleView()       { isCentered.value = !isCentered.value }
-  function setProcessing(val) { processing.value = val }
-  function setSearchQuery(query)   { searchQuery.value = query; currentPage.value = 1 }
-  function setActiveFilter(filter) { activeFilter.value = filter }
-  function prevPage()           { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
-  function nextPage()           { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
-  
   function navSort(key) {
+
     if (processing.value) return
-    if (sortKey.value === key) { 
-        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' 
-    } else { 
-        sortKey.value = key
-        sortOrder.value = 'asc' 
-    }
-    currentPage.value = 1 // resetear página al ordenar
+    if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
+    else { sortKey.value = key; sortOrder.value = 'asc' }
+    currentPage.value = 1
+
   }
 
   watch(totalPages, (newTotalPages) => { if (currentPage.value > newTotalPages || newTotalPages === 0) { currentPage.value = 1 } })
