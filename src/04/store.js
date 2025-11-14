@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
@@ -118,8 +118,6 @@ export const useStore = defineStore('store', () => {
     currentPage.value = 1
 
   }
-
-  watch(totalPages, (newTotalPages) => { if (currentPage.value > newTotalPages || newTotalPages === 0) { currentPage.value = 1 } })
 
   return {
 
