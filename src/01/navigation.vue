@@ -156,17 +156,17 @@ watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })       
 
     <div class="tablediv">
 
-      <table>
+      <table :class="{ 'two-columns': isCentered }">
 
         <colgroup>
-          <col class="col-fecha">
+          <col class="col-fecha" v-if="!isCentered">
           <col class="col-titulo">
           <col class="col-tags">
         </colgroup>
 
         <thead>
           <tr>
-            <th @click="navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder">fecha</th>
+            <th @click="navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder" v-if="!isCentered">fecha</th>
             <th @click="navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
             <th @click="navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
           </tr>
@@ -175,7 +175,7 @@ watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })       
         <tbody>
 
           <tr v-for="note in paginatedNotes" :key="note.slug" @click="noteOpen(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: processing }" >
-            <td>{{ note.date }}</td>
+            <td v-if="!isCentered">{{ note.date }}</td>
             <td>{{ note.title }}</td>
             <td class="tagcol">
               <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="noteSearch(tag)" :disabled="processing"> {{ tag }} </button>
@@ -194,7 +194,7 @@ watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })       
 
         <tfoot>
           <tr>
-            <td :colspan="3">
+            <td :colspan="isCentered ? 2 : 3">
               <div class="pagecontrols">
                 <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || processing"> < </button>
                 <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
@@ -306,6 +306,8 @@ table {
   & .col-fecha  { width: 20%; }
   & .col-titulo { width: 60%; }
   & .col-tags   { width: 20%; }
+
+  &.two-columns { & .col-titulo { width: 70%; } & .col-tags { width: 30%; } }
 
   & thead tr { 
 
