@@ -30,7 +30,7 @@ export const useStore = defineStore('store', () => {
   function toggleView()            { isCentered.value = !isCentered.value }
   function setProcessing(val)      { processing.value = val }
   function setSearchQuery(query)   { searchQuery.value = query; currentPage.value = 1 }
-  function setActiveFilter(filter) { activeFilter.value = filter }
+  function setActiveFilter(filter) { activeFilter.value = filter; currentPage.value = 1 }
   function prevPage()              { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
   function nextPage()              { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
 
