@@ -24,7 +24,6 @@ const currentTagline             = ref('')                                      
 const { isCentered, processing, searchQuery, activeFilter, notesIndex, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
-function noteSearch(tag)      { if (!processing.value) { store.setSearchQuery(tag) } }
 
 function navHome() {                                                                                                                  // navigates to root and reloads 
 
@@ -34,17 +33,6 @@ function navHome() {                                                            
   else { router.push({ path: '/' }) }
 
 }
-
-function navFilter(direction) {                                                                                                       // changes filter manually 
-
-  if (processing.value) return
-  const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
-  const newIndex = (currentIndex + direction + tabs.length) % tabs.length
-  store.setActiveFilter(tabs[newIndex].value)
-
-}
-
-function navSort(key) { store.navSort(key) }                                                                                          // changes sorting column 
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
@@ -95,9 +83,9 @@ onMounted(async () => {                                                         
 
         <thead>
           <tr>
-            <th @click="navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder" v-if="!isCentered">fecha</th>
-            <th @click="navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
-            <th @click="navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
+            <th @click="store.navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder" v-if="!isCentered">fecha</th>
+            <th @click="store.navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
+            <th @click="store.navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
           </tr>
         </thead>
 
@@ -108,10 +96,10 @@ onMounted(async () => {                                                         
             <td>{{ note.title }}</td>
             <td class="tagcol">
               <template v-if="!isCentered">
-                <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="noteSearch(tag)" :disabled="processing"> {{ tag }} </button>
+                <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="store.setSearchQuery(tag)" :disabled="processing"> {{ tag }} </button>
               </template>
               <template v-else>
-                <button v-if="note.tags.length > 0" class="tagfilter" @click.stop="noteSearch(note.tags[0])" :disabled="processing"> {{ note.tags[0] }} </button>
+                <button v-if="note.tags.length > 0" class="tagfilter" @click.stop="store.setSearchQuery(note.tags[0])" :disabled="processing"> {{ note.tags[0] }} </button>
               </template>
             </td>
           </tr>
