@@ -1,5 +1,5 @@
 <script setup> 
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
@@ -19,66 +19,12 @@ const tabs     = [                                                              
 const router                     = useRouter()                                                                                        // handles note open route
 const route                      = useRoute()                                                                                         // sets the current url route
 const store                      = useStore()                                                                                         // initializes global store
-const defaultItemsPerPage        = 8                                                                                                  // default number of notes per page
-const centeredItemsPerPage       = 10                                                                                                 // number of notes per page when centered
-const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                      // dynamic number of notes per page
 const currentTagline             = ref('')                                                                                            // current tagline phrase
-const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })             // returns total page number
-const sortKey                    = ref('isoDate')                                                                                     // current sort column
-const sortOrder                  = ref('desc')                                                                                        // current sort order
-const currentPage                = ref(1)                                                                                             // current page number
 
-const { isCentered, processing, searchQuery, activeFilter, notesIndex } = storeToRefs(store)                                          // extracts reactive states
+const { isCentered, processing, searchQuery, activeFilter, notesIndex, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter } = storeToRefs(store)
 
-function prevPage()           { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
-function nextPage()           { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
 function noteSearch(tag)      { if (!processing.value) { store.setSearchQuery(tag) } }
-
-const paginatedNotes = computed(() => {                                                                                               // returns current page notes 
-
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  const end = start + itemsPerPage.value
-  return noteSortFilter.value.slice(start, end)
-
-})
-
-const noteSortFilter = computed(() => {                                                                                               // applies filters and order to list 
-
-  const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
-  let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
-  const query = searchQuery.value.toLowerCase().trim()
-
-  if (query) { 
-
-    filtered = filtered.filter(note =>
-      note.title.toLowerCase().includes(query) ||
-      note.description.toLowerCase().includes(query) ||
-      note.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      note.date.includes(query)
-    )
-
-  }
-
-  return [...filtered].sort((a, b) => { 
-
-    let valA, valB
-
-    switch (sortKey.value) {
-      case 'title': valA = a.title.toLowerCase()          ; valB = b.title.toLowerCase()          ; break
-      case 'tags':  valA = a.tags[0]?.toLowerCase() || '' ; valB = b.tags[0]?.toLowerCase() || '' ; break
-      default:      valA = new Date(a.isoDate)            ; valB = new Date(b.isoDate)            ; break
-    }
-
-    let comparison = 0
-
-    if (valA > valB)      comparison =  1
-    else if (valA < valB) comparison = -1
-    return sortOrder.value === 'asc' ? comparison : -comparison
-
-  })
-
-})
 
 function navHome() {                                                                                                                  // navigates to root and reloads 
 
@@ -95,28 +41,18 @@ function navFilter(direction) {                                                 
   const currentIndex = tabs.findIndex(tab => tab.value === activeFilter.value)
   const newIndex = (currentIndex + direction + tabs.length) % tabs.length
   store.setActiveFilter(tabs[newIndex].value)
-  currentPage.value = 1
 
 }
 
-function navSort(key) {                                                                                                               // changes sorting column 
-
-  if (processing.value) return
-  if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' }
-  else { sortKey.value = key; sortOrder.value = 'asc' }
-
-}
+function navSort(key) { store.navSort(key) }                                                                                          // changes sorting column 
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
   const randomIndex = Math.floor(Math.random() * taglines.length)
   currentTagline.value = taglines[randomIndex]
-
   await store.loadNotesIndex()
 
 })
-
-watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })                                                             // resets pagination
 
 </script>
 
@@ -139,11 +75,11 @@ watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })       
 
     <div class="filters">
 
-      <button @click="navFilter(-1)" :disabled="processing"> < </button>
+      <button @click="store.prevPage" :disabled="processing"> < </button>
       <div class="tabs">
-        <button v-for="tab in tabs" :key="tab.value" @click="activeFilter = tab.value" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+        <button v-for="tab in tabs" :key="tab.value" @click="store.setActiveFilter(tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
       </div>
-      <button @click="navFilter(+1)" :disabled="processing"> > </button>
+      <button @click="store.nextPage" :disabled="processing"> > </button>
 
     </div>
 
@@ -194,9 +130,9 @@ watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })       
           <tr>
             <td :colspan="isCentered ? 2 : 3">
               <div class="pagecontrols">
-                <button class="navbutton" @click="prevPage" :disabled="currentPage === 1 || processing"> < </button>
+                <button class="navbutton" @click="store.prevPage" :disabled="currentPage === 1 || processing"> < </button>
                 <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
-                <button class="navbutton" @click="nextPage" :disabled="currentPage >= totalPages || processing"> > </button>
+                <button class="navbutton" @click="store.nextPage" :disabled="currentPage >= totalPages || processing"> > </button>
               </div>
             </td>
           </tr>
