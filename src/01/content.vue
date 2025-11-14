@@ -97,10 +97,9 @@ watch(
     store.setProcessing(true)
     document.body.style.cursor = 'wait'
     await nextTick()
-    await loadNotesIndex()
-
-    const postElement = document.querySelector('.post')
     
+    if (!slug && !store.notesLoaded.value) { await loadNotesIndex() }
+
     switch (true) {
       
       // first load without note, INTRO only on first page load
@@ -119,7 +118,6 @@ watch(
         firstLoad = false
         lastSlug = slug
         await handleLoadNote(slug)
-        if (postElement) { postElement.scrollTop = 0 }
         await shaderRef.value?.runQueue('outro')
         break
       
@@ -130,7 +128,6 @@ watch(
         lastSlug = slug
         await shaderRef.value?.runQueue('static')
         await handleLoadNote(slug)
-        if (postElement) { postElement.scrollTop = 0 }
         await new Promise(resolve => setTimeout(resolve, 500))
         await shaderRef.value?.runQueue('direct')
         break
@@ -142,7 +139,6 @@ watch(
         lastSlug = slug
         await shaderRef.value?.runQueue('transition-intro')
         await handleLoadNote(slug)
-        if (postElement) { postElement.scrollTop = 0 }
         await shaderRef.value?.runQueue('transition-outro')
         break
       
