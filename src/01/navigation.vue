@@ -178,7 +178,12 @@ watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })       
             <td v-if="!isCentered">{{ note.date }}</td>
             <td>{{ note.title }}</td>
             <td class="tagcol">
-              <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="noteSearch(tag)" :disabled="processing"> {{ tag }} </button>
+              <template v-if="!isCentered">
+                <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="noteSearch(tag)" :disabled="processing"> {{ tag }} </button>
+              </template>
+              <template v-else>
+                <button v-if="note.tags.length > 0" class="tagfilter" @click.stop="noteSearch(note.tags[0])" :disabled="processing"> {{ note.tags[0] }} </button>
+              </template>
             </td>
           </tr>
 
