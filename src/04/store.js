@@ -25,7 +25,7 @@ export const useStore = defineStore('store', () => {
   const currentPage                = ref(1)                                                                                           // current page number
   const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })           // returns total page number
 
-  // FUNCTIONS
+  // FUNCTIONS                                                                                                                        // FUNCTION
 
   function toggleView()            { isCentered.value = !isCentered.value }
   function setProcessing(val)      { processing.value = val }

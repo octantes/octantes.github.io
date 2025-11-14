@@ -120,7 +120,7 @@ onMounted(async () => {                                                         
             <td :colspan="isCentered ? 2 : 3">no hay notas que coincidan con "{{ searchQuery }}"</td>
           </tr>
 
-          <tr v-for="i in (itemsPerPage - (noteSortFilter.length > 0 ? paginatedNotes.length : (searchQuery ? 1 : 0)))" :key="`placeholder-${i}`" class="bodyfill">
+          <tr v-for="i in (noteSortFilter.length > 0 ? itemsPerPage - paginatedNotes.length : 0)" :key="`placeholder-${i}`" class="bodyfill">
             <td :colspan="isCentered ? 2 : 3">&nbsp;</td>
           </tr>
           
