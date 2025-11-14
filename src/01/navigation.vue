@@ -22,8 +22,10 @@ const store                      = useStore()                                   
 const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                        // base url template
 const notes                      = ref([])                                                                                            // reactive array of all the notes
 const currentTagline             = ref('')                                                                                            // current tagline phrase
-const itemsPerPage               = 8                                                                                                  // number of notes per page
-const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage) })                   // returns total page number
+const defaultItemsPerPage        = 8                                                                                                  // default number of notes per page
+const centeredItemsPerPage       = 10                                                                                                 // number of notes per page when centered
+const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                      // dynamic number of notes per page
+const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })             // returns total page number
 const sortKey                    = ref('isoDate')                                                                                     // current sort column
 const sortOrder                  = ref('desc')                                                                                        // current sort order
 const currentPage                = ref(1)                                                                                             // current page number
@@ -37,8 +39,8 @@ function noteSearch(tag)      { if (!processing.value) { store.setSearchQuery(ta
 
 const paginatedNotes = computed(() => {                                                                                               // returns current page notes 
 
-  const start = (currentPage.value - 1) * itemsPerPage
-  const end = start + itemsPerPage
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
   return noteSortFilter.value.slice(start, end)
 
 })
