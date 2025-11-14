@@ -125,7 +125,7 @@ export const useStore = defineStore('store', () => {
 
     /* STATES     */ processing, setProcessing,
     /* LAYOUT     */ isCentered, toggleView,
-    /* NAVIGATION */ searchQuery, activeFilter, setSearchQuery, setActiveFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, prevPage, nextPage, navSort,
+    /* NAVIGATION */ searchQuery, activeFilter, setSearchQuery, setActiveFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, prevPage, nextPage, navSort, itemsPerPage,
     /* DATA       */ notesIndex, notesLoaded, loadNotesIndex, loadLatestPost
 
   }
