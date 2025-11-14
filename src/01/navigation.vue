@@ -19,18 +19,16 @@ const tabs     = [                                                              
 const router                     = useRouter()                                                                                        // handles note open route
 const route                      = useRoute()                                                                                         // sets the current url route
 const store                      = useStore()                                                                                         // initializes global store
-const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                        // base url template
-const notes                      = ref([])                                                                                            // reactive array of all the notes
-const currentTagline             = ref('')                                                                                            // current tagline phrase
 const defaultItemsPerPage        = 8                                                                                                  // default number of notes per page
 const centeredItemsPerPage       = 10                                                                                                 // number of notes per page when centered
 const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                      // dynamic number of notes per page
+const currentTagline             = ref('')                                                                                            // current tagline phrase
 const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })             // returns total page number
 const sortKey                    = ref('isoDate')                                                                                     // current sort column
 const sortOrder                  = ref('desc')                                                                                        // current sort order
 const currentPage                = ref(1)                                                                                             // current page number
 
-const { isCentered, processing, searchQuery, activeFilter } = storeToRefs(store)                     // extracts reactive states
+const { isCentered, processing, searchQuery, activeFilter, notesIndex } = storeToRefs(store)                                          // extracts reactive states
 
 function prevPage()           { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
 function nextPage()           { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
@@ -48,7 +46,7 @@ const paginatedNotes = computed(() => {                                         
 const noteSortFilter = computed(() => {                                                                                               // applies filters and order to list 
 
   const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
-  let filtered = activeFilter.value === 'full' ? notes.value : notes.value.filter(note => note.type === filterType)
+  let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
   const query = searchQuery.value.toLowerCase().trim()
 
   if (query) { 
@@ -114,18 +112,11 @@ onMounted(async () => {                                                         
   const randomIndex = Math.floor(Math.random() * taglines.length)
   currentTagline.value = taglines[randomIndex]
 
-  try { 
-
-    const response = await fetch(`${base}/index.json`)
-    if (!response.ok) throw new Error(`http error ${response.status}`)
-    notes.value = await response.json()
-
-  } catch (e) { console.error('error cargando índice de notas:', e); notes.value = [] }
+  await store.loadNotesIndex()
 
 })
 
-watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })                                               // resets pagination
-
+watch([sortKey, sortOrder, searchQuery], () => { currentPage.value = 1 })                                                             // resets pagination
 
 </script>
 

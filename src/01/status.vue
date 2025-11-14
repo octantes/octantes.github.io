@@ -1,10 +1,12 @@
 <script setup> 
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from '../04/store.js'
 
 const router = useRouter()                                                                                                            // handles note open route
+const store = useStore()                                                                                                              // setup store usage
 const btcPrice = ref('---')                                                                                                           // btc price fetch result
-const latestPost = ref({ title: 'cargando...', url: '' })                                                                             // latest note fetch result
+const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
 const currentTime = ref('--:--')                                                                                                      // current time fetch result
 const barContent = ref('/ '.repeat(300))                                                                                              // progress bar animation content
 
@@ -26,19 +28,6 @@ function fetchTime() {                                                          
 
 }
 
-async function fetchLatest() { 
-
-  try {
-
-    const response = await fetch('/index.json')
-    if (!response.ok) throw new Error('no se encontró el index.json')
-    const index = await response.json()
-    if (index.length > 0) { const cleanUrl = index[0].url.replace(/^\/posts/, ''); latestPost.value = { title: index[0].title, url: cleanUrl } }
-
-  } catch (e) { console.error('error buscando la última nota:', e); latestPost.value.title = 'error cargando' }
-
-}
-
 async function fetchBTC() { 
 
   try {
@@ -56,7 +45,7 @@ async function fetchBTC() {
 
 onMounted(() => { 
 
-  fetchLatest() ;
+  store.loadNotesIndex()
   fetchBTC()    ; btcInterval    = setInterval(fetchBTC, 60000);
   fetchTime()  ; timeInterval   = setInterval(fetchTime, 15000);
 
