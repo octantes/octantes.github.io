@@ -14,8 +14,10 @@ import N9 from '../02/N9.vue'
 
 const store = useStore()
 const components = { dev: A2, note: S6, design: S7, music: N9 } // add vuecomps if needed
-const { currentPost, notesIndex, base } = storeToRefs(store)
+
+const { currentPost } = storeToRefs(store)
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store
+
 const route = useRoute()
 const shaderRef = ref(null)
 const noteContent = ref('')
@@ -94,7 +96,7 @@ watch(
   async slug => {
     
     if (store.processing) return
-    store.setProcessing(true)
+    setProcessing(true)
     document.body.style.cursor = 'wait'
     await nextTick()
     
@@ -145,7 +147,7 @@ watch(
       }
 
       document.body.style.cursor = ''
-      store.setProcessing(false)
+      setProcessing(false)
             
   }, { immediate: true }
 
