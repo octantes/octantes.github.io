@@ -367,8 +367,9 @@ table {
 
 .tagcol { 
 
-  /* LAYOUT */ display: flex; flex-wrap: wrap;
+  /* LAYOUT */ display: flex; 
   /* CURSOR */ cursor: default;
+  /* FONT   */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   /* BOX    */ gap: 0.5rem;
   
 }
