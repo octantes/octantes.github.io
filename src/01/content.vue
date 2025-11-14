@@ -16,6 +16,7 @@ const store = useStore()
 const components = { dev: A2, note: S6, design: S7, music: N9 } // add vuecomps if needed
 const { currentPost, notesIndex, base } = storeToRefs(store)
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store
+const route = useRoute()
 const shaderRef = ref(null)
 const noteContent = ref('')
 
