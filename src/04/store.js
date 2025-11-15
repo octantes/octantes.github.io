@@ -3,50 +3,60 @@ import { ref, computed } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
-  // DATA                                                                                                                             // LOAD NOTES
+  // CONTENT                                                                                                                          // LOAD DATA
 
-  const notesIndex                 = ref([])                                                                                          // note index array
-  const notesLoaded                = ref(false)                                                                                       // loaded index flag
-  const currentPost                = ref(null)                                                                                        // current post ref
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url
-
-  const classMap = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                                               // note type custom class map
+  const notesIndex                 = ref([])                                                                                          // note index array
+  const classMap                   = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                             // note type custom class map
 
   // STATES                                                                                                                           // CHANGE STATES
 
+  const currentPost                = ref(null)                                                                                        // current loaded post ref
+  const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   const processing                 = ref(false)                                                                                       // disabled component state
-  const isCentered                 = ref(false)                                                                                       // triple layout (centered note)
+  const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
 
-  // NAVIGATION                                                                                                                       // TABLE
+  // NAVIGATION                                                                                                                       // NOTE TABLE
+
+  const tabs                       = [                                                                                                // names for filters 
+
+    { label: 'completo',   value: 'full'   },
+    { label: 'diseño',     value: 'design' },
+    { label: 'desarrollo', value: 'dev'    },
+    { label: 'música',     value: 'music'  },
+    { label: 'textos',     value: 'posts'  },
+    { label: 'juegos',     value: 'game'   },
+
+  ]
 
   const defaultItemsPerPage        = 8                                                                                                // default number of notes per page
   const centeredItemsPerPage       = 10                                                                                               // number of notes per page when centered
   const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                    // dynamic number of notes per page
+  const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })           // returns total page number
   const activeFilter               = ref('full')                                                                                      // active tab filter name
   const sortKey                    = ref('isoDate')                                                                                   // current sort column
   const sortOrder                  = ref('desc')                                                                                      // current sort order
   const searchQuery                = ref('')                                                                                          // searchbox current search
   const currentPage                = ref(1)                                                                                           // current page number
-  const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })           // returns total page number
 
   // FUNCTIONS                                                                                                                        // FUNCTION
 
-  function toggleView()            { isCentered.value = !isCentered.value }
-  function setProcessing(val)      { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }
-  function setSearchQuery(query)   { searchQuery.value = query; currentPage.value = 1 }
-  function setActiveFilter(filter) { activeFilter.value = filter; currentPage.value = 1 }
-  function prevPage()              { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
-  function nextPage()              { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }
+  function toggleView()                 { isCentered.value = !isCentered.value }                                                      // toggle centered state
+  function prevPage()                   { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }                   // reduce current table page
+  function nextPage()                   { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }    // advance current table page
 
-  function setCurrentPost(postMetadata) { currentPost.value = postMetadata }
-
-  async function fetchPost(slug) {
+  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
+  function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
+  function setActiveFilter(filter)      { activeFilter.value = filter; currentPage.value = 1 }                                        // apply current table filter
+  function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
+  
+  async function fetchPost(slug) {                                                                                                    // fetch post html 
 
     if (!slug) { setCurrentPost(null); return { html: '', error: null } }
     if (!notesLoaded.value) { await loadNotesIndex() }
 
-    const postMetadata = notesIndex.value.find(p => p.slug === slug)
-    setCurrentPost(postMetadata || { type: 'note', slug })
+    const metadataSlug = notesIndex.value.find(p => p.slug === slug)
+    setCurrentPost(metadataSlug || { type: 'note', slug })
     const post = currentPost.value
 
     try {
@@ -64,7 +74,68 @@ export const useStore = defineStore('store', () => {
     
   }
 
-  const computedNoteComp = computed(() => {                                                                                               // compute vuecomp if it exists 
+  async function loadNotesIndex() {                                                                                                   // fetch full note index 
+
+    if (notesLoaded.value) return notesIndex.value
+
+    try {
+
+      const response = await fetch('/index.json')
+      if (!response.ok) throw new Error('no se encontró el index.json')
+      notesIndex.value = await response.json()
+      notesLoaded.value = true
+
+    } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
+
+    return notesIndex.value
+
+  }
+
+  function navHome(routerInstance, currentSlug) {                                                                                                                // navigates to root and reloads 
+
+    if (processing.value) return
+    if (currentSlug) { routerInstance.push({ path: '/' }); setTimeout(() => { window.location.reload() }, 0) }
+    else { routerInstance.push({ path: '/' }) }
+
+  }
+
+  function navSort(key) {                                                                                                             // change sort order 
+
+    if (processing.value) return
+    if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
+    else { sortKey.value = key; sortOrder.value = 'asc' }
+
+  }
+
+  function changeFilter(direction) {                                                                                                  // advance or reduce filters 
+
+    if (processing.value) return
+    
+    const currentTabValue = activeFilter.value
+    const currentTabIndex = tabs.findIndex(tab => tab.value === currentTabValue)
+    const numTabs = tabs.length
+
+    for (let i = 1; i <= numTabs; i++) {
+
+      let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
+      const nextTabValue = tabs[nextIndex].value
+
+      if (emptyFilter(nextTabValue)) { setActiveFilter(nextTabValue); return }
+
+    }
+
+  }
+
+  function emptyFilter(type) {                                                                                                        // check if the filter is empty 
+
+    if (type === 'full') return true
+    const actualType = type === 'posts' ? 'note' : type
+    
+    return notesIndex.value.some(note => note.type === actualType)
+
+  }
+
+  const computedNoteComp = computed(() => {                                                                                           // compute vuecomp if it exists 
 
     if (currentPost.value) {
       const customVuecomp = currentPost.value.vuecomp
@@ -75,7 +146,7 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  const computedNoteClass = computed(() => {                                                                                              // compute class for html post 
+  const computedNoteClass = computed(() => {                                                                                          // compute class for html post 
 
     if (currentPost.value) {
       const typeKey = currentPost.value.type
@@ -145,38 +216,12 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  async function loadNotesIndex() {
-
-    if (notesLoaded.value) return notesIndex.value
-
-    try {
-
-      const response = await fetch('/index.json')
-      if (!response.ok) throw new Error('no se encontró el index.json')
-      notesIndex.value = await response.json()
-      notesLoaded.value = true
-
-    } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
-
-    return notesIndex.value
-
-  }
-
-  function navSort(key) {
-
-    if (processing.value) return
-    if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
-    else { sortKey.value = key; sortOrder.value = 'asc' }
-    currentPage.value = 1
-
-  }
-
   return {
 
     /* STATES     */ processing, setProcessing,
     /* LAYOUT     */ isCentered, toggleView,
     /* NAVIGATION */ searchQuery, activeFilter, setSearchQuery, setActiveFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, prevPage, nextPage, navSort, itemsPerPage,
-    /* DATA       */ fetchPost, notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base, computedNoteComp, computedNoteClass
+    /* DATA       */ fetchPost, notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base, computedNoteComp, computedNoteClass, changeFilter, navHome, emptyFilter
 
   }
 

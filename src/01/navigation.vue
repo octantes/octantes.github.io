@@ -8,58 +8,10 @@ import Table from '../02/table.vue'
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
-
-const { isCentered, processing, searchQuery, activeFilter, notesIndex } = storeToRefs(store)                                          // imports refs from main store
-
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                         // random taglines
-const tabs            = [                                                                                                             // names for filters 
 
-  { label: 'completo',   value: 'full'   },
-  { label: 'diseño',     value: 'design' },
-  { label: 'desarrollo', value: 'dev'    },
-  { label: 'música',     value: 'music'  },
-  { label: 'textos',     value: 'posts'  },
-  { label: 'juegos',     value: 'game'   },
-
-]
-
-function navHome() {                                                                                                                  // navigates to root and reloads 
-
-  if (processing.value) return
-  if (route.params.slug) { router.push({ path: '/' })
-  setTimeout(() => { window.location.reload() }, 0) }
-  else { router.push({ path: '/' }) }
-
-}
-
-function changeFilter(direction) {                                                                                                    // advance or reduce filters 
-
-  if (processing.value) return
-  
-  const currentTabValue = activeFilter.value
-  const currentTabIndex = tabs.findIndex(tab => tab.value === currentTabValue)
-  const numTabs = tabs.length
-
-  for (let i = 1; i <= numTabs; i++) {
-
-    let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
-    const nextTabValue = tabs[nextIndex].value
-
-    if (emptyFilter(nextTabValue)) { store.setActiveFilter(nextTabValue); return }
-
-  }
-
-}
-
-function emptyFilter(type) {                                                                                                          // check if the filter is empty 
-
-  if (type === 'full') return true
-  const actualType = type === 'posts' ? 'note' : type
-  
-  return notesIndex.value.some(note => note.type === actualType)
-
-}
+const { isCentered, processing, searchQuery, activeFilter, changeFilter, emptyFilter, tabs } = storeToRefs(store)                     // imports refs from main store
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
@@ -75,7 +27,7 @@ onMounted(async () => {                                                         
   
   <div class="navigation">
 
-    <div class="banner clickable" :class="{'bcentered': isCentered}" @click="navHome">
+    <div class="banner clickable" :class="{'bcentered': isCentered}" @click="store.navHome(router, route.params.slug)">
 
 <pre>
  ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
