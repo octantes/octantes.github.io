@@ -11,6 +11,8 @@ export const useStore = defineStore('store', () => {
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')
   const currentPost                = ref(null)
 
+  const classMap = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                                               // note type custom class map
+
   // STATES                                                                                                                           // CHANGE STATES
 
   const processing                 = ref(false)                                                                                       // disabled component state
@@ -31,7 +33,7 @@ export const useStore = defineStore('store', () => {
   // FUNCTIONS                                                                                                                        // FUNCTION
 
   function toggleView()            { isCentered.value = !isCentered.value }
-  function setProcessing(val)      { processing.value = val }
+  function setProcessing(val)      { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }
   function setSearchQuery(query)   { searchQuery.value = query; currentPage.value = 1 }
   function setActiveFilter(filter) { activeFilter.value = filter; currentPage.value = 1 }
   function prevPage()              { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }
@@ -62,6 +64,28 @@ export const useStore = defineStore('store', () => {
     } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: `<p>error cargando la nota</p>`, error: e } }
     
   }
+
+  const computedNoteComp = computed(() => {                                                                                               // compute vuecomp if it exists 
+
+    if (currentPost.value) {
+      const customVuecomp = currentPost.value.vuecomp
+      if (customVuecomp) { return customVuecomp } 
+    }
+
+    return null
+
+  })
+
+  const computedNoteClass = computed(() => {                                                                                              // compute class for html post 
+
+    if (currentPost.value) {
+      const typeKey = currentPost.value.type
+      return classMap[typeKey] || 'S6' 
+    }
+
+    return 'S6' 
+
+  })
 
   const noteSortFilter = computed(() => { 
 
@@ -122,6 +146,8 @@ export const useStore = defineStore('store', () => {
 
   })
 
+
+
   async function loadNotesIndex() {
 
     if (notesLoaded.value) return notesIndex.value
@@ -153,7 +179,7 @@ export const useStore = defineStore('store', () => {
     /* STATES     */ processing, setProcessing,
     /* LAYOUT     */ isCentered, toggleView,
     /* NAVIGATION */ searchQuery, activeFilter, setSearchQuery, setActiveFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, prevPage, nextPage, navSort, itemsPerPage,
-    /* DATA       */ fetchPost, notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base
+    /* DATA       */ fetchPost, notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base, computedNoteComp, computedNoteClass
 
   }
 

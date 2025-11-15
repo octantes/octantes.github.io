@@ -7,13 +7,11 @@ import Portada from '../02/portada.vue'
 import Shader from '../03/shader.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps and import if needed
-const classMap = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                                                 // note type custom class map
 
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
-const { currentPost } = storeToRefs(store)                                                                                            // imports refs from main store
+const { currentPost, computedNoteComp, computedNoteClass } = storeToRefs(store)                                                       // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
-
 const shaderRef = ref(null)                                                                                                           // shader variable for animations
 const noteContent = ref('')                                                                                                           // basic note html for insert
 
@@ -23,25 +21,8 @@ let lastSlug = null                                                             
 
 const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
 
-  if (currentPost.value) {
-
-    const customVuecomp = currentPost.value.vuecomp
-    if (customVuecomp && compMap[customVuecomp]) { return compMap[customVuecomp] }
-
-  }
-
+  if (computedNoteComp.value) { return compMap[computedNoteComp.value] || null }
   return null
-
-})
-
-const computedClass = computed(() => {                                                                                                // compute class for html post 
-
-  if (currentPost.value) {
-    const typeKey = currentPost.value.type
-    return classMap[typeKey] || 'S6' 
-  }
-
-  return 'S6' 
 
 })
 
@@ -100,7 +81,6 @@ watch(                                                                          
     
     if (store.processing) return
     setProcessing(true)
-    document.body.style.cursor = 'wait'
     await nextTick()
     
     if (!slug && !store.notesLoaded.value) { await loadNotesIndex() }
@@ -149,7 +129,6 @@ watch(                                                                          
       
       }
 
-      document.body.style.cursor = ''
       setProcessing(false)
             
   }, { immediate: true }
@@ -174,7 +153,7 @@ watch(                                                                          
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />
           
-          <div v-else :class="computedClass" v-html="noteContent" />
+          <div v-else :class="computedNoteClass" v-html="noteContent" />
           
         </div>
         
