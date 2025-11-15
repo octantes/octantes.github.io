@@ -22,7 +22,7 @@ export const useStore = defineStore('store', () => {
   const defaultItemsPerPage        = 8                                                                                                // default number of notes per page
   const centeredItemsPerPage       = 10                                                                                               // number of notes per page when centered
   const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                    // dynamic number of notes per page
-  const activeFilter               = ref('full')                                                                                      // active tab filter
+  const activeFilter               = ref('full')                                                                                      // active tab filter name
   const sortKey                    = ref('isoDate')                                                                                   // current sort column
   const sortOrder                  = ref('desc')                                                                                      // current sort order
   const searchQuery                = ref('')                                                                                          // searchbox current search
@@ -144,8 +144,6 @@ export const useStore = defineStore('store', () => {
     return { title: latest.title, url: cleanUrl }
 
   })
-
-
 
   async function loadNotesIndex() {
 

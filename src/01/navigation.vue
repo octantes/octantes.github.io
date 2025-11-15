@@ -33,12 +33,31 @@ function navHome() {                                                            
 
 }
 
+function changeFilter(direction) {                                                                                                    // advance or reduce filters 
+
+  if (processing.value) return
+  
+  const currentTabValue = activeFilter.value
+  const currentTabIndex = tabs.findIndex(tab => tab.value === currentTabValue)
+  const numTabs = tabs.length
+
+  for (let i = 1; i <= numTabs; i++) {
+
+    let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
+    const nextTabValue = tabs[nextIndex].value
+
+    if (emptyFilter(nextTabValue)) { store.setActiveFilter(nextTabValue); return }
+
+  }
+
+}
+
 function emptyFilter(type) {                                                                                                          // check if the filter is empty 
 
-    if (type === 'full') return true
-    const actualType = type === 'posts' ? 'note' : type
-    
-    return notesIndex.value.some(note => note.type === actualType)
+  if (type === 'full') return true
+  const actualType = type === 'posts' ? 'note' : type
+  
+  return notesIndex.value.some(note => note.type === actualType)
 
 }
 
@@ -71,7 +90,7 @@ onMounted(async () => {                                                         
 
     <div class="filters">
 
-      <button @click="store.prevPage" :disabled="processing"> < </button>
+      <button @click="changeFilter(-1)" :disabled="processing"> < </button>
 
       <div class="tabs">
         <template v-for="tab in tabs" :key="tab.value">
@@ -79,13 +98,11 @@ onMounted(async () => {                                                         
         </template>
       </div>
 
-      <button @click="store.nextPage" :disabled="processing"> > </button>
+      <button @click="changeFilter(+1)" :disabled="processing"> > </button>
 
     </div>
 
-    <div class="tablediv">
-      <Table />
-    </div>
+    <div class="tablediv"> <Table /> </div>
     
     <div class="layoutcontrol">
       <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
