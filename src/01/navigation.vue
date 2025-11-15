@@ -11,7 +11,8 @@ const store           = useStore()                                              
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                         // random taglines
 
-const { isCentered, processing, searchQuery, activeFilter, changeFilter, emptyFilter, tabs } = storeToRefs(store)                     // imports refs from main store
+const { isCentered, processing, searchQuery, activeFilter, tabs, notesLoaded } = storeToRefs(store)                                   // imports refs from main store
+const { changeFilter, emptyFilter } = store                                                                                           // destructure store refs
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
@@ -40,7 +41,7 @@ onMounted(async () => {                                                         
       
     </div>
 
-    <div class="filters">
+    <div class="filters" v-if="notesLoaded">
 
       <button @click="changeFilter(-1)" :disabled="processing"> < </button>
 
