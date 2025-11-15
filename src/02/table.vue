@@ -13,7 +13,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 </script>
 
-<template>
+<template> 
 
   <table :class="{ 'two-columns': isCentered }">
 
@@ -75,14 +75,14 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
         </td>
       </tr>
-      
+
     </tfoot>
     
   </table>
 
 </template>
 
-<style>
+<style> 
 
 table { 
 
