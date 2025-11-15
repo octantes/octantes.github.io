@@ -9,7 +9,7 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { isCentered, processing, searchQuery, activeFilter } = storeToRefs(store)                                                      // imports refs from main store
+const { isCentered, processing, searchQuery, activeFilter, notesIndex } = storeToRefs(store)                                          // imports refs from main store
 
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                         // random taglines
@@ -19,8 +19,8 @@ const tabs            = [                                                       
   { label: 'diseño',     value: 'design' },
   { label: 'desarrollo', value: 'dev'    },
   { label: 'música',     value: 'music'  },
-  // { label: 'textos',     value: 'posts'  },
-  // { label: 'juegos',     value: 'game'   },
+  { label: 'textos',     value: 'posts'  },
+  { label: 'juegos',     value: 'game'   },
 
 ]
 
@@ -30,6 +30,15 @@ function navHome() {                                                            
   if (route.params.slug) { router.push({ path: '/' })
   setTimeout(() => { window.location.reload() }, 0) }
   else { router.push({ path: '/' }) }
+
+}
+
+function emptyFilter(type) {                                                                                                          // check if the filter is empty 
+
+    if (type === 'full') return true
+    const actualType = type === 'posts' ? 'note' : type
+    
+    return notesIndex.value.some(note => note.type === actualType)
 
 }
 
@@ -65,7 +74,7 @@ onMounted(async () => {                                                         
       <button @click="store.prevPage" :disabled="processing"> < </button>
 
       <div class="tabs">
-        <button v-for="tab in tabs" :key="tab.value" @click="store.setActiveFilter(tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+        <button v-for="tab in tabs" :key="tab.value" v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
       </div>
 
       <button @click="store.nextPage" :disabled="processing"> > </button>
@@ -73,9 +82,7 @@ onMounted(async () => {                                                         
     </div>
 
     <div class="tablediv">
-
       <Table />
-
     </div>
     
     <div class="layoutcontrol">
