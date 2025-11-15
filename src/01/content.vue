@@ -6,48 +6,46 @@ import { storeToRefs } from 'pinia'
 import Portada from '../02/portada.vue'
 import Shader from '../03/shader.vue'
 
-// import vuecomps if needed for notes
-const compMap = { portada: Portada } // add vuecomps if needed
-const classMap = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }
+const compMap = { }                                                                                                                   // add vuecomps and import if needed
+const classMap = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                                                 // note type custom class map
 
-const route = useRoute()
-const store = useStore()
-const { currentPost } = storeToRefs(store)
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store
-const shaderRef = ref(null)
-const noteContent = ref('')
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+const { currentPost } = storeToRefs(store)                                                                                            // imports refs from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
 
-let noteLoaded = false
-let firstLoad = true
-let lastSlug = null
+const shaderRef = ref(null)                                                                                                           // shader variable for animations
+const noteContent = ref('')                                                                                                           // basic note html for insert
 
-const computedComp = computed(() => {
+let noteLoaded = false                                                                                                                // note loaded bool flag for shader
+let firstLoad = true                                                                                                                  // first load bool flag for shader
+let lastSlug = null                                                                                                                   // previous slug flag for shader
 
-    if (currentPost.value) {
+const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
 
-        const customVuecomp = currentPost.value.vuecomp
-        if (customVuecomp && compMap[customVuecomp]) { return compMap[customVuecomp] }
+  if (currentPost.value) {
 
-    }
+    const customVuecomp = currentPost.value.vuecomp
+    if (customVuecomp && compMap[customVuecomp]) { return compMap[customVuecomp] }
 
-    return null
+  }
 
-})
-
-const computedClass = computed(() => {
-
-    if (currentPost.value) {
-        
-        const typeKey = currentPost.value.type
-        return classMap[typeKey] || 'S6' 
-
-    }
-
-    return 'S6' 
+  return null
 
 })
 
-async function handleLoadNote(slug) { 
+const computedClass = computed(() => {                                                                                                // compute class for html post 
+
+  if (currentPost.value) {
+    const typeKey = currentPost.value.type
+    return classMap[typeKey] || 'S6' 
+  }
+
+  return 'S6' 
+
+})
+
+async function handleLoadNote(slug) {                                                                                                 // custom html load behavior 
   
   const postElement = document.querySelector('.post')
   const { html, error } = await fetchPost(slug)
@@ -94,7 +92,7 @@ async function handleLoadNote(slug) {
 
 }
 
-watch( 
+watch(                                                                                                                                // trigger notes and animations 
   
   () => route.params.slug,
   
