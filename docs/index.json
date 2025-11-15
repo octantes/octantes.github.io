@@ -144,6 +144,25 @@
     "vuecomp": null
   },
   {
+    "slug": "test vuecomp",
+    "title": "test vuecomp",
+    "description": "descripcion corta para seo",
+    "type": "game",
+    "tags": [
+      "a",
+      "b",
+      "c"
+    ],
+    "portada": "https://octantes.github.io/posts/game/test vuecomp/portada.webp",
+    "handle": [
+      "kaste OR [kaste, octantes] if multi-author"
+    ],
+    "date": "NaN/NaN/NaN",
+    "isoDate": "YYYY-MM-DD",
+    "url": "/posts/game/test vuecomp/",
+    "vuecomp": "portada"
+  },
+  {
     "slug": "seance",
     "title": "seance",
     "description": "primer disquito con guitarra y visualizer",
