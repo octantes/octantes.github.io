@@ -3,22 +3,17 @@ import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
+import Portada from '../02/portada.vue'
 import Shader from '../03/shader.vue'
-import Portada from './portada.vue'
-import A2 from '../02/A2.vue'
-import S6 from '../02/S6.vue'
-import S7 from '../02/S7.vue'
-import N9 from '../02/N9.vue'
 
 // import vuecomps if needed for notes
-
-const store = useStore()
-const components = { dev: A2, note: S6, design: S7, music: N9 } // add vuecomps if needed
-
-const { currentPost } = storeToRefs(store)
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store
+const compMap = { portada: Portada } // add vuecomps if needed
+const classMap = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }
 
 const route = useRoute()
+const store = useStore()
+const { currentPost } = storeToRefs(store)
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store
 const shaderRef = ref(null)
 const noteContent = ref('')
 
@@ -26,28 +21,38 @@ let noteLoaded = false
 let firstLoad = true
 let lastSlug = null
 
-const currentComponent = computed(() => {
-  
-  if (currentPost.value) {
-    
-    const customVuecomp = currentPost.value.vuecomp
-    if (customVuecomp && components[customVuecomp]) { return components[customVuecomp] }
-    const typeComp = components[currentPost.value.type]
-    if (typeComp) { return typeComp}
+const computedComp = computed(() => {
 
-  }
+    if (currentPost.value) {
 
-  return components.note
+        const customVuecomp = currentPost.value.vuecomp
+        if (customVuecomp && compMap[customVuecomp]) { return compMap[customVuecomp] }
+
+    }
+
+    return null
+
+})
+
+const computedClass = computed(() => {
+
+    if (currentPost.value) {
+        
+        const typeKey = currentPost.value.type
+        return classMap[typeKey] || 'S6' 
+
+    }
+
+    return 'S6' 
 
 })
 
 async function handleLoadNote(slug) { 
   
   const postElement = document.querySelector('.post')
-  
   const { html, error } = await fetchPost(slug)
-  noteContent.value = html
 
+  noteContent.value = html
   if (postElement) { postElement.scrollTop = 0 }
   await nextTick()
 
@@ -168,8 +173,10 @@ watch(
       <div class="post">
 
         <div class="content">
+
+          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />
           
-          <component :is="currentComponent" :html="noteContent" />
+          <div v-else :class="computedClass" v-html="noteContent" />
           
         </div>
         
@@ -182,8 +189,6 @@ watch(
 </template>
 
 <style scoped> 
-
-@media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; } }
 
 .notedisplay { display: flex; flex-direction: column; height: 100%; gap: 1rem; }
 
@@ -220,5 +225,7 @@ watch(
   /* BOX    */ width: 100%;
 
 }
+
+@media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; } }
 
 </style>

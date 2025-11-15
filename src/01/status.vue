@@ -13,7 +13,7 @@ const barContent = ref('/ '.repeat(300))                                        
 let timeInterval = null                                                                                                               // time update interval
 let btcInterval = null                                                                                                                // btc update interval
 
-function openLatest() { if (latestPost.value.url) { router.push(latestPost.value.url) } }
+function openLatest() { if (latestPost.value.url) { router.push(latestPost.value.url) } }                                             // opens latest post
 
 function fetchTime() {                                                                                                                // fetch and update current time 
 
@@ -28,7 +28,7 @@ function fetchTime() {                                                          
 
 }
 
-async function fetchBTC() { 
+async function fetchBTC() {                                                                                                           // fetch and update btc price 
 
   try {
 
@@ -66,9 +66,11 @@ onUnmounted(() => { clearInterval(timeInterval); clearInterval(btcInterval) })
     </div>
 
     <div class="stcenter">
+
       <div class="progress-bar">
         <div class="progress-track">{{ barContent }}</div>
       </div>
+      
     </div>
     
     <div class="stright">

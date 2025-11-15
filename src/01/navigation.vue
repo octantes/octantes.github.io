@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
-import Table from './table.vue'
+import Table from '../02/table.vue'
 
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route

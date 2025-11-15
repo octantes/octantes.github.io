@@ -3,25 +3,24 @@ import { computed } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
-const store = useStore()
-const { currentPost } = storeToRefs(store)
+const store           = useStore()                                                                                                    // initializes global store
+const { currentPost } = storeToRefs(store)                                                                                            // imports refs from main store
 
-function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
+const authorsMap = {                                                                                                                  // author profile pic and link 
 
-const authorsMap = {
     swim: { img: '/assets/swim.webp', link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
     kaste: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
     octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+
 }
 
-const data = computed(() => {
+const data = computed(() => {                                                                                                         // get portada text content 
 
     const metadata = currentPost.value || {}
-
     let rawHandle = metadata.handle || 'kaste'
     const handles = Array.isArray(rawHandle) ? rawHandle : [rawHandle]
     
-    const postAuthors = handles.map(h => {
+    const postAuthors = handles.map(h => { 
 
         const handleName = String(h).replace(/^@/, '')
         const authorInfo = authorsMap[handleName] || authorsMap['kaste']
@@ -31,14 +30,13 @@ const data = computed(() => {
             handle: handleName,
             img: authorInfo.img,
             link: authorInfo.link,
-
             full: h === handles[0], 
             date: h === handles[0] ? metadata.date || '2026' : null,
 
         }
     })
 
-    return {
+    return { 
 
         title: metadata.title || 'bienvenido a octantes.net!',
         description: metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
@@ -48,6 +46,8 @@ const data = computed(() => {
     }
 
 })
+
+function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }                                                      // open author link
 
 </script>
 
@@ -68,8 +68,8 @@ const data = computed(() => {
           
           <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author.link)" >
 
-                <img class="userpic" :src="author.img" />
-                <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
+            <img class="userpic" :src="author.img" />
+            <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
 
           </div>
 
@@ -83,7 +83,7 @@ const data = computed(() => {
 
     <div class="cover" v-if="data.portada">
 
-        <img :src="data.portada" alt="" />
+      <img :src="data.portada" alt="" />
         
     </div>
 
@@ -140,8 +140,8 @@ const data = computed(() => {
 
 .authors {
 
-    /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem;
-    /* BOX    */ flex-wrap: wrap;
+  /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem;
+  /* BOX    */ flex-wrap: wrap;
 
 }
 
