@@ -74,7 +74,9 @@ onMounted(async () => {                                                         
       <button @click="store.prevPage" :disabled="processing"> < </button>
 
       <div class="tabs">
-        <button v-for="tab in tabs" :key="tab.value" v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+        <template v-for="tab in tabs" :key="tab.value">
+          <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+        </template>
       </div>
 
       <button @click="store.nextPage" :disabled="processing"> > </button>

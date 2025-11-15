@@ -7,9 +7,8 @@ export const useStore = defineStore('store', () => {
 
   const notesIndex                 = ref([])                                                                                          // note index array
   const notesLoaded                = ref(false)                                                                                       // loaded index flag
-
-  const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')
-  const currentPost                = ref(null)
+  const currentPost                = ref(null)                                                                                        // current post ref
+  const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url
 
   const classMap = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                                               // note type custom class map
 
