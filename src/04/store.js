@@ -9,7 +9,7 @@ export const useStore = defineStore('store', () => {
   const currentPost                = ref(null)                                                                                        // current loaded post ref
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
-  const classMap                   = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                             // note type custom class map
+  const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
 
   const authorsMap = {                                                                                                                // author profile pic and link 
 
@@ -37,12 +37,12 @@ export const useStore = defineStore('store', () => {
 
   const tabs                       = [                                                                                                // names for filters 
 
-    { label: 'completo',   value: 'full'   },
-    { label: 'diseño',     value: 'design' },
-    { label: 'desarrollo', value: 'dev'    },
-    { label: 'música',     value: 'music'  },
-    { label: 'textos',     value: 'posts'  },
-    { label: 'juegos',     value: 'game'   },
+    { label: 'completo',   value: 'full'       },
+    { label: 'diseño',     value: 'diseño'     },
+    { label: 'desarrollo', value: 'desarrollo' },
+    { label: 'música',     value: 'musica'     },
+    { label: 'textos',     value: 'textos'     },
+    { label: 'juegos',     value: 'juegos'     },
 
   ]
 
@@ -72,12 +72,12 @@ export const useStore = defineStore('store', () => {
     if (!notesLoaded.value) { await loadNotesIndex() }
 
     const metadataSlug = notesIndex.value.find(p => p.slug === slug)
-    setCurrentPost(metadataSlug || { type: 'note', slug })
+    setCurrentPost(metadataSlug || { type: 'textos', slug })
     const post = currentPost.value
 
     try {
 
-      const fetchPath = post.url || `${base.value}/posts/${post.type || 'note'}/${slug}/`
+      const fetchPath = post.url || `${base.value}/posts/${post.type || 'textos'}/${slug}/`
       const res = await fetch(fetchPath)
       const html = await res.text()
 
@@ -205,7 +205,7 @@ export const useStore = defineStore('store', () => {
   function emptyFilter(type) {                                                                                                        // check if the filter is empty 
 
     if (type === 'full') return true
-    const actualType = type === 'posts' ? 'note' : type
+    const actualType = type
     
     return notesIndex.value.some(note => note.type === actualType)
 
@@ -280,7 +280,7 @@ export const useStore = defineStore('store', () => {
   const noteSortFilter    = computed(() => {                                                                                          // compute table filter 
 
     if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
-    const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
+    const filterType = activeFilter.value
     let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
     const query = searchQuery.value.toLowerCase().trim()
 
