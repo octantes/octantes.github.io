@@ -9,6 +9,12 @@ const routes = [
   },
 
   {
+    path: '/:filterType',
+    component: Content,
+    props: route => ({ filterType: route.params.filterType })
+  },
+
+  {
     path: '/:type/:slug',
     component: Content,
     props: route => ({ slug: route.params.slug, type: route.params.type }) // pasa el slug como prop para content

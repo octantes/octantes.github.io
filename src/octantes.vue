@@ -1,5 +1,5 @@
 <script setup> 
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useStore } from './04/store.js'
 import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'

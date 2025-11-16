@@ -60,7 +60,6 @@ export const useStore = defineStore('store', () => {
   
   function setCentered()                { isCentered.value = !isCentered.value }                                                      // toggle centered state
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
-  function setActiveFilter(filter)      { activeFilter.value = filter; currentPage.value = 1 }                                        // apply current table filter
   function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
 
@@ -166,7 +165,21 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function changeFilter(direction) {                                                                                                  // advance or reduce filters 
+  function setActiveFilter(routerInstance, filter) {                                                                                  // apply current table filter 
+
+    activeFilter.value = filter
+    currentPage.value = 1
+
+    if (routerInstance) {
+
+        let path = (filter === 'full') ? `${base.value}/` : `${base.value}/${filter}`
+        if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
+
+    }
+
+  }
+
+  function changeFilter(routerInstance, direction) {                                                                                  // advance or reduce filters 
 
     if (processing.value) return
     
@@ -179,7 +192,7 @@ export const useStore = defineStore('store', () => {
       let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
       const nextTabValue = tabs[nextIndex].value
 
-      if (emptyFilter(nextTabValue)) { setActiveFilter(nextTabValue); return }
+      if (emptyFilter(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
 
     }
 
