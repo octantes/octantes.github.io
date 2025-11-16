@@ -4,7 +4,7 @@ type: desarrollo
 title: trackwithslate
 description: herramienta simple para editar y organizar información tabular CSV directamente en el navegador
 portada:
-date: 2025-07-04
+date: 2025-06-23
 handle: kaste
 ---
 
