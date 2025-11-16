@@ -172,7 +172,7 @@ export const useStore = defineStore('store', () => {
 
     if (routerInstance) {
 
-        let path = (filter === 'full') ? `` : `/${filter}`
+        let path = (filter === 'full') ? `/` : `/${filter}`
         if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
 
     }
