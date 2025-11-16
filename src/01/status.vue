@@ -1,57 +1,19 @@
 <script setup> 
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
 
-const router = useRouter()                                                                                                            // handles note open route
-const store = useStore()                                                                                                              // setup store usage
-const btcPrice = ref('---')                                                                                                           // btc price fetch result
+const router     = useRouter()                                                                                                        // handles note open route
+const store      = useStore()                                                                                                         // setup store usage
 const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
-const currentTime = ref('--:--')                                                                                                      // current time fetch result
-const barContent = ref('/ '.repeat(300))                                                                                              // progress bar animation content
 
-let timeInterval = null                                                                                                               // time update interval
-let btcInterval = null                                                                                                                // btc update interval
+const { btcPrice, currentTime, barContent } = storeToRefs(store)                                                                      // imports refs from main store
 
 function openLatest() { if (latestPost.value.url) { router.push(latestPost.value.url) } }                                             // opens latest post
 
-function fetchTime() {                                                                                                                // fetch and update current time 
-
-  const now = new Date()
-
-  currentTime.value = now.toLocaleTimeString('es-AR', {
-    timeZone: 'America/Argentina/Buenos_Aires',
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-
-}
-
-async function fetchBTC() {                                                                                                           // fetch and update btc price 
-
-  try {
-
-    const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-    if (!response.ok) throw new Error('la respuesta de la api falló')
-    const data = await response.json()
-    const price = data.bitcoin.usd
-    const formattedPrice = Math.floor((price / 1000) * 10) / 10
-    btcPrice.value = `${formattedPrice}K`
-
-  } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
-
-}
-
-onMounted(() => { 
-
-  store.loadNotesIndex()
-  fetchBTC()    ; btcInterval    = setInterval(fetchBTC, 60000);
-  fetchTime()   ; timeInterval   = setInterval(fetchTime, 15000);
-
-})
-
-onUnmounted(() => { clearInterval(timeInterval); clearInterval(btcInterval) })
+onMounted(() => { store.loadNotesIndex(); store.startStatusUpdates() })
+onUnmounted(() => { store.stopStatusUpdates() })
 
 </script>
 
