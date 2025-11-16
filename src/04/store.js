@@ -155,6 +155,7 @@ export const useStore = defineStore('store', () => {
     isCentered.value = false
     if (currentSlug) { routerInstance.push({ path: '/' }) }
     else { routerInstance.push({ path: '/' }) }
+    currentPage.value = 1
 
   }
 
