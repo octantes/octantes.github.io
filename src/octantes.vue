@@ -85,7 +85,7 @@ function handleResize() {
   .articulos  { grid-column: 1; grid-row: 3;               }
   .side       { grid-column: 1; grid-row: 4;               }
 
-  /* .content    { aspect-ratio: 3/5;                         } */
+  .content    { height: 50rem;                          }
   .pagina     { height: auto;                              }
   
 }
