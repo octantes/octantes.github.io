@@ -13,7 +13,12 @@ const { computedPortada } = storeToRefs(store)
 onMounted(() => { window.addEventListener('resize', handleResize); handleResize() })
 onUnmounted(() => { window.removeEventListener('resize', handleResize) })
 
-function handleResize() { if (window.innerWidth <= 1080) { if (store.isCentered) { store.isCentered = false } } }
+function handleResize() {
+
+  if (window.innerWidth <= 1080) { store.isCentered = true  }
+  if (window.innerWidth >= 1080) { store.isCentered = false }
+
+}
 
 </script>
 

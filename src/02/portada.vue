@@ -157,4 +157,6 @@ function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
 
 }
 
+@media (max-width: 1080px) { .sidebutton { display: none; } }
+
 </style>
