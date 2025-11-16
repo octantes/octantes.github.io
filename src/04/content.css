@@ -17,6 +17,22 @@
 
 }
 
+.S6TRAD { 
+
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  
+  & img { 
+
+    /* LAYOUT */ display: block; 
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
 /* DISEÑO */
 
 .S7 { 
@@ -45,6 +61,22 @@
 .S7TEXT { 
 
   /* LAYOUT */ text-align: center;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+  
+}
+
+.S7TEXT-TRAD { 
+
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
   /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;

@@ -85,7 +85,10 @@ const indexItems = []
 
 // MD TO HTML BODY PROCESSING
 
-function renderType(body, type, portada) {                                       // render body applying type logic 
+function renderType(body, attributes) {                                          // render body applying type logic 
+
+  const type = attributes.type
+  const isTrad = attributes.style === 'trad'
 
   switch (type) {
 
@@ -99,15 +102,18 @@ function renderType(body, type, portada) {                                      
         .replace(/^\s*<p>(.*?)<\/p>\s*$/is, '$1')
         .replace(/<br\s*\/?>/gi, '')
 
-      return `${renderedAssets}${ noteBlock ? `<div class="S7TEXT">${md.render(noteBlock)}</div>` : ''}`
+      const noteBlockClass = isTrad ? 'S7TEXT-TRAD' : 'S7TEXT'
+
+      return `${renderedAssets}${ noteBlock ? `<div class="${noteBlockClass}">${md.render(noteBlock)}</div>` : ''}`
 
     }
 
-    case 'desarrollo': return md.render(body)
-    case 'musica': return md.render(body)
-    case 'textos': return md.render(body)
-    case 'juegos': return md.render(body)
-    default: return md.render(body)
+    default: {
+
+        const contentClass = isTrad ? 'S6TRAD' : 'S6'
+        return `<div class="${contentClass}">${md.render(body)}</div>`
+
+    }
 
   }
 
@@ -419,7 +425,7 @@ async function processPosts() {                                                 
       if (isTradStyle) { unsetCustomSoftbreak(); console.log(`using 'trad' style on ${slug} - default softbreak`) }
       else { setCustomSoftbreak() }
 
-      let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
+      let htmlContent = renderType(body, attributes).trim()
       htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
 
       if (isTradStyle) { setCustomSoftbreak() }
