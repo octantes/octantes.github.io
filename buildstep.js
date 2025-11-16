@@ -31,6 +31,7 @@ handle: kaste OR [kaste, octantes] if multi-author
 ---
 
 CUSTOM: add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
+CUSTOM: add "style: trad" in metadata to remove the softbreaks rule from that specific note
 JUEGOS: just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
 
 - usar como maximo tres tags
@@ -40,9 +41,13 @@ linea de ejemplo para el ancho: cruzar fue mi segundo proyecto de diseño basado
 
 */
 
+// MD IT INSTANCE RULES
+
 const md = new MarkdownIt()
 
-md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {             // render linebreaks only on text 
+const defaultSoftbreak = md.renderer.rules.softbreak                             // normal linebreaks on tradnotes
+
+const customSoftbreak = (tokens, idx, options, env, self) => {                   // render linebreaks only on text 
 
     const token = tokens[idx]
 
@@ -59,6 +64,13 @@ md.renderer.rules.softbreak = (tokens, idx, options, env, self) => {            
 
 }
 
+function setCustomSoftbreak()   { md.renderer.rules.softbreak = customSoftbreak }
+function unsetCustomSoftbreak() { md.renderer.rules.softbreak = defaultSoftbreak }
+
+setCustomSoftbreak()
+
+// VARIABLES
+
 const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 const webURL = 'https://octantes.github.io'
@@ -68,6 +80,7 @@ const outputDir = './dist'
 let cache = {}
 let postDirs = []
 let fullRebuild = false
+
 const indexItems = []
 
 // MD TO HTML BODY PROCESSING
@@ -401,8 +414,15 @@ async function processPosts() {                                                 
 
     if (fullRebuild || cache[`${postType}/${slug}/index.md`] !== finalHash) {
 
+      const isTradStyle = attributes.style === 'trad'
+
+      if (isTradStyle) { unsetCustomSoftbreak(); console.log(`using 'trad' style on ${slug} - default softbreak`) }
+      else { setCustomSoftbreak() }
+
       let htmlContent = renderType(body, attributes.type, attributes.portada).trim()
       htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+
+      if (isTradStyle) { setCustomSoftbreak() }
 
       const internalLinkRegex = new RegExp(`href=['"](${webURL}|\\/)`, 'i')
 
