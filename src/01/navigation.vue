@@ -21,13 +21,9 @@ onMounted(async () => {                                                         
   await store.loadNotesIndex()
 
   const urlFilter = route.params.filterType
+  const initialFilter = urlFilter || 'full'
   
-  if (urlFilter) {
-
-      const initialFilter = urlFilter === 'full' ? 'full' : urlFilter 
-      store.setActiveFilter(router, initialFilter)
-
-  }
+  if (initialFilter !== store.activeFilter.value) { store.setActiveFilter(router, initialFilter) }
 
 })
 
