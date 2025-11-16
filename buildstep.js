@@ -16,7 +16,7 @@ import sharp from 'sharp'
 // all files must be under 10MB and most should be under 5MB
 // embeds will be processed in any note type as long as the url is from youtube or spotify
 // optimization is handled only for images and audios, preprocess vidos and gifs before uploading
-// for DESIGN use [!TEXT] to divide from project assets to actual note
+// for DISEÑO use [!TEXT] to divide from project assets to actual note
 
 /* METADATA TEMPLATE
 
@@ -431,7 +431,7 @@ async function processPosts() {                                                 
       slug,
       title: attributes.title || slug,
       description: attributes.description || '',
-      type: postType || 'note',
+      type: postType || 'textos',
       tags: attributes.tags || [],
       portada: portadaUrl,
       handle: handles,
