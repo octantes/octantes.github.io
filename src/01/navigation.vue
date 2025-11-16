@@ -20,6 +20,15 @@ onMounted(async () => {                                                         
   currentTagline.value = taglines[randomIndex]
   await store.loadNotesIndex()
 
+  const urlFilter = route.params.filterType
+  
+  if (urlFilter) {
+
+      const initialFilter = urlFilter === 'full' ? 'full' : urlFilter 
+      store.setActiveFilter(router, initialFilter)
+
+  }
+
 })
 
 </script>
@@ -43,15 +52,15 @@ onMounted(async () => {                                                         
 
     <div class="filters"> 
 
-      <button @click="changeFilter(-1)" :disabled="processing"> < </button>
+      <button @click="changeFilter(router, -1)" :disabled="processing"> < </button>
 
       <div class="tabs">
         <template v-for="tab in tabs" :key="tab.value">
-          <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+          <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
         </template>
       </div>
 
-      <button @click="changeFilter(+1)" :disabled="processing"> > </button>
+      <button @click="changeFilter(router, +1)" :disabled="processing"> > </button>
 
     </div>
 
