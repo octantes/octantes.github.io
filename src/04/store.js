@@ -5,16 +5,24 @@ export const useStore = defineStore('store', () => {
 
   // CONTENT                                                                                                                          // LOAD DATA
 
-  const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url
   const notesIndex                 = ref([])                                                                                          // note index array
+  const currentPost                = ref(null)                                                                                        // current loaded post ref
+  const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
+  const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const classMap                   = { dev: 'S6', note: 'S6', design: 'S7', music: 'S6' }                                             // note type custom class map
+
+  const authorsMap = {                                                                                                                // author profile pic and link 
+
+    swim:     { img: '/assets/swim.webp', link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
+    kaste:    { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+    octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+
+  }
 
   // STATES                                                                                                                           // CHANGE STATES
 
-  const currentPost                = ref(null)                                                                                        // current loaded post ref
-  const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
-  const processing                 = ref(false)                                                                                       // disabled component state
   const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
+  const processing                 = ref(false)                                                                                       // disabled component state
 
   // NAVIGATION                                                                                                                       // NOTE TABLE
 
@@ -40,15 +48,15 @@ export const useStore = defineStore('store', () => {
   const currentPage                = ref(1)                                                                                           // current page number
 
   // FUNCTIONS                                                                                                                        // FUNCTION
+  
+  function setCentered()                { isCentered.value = !isCentered.value }                                                      // toggle centered state
+  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
+  function setActiveFilter(filter)      { activeFilter.value = filter; currentPage.value = 1 }                                        // apply current table filter
+  function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
+  function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
 
-  function toggleView()                 { isCentered.value = !isCentered.value }                                                      // toggle centered state
   function prevPage()                   { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }                   // reduce current table page
   function nextPage()                   { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }    // advance current table page
-
-  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
-  function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
-  function setActiveFilter(filter)      { activeFilter.value = filter; currentPage.value = 1 }                                        // apply current table filter
-  function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
   
   async function fetchPost(slug) {                                                                                                    // fetch post html 
 
@@ -91,7 +99,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function navHome(routerInstance, currentSlug) {                                                                                                                // navigates to root and reloads 
+  function navHome(routerInstance, currentSlug) {                                                                                     // navigates to root and reloads 
 
     if (processing.value) return
     if (currentSlug) { routerInstance.push({ path: '/' }); setTimeout(() => { window.location.reload() }, 0) }
@@ -135,7 +143,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  const computedNoteComp = computed(() => {                                                                                           // compute vuecomp if it exists 
+  const computedNoteComp  = computed(() => {                                                                                          // compute vuecomp if it exists 
 
     if (currentPost.value) {
       const customVuecomp = currentPost.value.vuecomp
@@ -157,7 +165,51 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  const noteSortFilter = computed(() => { 
+  const computedPortada   = computed(() => {                                                                                            // compute data for portada 
+
+    const metadata = currentPost.value || {}
+    let rawHandle = metadata.handle || 'kaste'
+    const handles = Array.isArray(rawHandle) ? rawHandle : [rawHandle]
+    
+    const postAuthors = handles.map(h => { 
+
+      const handleName = String(h).replace(/^@/, '')
+      const authorInfo = authorsMap[handleName] || authorsMap['kaste']
+      
+      return {
+
+        handle: handleName,
+        img: authorInfo.img,
+        link: authorInfo.link,
+        full: h === handles[0], 
+        date: h === handles[0] ? metadata.date || '2026' : null,
+
+      }
+
+    })
+
+    return { 
+
+      title: metadata.title || 'bienvenido a octantes.net!',
+      description: metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
+      authors: postAuthors,
+      portada: metadata.portada || '',
+
+    }
+    
+  })
+
+  const loadLatestPost    = computed(() => {                                                                                          // compute latest post 
+
+    if (notesIndex.value.length === 0) return { title: 'cargando...', url: '' }
+    const latest = notesIndex.value[0]
+    const cleanUrl = latest.url.replace(/^\/posts/, '') 
+
+    return { title: latest.title, url: cleanUrl }
+
+  })
+
+  const noteSortFilter    = computed(() => {                                                                                          // compute table filter 
 
     if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
     const filterType = activeFilter.value === 'posts' ? 'note' : activeFilter.value
@@ -197,7 +249,7 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  const paginatedNotes = computed(() => { 
+  const paginatedNotes    = computed(() => {                                                                                          // compute table pages 
 
     const start = (currentPage.value - 1) * itemsPerPage.value
     const end = start + itemsPerPage.value
@@ -206,22 +258,18 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  const loadLatestPost = computed(() => {
-
-    if (notesIndex.value.length === 0) return { title: 'cargando...', url: '' }
-    const latest = notesIndex.value[0]
-    const cleanUrl = latest.url.replace(/^\/posts/, '') 
-
-    return { title: latest.title, url: cleanUrl }
-
-  })
-
   return {
 
-    /* STATES     */ processing, setProcessing,
-    /* LAYOUT     */ isCentered, toggleView,
-    /* NAVIGATION */ searchQuery, activeFilter, setSearchQuery, setActiveFilter, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, prevPage, nextPage, navSort, itemsPerPage,
-    /* DATA       */ fetchPost, notesIndex, notesLoaded, loadNotesIndex, loadLatestPost, currentPost, setCurrentPost, base, computedNoteComp, computedNoteClass, changeFilter, navHome, emptyFilter
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost,
+    /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
+
+    /* VIEWS VAR */ isCentered, processing,
+    /* VIEWS FUN */ setCentered, setProcessing,
+
+    /* NAVIG VAR */ itemsPerPage, totalPages, activeFilter, sortKey, sortOrder, searchQuery, currentPage, tabs,
+    /* NAVIG FUN */ prevPage, nextPage, setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
+    /* NAVIG COM */ noteSortFilter, paginatedNotes,
 
   }
 

@@ -20,7 +20,7 @@ function handleResize() { if (window.innerWidth <= 1080) { if (store.isCentered)
 
     <div class="layout" :class="{ centered: store.isCentered }" >
 
-        <Navigation @toggle-view="store.toggleView" class="navigation" :disabled="store.processing" :is-centered="store.isCentered" />
+        <Navigation class="navigation" :disabled="store.processing" :is-centered="store.isCentered" />
 
         <RouterView v-slot="{ Component }" >
 
