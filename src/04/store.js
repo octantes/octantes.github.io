@@ -176,8 +176,11 @@ export const useStore = defineStore('store', () => {
 
     if (routerInstance && !currentPost.value) {
 
-        let path = (filter === 'full') ? `/` : `/${filter}`
-        if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
+      const isNote = routerInstance.currentRoute.value.params.slug
+      if (isNote) return
+
+      let path = (filter === 'full') ? `/` : `/${filter}`
+      if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
 
     }
 
