@@ -3,7 +3,6 @@ import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
-import Portada from '../02/portada.vue'
 import Shader from '../03/shader.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps and import if needed
@@ -152,12 +151,10 @@ watch(                                                                          
 <template> 
 
   <div class="notedisplay">
-  
-    <Portada :metadata="currentPost || {}" class="scroll-into" />
     
-    <div class="container">
+    <div class="container scroll-into" >
 
-      <Shader class ="shader" ref="shaderRef"/>
+      <Shader class="shader" ref="shaderRef"/>
 
       <div class="post">
 
