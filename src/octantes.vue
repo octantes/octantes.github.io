@@ -85,7 +85,7 @@ function handleResize() {
   .articulos  { grid-column: 1; grid-row: 3;               }
   .side       { grid-column: 1; grid-row: 4;               }
 
-  .content    { height: 50rem;                          }
+  .content    { height: 100rem;                            }
   .pagina     { height: auto;                              }
   
 }
