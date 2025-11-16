@@ -129,9 +129,9 @@ watch(                                                                          
         await shaderRef.value?.runQueue('transition-outro')
         break
       
-      }
+    }
 
-      setProcessing(false)
+    setProcessing(false)
             
   }, { immediate: true }
 
