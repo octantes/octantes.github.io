@@ -91,6 +91,8 @@ watch(                                                                          
 
       // back to home with note loaded, TRANSITION on note unload
       case !slug && noteLoaded:
+
+        if (route.params.filterType) { setProcessing(false); return } // ignore filter change
         noteLoaded = false
         lastSlug = null
         await shaderRef.value?.runQueue('transition-intro')
