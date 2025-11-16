@@ -5,6 +5,18 @@
 <template> 
 
   <div class="side">
+
+    <div class="sidetop">
+
+      <p>asdadsad</p>
+
+    </div>
+
+    <div class="sidebot">
+
+      <p>asdadsad</p>
+
+    </div>
     
   </div>
 
@@ -22,6 +34,9 @@
   &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled); }
 
 }
+
+.sidetop { background-color: var(--lirio25) ;  height: 50%; }
+.sidebot { background-color: var(--cristal25); height: 50%; }
 
 .logo { 
 
