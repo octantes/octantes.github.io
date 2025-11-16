@@ -88,6 +88,15 @@ watch(                                                                          
     if (!slug && !store.notesLoaded.value) { await loadNotesIndex() }
 
     switch (true) {
+
+      // back to home with note loaded, TRANSITION on note unload
+      case !slug && noteLoaded:
+        noteLoaded = false
+        lastSlug = null
+        setCurrentPost(null)
+        noteContent.value = ''
+        await shaderRef.value?.runQueue('transition-intro')
+        break
       
       // first load without note, INTRO only on first page load
       case !slug && firstLoad:
