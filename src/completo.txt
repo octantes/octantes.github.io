@@ -1,0 +1,2567 @@
+|| componente: baseline.css -------------------------------------
+
+/* PALETTE */
+
+:root { 
+
+    --font-main:    'Outfit',        sans-serif;
+    --font-mono:    'Inconsolata',   monospace;
+    --font-grotesk: 'Space Grotesk', sans-serif;
+
+    --carbon25:  #1B1C1C25;
+    --carbon50:  #1B1C1C50;
+    --carbon:    #1B1C1C;
+    --ceniza:    #2B2C2C;
+    --polvo:     #3C3C3C;
+    --humo:      #AAABAC;
+    --humo10:    #AAABAC10;
+    --humo25:    #AAABAC25;
+    --humo50:    #AAABAC50;
+    --niebla:    #D8DADE;
+    --brillo:    #F2F2F2;
+    --lirio:     #986C98;
+    --lirio99:   #986C9899;
+    --lirio80:   #986C9880;
+    --lirio65:   #986C9865;
+    --lirio35:   #986C9835;
+    --lirio25:   #986C9825;
+    --cristal:   #8AB6BB;
+    --cristal80: #8AB6BB80;
+    --cristal25: #8AB6BB25;
+
+    --shadow-border: inset 0 0 0 1px;
+    --small-outline: 1px solid;
+
+    --radius-xs: 5px;
+    --radius-ss: 3px;
+
+    --animate-fast: 0.25s ease;
+    --animate-mid:  0.50s ease;
+
+    --alpha-invisible: 0.00;
+    --alpha-half:      0.50;
+    --alpha-disabled:  0.25;
+
+    --scale-min: scale(0.99);
+    --scale-low: scale(0.95);
+
+}
+
+/* RESET */
+
+html, body, #octantes { 
+
+  /* LAYOUT */ box-sizing: border-box;
+  /* BOX    */ width: 100%; height: 100%; margin: 0; padding: 0;
+  /* FILL   */ background-color: var(--carbon);
+
+}
+
+#octantes > .root { 
+
+  /* LAYOUT */ display: flex; flex-direction: column;
+  /* BOX    */ width: 100%; height: 100%;
+  
+}
+
+*, *::before, *::after { box-sizing: inherit;                   }
+body, i, strong        { font-family: var(--font-main);         }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-grotesk);      }
+code, pre              { font-family: var(--font-mono);         }
+strong                 { color: var(--lirio);                   }
+ul, ol                 { display: block;                        }
+li                     { list-style-position: inside;           }
+
+i, em                  { color: var(--cristal); margin-right: 0.15rem; font-style: italic; }
+
+a { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;
+  /* FONT   */ font-family: var(--font-main); text-decoration: underline; text-decoration-color: var(--cristal80); text-underline-offset: 3px; 
+  /* MOTION */ transition: text-decoration-color 0.25s ease;
+  /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+  &:hover { 
+    
+    /* FILL   */ background: linear-gradient(250deg, var(--cristal), var(--lirio)); background-clip: text;
+    /* FONT   */ text-decoration: underline; text-decoration-color: var(--lirio);
+    /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  
+  }
+
+}
+
+::selection               { background-color: var(--lirio); color: var(--carbon); }
+::-moz-selection          { background-color: var(--lirio); color: var(--carbon); }
+::-webkit-scrollbar       { background-color: var(--polvo); width: 4px;           }
+::-webkit-scrollbar-thumb { background-color: var(--lirio);                       }
+
+audio[controls] { 
+
+  /* BOX    */ width: 100%;
+  /* FILL   */ background: var(--carbon);
+
+}
+
+audio::-webkit-media-controls-enclosure { 
+
+  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+  /* FILL   */ background-color: var(--lirio35);
+
+}
+
+audio::-webkit-media-controls-enclosure:hover { 
+
+  /* FILL   */ background-color: var(--lirio65);
+
+}
+
+---
+
+|| componente: router.js -------------------------------------
+
+import { createRouter, createWebHistory } from 'vue-router'
+import Content from '../01/content.vue'
+
+const routes = [
+
+  { path: '/:type/:slug', component: Content, props: route => ({ slug: route.params.slug, type: route.params.type }) }, // pasa el slug como prop para content
+  { path: '/:filterType', component: Content, props: route => ({ filterType: route.params.filterType }) },
+  { path: '/', component: Content },
+  { path: '/:catchAll(.*)', component: Content, props: { slug: '404' } } // mantener siempre al final
+
+]
+
+const router = createRouter({ history: createWebHistory(import.meta.env.BASE_URL), routes })
+
+export default router
+
+---
+
+|| componente: store.js -------------------------------------
+
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+
+export const useStore = defineStore('store', () => {
+
+  // CONTENT                                                                                                                          // LOAD DATA
+
+  const notesIndex                 = ref([])                                                                                          // note index array
+  const currentPost                = ref(null)                                                                                        // current loaded post ref
+  const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
+  const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
+  const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
+
+  const authorsMap = {                                                                                                                // author profile pic and link 
+
+    swim:     { img: '/assets/swim.webp', link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
+    kaste:    { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+    octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+
+  }
+
+  // STATES                                                                                                                           // CHANGE STATES
+
+  const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
+  const processing                 = ref(false)                                                                                       // disabled component state
+
+  // STATUS                                                                                                                           // BOTTOM BAR
+
+  const btcPrice    = ref('---')                                                                                                      // btc price fetch result
+  const currentTime = ref('--:--')                                                                                                    // current time fetch result
+  const barContent  = ref('/ '.repeat(300))                                                                                           // progress bar animation content
+
+  let timeInterval  = null                                                                                                            // time update interval
+  let btcInterval   = null                                                                                                            // btc update interval
+
+  // NAVIGATION                                                                                                                       // NOTE TABLE
+
+  const tabs                       = [                                                                                                // names for filters 
+
+    { label: 'completo',   value: 'full'       },
+    { label: 'diseño',     value: 'diseño'     },
+    { label: 'desarrollo', value: 'desarrollo' },
+    { label: 'música',     value: 'musica'     },
+    { label: 'textos',     value: 'textos'     },
+    { label: 'juegos',     value: 'juegos'     },
+
+  ]
+
+  const defaultItemsPerPage        = 8                                                                                                // default number of notes per page
+  const centeredItemsPerPage       = 10                                                                                               // number of notes per page when centered
+  const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                    // dynamic number of notes per page
+  const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })           // returns total page number
+  const activeFilter               = ref('full')                                                                                      // active tab filter name
+  const sortKey                    = ref('isoDate')                                                                                   // current sort column
+  const sortOrder                  = ref('desc')                                                                                      // current sort order
+  const searchQuery                = ref('')                                                                                          // searchbox current search
+  const currentPage                = ref(1)                                                                                           // current page number
+
+  // FUNCTIONS                                                                                                                        // FUNCTION
+  
+  function setCentered()                { isCentered.value = !isCentered.value }                                                      // toggle centered state
+  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
+  function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
+  function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
+
+  function prevPage()                   { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }                   // reduce current table page
+  function nextPage()                   { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }    // advance current table page
+  
+  async function fetchPost(slug) {                                                                                                    // fetch post html 
+
+    if (!slug) { setCurrentPost(null); return { html: '', error: null } }
+    if (!notesLoaded.value) { await loadNotesIndex() }
+
+    const metadataSlug = notesIndex.value.find(p => p.slug === slug)
+    setCurrentPost(metadataSlug || { type: 'textos', slug })
+    const post = currentPost.value
+
+    try {
+
+      const fetchPath = post.url || `${base.value}/posts/${post.type || 'textos'}/${slug}/`
+      const res = await fetch(fetchPath)
+      const html = await res.text()
+
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+      if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
+
+      return { html, error: null }
+
+    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: `<p>error cargando la nota</p>`, error: e } }
+    
+  }
+
+  async function loadNotesIndex() {                                                                                                   // fetch full note index 
+
+    if (notesLoaded.value) return notesIndex.value
+
+    try {
+
+      const response = await fetch('/index.json')
+      if (!response.ok) throw new Error('no se encontró el index.json')
+      notesIndex.value = await response.json()
+      notesLoaded.value = true
+
+    } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
+
+    return notesIndex.value
+
+  }
+
+  async function fetchBTC() {                                                                                                         // fetch and update btc price 
+
+    try {
+
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+      if (!response.ok) throw new Error('la respuesta de la api falló')
+      const data = await response.json()
+      const price = data.bitcoin.usd
+      const formattedPrice = Math.floor((price / 1000) * 10) / 10
+      btcPrice.value = `${formattedPrice}K`
+
+    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
+
+  }
+
+  function fetchTime() {                                                                                                              // fetch and update current time  
+
+    const now = new Date()
+
+    currentTime.value = now.toLocaleTimeString('es-AR', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+
+  }
+
+  function startStatusUpdates() {                                                                                                     // start bar data updates 
+
+    fetchBTC()  ; btcInterval  = setInterval(fetchBTC,  60000)
+    fetchTime() ; timeInterval = setInterval(fetchTime, 15000)
+    
+  }
+
+  function stopStatusUpdates() {                                                                                                      // stop bar data updates 
+
+    clearInterval(timeInterval)
+    clearInterval(btcInterval)
+
+  }
+
+  function navHome(routerInstance) {                                                                                                  // navigates to root and reloads 
+
+    if (processing.value) return
+    routerInstance.push({ path: '/' })
+    activeFilter.value = 'full'
+    isCentered.value = false
+    currentPage.value = 1
+
+  }
+
+  function navSort(key) {                                                                                                             // change sort order 
+
+    if (processing.value) return
+    if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
+    else { sortKey.value = key; sortOrder.value = 'asc' }
+
+  }
+
+  function setActiveFilter(routerInstance, filter) {                                                                                  // apply current table filter 
+
+    activeFilter.value = filter
+    currentPage.value = 1
+
+    if (filter !== 'full' && !isCentered.value) { isCentered.value = true }
+
+    if (routerInstance && !currentPost.value) {
+
+      const isNote = routerInstance.currentRoute.value.params.slug
+      if (isNote) return
+
+      let path = (filter === 'full') ? `/` : `/${filter}`
+      if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
+
+    }
+
+  }
+
+  function changeFilter(routerInstance, direction) {                                                                                  // advance or reduce filters 
+
+    if (processing.value) return
+    
+    const currentTabValue = activeFilter.value
+    const currentTabIndex = tabs.findIndex(tab => tab.value === currentTabValue)
+    const numTabs = tabs.length
+
+    for (let i = 1; i <= numTabs; i++) {
+
+      let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
+      const nextTabValue = tabs[nextIndex].value
+
+      if (emptyFilter(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
+
+    }
+
+  }
+
+  function emptyFilter(type) {                                                                                                        // check if the filter is empty 
+
+    if (type === 'full') return true
+    const actualType = type
+    
+    return notesIndex.value.some(note => note.type === actualType)
+
+  }
+
+  const computedNoteComp  = computed(() => {                                                                                          // compute vuecomp if it exists 
+
+    if (currentPost.value) {
+      const customVuecomp = currentPost.value.vuecomp
+      if (customVuecomp) { return customVuecomp } 
+    }
+
+    return null
+
+  })
+
+  const computedNoteClass = computed(() => {                                                                                          // compute class for html post 
+
+    if (currentPost.value) {
+      const typeKey = currentPost.value.type
+      return classMap[typeKey] || 'S6' 
+    }
+
+    return 'S6' 
+
+  })
+
+  const computedPortada   = computed(() => {                                                                                          // compute data for portada 
+
+    const metadata = currentPost.value || {}
+    let rawHandle = metadata.handle || 'kaste'
+    const handles = Array.isArray(rawHandle) ? rawHandle : [rawHandle]
+    
+    const postAuthors = handles.map(h => { 
+
+      const handleName = String(h).replace(/^@/, '')
+      const authorInfo = authorsMap[handleName] || authorsMap['kaste']
+      
+      return {
+
+        handle: handleName,
+        img: authorInfo.img,
+        link: authorInfo.link,
+        full: h === handles[0], 
+        date: h === handles[0] ? metadata.date || '2026' : null,
+
+      }
+
+    })
+
+    return { 
+
+      title: metadata.title || 'bienvenido a octantes.net!',
+      description: metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
+      authors: postAuthors,
+      portada: metadata.portada || '',
+
+    }
+    
+  })
+
+  const loadLatestPost    = computed(() => {                                                                                          // compute latest post 
+
+    if (notesIndex.value.length === 0) return { title: 'cargando...', url: '' }
+    const latest = notesIndex.value[0]
+    const cleanUrl = latest.url.replace(/^\/posts/, '') 
+
+    return { title: latest.title, url: cleanUrl }
+
+  })
+
+  const noteSortFilter    = computed(() => {                                                                                          // compute table filter 
+
+    if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
+    const filterType = activeFilter.value
+    let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
+    const query = searchQuery.value.toLowerCase().trim()
+
+    if (query) { 
+
+      filtered = filtered.filter(note =>
+        note.title.toLowerCase().includes(query) ||
+        note.description.toLowerCase().includes(query) ||
+        note.tags.some(tag => tag.toLowerCase().includes(query)) ||
+        note.date.includes(query)
+      )
+
+    }
+
+    return [...filtered].sort((a, b) => { 
+
+      let valA, valB
+
+      switch (sortKey.value) {
+
+        case 'title': valA = a.title.toLowerCase()          ; valB = b.title.toLowerCase()          ; break
+        case 'tags':  valA = a.tags[0]?.toLowerCase() || '' ; valB = b.tags[0]?.toLowerCase() || '' ; break
+        default:      valA = new Date(a.isoDate)            ; valB = new Date(b.isoDate)            ; break
+
+      }
+
+      let comparison = 0
+      if (valA > valB)      comparison =  1
+      else if (valA < valB) comparison = -1
+
+      return sortOrder.value === 'asc' ? comparison : -comparison
+
+    })
+
+  })
+
+  const paginatedNotes    = computed(() => {                                                                                          // compute table pages 
+
+    const start = (currentPage.value - 1) * itemsPerPage.value
+    const end = start + itemsPerPage.value
+
+    return noteSortFilter.value.slice(start, end)
+
+  })
+
+  return { 
+
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost,
+    /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
+    /* STATS VAR */ btcPrice, currentTime, barContent,
+    /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
+    /* VIEWS VAR */ isCentered, processing,
+    /* VIEWS FUN */ setCentered, setProcessing,
+    /* NAVIG VAR */ itemsPerPage, totalPages, activeFilter, sortKey, sortOrder, searchQuery, currentPage, tabs,
+    /* NAVIG FUN */ prevPage, nextPage, setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
+    /* NAVIG COM */ noteSortFilter, paginatedNotes,
+
+  }
+
+})
+
+---
+
+|| componente: content.css -------------------------------------
+
+/* TEXTOS */
+
+.S6 { 
+
+  /* LAYOUT */ text-align: center;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  
+  & img { 
+
+    /* LAYOUT */ display: block; 
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+.S6TRAD { 
+
+  /* LAYOUT */ text-align: left;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  
+  & img { 
+
+    /* LAYOUT */ display: block; 
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+/* DISEÑO */
+
+.S7 { 
+
+  /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+
+  }
+
+  & video { 
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+.S7TEXT { 
+
+  /* LAYOUT */ text-align: center;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+  
+}
+
+.S7TEXT-TRAD { 
+
+  /* LAYOUT */ text-align: left;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+  
+}
+
+/* EMBEDS */  
+
+.YTVideo { 
+
+  /* LAYOUT */ position: relative; 
+  /* BOX    */ width: 100%; height: 100%; aspect-ratio: 16 / 9;
+  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+}
+
+@media (max-width: 1405px) { .S6, .S7TEXT { font-size: .75vw } }
+@media (max-width: 1080px) { .S6, .S7TEXT { font-size: 2vw; } }
+
+---
+
+|| componente: rustwasm.vue -------------------------------------
+
+<script> 
+import init, { startgame } from '@/wasm/rustgame.js'
+export default { name: 'rustgame', async mounted() { await init(); const canvas = this.$refs.containerref; startgame(canvas) } }
+</script>
+
+<template> 
+
+  <canvas ref="containerref" class="rust"></canvas>
+
+</template>
+
+<style scoped> 
+
+.rust { display: block; width: 100%; height: 100%; }
+
+</style>
+
+---
+
+|| componente: shader.vue -------------------------------------
+
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+const TIER_CONFIGS = {
+
+    high: { maxCols: 50, maxRows: 50, minCores: 8, minMemory: 8 },
+    medium: { maxCols: 40, maxRows: 40, minCores: 4, minMemory: 4 },
+    low: { maxCols: 30, maxRows: 30, minCores: 2, minMemory: 2 }
+    
+}
+
+const canvasRef    = ref(null)                                          // dom << canvas >> ref
+const containerRef = ref(null)                                          // container div ref
+const COLOR_BACKGR = '#1B1C1C'                                          // solid background color
+const COLOR_BORDER = '#AAABAC'                                          // solid frontier color
+const COLOR_PORTAL = '#986C98'                                          // solid portal color
+const COLOR_RAIN   = '#8AB6BB'                                          // solid rain color
+const charRangeStart    = 33                                            // unicode starting character
+const charRangeCount    = 126 - charRangeStart + 1                      // max possible characters
+const germFramesMax     = 160                                           // intro total frames counter
+const outroFramesMax    = 32                                            // outro animation max frames
+const directFramesExtra = 42                                            // direct animation extra frames
+
+let lastTime   = 0                                                      // last frame time for delta
+let charIndex  = 0                                                      // character buffer index
+let charTable  = null                                                   // precomputed unicode char values
+let charBuffer = []                                                     // buffer for precomputed char values
+let mode = 'hidden'                                                     // current animation mode
+let animationID = null                                                  // next requested frame id
+let taskPromise = null                                                  // promise handling for drawloop
+let taskResolve = null                                                  // resolve handling for drawloop
+let context = null                                                      // canvas 2D context init
+let fontSize = 16                                                       // font base pixel size
+let height = 0                                                          // canvas px height
+let width = 0                                                           // canvas px width
+let dpr = 1                                                             // device px ratio
+let cols = 0                                                            // char grid columns
+let rows = 0                                                            // char grid rows
+let maxCols = 40                                                        // max char grid columns
+let maxRows = 60                                                        // max char grid rows
+
+let portalTime   = 0                                                    // portal delta speed calculation
+let portalCodes  = null                                                 // portal cell int char codes
+let portalChars  = null                                                 // portal characters
+let portalSine   = null                                                 // portal trigo cache sine
+let portalCosine = null                                                 // portal trigo cache cosine
+let rainHeads    = []                                                   // first rain char position
+let rainBuffer   = []                                                   // rain column chars positions
+let rainColumn   = null                                                 // full rain column position array
+let rainColors   = null                                                 // alpha color cache
+let rainChance   = 0.005                                                // column reset chance
+let rainLength   = 25                                                   // rain trail char length
+let rainSpeed    = 0.7                                                  // rain trail fall speed
+
+let germFrame     = 0                                                   // frame counter for intro & direct
+let swipeFrame    = 0                                                   // swipe animation line counter
+let swipePhase    = 0                                                   // swipe animation direction
+let swipeSine     = null                                                // swipe trigo cache cosine
+let swipeCosine   = null                                                // swipe trigo cache cosine
+let outroRadius   = 0                                                   // current outro animation radius
+let outroCenter   = { x: 0, y: 0 }                                      // outro animation center position
+let outroAuto     = false                                               // swipe outro autotrigger
+let outroCells    = null                                                // guarda indices dentro del circulo
+let outroFrontier = null                                                // guarda indices del limite del circulo
+
+let logicMask  = null                                                   // binary active cell mask
+let visualMask = null                                                   // buffer mask for basemask
+let expandA    = null                                                   // dilation buffer for expandMask
+let expandB    = null                                                   // dilation buffer for expandMask
+let indexToX   = null                                                   // maps linear index to x coord
+let indexToY   = null                                                   // maps linear index to y coord
+let textGroups = null                                                   // map for text drawing
+
+let noiseMap        = null                                              // static noise map for distortion
+let neighborsMap    = null                                              // stores each cell neighbors
+let frontierMap     = null                                              // mask for cells in borders
+let frontierCurrent = null                                              // buffer for last frontier indexes
+let frontierNext    = null                                              // buffer for next frontier indexes
+
+// MAIN RENDER
+
+function cellRender(x, y, headPos, colBuf, resultMask) {                // cell style definitions by mode 
+
+  const idx = y * cols + x
+  const portalCh = portalChars[idx]
+  const matrixCh = colBuf[y]
+  const revealed = !!resultMask[idx]
+  const frontier = !!frontierMap[idx]
+  const dist = headPos - y
+
+  let drawCh = portalCh
+  let color = COLOR_PORTAL
+  let isTransparent = false
+
+  const isRain = (dist >= 0 && dist <= rainLength)
+  const isRainHead = !!matrixCh
+
+  switch (mode) {
+
+    case 'intro': {
+      if (frontier) color = COLOR_BORDER
+      if (!revealed) { drawCh = null; isTransparent = true }
+      if (isRain && revealed) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'static': {
+      if (isRain) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      else { drawCh = portalCh; color = COLOR_PORTAL }
+      break
+    }
+
+    case 'outro': {
+      const isInsideCircle = outroCells[idx] && !outroFrontier[idx]
+      isTransparent = isInsideCircle
+      if (isInsideCircle) { drawCh = null } else if (outroFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
+      if (isRain && !isInsideCircle) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'direct': {
+      if (frontier) { drawCh = portalCh; color = COLOR_BORDER }
+      else if (!revealed) { drawCh = null; isTransparent = true }
+      else { drawCh = portalCh; color = COLOR_PORTAL }
+      if (isRain && (revealed || frontier)) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'transition': {
+      if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER } else { drawCh = null; isTransparent = true } }
+      else { drawCh = portalCh; if (frontier) color = COLOR_BORDER }
+      if (isRain && revealed) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'hidden': { drawCh = null; isTransparent = true; break }
+    
+    default: { 
+      if (frontier) color = COLOR_BORDER;
+      if (isRain) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+  }
+  
+  return [drawCh, color, isTransparent]
+
+}
+
+function drawFrame(deltaTime) {                                     // draw shader
+
+  if (!context) return
+  const total = rows * cols
+  const frameFactor = (deltaTime / 16.666)
+
+  if (mode !== 'hidden') {
+
+    animatePortal(frameFactor)
+    animateRain(frameFactor)
+
+    switch (mode) {
+
+      case 'intro':       { animateGerm(total); break }
+      case 'static':      { secureCopy(visualMask, logicMask); break }
+      case 'outro':       { animateCircle(frameFactor); break }
+      case 'direct':      { animateGermInv(total); break }
+      case 'transition':  { animateSwipe(frameFactor); break }
+
+    }
+
+  } else { visualMask.fill(0) }
+
+  const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(germFrame / germFramesMax, 0, 1) : 1) * outroFramesMax))
+  let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
+  computeFrontier(resultMask)
+  
+  if (!textGroups) textGroups = new Map()
+  textGroups.clear()
+
+  context.clearRect(0, 0, width, height)
+  context.fillStyle = COLOR_BACKGR
+  context.fillRect(0, 0, width, height)
+
+  context.globalCompositeOperation = 'destination-out'
+  context.fillStyle = '#000'
+  context.beginPath()
+  
+  const isTransparentPath = []
+
+  for (let y = 0; y < rows; y++) {
+
+    const py = y * fontSize
+
+    for (let x = 0; x < cols; x++) {
+
+      const headPos = rainColumn[x]
+      const colBuf = rainBuffer[x]
+      const [drawCh, color, isTransparent] = cellRender(x, y, headPos, colBuf, resultMask)
+      
+      if (isTransparent) { isTransparentPath.push({ x, py }) }
+      
+      if (drawCh != null) {
+        let group = textGroups.get(color)
+        if (!group) { group = []; textGroups.set(color, group) }
+        group.push({ drawCh, x, py })
+      }
+
+    }
+  }
+  
+  for (const { x, py } of isTransparentPath) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
+  context.fill()
+
+  context.globalCompositeOperation = 'source-over'
+
+  for (const [color, chars] of textGroups) {
+    context.fillStyle = color
+    for (const { drawCh, x, py } of chars) { context.fillText(drawCh, x * fontSize, py) }
+  }
+  
+  const frameAdvancement = 1 * frameFactor
+
+  switch (mode) {
+
+    case 'intro':         germFrame += frameAdvancement; if (germFrame >= germFramesMax) { germFrame = germFramesMax; mode = 'static' } break
+    case 'direct':        germFrame += frameAdvancement; const directLimit = germFramesMax + directFramesExtra; if (germFrame >= directLimit) { germFrame = directLimit; mode = 'hidden' } break
+    case 'transition':    animateSwipe(frameFactor); break
+
+    default: break
+
+  }
+
+  if (taskPromise) {
+    try {
+      if (mode === 'hidden' || mode === 'static' || (typeof taskPromise.finish === 'function' && taskPromise.finish())) {
+        const r = taskResolve
+        taskPromise = null
+        taskResolve = null
+        if (r) r()
+      }
+    } catch (err) { taskPromise = null; taskResolve = null }
+  }
+
+}
+
+// INIT
+
+function initMasks() {                                                  // initialize all arrays 
+
+  const total = cols * rows
+
+  if (!noiseMap         || noiseMap.length          !== total) noiseMap          = new Float32Array(total)
+  if (!frontierCurrent  || frontierCurrent.length   !== total) frontierCurrent   = new Uint32Array(total)
+  if (!frontierNext     || frontierNext.length      !== total) frontierNext      = new Uint32Array(total)
+  if (!indexToX         || indexToX.length          !== total) indexToX          = new Int16Array(total)
+  if (!indexToY         || indexToY.length          !== total) indexToY          = new Int16Array(total)
+  if (!portalCodes      || portalCodes.length       !== total) portalCodes       = new Int16Array(total)
+  if (!logicMask        || logicMask.length         !== total) logicMask         = new Uint8Array(total)
+  if (!visualMask       || visualMask.length        !== total) visualMask        = new Uint8Array(total)
+  if (!expandA          || expandA.length           !== total) expandA           = new Uint8Array(total)
+  if (!expandB          || expandB.length           !== total) expandB           = new Uint8Array(total)
+  if (!outroCells       || outroCells.length        !== total) outroCells        = new Uint8Array(total)
+  if (!outroFrontier    || outroFrontier.length     !== total) outroFrontier     = new Uint8Array(total)
+  if (!frontierMap      || frontierMap.length       !== total) frontierMap       = new Uint8Array(total)
+  if (!portalChars      || portalChars.length       !== total) portalChars       = new Array(total)
+  if (!neighborsMap     || neighborsMap.length      !== total) neighborsMap      = new Array(total)
+  if (!rainColumn       || rainColumn.length        !== cols)  rainColumn        = new Int16Array(cols)
+  if (!portalCosine     || portalCosine.length      !== cols)  portalCosine      = new Float32Array(cols)
+  if (!portalSine       || portalSine.length        !== rows)  portalSine        = new Float32Array(rows)
+  if (!swipeSine        || swipeSine.length         !== rows)  swipeSine         = new Float32Array(rows)
+  if (!swipeCosine      || swipeCosine.length       !== rows)  swipeCosine       = new Float32Array(rows)
+
+}
+
+function resetMasks() {                                                 // reset only state masks 
+
+  const total = cols * rows
+
+  if (!logicMask      || logicMask.length      !== total) logicMask      = new Uint8Array(total)
+  if (!visualMask     || visualMask.length     !== total) visualMask     = new Uint8Array(total)
+  if (!outroCells     || outroCells.length     !== total) outroCells     = new Uint8Array(total)
+  if (!outroFrontier  || outroFrontier.length  !== total) outroFrontier  = new Uint8Array(total)
+  if (!frontierMap    || frontierMap.length    !== total) frontierMap    = new Uint8Array(total)
+  if (!portalChars    || portalChars.length    !== total) portalChars    = new Array(total)
+
+}
+
+function initContext() {                                                // prepare context 
+
+  // cols + rows based on cpu
+  const cores = navigator.hardwareConcurrency || 2;
+  const memory = navigator.deviceMemory || 2;
+  
+  if (cores >= TIER_CONFIGS.high.minCores && memory >= TIER_CONFIGS.high.minMemory) { maxCols = TIER_CONFIGS.high.maxCols; maxRows = TIER_CONFIGS.high.maxRows }
+  else if (cores >= TIER_CONFIGS.medium.minCores && memory >= TIER_CONFIGS.medium.minMemory) { maxCols = TIER_CONFIGS.medium.maxCols; maxRows = TIER_CONFIGS.medium.maxRows }
+  else { maxCols = TIER_CONFIGS.low.maxCols; maxRows = TIER_CONFIGS.low.maxRows }
+
+  // container div size
+  if (!canvasRef.value || !containerRef.value) return
+  const rect = containerRef.value.getBoundingClientRect()
+  width = Math.floor(rect.width)
+  height = Math.floor(rect.height)
+
+  // resolution by pixel density
+  dpr = window.devicePixelRatio || 1
+  canvasRef.value.width = Math.floor(width * dpr)
+  canvasRef.value.height = Math.floor(height * dpr)
+  canvasRef.value.style.width = width + 'px'
+  canvasRef.value.style.height = height + 'px'
+
+  // transform to normals
+  context = canvasRef.value.getContext('2d')
+  context.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+}
+
+function resetContext() {                                               // update context 
+
+  initContext()
+
+  fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
+
+  initGrid()
+
+}
+
+function initGrid() {                                                   // create grid + animate rain 
+
+  // set size
+  let tempCols = Math.ceil(width / fontSize)
+  let tempRows = Math.ceil(height / fontSize)
+
+  // dynamic font size for large screen
+  if (tempCols > maxCols || tempRows > maxRows) {
+    const scaleX = width / maxCols
+    const scaleY = height / maxRows
+    fontSize = Math.floor(Math.min(scaleX, scaleY))
+    tempCols = Math.ceil(width / fontSize)
+    tempRows = Math.ceil(height / fontSize)
+  }
+
+  context.font = `${fontSize}px monospace`
+  context.textBaseline = 'top'
+  context.textAlign = 'left'
+
+  // set final sizes
+  cols = tempCols
+  rows = tempRows
+  const total = cols * rows
+
+  initMasks()
+
+  const cx = cols / 2
+  const cy = rows / 2
+  
+  const t0 = 100
+  
+  // portal trig animation
+  for (let y = 0, i = 0; y < rows; y++) { for (let x = 0; x < cols; x++, i++) { indexToX[i] = x; indexToY[i] = y } }
+  for (let x = 0; x < cols; x++) portalCosine[x] = Math.cos((x - cx) / 8 + t0 * 0.001)
+  for (let y = 0; y < rows; y++) portalSine[y] = Math.sin((y - cy) / 8 + t0 * 0.001)
+
+  // set rain
+  rainHeads = new Array(cols)
+  rainBuffer = new Array(cols)
+  for (let c = 0; c < cols; c++) {
+    rainHeads[c] = -Math.random() * rows * 10
+    rainBuffer[c] = new Array(rows).fill(null)
+  }
+
+  // precompute all chars
+  if (!charTable) {
+    charTable = new Array(charRangeCount)
+    for (let i = 0; i < charRangeCount; i++) {
+      charTable[i] = String.fromCharCode(charRangeStart + i)
+    }
+  }
+
+  buildChars()
+  
+  // build swipe waves
+  for (let y = 0; y < rows; y++) {
+    swipeSine[y] = Math.sin(y * 0.25)
+    swipeCosine[y] = Math.cos(y * 0.25)
+  }
+  
+  // buildneighbors
+  neighborsMap = new Array(total).fill(null)
+  for (let idx = 0; idx < total; idx++) {
+    const x = indexToX[idx]
+    const y = indexToY[idx]
+    const neighbors = []
+    if (x > 0) neighbors.push(idx - 1)
+    if (x < cols - 1) neighbors.push(idx + 1)
+    if (y > 0) neighbors.push(idx - cols)
+    if (y < rows - 1) neighbors.push(idx + cols)
+    neighborsMap[idx] = neighbors
+  }
+
+  // set alpha cache
+  rainColors = new Array(rainLength + 1)
+  for (let i = 0; i <= rainLength; i++) {
+    const alpha = 1 - i / Math.max(1, rainLength)
+    const a = Math.pow(Math.max(0, alpha), 1.2)
+    rainColors[i] = `rgba(126,189,196,${a.toFixed(3)})`
+  }
+
+  // set noisemap
+  for (let y = 0; y < rows; y++) {
+    const ny = y / Math.max(1, rows)
+    for (let x = 0; x < cols; x++) {
+      const nx = x / Math.max(1, cols)
+      const noise = Math.sin(nx * 12 + ny * 12) + Math.cos(nx * 7 - ny * 9)
+      const n = clampValue(noise * 0.5 + 0.5, 0, 1)
+      noiseMap[y * cols + x] = n
+    }
+  }
+
+}
+
+// HELPERS
+
+function clampValue(value, min = 0, max = 1) {                          // constrain value between max and min 
+  
+  return Math.min(max, Math.max(min, value))
+
+}
+
+function secureCopy(destination, source) {                              // prevent overwrite on UINT8 array copy 
+
+  if (!source) return null
+  if (!destination || destination.length !== source.length) {
+    destination = new Uint8Array(source.length)
+  }
+  
+  destination.set(source)
+  return destination
+
+}
+
+// BUILDERS
+
+function computeFrontier(mask) {                                        // frontier from cells touching inactive 
+
+  if (!mask) { frontierMap && frontierMap.fill(0); return }
+  frontierMap.fill(0)
+  
+  for (let y = 0; y < rows; y++) {
+    const yOff = y * cols
+    for (let x = 0; x < cols; x++) {
+      const i = yOff + x
+      if (!mask[i]) continue
+      if (x > 0        && !mask[i - 1])    { frontierMap[i] = 1; continue }
+      if (y > 0        && !mask[i - cols]) { frontierMap[i] = 1; continue }
+      if (x < cols - 1 && !mask[i + 1])    { frontierMap[i] = 1; continue }
+      if (y < rows - 1 && !mask[i + cols]) { frontierMap[i] = 1; continue }
+    }
+  }
+
+}
+
+function buildChars() {                                                 // init char buffer 
+
+  charBuffer = new Array(charRangeCount)
+
+  for (let i = 0; i < charRangeCount; i++) {
+    charBuffer[i] = charTable[i]
+  }
+
+  charIndex = 0
+  
+}
+
+// ANIMATIONS
+
+function animatePortal(frameFactor) {                                          // render next portal frame
+
+  const portalAdvance = 0.0125 * frameFactor
+  portalTime += portalAdvance
+
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const idx = y * cols + x
+      const v = portalCosine[x] + portalSine[y] + portalTime
+      const rawCode = v * 16 | 0
+      portalCodes[idx] = ((rawCode % charRangeCount) + charRangeCount) % charRangeCount
+      portalChars[idx] = charTable[portalCodes[idx]]
+    }
+  }
+
+}
+
+function animateRain(frameFactor) {                                     // render next rain frame 
+
+  let localCharIndex = charIndex
+  const charCount = charRangeCount
+  const fallSpeed = rainSpeed * frameFactor
+
+  for (let c = 0; c < cols; c++) {
+    const rowPos = Math.floor(rainHeads[c] + fallSpeed)
+    rainHeads[c] += fallSpeed
+    rainColumn[c] = Math.floor(rainHeads[c])
+    if (rowPos >= 0 && rowPos < rows) { rainBuffer[c][rowPos] = charBuffer[localCharIndex]; localCharIndex = (localCharIndex + 1) % charCount }
+    if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) { rainHeads[c] = -Math.random() * rows }
+  }
+
+  charIndex = localCharIndex
+
+}
+
+function animateCircle(frameFactor) {                                   // render next circle frame 
+  
+  outroRadius += 1 * frameFactor
+
+  const rCurr = outroRadius
+  const cX = outroCenter.x
+  const cY = outroCenter.y
+
+  outroCells.fill(0); 
+
+  for (let y = 0; y < rows; y++) {
+
+    const yOff = y * cols
+    const dY = y - cY
+    const dY2 = dY * dY
+
+    for (let x = 0; x < cols; x++) {
+
+      const idx = yOff + x
+      const dX = x - cX
+      const dist2 = dX * dX + dY2
+      const n = noiseMap[idx] * 5
+      const radiusNoise2 = (rCurr + n) * (rCurr + n)
+
+      if (dist2 <= radiusNoise2) outroCells[idx] = 1
+
+    }
+
+  }
+
+  for (let i = 0; i < rows * cols; i++) outroFrontier[i] = 0
+
+  for (let y = 0; y < rows; y++) {
+
+    const yOff = y * cols
+
+    for (let x = 0; x < cols; x++) {
+
+      const idx = yOff + x
+      
+      if (!outroCells[idx]) continue
+      if (
+
+        (x > 0 && !outroCells[idx - 1]) || (x < cols - 1 && !outroCells[idx + 1]) || 
+        (y > 0 && !outroCells[idx - cols]) || (y < rows - 1 && !outroCells[idx + cols]) 
+
+      ) outroFrontier[idx] = 1
+
+    }
+  }
+
+  for (let i = 0; i < rows * cols; i++) logicMask[i] = outroCells[i] ? 0 : 1
+
+}
+
+function animateGerm(total) {                                           // render next germ frame 
+
+  const oldRatio = animateGerm.lastRatio || 0
+  const newRatio = clampValue(germFrame / germFramesMax, 0, 1)
+
+  for (let i = 0; i < total; i++) { const n = noiseMap[i]; if (n >= oldRatio && n < newRatio) logicMask[i] = 1 }
+  animateGerm.lastRatio = newRatio
+
+}
+
+function animateGermInv(total) {                                        // render next inverted germ frame 
+  
+  const ratio = clampValue(germFrame / germFramesMax, 0, 1)
+  
+  for (let i = 0; i < total; i++) { if (logicMask[i] === 1 && noiseMap[i] < ratio) logicMask[i] = 0 }
+
+  if (ratio >= 1) {
+
+    if (!animateGermInv.frontierQueue) animateGermInv.frontierQueue = []
+    const q = animateGermInv.frontierQueue
+
+    for (let y = 0; y < rows; y++) {
+      const yOff = y * cols
+      for (let x = 0; x < cols; x++) {
+        const i = yOff + x
+        if (logicMask[i] !== 1) continue
+        if (
+          (x > 0        && logicMask[i - 1]    === 0) ||
+          (x < cols - 1 && logicMask[i + 1]    === 0) ||
+          (y > 0        && logicMask[i - cols] === 0) ||
+          (y < rows - 1 && logicMask[i + cols] === 0)
+        ) { if (!q.includes(i)) q.push(i) }
+      }
+    }
+
+    if (q.length > 0) {
+      const perFrame = Math.max(1, Math.floor(total / germFramesMax))
+      let count = 0
+      for (let k = 0; k < q.length && count < perFrame; k++) {
+        const idx = q[k]
+        if (logicMask[idx] === 1) { logicMask[idx] = 0; count++ }
+      }
+      animateGermInv.frontierQueue = q.filter(i => logicMask[i] === 1)
+    }
+  }
+}
+
+function animateSwipe(frameFactor) {                                    // render next swipe frame 
+
+  const line = Math.floor(swipeFrame)
+  visualMask.fill(0)
+
+  if (swipePhase === 0) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeSine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xLimit = Math.min(line + noiseOffset, cols - 1)
+      for (let x = 0; x <= xLimit; x++) visualMask[y * cols + x] = 1
+    }
+  } else if (swipePhase === 1) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeCosine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xStart = Math.max(line - noiseOffset, 0)
+      for (let x = xStart; x < cols; x++) visualMask[y * cols + x] = 1
+    }
+  }
+
+  swipeFrame += 1.0 * frameFactor
+
+  if (swipeFrame >= cols) {
+
+    if (swipePhase === 0) {
+
+      logicMask.set(visualMask)
+      if (outroAuto) { swipePhase = 1; swipeFrame = 0 } else { mode = 'static' }
+
+    } else if (swipePhase === 1) {
+
+      logicMask.fill(0)
+      visualMask.fill(0)
+      swipeFrame = cols
+      swipePhase = 1
+      mode = 'hidden'
+
+    }
+
+  }
+
+}
+
+function expandMask(source, steps) {                                    // render next mask frame with buffer 
+
+  const total = cols * rows
+  let a = expandA, b = expandB
+  a.set(source)
+  
+  let frontier = frontierCurrent
+  let nextFrontier = frontierNext
+  let frontierLen = 0
+  let nextLen = 0
+
+  for (let i = 0; i < total; i++) { if (a[i]) frontier[frontierLen++] = i }
+
+  for (let s = 0; s < steps; s++) {
+
+    b.set(a)
+    nextLen = 0
+
+    for (let f = 0; f < frontierLen; f++) {
+      const idx = frontier[f]
+      const neighbors = neighborsMap[idx]
+      for (let n of neighbors) { if (!b[n]) { b[n] = 1; nextFrontier[nextLen++] = n } }
+    }
+
+    if (nextLen === 0) break
+
+    [frontier, nextFrontier] = [nextFrontier, frontier]
+    frontierLen = nextLen
+    const tmp = a
+    a = b
+    b = tmp
+
+  }
+
+  expandA.set(a);
+  return expandA;
+}
+
+// TASKS
+
+const TASKS = {                                                         // run and check 
+
+  intro:    { impl: runIntro,  finish: checkIntro   },
+  static:   { impl: runStatic, finish: checkStatic  },
+  outro:    { impl: runOutro,  finish: checkOutro   },
+  direct:   { impl: runDirect, finish: checkDirect  },
+  hidden:   { impl: runHidden, finish: checkHidden  },
+
+  'transition-full':  { impl: runTransitionFull,  finish: checkTransitionFull  },
+  'transition-intro': { impl: runTransitionIntro, finish: checkTransitionIntro },
+  'transition-outro': { impl: runTransitionOutro, finish: checkTransitionOutro },
+
+}
+
+function runQueue(name) {                                               // run queue 
+  const task = TASKS[name]
+  if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
+  return new Promise((resolve, reject) => {
+    try { task.impl() } catch (err) { return reject(err) }
+    taskPromise = task
+    taskResolve = resolve
+  })
+}
+
+function runIntro()             { mode = 'intro'; germFrame = 0; }
+function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
+function runDirect()            { mode = 'direct'; germFrame = 0; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
+function runTransitionFull()    { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = true }
+function runTransitionIntro()   { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = false }
+function runTransitionOutro()   { mode = 'transition'; resetMasks(); secureCopy(visualMask, logicMask); swipeFrame = 0; swipePhase = 1; outroAuto = false }
+function runStatic()            { mode = 'static'; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
+function runHidden()            { mode = 'hidden' }
+
+function checkIntro()           { return mode === 'intro' && germFrame >= germFramesMax * 0.65 }
+function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
+function checkDirect()          { return mode === 'direct' && germFrame >= germFramesMax + directFramesExtra }
+function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
+function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
+function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
+function checkStatic()          { return true }
+function checkHidden()          { return true }
+
+function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(deltaTime); animationID = requestAnimationFrame(mainLoop) }
+
+defineExpose({ runQueue })
+onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
+onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
+
+</script>
+
+<template> <div ref="containerRef" class="container"> <canvas ref="canvasRef"> </canvas> </div> </template>
+<style> .container { overflow: hidden; width: 100%; height: 100%; } canvas { display: block; width: 100%; height: 100%; } </style>
+
+---
+
+|| componente: pixigd.vue -------------------------------------
+
+<script setup> 
+import * as PIXI from 'pixi.js'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+const containerRef = ref(null)                                          // container div ref
+
+let app = null                                                          // pixi global instance
+
+function initGame() {                                                   // pixi app config 
+
+    app = new PIXI.Application({ width: 800, height: 600, backgroundColor: 0x1B1C1C, resolution: window.devicePixelRatio || 1, antialias: false })
+
+    if (containerRef.value) {
+
+        containerRef.value.appendChild(app.view)
+        app.view.style.width = '100%'
+        app.view.style.height = '100%'
+        
+        const gameText = new PIXI.Text('juego.vue cargado', { fontFamily: 'monospace', fontSize: 24, fill: 0xAAABAC })
+        
+        gameText.x = 50
+        gameText.y = 50
+        
+        app.stage.addChild(gameText)
+
+    }
+}
+
+onMounted(() => { initGame() })
+onBeforeUnmount(() => { if (app) { app.destroy(true, { children: true, texture: true, baseTexture: true }); app = null } })
+defineExpose({ app })
+
+</script>
+
+<template> 
+
+    <div ref="containerRef" class="pixi" />
+
+</template>
+
+<style scoped> 
+
+.pixi { width: 100%; height: 100%; }
+
+</style>
+
+---
+
+|| componente: side.vue -------------------------------------
+
+<script setup> 
+
+</script>
+
+<template> 
+
+  <div class="side">
+    
+  </div>
+
+</template>
+
+<style scoped> 
+
+.side { 
+
+  /* LAYOUT */ display: flex; flex-direction: column;
+  /* BOX    */ padding: 1rem;
+  /* FILL   */ background-color: var(--carbon); color: var(--niebla);
+  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-xs);
+
+  &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled); }
+
+}
+
+.logo { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+  /* BOX    */ width: 100%; overflow: hidden;
+  /* FONT   */ font-size: .8vw;
+
+  &.clickable { cursor: pointer; }
+
+  & pre {
+  
+    /* LAYOUT */ flex-shrink: 0;
+    /* BOX    */ margin-bottom: .25rem; margin-top: .8rem; overflow: visible;
+    /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); color: var(--lirio);
+    /* FONT   */ font-family: monospace;
+    /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
+  
+  }
+
+}
+
+</style>
+
+---
+
+|| componente: status.vue -------------------------------------
+
+<script setup> 
+import { computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const router     = useRouter()                                                                                                        // handles note open route
+const store      = useStore()                                                                                                         // setup store usage
+const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
+
+const { btcPrice, currentTime, barContent } = storeToRefs(store)                                                                      // imports refs from main store
+
+function openLatest() { if (latestPost.value.url) { router.push(latestPost.value.url) } }                                             // opens latest post
+
+onMounted(() => { store.loadNotesIndex(); store.startStatusUpdates() })
+onUnmounted(() => { store.stopStatusUpdates() })
+
+</script>
+
+<template> 
+
+  <div class="statusbar">
+
+    <div class="stleft">
+
+      <a href="#" @click.prevent="openLatest">ultima nota - {{ latestPost.title }}</a>
+
+    </div>
+
+    <div class="stcenter">
+
+      <div class="progress-bar">
+        <div class="progress-track">{{ barContent }}</div>
+      </div>
+      
+    </div>
+    
+    <div class="stright">
+
+      <span>BTC: {{ btcPrice }}</span>
+      <span>//</span>
+      <span>{{ currentTime }}</span>
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.statusbar { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; justify-content: space-between; align-items: center;
+  /* BOX    */ min-width: 0; width: 100%; padding: 1rem 1.5rem; gap: 1.5rem; overflow: hidden;
+  /* FILL   */ background-color: var(--carbon); color: var(--humo);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+  
+}
+
+.stcenter { 
+
+  /* LAYOUT */ flex-grow: 1; flex-basis: 0;
+  /* BOX    */ min-width: 0; padding: 0.25rem 0;
+
+}
+
+.stleft { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 1; align-items: center;
+  /* BOX    */ min-width: 0; gap: 1rem; margin-bottom: .25rem; overflow: hidden;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ white-space: nowrap;
+
+  & a {
+
+    /* BOX    */ min-width: 0; overflow: hidden;
+    /* FONT   */ text-overflow: ellipsis; white-space: nowrap;
+
+  }
+
+}
+
+.stright { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 0; align-items: center;
+  /* BOX    */ min-width: 0; gap: 1rem; overflow: hidden;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ white-space: nowrap;
+
+  & a {
+
+    /* BOX    */ min-width: 0; overflow: hidden;
+    /* FONT   */ text-overflow: ellipsis; white-space: nowrap;
+
+  }
+
+}
+
+.progress-bar { 
+
+  /* CURSOR */ user-select: none;
+  /* BOX    */ width: 100%; overflow: hidden;
+  /* FILL   */ background-color: var(--carbon); color: var(--humo50);
+  /* BORDER */ border-radius: var(--radius-xs);
+  /* FONT   */ font-family: var(--font-mono); line-height: 1.5; white-space: nowrap;
+  
+}
+
+.progress-track { 
+  
+  /* LAYOUT */ display: inline-block;
+  /* MOTION */ animation: scroll-progress 4s linear infinite;
+
+}
+
+@keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
+
+@media (max-width: 590px) { .stcenter { display:none; } }
+@media (max-width: 312px) { .stleft { display:none; } .statusbar { justify-content: center; } }
+
+</style>
+
+---
+
+|| componente: content.vue -------------------------------------
+
+<script setup> 
+import { ref, watch, nextTick, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+import Portada from '../02/portada.vue'
+import Shader from '../03/shader.vue'
+
+const compMap = { }                                                                                                                   // add vuecomps and import if needed
+
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+
+const { currentPost, computedNoteComp, computedNoteClass }         = storeToRefs(store)                                               // imports refs from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
+
+const shaderRef   = ref(null)                                                                                                         // shader variable for animations
+const noteContent = ref('')                                                                                                           // basic note html for insert
+
+let noteLoaded = false                                                                                                                // note loaded bool flag for shader
+let firstLoad  = true                                                                                                                 // first load bool flag for shader
+let lastSlug   = null                                                                                                                 // previous slug flag for shader
+
+const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
+
+  if (computedNoteComp.value) { return compMap[computedNoteComp.value] || null }
+  return null
+
+})
+
+async function handleLoadNote(slug) {                                                                                                 // custom html load behavior 
+  
+  const postElement = document.querySelector('.post')
+  const { html, error } = await fetchPost(slug)
+
+  noteContent.value = html
+  if (postElement) { postElement.scrollTop = 0 }
+  await nextTick()
+
+  const contentElement = document.querySelector('.content')
+
+  if (contentElement && !error) { 
+    
+    const mediaLoadPromises = []
+    const mediaElements = contentElement.querySelectorAll('img, video, iframe')
+    
+    mediaElements.forEach(el => {
+      
+      if ((el.tagName === 'IMG' && !el.complete) || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
+          
+        mediaLoadPromises.push(new Promise(resolve => {
+          
+          if (el.tagName === 'IMG' || el.tagName === 'IFRAME') {
+            el.addEventListener('load', resolve, { once: true })
+            el.addEventListener('error', resolve, { once: true })
+            if (el.complete || el.readyState === 'complete') { resolve() }
+          }
+          
+          else if (el.tagName === 'VIDEO') {
+            el.addEventListener('loadedmetadata', resolve, { once: true })
+            el.addEventListener('error', resolve, { once: true })
+            if (el.readyState >= 3) { resolve() }
+          }
+          
+        }))
+        
+      }
+    })
+    
+    await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
+    if (window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into')
+    if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
+    
+  }
+
+}
+
+watch(                                                                                                                                // trigger notes and animations 
+  
+  () => route.params.slug,
+  
+  async slug => {
+    
+    if (store.processing) return
+    setProcessing(true)
+    await nextTick()
+    
+    if (!slug && !store.notesLoaded.value) { await loadNotesIndex() }
+
+    switch (true) {
+
+      // back to home with note loaded, TRANSITION on note unload
+      case !slug && noteLoaded:
+
+        noteLoaded = false
+        lastSlug = null
+        await shaderRef.value?.runQueue('transition-intro')
+        setCurrentPost(null)
+        noteContent.value = ''
+        break
+      
+      // first load without note, INTRO only on first page load
+      case !slug && firstLoad:
+        noteLoaded = false
+        firstLoad = false
+        lastSlug = null
+        setCurrentPost(null)
+        noteContent.value = ''
+        await shaderRef.value?.runQueue('intro')
+        break
+      
+      // first note load, OUTRO only on first note load
+      case slug && !noteLoaded && !firstLoad:
+        noteLoaded = true
+        firstLoad = false
+        lastSlug = slug
+        await handleLoadNote(slug)
+        await shaderRef.value?.runQueue('outro')
+        break
+      
+      // first load from url, DIRECT when loading from url
+      case slug && !noteLoaded && firstLoad:
+        noteLoaded = true
+        firstLoad = false
+        lastSlug = slug
+        await shaderRef.value?.runQueue('static')
+        await handleLoadNote(slug)
+        await new Promise(resolve => setTimeout(resolve, 500))
+        await shaderRef.value?.runQueue('direct')
+        break
+      
+      // loaded note change, TRANSITION when switching note
+      case slug && noteLoaded && lastSlug !== slug:
+        noteLoaded = true
+        firstLoad = false
+        lastSlug = slug
+        await shaderRef.value?.runQueue('transition-intro')
+        await handleLoadNote(slug)
+        await shaderRef.value?.runQueue('transition-outro')
+        break
+      
+    }
+
+    setProcessing(false)
+            
+  }, { immediate: true }
+
+)
+
+</script>
+
+<template> 
+
+  <div class="notedisplay">
+  
+    <Portada :metadata="currentPost || {}" class="scroll-into" />
+    
+    <div class="container">
+
+      <Shader class ="shader" ref="shaderRef"/>
+
+      <div class="post">
+
+        <div class="content">
+
+          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />
+          
+          <div v-else :class="computedNoteClass" v-html="noteContent" />
+          
+        </div>
+        
+      </div>
+      
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.notedisplay { display: flex; flex-direction: column; height: 100%; gap: 1rem; }
+
+.container { position: relative; }
+
+.post { 
+
+  /* LAYOUT */ position: relative;
+  /* BOX    */ height: 100%; width: 100%; overflow-x: hidden; overflow-y: auto;
+  /* FILL   */ background-color: var(--carbon);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+
+  &::after {
+    
+    /* LAYOUT */ position: sticky; display: block; bottom: 0;
+    /* BOX    */ height: 3rem; margin-top: -1rem;
+    /* FONT   */ content: '';
+    
+  }
+
+}
+
+.shader { 
+  
+  /* CURSOR */ pointer-events: none;
+  /* LAYOUT */ position: absolute; top: 0; left: 0;
+  /* BOX    */ width: 100%; height: 100%; z-index: 10;
+  
+}
+
+.content { 
+
+  /* LAYOUT */ position: relative; top: 0; left: 0;
+  /* BOX    */ width: 100%;
+
+}
+
+@media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; } }
+
+</style>
+
+---
+
+|| componente: navigation.vue -------------------------------------
+
+<script setup> 
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+import Table from '../02/table.vue'
+
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+const currentTagline  = ref('')                                                                                                       // current tagline phrase
+const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                         // random taglines
+
+const { isCentered, processing, searchQuery, activeFilter } = storeToRefs(store)                                                      // imports refs from main store
+const { changeFilter, emptyFilter, tabs } = store                                                                                     // destructure store refs
+
+onMounted(async () => {                                                                                                               // searches notes on mount 
+
+  const randomIndex = Math.floor(Math.random() * taglines.length)
+  currentTagline.value = taglines[randomIndex]
+  await store.loadNotesIndex()
+
+  const urlFilter = route.params.filterType
+  const initialFilter = urlFilter || 'full'
+  
+  if (initialFilter !== store.activeFilter.value) { store.setActiveFilter(router, initialFilter) }
+
+})
+
+</script>
+
+<template> 
+  
+  <div class="navigation">
+
+    <div class="banner clickable" :class="{'bcentered': isCentered}" @click="store.navHome(router)">
+
+<pre>
+ ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
+██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝██╔════╝██╔════╝
+██║   ██║██║        ██║   ███████║██╔██╗ ██║   ██║   █████╗  ███████╗
+██║   ██║██║        ██║   ██╔══██║██║╚██╗██║   ██║   ██╔══╝  ╚════██║
+╚██████╔╝╚██████╗   ██║   ██║  ██║██║ ╚████║   ██║   ███████╗███████║
+ ╚═════╝  ╚═════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝
+</pre>
+      
+    </div>
+
+    <div class="filters"> 
+
+      <button @click="changeFilter(router, -1)" :disabled="processing"> < </button>
+
+      <div class="tabs">
+        <template v-for="tab in tabs" :key="tab.value">
+          <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+        </template>
+      </div>
+
+      <button @click="changeFilter(router, +1)" :disabled="processing"> > </button>
+
+    </div>
+
+    <div class="tablediv"> <Table /> </div>
+    
+    <div class="layoutcontrol">
+      <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
+    </div>
+
+    <div class="bottom">
+      <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.navigation { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
+  /* BOX    */ padding: 2.25rem 2rem 1.5rem 2rem; gap: .8rem;
+  /* FILL   */ background-color: var(--carbon); color: var(--niebla);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+  /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
+
+}
+
+.banner { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+  /* BOX    */ width: 100%; overflow: hidden;
+  /* FONT   */ font-size: .8vw;
+
+  &.clickable { cursor: pointer; }
+
+  & pre {
+  
+    /* LAYOUT */ flex-shrink: 0;
+    /* BOX    */ margin-bottom: .25rem; margin-top: .8rem; overflow: visible;
+    /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); color: var(--lirio);
+    /* FONT   */ font-family: monospace;
+    /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
+  
+  }
+
+}
+
+.bcentered { 
+  
+  /* FONT   */ font-size: .5vw;
+
+}
+
+.filters { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  /* BOX    */ width: 100%; margin-top: .5rem; gap: 1rem;
+
+  & button {
+
+    /* CURSOR */ cursor: pointer;
+    /* BOX    */ padding: 0.5rem 1rem;
+    /* FILL   */ background-color: transparent; color: var(--humo);
+    /* BORDER */ border: none; border-radius: var(--radius-xs);
+    /* FONT   */ font-family: var(--font-main);
+    /* MOTION */ transition: all var(--animate-fast);
+    
+    &:hover { background-color: var(--humo25); color: var(--niebla); }
+    &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled); }
+    &.active { background-color: var(--cristal25); color: var(--niebla); box-shadow: var(--shadow-border) var(--humo25); }
+    
+  }
+
+}
+
+.tabs { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 0;
+  /* BOX    */ gap: 1rem; overflow: hidden;
+
+}
+
+.tablediv { 
+
+  /* LAYOUT */ flex-shrink: 0;
+  /* BOX    */ padding-left: 4rem; padding-right: 4rem;
+  
+}
+
+.layoutcontrol { 
+
+  /* LAYOUT */ flex-shrink: 0;
+  /* BOX    */ width: 100%; padding-left: 4rem; padding-right: 4rem;
+  
+}
+
+.searchbox { 
+
+  /* CURSOR */ cursor: text;
+  /* LAYOUT */ text-align: center;
+  /* BOX    */ width: 100%; padding: 0.5rem 1rem;
+  /* FILL   */ background-color: transparent; color: var(--humo);
+  /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
+  /* FONT   */ font-family: var(--font-main); font-style: italic;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
+
+}
+
+.bottom { display:flex; height: 100%; align-items: center; justify-content: center; }
+
+.tagline { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
+  /* FONT   */ font-size: clamp(16px, .9vw, 24px); font-style: italic;
+  /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
+
+}
+
+@media (max-width: 1600px) { .tablediv { padding-left: 2rem; padding-right: 2rem;} }
+@media (max-width: 1400px) { .tablediv { padding-left: 0rem; padding-right: 0rem;} }
+@media (max-width: 1080px) { .tablediv { padding-left: 2rem; padding-right: 2rem;} }
+@media (max-width: 800px)  { .tablediv { padding-left: 0rem; padding-right: 0rem;} }
+
+@media (max-width: 580px) {
+
+  .tablediv { padding-left: 0rem; padding-right: 0rem;}
+
+  .tabs button        { display: none; }
+  .tabs button.active { display: flex; }
+
+}
+
+</style>
+
+---
+
+|| componente: octantes.vue -------------------------------------
+
+<script setup> 
+import { onMounted, onUnmounted } from 'vue'
+import { useStore } from './04/store.js'
+import Navigation from './01/navigation.vue'
+import Status from './01/status.vue'
+import Side from './01/side.vue'
+
+const store = useStore()
+
+onMounted(() => { window.addEventListener('resize', handleResize); handleResize() })
+onUnmounted(() => { window.removeEventListener('resize', handleResize) })
+
+function handleResize() { if (window.innerWidth <= 1080) { if (store.isCentered) { store.isCentered = false } } }
+
+</script>
+
+<template> 
+
+  <div class="pagina">
+
+    <div class="layout" :class="{ centered: store.isCentered }" >
+
+        <Navigation class="navigation" :disabled="store.processing" :is-centered="store.isCentered" />
+
+        <RouterView v-slot="{ Component }" >
+
+          <component class="articulos" :is="Component" @updateProcessing="store.setProcessing" />
+          
+        </RouterView>
+
+        <Side v-if="store.isCentered" class="side" :disabled="store.processing" />
+
+    </div>
+
+    <div class="footer">
+
+        <Status />
+        
+    </div>
+
+  </div>
+
+</template>
+
+<style> 
+
+.pagina { 
+
+  /* LAYOUT */ display: flex; flex-direction: column;
+  /* BOX    */ width: 100%; height: 100%; padding: 1rem; gap: 1rem; overflow: hidden;
+
+}
+
+.layout { 
+
+  /* LAYOUT */ display: grid; grid-template-columns: 5fr 3fr; flex: 1 1 auto;
+  /* BOX    */ width: 100%; min-height: 0; gap: 1rem;
+
+  &.centered { grid-template-columns: 2.5fr 3fr 2.5fr; }
+
+}
+
+.navigation { grid-column: 1; overflow-y: auto; min-height: 0; }
+.articulos  { grid-column: 2; overflow-y: auto; min-height: 0; }
+.side       { grid-column: 3; overflow-y: auto; min-height: 0; }
+
+@media (max-width: 1080px) {
+
+  .pagina     { height: auto;                                         }
+  .layout     { grid-template-columns: 1fr; grid-auto-rows: auto 1fr; }
+  .navigation { height: auto; grid-column: 1;                         }
+  .content    { aspect-ratio: 3/5;                                    }
+  
+  .articulos, .side { grid-column: 1; }
+  
+}
+
+</style>
+
+---
+
+|| componente: table.vue -------------------------------------
+
+<script setup> 
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+
+const { isCentered, processing, searchQuery, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
+
+function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
+
+</script>
+
+<template> 
+
+  <table :class="{ 'two-columns': isCentered }">
+
+    <colgroup>
+      <col class="col-fecha" v-if="!isCentered">
+      <col class="col-titulo">
+      <col class="col-tags">
+    </colgroup>
+
+    <thead>
+      <tr>
+        <th @click="store.navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder" v-if="!isCentered">fecha</th>
+        <th @click="store.navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
+        <th @click="store.navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr v-for="note in paginatedNotes" :key="note.slug" @click="noteOpen(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: processing }" >
+
+        <td v-if="!isCentered">{{ note.date }}</td>
+        <td>{{ note.title }}</td>
+
+        <td class="tagcol">
+
+          <template v-if="!isCentered">
+            <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="store.setSearchQuery(tag)" :disabled="processing"> {{ tag }} </button>
+          </template>
+
+          <template v-else>
+            <button v-if="note.tags.length > 0" class="tagfilter" @click.stop="store.setSearchQuery(note.tags[0])" :disabled="processing"> {{ note.tags[0] }} </button>
+          </template>
+
+        </td>
+
+      </tr>
+
+      <tr v-if="noteSortFilter.length === 0 && searchQuery" class="no-results">
+        <td :colspan="isCentered ? 2 : 3">no hay notas que coincidan con "{{ searchQuery }}"</td>
+      </tr>
+
+      <tr v-for="i in (noteSortFilter.length > 0 ? itemsPerPage - paginatedNotes.length : 0)" :key="`placeholder-${i}`" class="bodyfill">
+        <td :colspan="isCentered ? 2 : 3">&nbsp;</td>
+      </tr>
+      
+    </tbody>
+
+    <tfoot>
+
+      <tr>
+        <td :colspan="isCentered ? 2 : 3">
+
+          <div class="pagecontrols">
+            <button class="navbutton" @click="store.prevPage" :disabled="currentPage === 1 || processing"> < </button>
+            <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
+            <button class="navbutton" @click="store.nextPage" :disabled="currentPage >= totalPages || processing"> > </button>
+          </div>
+
+        </td>
+      </tr>
+
+    </tfoot>
+    
+  </table>
+
+</template>
+
+<style> 
+
+table { 
+
+  /* LAYOUT */ flex-shrink: 0;
+  /* TABLE  */ table-layout: fixed;
+  /* BOX    */ width: 100%;
+  /* BORDER */ border-collapse: separate; border-spacing: 0 0.5rem;
+
+  & .col-fecha  { width: 20%; }
+  & .col-titulo { width: 60%; }
+  & .col-tags   { width: 20%; }
+
+  &.two-columns { & .col-titulo { width: 70%; } & .col-tags { width: 30%; } }
+
+  & thead tr { 
+
+    /* BORDER */ box-shadow: var(--shadow-border) var(--humo25); border-radius: var(--radius-xs);
+
+  }
+
+  & th, td { 
+
+    /* LAYOUT */ text-align: left;
+    /* BOX    */ padding: 0.5rem 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+
+  }
+
+  & th { 
+
+    /* CURSOR */ cursor: pointer;
+    /* LAYOUT */ position: relative;
+    /* FILL   */ color: var(--humo);
+    /* FONT   */ font-weight: normal;
+    /* MOTION */ transition: all var(--animate-fast);
+
+    &:hover         { background-color: var(--humo25); color: var(--niebla); }
+    &.active        { background-color: var(--lirio25); color: var(--niebla); }
+    &:first-child   { border-top-left-radius: var(--radius-xs); border-bottom-left-radius: var(--radius-xs); }
+    &:last-child    { border-top-right-radius: var(--radius-xs); border-bottom-right-radius: var(--radius-xs); }
+
+    &.active::after { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
+    &.active[data-order="asc"]::after  { content: '↑'; }
+    &.active[data-order="desc"]::after { content: '↓'; }
+
+    &.active[data-order="asc"]  { background: linear-gradient(0deg, var(--cristal25) 0%, var(--lirio35) 100%); }
+    &.active[data-order="desc"] { background: linear-gradient(180deg, var(--cristal25) 0%, var(--lirio35) 100%); }
+  
+  }
+
+  & tbody tr { 
+
+    /* CURSOR */ cursor: pointer;
+
+    &:hover    { color: var(--lirio99); }
+    &.active   { color: var(--cristal); }
+    &.disabled { cursor: not-allowed; opacity: var(--alpha-disabled); }
+
+    & td:nth-child(3) { cursor: default; }
+
+  }
+
+  & tfoot td { 
+
+    /* LAYOUT */ text-align: center;
+    /* BOX    */ width: 100%; padding-top: 1rem; padding-bottom: 0;
+
+  }
+
+}
+
+.tagcol { 
+
+  /* LAYOUT */ display: flex; 
+  /* CURSOR */ cursor: default;
+  /* FONT   */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* BOX    */ gap: 0.5rem;
+  
+}
+
+.tagfilter { 
+
+  /* CURSOR */ cursor: pointer;
+  /* BOX    */ padding: 0; margin: 0;
+  /* FILL   */ color: var(--lirio); background: none;
+  /* BORDER */ border: none;
+  /* FONT   */ white-space: nowrap;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover    { color: var(--cristal); text-decoration: underline; }
+  &:disabled { cursor: not-allowed; opacity: var(--alpha-half); text-decoration: none; }
+
+}
+
+.no-results td { 
+
+  /* LAYOUT */ text-align: center;
+  /* FILL   */ opacity: var(--alpha-half); color: var(--humo);
+  /* FONT   */ font-style: italic;
+
+}
+
+.bodyfill { 
+
+  /* CURSOR */ pointer-events: none;
+  /* FILL   */ opacity: var(--alpha-invisible);
+  
+}
+
+.pagecontrols {
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+  /* BOX    */ gap: 1rem;
+
+  & span { color: var(--humo); }
+
+}
+
+.navbutton { 
+
+  /* CURSOR */ cursor: pointer;
+  /* BOX    */ padding: 0rem .5rem;
+  /* FILL   */ background-color: transparent; color: var(--lirio);
+  /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--lirio25);
+  /* FONT   */ font-size: 1.5rem;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { background-color: var(--humo25); }
+
+  &:disabled { 
+    
+    /* CURSOR */ cursor: not-allowed;
+    /* FILL   */ opacity: var(--alpha-disabled);
+  
+  }
+
+}
+
+@media (max-width: 1600px) { 
+
+  table .col-fecha  { width: 20%; }
+  table .col-titulo { width: 50%; }
+  table .col-tags   { width: 30%; }
+
+}
+
+@media (max-width: 1400px) { 
+
+  table .col-fecha  { width: 20%; }
+  table .col-titulo { width: 50%; }
+  table .col-tags   { width: 30%; }
+
+}
+
+@media (max-width: 1080px) { 
+
+  table .col-fecha  { width: 20%; }
+  table .col-titulo { width: 50%; }
+  table .col-tags   { width: 30%; }
+
+}
+
+@media (max-width: 800px) { 
+
+  table .col-fecha  { width: 20%; }
+  table .col-titulo { width: 40%; }
+  table .col-tags   { width: 30%; }
+
+}
+
+@media (max-width: 580px) {
+
+  table .col-fecha  { width: 02%; }
+  table .col-titulo { width: 68%; }
+  table .col-tags   { width: 30%; }
+
+}
+
+</style>
+
+---
+
+|| componente: portada.vue -------------------------------------
+
+<script setup> 
+import { computed } from 'vue'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const store               = useStore()                                                                                                // initializes global store
+const { computedPortada } = storeToRefs(store)                                                                                        // imports refs from main store
+const data = computed(() => computedPortada.value)                                                                                    // note data for text content
+
+function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }                                                      // open author link
+
+</script>
+
+<template> 
+
+  <div class="card">
+
+    <div class="text">
+
+      <div class="info">
+          
+        <div class="title">{{ data.title }}</div>
+        <div class="description">{{ data.description }}</div>
+
+        <hr />
+
+        <div class="authors">
+          
+          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author.link)" >
+
+            <img class="userpic" :src="author.img" />
+            <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
+
+          </div>
+
+          <button @click="store.setCentered()" class="sidebutton">{{ store.isCentered ? '<' : '>' }}</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="cover" v-if="data.portada">
+
+      <img :src="data.portada" alt="" />
+        
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.card { 
+
+  /* LAYOUT */ display: flex; flex-direction: row; align-items: stretch;
+  /* BOX    */ width: 100%;
+
+}
+
+.text { 
+
+  /* BOX    */ width: 100%;
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%);
+  /* BORDER */ border-radius: var(--radius-ss);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { filter: brightness(95%); }
+
+}
+
+.info { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; justify-content: center;
+  /* FONT   */ font-family: var(--font-mono);
+  /* BOX    */ width: 100%; height: 100%; min-width: 50%; padding: 1.5rem; gap: 1rem;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { transform: var(--scale-min); }
+
+  & hr { 
+
+    /* BORDER */ border: none; border-top: var(--small-outline) var(--carbon);
+    /* BOX    */ margin: 0;
+
+  }
+
+}
+
+.title { font-size: 1.25rem; }
+
+.description { 
+
+  /* BOX    */ height: calc(1.25rem * 2);
+  /* FONT   */ font-style: italic; overflow: hidden; line-height: 1.25rem;
+
+}
+
+.authors {
+
+  /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem;
+  /* BOX    */ flex-wrap: wrap;
+
+}
+
+.profile { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center;
+  /* BORDER */ border-radius: 9999px;
+  /* BOX    */ padding: .5rem 1rem .5rem .6rem; gap: .65rem;
+  /* FILL   */ background-color: var(--carbon25);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover  { cursor: pointer; background-color: var(--carbon50); }
+  &:active { transform: var(--scale-min); }
+  
+}
+
+.profile-full {
+
+  /* LAYOUT */ flex-grow: 1; justify-content: flex-start;
+
+}
+
+.userpic { 
+
+  /* LAYOUT */ border-radius: 50%;
+  /* BOX    */ width: 25px; height: 25px;
+
+}
+
+.sidebutton {
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center; justify-content: center;
+  /* BORDER */ border: none; border-radius: 9999px;
+  /* BOX    */ padding: .5rem 1.5rem .5rem 1.5rem;
+  /* FILL   */ background-color: var(--carbon25);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover  { cursor: pointer; background-color: var(--carbon50); }
+  &:active { transform: var(--scale-min); }
+  
+}
+
+.cover { 
+
+  /* LAYOUT */ max-width: 50%;
+  /* FILL   */ background-color: var(--lirio);
+  /* MOTION */ transition: all var(--animate-mid);
+
+  &:hover { filter: grayscale() }
+  & img   { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+}
+
+</style>
+
+---
+
+|| componente: main.js -------------------------------------
+
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import router from './04/router.js'
+import App from './octantes.vue'
+import './04/baseline.css'
+import './04/content.css'
+
+const pinia = createPinia()
+
+createApp(App).use(router).use(pinia).mount('#octantes')
+
+---
+
