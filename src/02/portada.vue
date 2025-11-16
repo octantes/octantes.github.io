@@ -3,10 +3,9 @@ import { computed } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
-const store                            = useStore()                                                                                   // initializes global store
-const { computedPortada } = storeToRefs(store)                                                                           // imports refs from main store
-
-const data = computed(() => computedPortada.value)                                                                                    // 
+const store               = useStore()                                                                                                // initializes global store
+const { computedPortada } = storeToRefs(store)                                                                                        // imports refs from main store
+const data = computed(() => computedPortada.value)                                                                                    // note data for text content
 
 function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }                                                      // open author link
 

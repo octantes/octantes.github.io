@@ -24,6 +24,15 @@ export const useStore = defineStore('store', () => {
   const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
   const processing                 = ref(false)                                                                                       // disabled component state
 
+  // STATUS                                                                                                                           // BOTTOM BAR
+
+  const btcPrice    = ref('---')                                                                                                      // btc price fetch result
+  const currentTime = ref('--:--')                                                                                                    // current time fetch result
+  const barContent  = ref('/ '.repeat(300))                                                                                           // progress bar animation content
+
+  let timeInterval  = null                                                                                                            // time update interval
+  let btcInterval   = null                                                                                                            // btc update interval
+
   // NAVIGATION                                                                                                                       // NOTE TABLE
 
   const tabs                       = [                                                                                                // names for filters 
@@ -99,6 +108,48 @@ export const useStore = defineStore('store', () => {
 
   }
 
+  async function fetchBTC() {                                                                                                         // fetch and update btc price 
+
+    try {
+
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+      if (!response.ok) throw new Error('la respuesta de la api falló')
+      const data = await response.json()
+      const price = data.bitcoin.usd
+      const formattedPrice = Math.floor((price / 1000) * 10) / 10
+      btcPrice.value = `${formattedPrice}K`
+
+    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
+
+  }
+
+  function fetchTime() {                                                                                                              // fetch and update current time  
+
+    const now = new Date()
+
+    currentTime.value = now.toLocaleTimeString('es-AR', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+
+  }
+
+  function startStatusUpdates() {                                                                                                     // start bar data updates 
+
+    fetchBTC()  ; btcInterval  = setInterval(fetchBTC,  60000)
+    fetchTime() ; timeInterval = setInterval(fetchTime, 15000)
+    
+  }
+
+  function stopStatusUpdates() {                                                                                                      // stop bar data updates 
+
+    clearInterval(timeInterval)
+    clearInterval(btcInterval)
+
+  }
+
   function navHome(routerInstance, currentSlug) {                                                                                     // navigates to root and reloads 
 
     if (processing.value) return
@@ -165,7 +216,7 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  const computedPortada   = computed(() => {                                                                                            // compute data for portada 
+  const computedPortada   = computed(() => {                                                                                          // compute data for portada 
 
     const metadata = currentPost.value || {}
     let rawHandle = metadata.handle || 'kaste'
@@ -258,15 +309,15 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  return {
+  return { 
 
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
     /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost,
     /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
-
+    /* STATS VAR */ btcPrice, currentTime, barContent,
+    /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ isCentered, processing,
     /* VIEWS FUN */ setCentered, setProcessing,
-
     /* NAVIG VAR */ itemsPerPage, totalPages, activeFilter, sortKey, sortOrder, searchQuery, currentPage, tabs,
     /* NAVIG FUN */ prevPage, nextPage, setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
     /* NAVIG COM */ noteSortFilter, paginatedNotes,
