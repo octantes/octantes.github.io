@@ -31,7 +31,7 @@ handle: kaste OR [kaste, octantes] if multi-author
 ---
 
 CUSTOM: add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
-CUSTOM: add "style: trad" in metadata to remove the softbreaks rule from that specific note
+CUSTOM: add "style: trad" in metadata to remove the softbreaks rule from that specific note and set left alignment
 JUEGOS: just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
 
 - usar como maximo tres tags
@@ -110,8 +110,8 @@ function renderType(body, attributes) {                                         
 
     default: {
 
-        const contentClass = isTrad ? 'S6TRAD' : 'S6'
-        return `<div class="${contentClass}">${md.render(body)}</div>`
+        if (isTrad) { return `<div class="S6TRAD">${md.render(body)}</div>` }
+        return md.render(body) 
 
     }
 
