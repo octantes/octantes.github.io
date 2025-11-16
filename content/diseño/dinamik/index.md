@@ -6,7 +6,6 @@ description: descripcion corta para seo
 portada:
 date: 2024-11-30
 handle: kaste
-style: trad
 ---
 
 ![informacion del proyecto](top.png)
