@@ -152,6 +152,7 @@ export const useStore = defineStore('store', () => {
   function navHome(routerInstance, currentSlug) {                                                                                     // navigates to root and reloads 
 
     if (processing.value) return
+    isCentered.value = false
     if (currentSlug) { routerInstance.push({ path: '/' }); setTimeout(() => { window.location.reload() }, 0) }
     else { routerInstance.push({ path: '/' }) }
 
@@ -170,7 +171,8 @@ export const useStore = defineStore('store', () => {
     activeFilter.value = filter
     currentPage.value = 1
 
-    if (filter !== 'full' && !isCentered.value) { isCentered.value = true }
+    if (filter === 'full') { isCentered.value = false }
+    else if (!isCentered.value) { isCentered.value = true }
 
     if (routerInstance) {
 
