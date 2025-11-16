@@ -93,9 +93,9 @@ watch(                                                                          
       case !slug && noteLoaded:
         noteLoaded = false
         lastSlug = null
+        await shaderRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
-        await shaderRef.value?.runQueue('transition-intro')
         break
       
       // first load without note, INTRO only on first page load
