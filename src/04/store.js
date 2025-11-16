@@ -174,7 +174,7 @@ export const useStore = defineStore('store', () => {
 
     if (filter !== 'full' && !isCentered.value) { isCentered.value = true }
 
-    if (routerInstance) {
+    if (routerInstance && !currentPost.value) {
 
         let path = (filter === 'full') ? `/` : `/${filter}`
         if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
