@@ -1,13 +1,13 @@
 {
-  "design/cruzar/index.md": "4b8341031d400e68d989c974e3410b04f80af8034327c075b80be013303a5779",
-  "design/dinamik/index.md": "f3fa7a0249d681ebfe7bdb7c3efb50a2bd50a958635abe9c62d061f9e44926ee",
-  "design/enuna/index.md": "52be54f00e4d624e38be08ca28327147af7cb4ed161d3cff3e355c0155a17bd0",
-  "dev/arch-hud/index.md": "a123fa83626c1a5654a1dc4b021446d0a33ad700a87248375b93cd0d2bfcb05b",
-  "dev/shadewithseal/index.md": "eaf595f95287409b2bd7b8eeab2ede0a6f3bfb9d4373397fb76782d2000cc6d6",
-  "dev/trackwithslate/index.md": "3b14c3ba986b3b601f66aa9a1976c1e394c67c2f0fd636fd1a73568368b1cad9",
-  "music/geminis/index.md": "5f5c81db8235de26d313ff614436ebb4a6de7d3b968704b443156db0d6f291e0",
-  "music/moodworktapes/index.md": "94cd2626f3c915381d85c6e817c37bc0b936586349bebe381292adfdf8ce50f8",
-  "music/seance/index.md": "096b27389f2abd1bad9eeab7e8eb795ca0a1b41b1fb4c4d9496c43c103ffa2ee",
-  "music/sixminutesolder/index.md": "85f9d86216d6dc42a55d91f659589ea306034200d0d5d7f542877781627e300d",
-  "music/viñetas/index.md": "e32d10fa1b0f801740a8672161882e61dfacc795b8cc4332a84621e8a5ba6483"
+  "desarrollo/arch-hud/index.md": "4e9548641224ebcbbc7b75cb061ba10cf112868d86aa66409abdb87b0d852d13",
+  "desarrollo/shadewithseal/index.md": "63054d356dbedcd19c150ba92f63bdb213c8588d2cb124e8854d47f4d2f3cc91",
+  "desarrollo/trackwithslate/index.md": "a28c9c64b99fbc77628801568982b285add6ac196ab7cef25c33aed9596c7f6b",
+  "diseño/cruzar/index.md": "ba853244e84faf02404c430afc6ca53a28dcb7ea80367d11e39c32ca02c3562e",
+  "diseño/dinamik/index.md": "dab5476b12a3da2b9cd6f1e1549a44eab95ecef7c14c40f534f5c0abf7d0dc6f",
+  "diseño/enuna/index.md": "32afcfa9fdb39ef8859b4d6d038cfbcf93f2aec20f779fca373ae46171a6b9b4",
+  "musica/geminis/index.md": "3f5a15baf36bcb36f4af94adf4f441f2a3f237753068384787a50b912ded6160",
+  "musica/moodworktapes/index.md": "223c3a7e2fc5e0d46904e4fcf9e44b019cc8b4a9266acf8ee09c2ea2f23dc0ff",
+  "musica/seance/index.md": "d8d5b9828ce89cafdd110218c91407389bb0e98fa51c6ecf50895dc573f7e94e",
+  "musica/sixminutesolder/index.md": "bbdba3c5f8babf984a8ff014f54bf8c5021daad2250911fc3622e4f6b6201fd5",
+  "musica/viñetas/index.md": "5f6ccaee43872df9d94f93a33136b8c77097efbabace520ea5a97ad87e0a3dcc"
 }
