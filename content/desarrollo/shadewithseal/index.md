@@ -4,7 +4,7 @@ type: desarrollo
 title: shadewithseal
 description: playground para programar y grabar fragment shaders GLSL directamente en el navegador
 portada:
-date: 2025-07-04
+date: 2025-07-03
 handle: kaste
 ---
 
