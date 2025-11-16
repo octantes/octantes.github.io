@@ -1,28 +1,37 @@
 ---
 tags: [herramientas, portfolio]
 type: textos
-title: arch-hud test
-description: pack de herramientas suckless para convertir arch linux en un heads up display
+title: testeando trad
+description: cosa cosa
 portada:
-date: 2025-09-14
+date: 2025-09-20
 handle: kaste
 style: trad
 ---
 
-[arch-hud](https://github.com/octantes/arch-hud) es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch linux
+les comparto una reflexión
 
-las herramientas fueron implementadas pensando en el concepto de un *heads up display*
-buscando que la pc vuelva a ser una herramienta y deje de ser un agujero negro cognitivo
-se implementaron varios parches sobre DWM junto a una estética simple de estilo retro
-sin gaps, transparencia ni compositor por defecto; **sin distracciones innecesarias**
+las ideas no nos pertenecen
+son *fruto de un sustrato colectivo*: nuestra época y las referencias que tomamos
+teniendo eso en cuenta, no compartir su resultado es un acto de individualismo
+es no devolverle al mundo lo que nos dio
+el perfeccionismo es **egoísta** antes que nada
 
-para compilar, entrá en cada dir y ejecutá *sudo make clean install* (script pendiente)
+con la intención de rendir tributo a mis ideas, de estar "a su altura", me fui perdiendo
+el camino del arte es uno de sanación
+pero el ciclo no se completa hasta que damos la obra por terminada
+*no termina hasta que la compartimos* para volver a empezar
+transformados por el proceso
 
-[dwm](https://dwm.suckless.org/) - tiling windows manager
-[dmenu](https://tools.suckless.org/dmenu/) - menú de scripts dinámico
-[st](https://st.suckless.org/) - emulador de terminal simple
-[surf](https://surf.suckless.org/) - navegador minimalista
-[tabbed](https://tools.suckless.org/tabbed/) - implementa pestañas en la terminal y el browser
-[dunst](https://github.com/dunst-project/dunst) - daemon de notificaciones súper simple
+el perfeccionismo es un espejo que invierte nuestro propósito:
+**llevar a los demás** por ese camino
+al no compartirlo, el cambio se mantiene mental
+lo llevamos dentro sin que se exprese afuera
 
-podés sumar el compositor [picom](https://github.com/yshui/picom) si experimentás screen tearing
+viñetas es uno de esos proyectos que se viene fermentando en mi disco duro desde 2020
+lo abandoné esperando mejorar la mezcla en otro momento y pasé al siguiente
+me distraje y lo olvidé, pero *los puntos solo se conectan mirando hacia atrás*
+
+hoy decido subirlo así como quedó guardado, para retomar ese camino
+toca volver a ser un canal para esas ideas y lo primero es **aceptarlas** como son
+queda en ustedes ver si hay algo ahí y completar el ciclo
