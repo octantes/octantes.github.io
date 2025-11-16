@@ -33,7 +33,7 @@ onMounted(async () => {                                                         
   
   <div class="navigation">
 
-    <div class="banner clickable" :class="{'bcentered': isCentered}" @click="store.navHome(router, route.params.slug)">
+    <div class="banner clickable" :class="{'bcentered': isCentered}" @click="store.navHome(router)">
 
 <pre>
  ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
