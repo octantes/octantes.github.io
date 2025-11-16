@@ -153,7 +153,7 @@ export const useStore = defineStore('store', () => {
 
     if (processing.value) return
     isCentered.value = false
-    if (currentSlug) { routerInstance.push({ path: '/' }); setTimeout(() => { window.location.reload() }, 0) }
+    if (currentSlug) { routerInstance.push({ path: '/' }) }
     else { routerInstance.push({ path: '/' }) }
 
   }
