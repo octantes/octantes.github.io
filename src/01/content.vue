@@ -10,8 +10,10 @@ const compMap = { }                                                             
 
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
+
 const { currentPost, computedNoteComp, computedNoteClass } = storeToRefs(store)                                                       // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
+
 const shaderRef = ref(null)                                                                                                           // shader variable for animations
 const noteContent = ref('')                                                                                                           // basic note html for insert
 

@@ -3,49 +3,10 @@ import { computed } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
-const store           = useStore()                                                                                                    // initializes global store
-const { currentPost } = storeToRefs(store)                                                                                            // imports refs from main store
+const store                            = useStore()                                                                                   // initializes global store
+const { computedPortada } = storeToRefs(store)                                                                           // imports refs from main store
 
-const authorsMap = {                                                                                                                  // author profile pic and link 
-
-    swim: { img: '/assets/swim.webp', link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
-    kaste: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
-    octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
-
-}
-
-const data = computed(() => {                                                                                                         // get portada text content 
-
-    const metadata = currentPost.value || {}
-    let rawHandle = metadata.handle || 'kaste'
-    const handles = Array.isArray(rawHandle) ? rawHandle : [rawHandle]
-    
-    const postAuthors = handles.map(h => { 
-
-        const handleName = String(h).replace(/^@/, '')
-        const authorInfo = authorsMap[handleName] || authorsMap['kaste']
-        
-        return {
-
-            handle: handleName,
-            img: authorInfo.img,
-            link: authorInfo.link,
-            full: h === handles[0], 
-            date: h === handles[0] ? metadata.date || '2026' : null,
-
-        }
-    })
-
-    return { 
-
-        title: metadata.title || 'bienvenido a octantes.net!',
-        description: metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
-        authors: postAuthors,
-        portada: metadata.portada || '',
-
-    }
-
-})
+const data = computed(() => computedPortada.value)                                                                                    // 
 
 function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }                                                      // open author link
 
@@ -73,7 +34,7 @@ function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
 
           </div>
 
-          <button @click="store.toggleView()" class="sidebutton">{{ store.isCentered ? '<' : '>' }}</button>
+          <button @click="store.setCentered()" class="sidebutton">{{ store.isCentered ? '<' : '>' }}</button>
 
         </div>
 
