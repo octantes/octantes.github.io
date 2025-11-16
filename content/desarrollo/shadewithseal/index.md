@@ -1,6 +1,6 @@
 ---
 tags: [herramientas, portfolio]
-type: dev
+type: desarrollo
 title: shadewithseal
 description: playground para programar y grabar fragment shaders GLSL directamente en el navegador
 portada:

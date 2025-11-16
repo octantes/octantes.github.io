@@ -1,6 +1,6 @@
 ---
 tags: [herramientas, portfolio]
-type: dev
+type: desarrollo
 title: arch-hud
 description: pack de herramientas suckless para convertir arch linux en un heads up display
 portada:

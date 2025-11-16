@@ -1,6 +1,6 @@
 ---
 tags: [branding, portfolio]
-type: design
+type: diseño
 title: en una - branding
 description: descripcion corta para seo
 portada: 

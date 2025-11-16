@@ -1,6 +1,6 @@
 ---
 tags: [branding, portfolio]
-type: music
+type: musica
 title: viñetas
 description: descripcion corta para seo
 portada: 

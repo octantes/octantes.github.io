@@ -1,6 +1,6 @@
 ---
 tags: [branding, portfolio]
-type: design
+type: diseño
 title: dinamik - branding
 description: descripcion corta para seo
 portada:

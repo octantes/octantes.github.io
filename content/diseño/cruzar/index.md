@@ -1,6 +1,6 @@
 ---
 tags: [branding, portfolio]
-type: design
+type: diseño
 title: cruzar - cordillera cripto
 description: descripcion corta para seo
 portada: 

@@ -22,7 +22,7 @@ import sharp from 'sharp'
 
 ---
 tags: [a, b, c]
-type: design, dev, note, music, game
+type: diseño, desarrollo, musica, textos, juegos
 title: titulo de la nota
 description: descripcion corta para seo
 portada: portada.png
@@ -31,7 +31,7 @@ handle: kaste OR [kaste, octantes] if multi-author
 ---
 
 CUSTOM: add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
-GAMES: just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
+JUEGOS: just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
 
 - usar como maximo tres tags
 - en la tabla solo se muestra hasta la primera coma- bloque de "novedades"
@@ -76,7 +76,7 @@ function renderType(body, type, portada) {                                      
 
   switch (type) {
 
-    case 'design': {
+    case 'diseño': {
 
       let parts = body.split('[!TEXT]')
       let assetBlock = parts[0] || ''
@@ -90,9 +90,10 @@ function renderType(body, type, portada) {                                      
 
     }
 
-    case 'dev': return md.render(body)
-    case 'note': return md.render(body)
-    case 'music': return md.render(body)
+    case 'desarrollo': return md.render(body)
+    case 'musica': return md.render(body)
+    case 'textos': return md.render(body)
+    case 'juegos': return md.render(body)
     default: return md.render(body)
 
   }

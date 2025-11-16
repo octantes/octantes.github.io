@@ -1,6 +1,6 @@
 ---
 tags: [branding, portfolio]
-type: music
+type: musica
 title: geminis
 description: la musica de mi hermano, sumando un tema mio al final
 portada: 

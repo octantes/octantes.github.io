@@ -1,6 +1,6 @@
 ---
 tags: [branding, portfolio]
-type: music
+type: musica
 title: six minutes older
 description: experimentos midi
 portada: 

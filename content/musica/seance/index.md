@@ -1,6 +1,6 @@
 ---
 tags: [branding, portfolio]
-type: music
+type: musica
 title: seance
 description: primer disquito con guitarra y visualizer
 portada: 
