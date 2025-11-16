@@ -416,7 +416,26 @@ async function processPosts() {                                                 
     const rawHandle = attributes.handle
     const handles = (Array.isArray(rawHandle) ? rawHandle : (rawHandle ? [rawHandle] : ['kaste'])).map(h => String(h).replace(/^@/, ''))
     const primaryHandle = handles[0] // only one handle in html for SEO
-    const authorJson = primaryHandle ? `{"@type":"Person","name":"${primaryHandle}","url":"https://twitter.com/${primaryHandle}"}` : `{"@type":"Person","name":"Desconocido"}`
+    const articleJson = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
+      "headline": attributes.title || slug,
+      "image": portadaUrl || `${webURL}/assets/portada.webp`,
+      "author": { "@type": "Person", "name": primaryHandle, "url": primaryHandle ? `https://x.com/${primaryHandle}` : `${webURL}/about` },
+      "publisher": { "@type": "Organization", "name": "octantes.net", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
+      "datePublished": isoDate,
+      "dateModified": isoDate,
+      "description": attributes.description || 'descripción corta de la nota',
+      "keywords": (attributes.tags || []).join(', ')
+    });
+
+    const finalArticleJson = articleJson
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 
     if (fullRebuild || cache[`${postType}/${slug}/index.md`] !== finalHash) {
 
@@ -445,7 +464,7 @@ async function processPosts() {                                                 
         .replace(/{{canonicalUrl}}/g, canonicalUrl)
         .replace(/{{handle}}/g, primaryHandle)
         .replace(/{{date}}/g, formatted)
-        .replace(/{{authorJson}}/g, authorJson)
+        .replace(/{{articleJson}}/g, finalArticleJson)
         .replace(/{{htmlContent}}/g, htmlContent)
 
       await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
