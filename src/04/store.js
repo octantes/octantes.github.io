@@ -170,6 +170,8 @@ export const useStore = defineStore('store', () => {
     activeFilter.value = filter
     currentPage.value = 1
 
+    if (filter !== 'full' && !isCentered.value) { isCentered.value = true }
+
     if (routerInstance) {
 
         let path = (filter === 'full') ? `/` : `/${filter}`
