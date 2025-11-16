@@ -154,7 +154,7 @@ export const useStore = defineStore('store', () => {
     if (processing.value) return
     routerInstance.push({ path: '/' })
     activeFilter.value = 'full'
-    isCentered.value = false
+    if (window.innerWidth > 1080) { isCentered.value = false }
     currentPage.value = 1
 
   }
