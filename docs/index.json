@@ -1,6 +1,24 @@
 [
   {
-    "slug": "arch-hud",
+    "slug": "testnotrad",
+    "title": "testeando no trad",
+    "description": "cosa cosa",
+    "type": "textos",
+    "tags": [
+      "herramientas",
+      "portfolio"
+    ],
+    "portada": "",
+    "handle": [
+      "kaste"
+    ],
+    "date": "20/09/2025",
+    "isoDate": "2025-09-20T00:00:00.000Z",
+    "url": "/posts/textos/testnotrad/",
+    "vuecomp": null
+  },
+  {
+    "slug": "testtrad",
     "title": "testeando trad",
     "description": "cosa cosa",
     "type": "textos",
@@ -14,7 +32,7 @@
     ],
     "date": "20/09/2025",
     "isoDate": "2025-09-20T00:00:00.000Z",
-    "url": "/posts/textos/arch-hud/",
+    "url": "/posts/textos/testtrad/",
     "vuecomp": null
   },
   {
