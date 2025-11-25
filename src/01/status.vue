@@ -53,7 +53,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; justify-content: space-between; align-items: center;
-  /* BOX    */ min-width: 0; width: 100%; padding: 1rem 1.5rem; gap: 1.5rem; overflow: hidden;
+  /* BOX    */ min-width: 0; width: 100%; padding: .5rem 1rem; gap: 1.5rem; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
   
