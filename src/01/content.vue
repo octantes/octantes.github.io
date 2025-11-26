@@ -1,6 +1,6 @@
 <script setup> 
 import { ref, watch, nextTick, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import Shader from '../03/shader.vue'
@@ -8,11 +8,12 @@ import Background from '../03/background.vue'
 
 const compMap = { 'background': Background }                                                                                         // add vuecomps/fullcomps and import if needed
 
+const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, navHome } = store                                                   // imports variables from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                   // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const noteContent = ref('')                                                                                                           // basic note html for insert
@@ -158,7 +159,7 @@ watch(                                                                          
 
       <Shader class="shader" ref="shaderRef"/>
 
-      <button v-if="computedFullscreen" class="fs-close" @click="navHome(router)">X</button>
+      <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)">X</button>
 
       <div class="post" :class="{ 'fs-mode': computedFullscreen }">
 

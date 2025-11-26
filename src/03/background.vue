@@ -52,9 +52,10 @@ onUnmounted(() => { window.removeEventListener('resize', calculateGrid) })
 
 .background {
   
-  /* LAYOUT */ position: fixed; top: 0; left: 0; display: grid;
-  /* GRID   */ grid-template-columns: repeat(var(--cols), 1fr);
-  /* BOX    */ width: 100vw; height: 100vh; z-index: -1;
+  /* LAYOUT */ position: absolute;
+  /* BOX    */ top: 0; left: 0; width: 100%; height: 100%;
+  /* GRID   */ display: grid; grid-template-columns: repeat(var(--cols), 1fr);
+  /* LAYER  */ z-index: 0;
   /* FILL   */ background-color: var(--carbon);
 
 }
@@ -63,7 +64,7 @@ onUnmounted(() => { window.removeEventListener('resize', calculateGrid) })
   
   /* LAYOUT */ display: flex; align-items: center; justify-content: center;
   /* BOX    */ width: 100%; height: 100%;
-  /* FILL   */ background-color: var(--humo); /* blanco/gris */
+  /* FILL   */ background-color: var(--humo);
   /* MOTION */ transition: background-color 0.2s ease;
 
   &.dark { background-color: var(--carbon); & .cross { color: var(--humo); } }
