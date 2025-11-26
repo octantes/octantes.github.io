@@ -75,7 +75,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
     border-color: var(--cristal);
 
-    & .title { color: var(--cristal); }
+    & .title { color: var(--lirio); }
     & img { filter: grayscale(0); transform: scale(1.05); }
 
   } 
