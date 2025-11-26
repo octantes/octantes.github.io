@@ -1,21 +1,39 @@
 <script setup> 
+import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import authorpic from '../../content/assets/kaste.jpg'
 
-const router = useRouter()
-const store = useStore()
-const { activeFilter, processing } = storeToRefs(store)
+const router          = useRouter()                                                                                                   // handles note open route
+const store           = useStore()                                                                                                    // initializes global store
+
+const { activeFilter, processing } = storeToRefs(store)                                                                               // imports refs from main store
+
+const currentTagline  = ref('')                                                                                                       // current tagline phrase
+const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales' ]                 // random taglines
 
 function loadReference(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
+
+onMounted(async () => {                                                                                                               // set random tagline
+
+  const randomIndex = Math.floor(Math.random() * taglines.length)
+  currentTagline.value = taglines[randomIndex]
+
+})
+
 </script>
 
 <template> 
 
   <div class="side">
 
-    <img class="profilepic" :src="authorpic" alt="kaste profile pic"/>
+    <div class="profile-head">
+
+      <img class="profilepic" :src="authorpic" alt="kaste profile pic"/>
+      <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+
+    </div>
 
     <div v-if="activeFilter === 'full'"> 
 
@@ -222,15 +240,6 @@ function loadReference(type, slug) { if (!processing.value) router.push({ path: 
 
 <style scoped> 
 
-.profilepic { 
-
-  /* LAYOUT */ border-radius: 50%;
-  /* BOX    */ width: 5rem; height: 5rem;
-  /* FONT   */ align-self: center;
-  /* BORDER */ border: var(--small-outline) var(--humo25);
-
-}
-
 .side { 
 
   /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
@@ -241,23 +250,22 @@ function loadReference(type, slug) { if (!processing.value) router.push({ path: 
 
 }
 
-.logo { 
+.profile-head { display: flex; flex-direction: column; justify-content: center; gap: 2rem; }
 
-  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
-  /* BOX    */ width: 100%; overflow: hidden;
-  /* FONT   */ font-size: .8vw;
+.profilepic { 
 
-  &.clickable { cursor: pointer; }
+  /* LAYOUT */ border-radius: 50%;
+  /* BOX    */ width: 5rem; height: 5rem;
+  /* FONT   */ align-self: center;
+  /* BORDER */ border: var(--small-outline) var(--humo25);
 
-  & pre {
-  
-    /* LAYOUT */ flex-shrink: 0;
-    /* BOX    */ margin-bottom: .25rem; margin-top: .8rem; overflow: visible;
-    /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); color: var(--lirio);
-    /* FONT   */ font-family: monospace;
-    /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
-  
-  }
+}
+
+.tagline { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
+  /* FONT   */ font-size: clamp(16px, .9vw, 24px); font-style: italic;
+  /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
 
 }
 
