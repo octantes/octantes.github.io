@@ -6,14 +6,14 @@ import { storeToRefs } from 'pinia'
 import Shader from '../03/shader.vue'
 import Background from '../03/background.vue'
 
-const compMap = { 'background': Background }                                                                                         // add vuecomps/fullcomps and import if needed
+const compMap = { 'background': Background }                                                                                          // add vuecomps/fullcomps and import if needed
 
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                   // imports variables from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const noteContent = ref('')                                                                                                           // basic note html for insert
@@ -29,6 +29,14 @@ const computedComp = computed(() => {                                           
   return null
 
 })
+
+async function forceShaderResize() {                                                                                                  // forces shader resize 
+
+  await nextTick()
+  window.dispatchEvent(new Event('resize'))
+  await new Promise(resolve => requestAnimationFrame(resolve))
+
+}
 
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior 
   
@@ -70,12 +78,14 @@ async function handleLoadNote(slug) {                                           
     })
     
     await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
-    if (window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into')
+    if (!computedFullscreen.value && window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into')
     if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
     
   }
 
 }
+
+watch(computedFullscreen, async () => { await forceShaderResize() })                                                                  // watches for shader resize 
 
 watch(                                                                                                                                // trigger notes and animations 
   
