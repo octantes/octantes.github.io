@@ -77,7 +77,7 @@ table {
 
   &.two-columns { & .col-titulo { width: 70%; } & .col-tags { width: 30%; } }
 
-  & thead { position: sticky; top: 0; background-color: var(--carbon); }
+  & thead { background-color: var(--carbon); }
 
   & thead tr { 
 
