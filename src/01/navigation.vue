@@ -101,7 +101,7 @@ onMounted(async () => {                                                         
 
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
   /* BOX    */ width: 100%; height: 100%;
-  /* PAD    */ padding: 2rem 2rem 1rem 2rem; gap: 1.25rem;
+  /* PAD    */ padding: 2rem 2rem 2rem 2rem; gap: 2rem;
   overflow: hidden;
 
 }
@@ -131,7 +131,7 @@ onMounted(async () => {                                                         
 
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  /* BOX    */ width: 100%; margin-top: .5rem; gap: 1rem;
+  /* BOX    */ width: 100%; gap: 1rem;
 
   & button {
 
@@ -195,8 +195,9 @@ onMounted(async () => {                                                         
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   /* BOX    */ padding: 0.5rem 5rem;
-  /* FILL   */ background-color: var(--lirio05); color: var(--humo);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+  /* FILL   */ background-color: transparent; color: var(--humo);
+  /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
+  /* FONT   */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: background-color var(--animate-fast);
 
   &:hover { background-color: var(--lirio15); }
