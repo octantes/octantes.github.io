@@ -23,6 +23,8 @@ export const useStore = defineStore('store', () => {
 
   const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
   const processing                 = ref(false)                                                                                       // disabled component state
+  const showPopup                  = ref(true)                                                                                        // enable popup in navigation
+  const navMode                    = ref('table')                                                                                     // navigation view style
 
   // STATUS                                                                                                                           // BOTTOM BAR
 
@@ -77,6 +79,7 @@ export const useStore = defineStore('store', () => {
   
   function setCentered()                { isCentered.value = !isCentered.value }                                                      // toggle centered state
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
+  function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
   function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
 
@@ -181,6 +184,13 @@ export const useStore = defineStore('store', () => {
     if (processing.value) return
     if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
     else { sortKey.value = key; sortOrder.value = 'asc' }
+
+  }
+
+  function toggleNavMode() {                                                                                                          // toggle navigation view mode
+  
+    if (processing.value) return
+    navMode.value = navMode.value === 'table' ? 'gallery' : 'table'
 
   }
 
@@ -359,8 +369,8 @@ export const useStore = defineStore('store', () => {
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
-    /* VIEWS VAR */ isCentered, processing,
-    /* VIEWS FUN */ setCentered, setProcessing,
+    /* VIEWS VAR */ isCentered, processing, showPopup, navMode,
+    /* VIEWS FUN */ setCentered, setProcessing, togglePopup, toggleNavMode,
     /* NAVIG VAR */ itemsPerPage, totalPages, activeFilter, sortKey, sortOrder, searchQuery, currentPage, tabs,
     /* NAVIG FUN */ prevPage, nextPage, setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
     /* NAVIG COM */ noteSortFilter, paginatedNotes,
