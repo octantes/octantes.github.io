@@ -183,7 +183,7 @@ onMounted(async () => {                                                         
 .nav-views { 
 
   /* LAYOUT */ flex-shrink: 0;
-  /* BOX    */ padding-left: 4rem; padding-right: 4rem;
+  /* BOX    */ width: 100%; padding-left: 4rem; padding-right: 4rem;
   
 }
 
@@ -218,14 +218,14 @@ onMounted(async () => {                                                         
 
 }
 
-@media (max-width: 1600px) { .tablediv { padding-left: 2rem; padding-right: 2rem;} }
-@media (max-width: 1400px) { .tablediv { padding-left: 0rem; padding-right: 0rem;} }
-@media (max-width: 1080px) { .tablediv { padding-left: 2rem; padding-right: 2rem;} .bcentered { font-size: .8vw; } }
-@media (max-width: 800px)  { .tablediv { padding-left: 0rem; padding-right: 0rem;} .bcentered { font-size: .8vw; } }
+@media (max-width: 1600px) { .nav-views { padding-left: 2rem; padding-right: 2rem;} }
+@media (max-width: 1400px) { .nav-views { padding-left: 0rem; padding-right: 0rem;} }
+@media (max-width: 1080px) { .nav-views { padding-left: 2rem; padding-right: 2rem;} .bcentered { font-size: .8vw; } }
+@media (max-width: 800px)  { .nav-views { padding-left: 0rem; padding-right: 0rem;} .bcentered { font-size: .8vw; } }
 
 @media (max-width: 580px) {
 
-  .tablediv { padding-left: 0rem; padding-right: 0rem;}
+  .nav-views { padding-left: 0rem; padding-right: 0rem;}
   .bcentered { font-size: .8vw; }
 
   .tabs button        { display: none; }
