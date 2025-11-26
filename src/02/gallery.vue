@@ -73,7 +73,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   &.active {
 
-    border-color: var(--lirio);
+    border-color: var(--cristal);
 
     & .title { color: var(--cristal); }
     & img { filter: grayscale(0); transform: scale(1.05); }

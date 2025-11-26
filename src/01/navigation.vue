@@ -90,7 +90,7 @@ onMounted(async () => {                                                         
 
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center; position: relative;
-  /* BOX    */ padding: 2rem; gap: .8rem;
+  /* BOX    */ padding: 2rem; padding-top: 1rem; gap: .8rem;
   /* FILL   */ background-color: var(--carbon); color: var(--niebla);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
   /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
