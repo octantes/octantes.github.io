@@ -179,7 +179,7 @@ onMounted(async () => {                                                         
 
   /* CURSOR */ cursor: text;
   /* LAYOUT */ text-align: center;
-  /* BOX    */ width: 50%; padding: 0.5rem 1rem;
+  /* BOX    */ width: 75%; padding: 0.5rem 1rem;
   /* FILL   */ background-color: transparent; color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
   /* FONT   */ font-family: var(--font-main); font-style: italic;
@@ -193,7 +193,7 @@ onMounted(async () => {                                                         
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  /* BOX    */ width: 50%; padding: 0.5rem 5rem;
+  /* BOX    */ width: 25%; padding: 0.5rem 5rem;
   /* FILL   */ background-color: transparent; color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
   /* FONT   */ font-family: var(--font-main); font-style: italic;
