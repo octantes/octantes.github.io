@@ -71,18 +71,19 @@ onMounted(async () => {                                                         
       <div class="nav-views">
 
         <div class="tablediv"> 
+
           <Table v-if="navMode === 'table'" />
-          <Gallery v-else />
+
         </div>
+
+        <Gallery v-if="navMode === 'gallery'" />
         
       </div>
       
-      <div class="layoutcontrol">
-        <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
-      </div>
-
       <div class="bottom">
+
         <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+        
       </div>
 
       <Popup v-if="store.showPopup" />
@@ -131,7 +132,7 @@ onMounted(async () => {                                                         
 
 .nav-views {
   /* LAYOUT */ flex-grow: 1; width: 100%; min-height: 0; overflow: hidden;
-  /* FLEX */ display: flex; flex-direction: column;
+  /* FLEX */ display: flex; flex-direction: column; height: 100%;
 }
 
 .banner { 
@@ -195,27 +196,6 @@ onMounted(async () => {                                                         
   /* LAYOUT */ flex-shrink: 0;
   /* BOX    */ padding-left: 4rem; padding-right: 4rem;
   
-}
-
-.layoutcontrol { 
-
-  /* LAYOUT */ flex-shrink: 0;
-  /* BOX    */ width: 100%; padding-left: 4rem; padding-right: 4rem;
-  
-}
-
-.searchbox { 
-
-  /* CURSOR */ cursor: text;
-  /* LAYOUT */ text-align: center;
-  /* BOX    */ width: 100%; padding: 0.5rem 1rem;
-  /* FILL   */ background-color: transparent; color: var(--humo);
-  /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
-  /* FONT   */ font-family: var(--font-main); font-style: italic;
-  /* MOTION */ transition: all var(--animate-fast);
-
-  &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
-
 }
 
 .bottom { display:flex; height: 100%; align-items: center; justify-content: center; }
