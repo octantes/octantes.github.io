@@ -1,5 +1,5 @@
 <script setup> 
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
@@ -10,16 +10,12 @@ import Popup from '../02/popup.vue'
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
-const currentTagline  = ref('')                                                                                                       // current tagline phrase
-const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales' ]                 // random taglines
 
 const { isCentered, processing, searchQuery, activeFilter, navMode } = storeToRefs(store)                                             // imports refs from main store
 const { changeFilter, emptyFilter, tabs, toggleNavMode } = store                                                                      // destructure store refs
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
-  const randomIndex = Math.floor(Math.random() * taglines.length)
-  currentTagline.value = taglines[randomIndex]
   await store.loadNotesIndex()
 
   const urlFilter = route.params.filterType
@@ -77,12 +73,6 @@ onMounted(async () => {                                                         
       
       <div class="layoutcontrol"> 
         <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
-      </div>
-
-      <div class="bottom">
-
-        <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
-
       </div>
 
       <Popup v-if="store.showPopup" />
@@ -208,15 +198,6 @@ onMounted(async () => {                                                         
 
 }
 
-.bottom { display:flex; height: 100%; align-items: center; justify-content: center; }
-
-.tagline { 
-
-  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
-  /* FONT   */ font-size: clamp(16px, .9vw, 24px); font-style: italic;
-  /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
-
-}
 
 @media (max-width: 1600px) { .nav-views { padding-left: 2rem; padding-right: 2rem;} }
 @media (max-width: 1400px) { .nav-views { padding-left: 0rem; padding-right: 0rem;} }
