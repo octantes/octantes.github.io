@@ -13,29 +13,25 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 </script>
 
 <template> 
-
-  <div class="gallery-container">
     
-    <div class="grid">
-      
-      <div v-for="note in noteSortFilter" :key="note.slug" class="card" @click="noteOpen(note.type, note.slug)" :class="{ disabled: processing }" >
-      
-        <div class="card-cover">
+  <div class="grid">
+    
+    <div v-for="note in noteSortFilter" :key="note.slug" class="card" @click="noteOpen(note.type, note.slug)" :class="{ disabled: processing }" >
+    
+      <div class="card-cover">
 
-          <img v-if="note.portada" :src="note.portada" loading="lazy" alt="cover" />
-          <div v-else class="placeholder-img">/</div>
-          
-        </div>
+        <img v-if="note.portada" :src="note.portada" loading="lazy" alt="cover" />
+        <div v-else class="placeholder-img">/</div>
+        
+      </div>
 
-        <div class="card-info">
+      <div class="card-info">
 
-          <span class="date">{{ note.date }}</span>
-          <h3 class="title">{{ note.title }}</h3>
-          
-          <div class="tags">
-            <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
-          </div>
-
+        <span class="date">{{ note.date }}</span>
+        <h3 class="title">{{ note.title }}</h3>
+        
+        <div class="tags">
+          <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
         </div>
 
       </div>
@@ -46,17 +42,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 </template>
 
-<style scoped>
- 
-.gallery-container { 
-
-  /* LAYOUT */ display: flex; flex-direction: column;
-  /* BOX    */ width: 100%; height: 100%; 
-  /* SCROLL */ overflow-y: auto; /* esto activa el scroll interno */
-  /* SCROLLBAR */ scrollbar-width: thin; scrollbar-color: var(--lirio) var(--carbon);
-  padding-right: 0.5rem;
-
-}
+<style scoped> 
 
 .grid { 
 
@@ -134,9 +120,5 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* FONT   */ font-size: 0.6rem;
 
 }
-
-.gallery-container::-webkit-scrollbar { width: 4px; }
-.gallery-container::-webkit-scrollbar-thumb { background-color: var(--lirio); border-radius: 4px; }
-.gallery-container::-webkit-scrollbar-track { background-color: var(--carbon); }
 
 </style>

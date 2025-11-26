@@ -115,7 +115,7 @@ onMounted(async () => {                                                         
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
   /* BOX */ width: 100%; height: 100%;
   /* PADDING */ padding: 2.25rem 3.5rem 1.5rem 2rem; gap: .8rem;
-  overflow-y: auto;
+  overflow: hidden;
 
 }
 
@@ -172,8 +172,15 @@ onMounted(async () => {                                                         
 
 .nav-views { 
 
-  /* LAYOUT */ flex-shrink: 0;
-  /* BOX    */ width: 100%; padding-left: 4rem; padding-right: 4rem;
+  flex-grow: 1; min-height: 0; width: 100%;
+  overflow-y: auto; /* El scroll vive AQUI */
+  padding-left: 4rem; padding-right: 4rem; 
+  display: flex; flex-direction: column;
+  
+  scrollbar-width: thin; scrollbar-color: var(--lirio) var(--carbon);
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background-color: var(--lirio); border-radius: 4px; }
+  &::-webkit-scrollbar-track { background-color: var(--carbon); }
   
 }
 
@@ -197,7 +204,6 @@ onMounted(async () => {                                                         
   &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
 
 }
-
 
 @media (max-width: 1600px) { .nav-views { padding-left: 2rem; padding-right: 2rem;} }
 @media (max-width: 1400px) { .nav-views { padding-left: 0rem; padding-right: 0rem;} }
