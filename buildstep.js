@@ -30,9 +30,10 @@ date: YYYY-MM-DD
 handle: kaste OR [kaste, octantes] if multi-author
 ---
 
-CUSTOM: add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
-TEXTOS: add "style: trad" in metadata to remove the softbreaks rule from that specific note and set left alignment
-JUEGOS: just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
+FULLSCREEN:   add "fullscreen: componente" to metadata to mount component in fullscreen layout (add imports to fullscreen.vue)
+CUSTOM:       add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
+TEXTOS:       add "style: trad" in metadata to remove the softbreaks rule from that specific note and set left alignment
+JUEGOS:       just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
 
 - usar como maximo tres tags
 - en la tabla solo se muestra hasta la primera coma- bloque de "novedades"
@@ -484,6 +485,7 @@ async function processPosts() {                                                 
       isoDate: isoDate,
       url: `/posts/${postType}/${slug}/`,
       vuecomp: attributes.vuecomp || null,
+      fullscreen: attributes.fullscreen || null
     })
 
   }

@@ -3,6 +3,21 @@ import { ref, computed } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
+  const error404 =
+
+`
+<div class="figlet">
+  <pre>
+██╗  ██╗ ██████╗ ██╗  ██╗
+██║  ██║██╔═████╗██║  ██║
+███████║██║██╔██║███████║
+╚════██║████╔╝██║╚════██║
+     ██║╚██████╔╝     ██║
+     ╚═╝ ╚═════╝      ╚═╝
+  </pre>
+</div>
+`
+
   // CONTENT                                                                                                                          // LOAD DATA
 
   const notesIndex                 = ref([])                                                                                          // note index array
@@ -86,7 +101,7 @@ export const useStore = defineStore('store', () => {
 
       return { html, error: null }
 
-    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: `<p>error cargando la nota</p>`, error: e } }
+    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: error404, error: e } }
     
   }
 
@@ -225,6 +240,12 @@ export const useStore = defineStore('store', () => {
 
   })
 
+  const computedFullscreen = computed(() => {                                                                                         // return fullscreen component if exists 
+    
+    if (currentPost.value && currentPost.value.fullscreen) { return currentPost.value.fullscreen } return null
+
+  })
+
   const computedNoteClass = computed(() => {                                                                                          // compute class for html post 
 
     if (currentPost.value) {
@@ -333,7 +354,7 @@ export const useStore = defineStore('store', () => {
 
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
     /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost,
-    /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
+    /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ isCentered, processing,

@@ -4,14 +4,15 @@ import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import Shader from '../03/shader.vue'
+import Background from '../03/background.vue'
 
-const compMap = { }                                                                                                                   // add vuecomps and import if needed
+const compMap = { 'background': Background }                                                                                         // add vuecomps/fullcomps and import if needed
 
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { currentPost, computedNoteComp, computedNoteClass }         = storeToRefs(store)                                               // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
+const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, navHome } = store                                                   // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const noteContent = ref('')                                                                                                           // basic note html for insert
@@ -22,6 +23,7 @@ let lastSlug   = null                                                           
 
 const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
 
+  if (computedFullscreen.value) { return compMap[computedFullscreen.value] || null }
   if (computedNoteComp.value) { return compMap[computedNoteComp.value] || null }
   return null
 
@@ -156,9 +158,11 @@ watch(                                                                          
 
       <Shader class="shader" ref="shaderRef"/>
 
-      <div class="post">
+      <button v-if="computedFullscreen" class="fs-close" @click="navHome(router)">X</button>
 
-        <div class="content">
+      <div class="post" :class="{ 'fs-mode': computedFullscreen }">
+
+        <div class="content" :class="{ 'fs-content': computedFullscreen }">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />
           
@@ -195,6 +199,9 @@ watch(                                                                          
     
   }
 
+  &.fs-mode { background: none; overflow: hidden; &::after { display: none } }
+
+
 }
 
 .shader { 
@@ -205,10 +212,39 @@ watch(                                                                          
   
 }
 
+.fs-close {
+  
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ position: absolute; top: 1rem; right: 2rem; z-index: 20;
+  /* BORDER */ border: none; border-radius: 9999px;
+  /* BOX    */ padding: .8rem 1rem .8rem 1rem;
+  /* FILL   */ background-color: var(--niebla50); color: var(--carbon);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { cursor: pointer; background-color: var(--niebla99); }
+
+}
+
+.sidebutton {
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center; justify-content: center;
+  /* BORDER */ border: none; border-radius: 9999px;
+  /* BOX    */ padding: .5rem 1.5rem .5rem 1.5rem;
+  /* FILL   */ background-color: var(--carbon25);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover  { cursor: pointer; background-color: var(--carbon50); }
+  &:active { transform: var(--scale-min); }
+  
+}
+
 .content { 
 
   /* LAYOUT */ position: relative; top: 0; left: 0;
   /* BOX    */ width: 100%;
+
+  &.fs-content { height: 100%; }
 
 }
 

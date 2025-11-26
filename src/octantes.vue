@@ -8,7 +8,7 @@ import Side from './01/side.vue'
 import Portada from './02/portada.vue'
 
 const store = useStore()
-const { computedPortada } = storeToRefs(store)
+const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 onMounted(() => { window.addEventListener('resize', handleResize); handleResize() })
 onUnmounted(() => { window.removeEventListener('resize', handleResize) })
@@ -26,19 +26,23 @@ function handleResize() {
 
   <div class="pagina">
 
-    <div class="layout" :class="{ centered: store.isCentered }" >
+    <div class="layout" :class="{ centered: store.isCentered, fullscreen: computedFullscreen }" >
 
-      <Portada class="portada" :metadata="computedPortada" />
+      <template v-if="!computedFullscreen">
 
-      <Navigation class="navigation" :disabled="store.processing" :is-centered="store.isCentered" />
+        <Portada class="portada" :metadata="computedPortada" />
+        <Navigation class="navigation" :disabled="store.processing" :is-centered="store.isCentered" />
+        <Side v-if="store.isCentered" class="side" :disabled="store.processing" />
 
+      </template>
+
+      
       <RouterView v-slot="{ Component }" >
-
+        
         <component class="articulos" :is="Component" @updateProcessing="store.setProcessing" />
         
       </RouterView>
 
-      <Side v-if="store.isCentered" class="side" :disabled="store.processing" />
 
     </div>
 
@@ -70,6 +74,10 @@ function handleResize() {
 
 }
 
+.layout.fullscreen { display: flex;  flex-direction: column; width: 100%; height: 100%; gap: 0; }
+
+.layout.fullscreen .articulos { width: 100%; height: 100%; padding: 0; border: none; }
+
 .navigation { grid-column: 1; overflow-y: auto; min-height: 0; grid-row: 1 / span 2; }
 .portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1;          }
 .articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2;          }
@@ -77,8 +85,9 @@ function handleResize() {
 
 @media (max-width: 1080px) {
 
-  .layout          { grid-template-columns: 1fr; grid-auto-rows: auto auto 1fr auto; }
-  .layout.centered { grid-template-columns: 1fr; grid-auto-rows: auto auto 1fr auto; }
+  .layout            { grid-template-columns: 1fr; grid-auto-rows: auto auto 1fr auto; }
+  .layout.centered   { grid-template-columns: 1fr; grid-auto-rows: auto auto 1fr auto; }
+  .layout.fullscreen { display: flex; height: 100%; }
 
   .portada    { grid-column: 1; grid-row: 1;               }
   .navigation { grid-column: 1; grid-row: 2; height: auto; }
