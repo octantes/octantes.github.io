@@ -114,7 +114,7 @@ onMounted(async () => {                                                         
 
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
   /* BOX */ width: 100%; height: 100%;
-  /* PADDING */ padding: 2.25rem 3.5rem 1.5rem 2rem; gap: 1.25rem;
+  /* PADDING */ padding: 2rem 2rem 2rem 2rem; gap: 1.25rem;
   overflow: hidden;
 
 }
@@ -174,13 +174,12 @@ onMounted(async () => {                                                         
 
   flex-grow: 1; min-height: 0; width: 100%;
   overflow-y: auto;
-  padding: .25rem 4rem 1rem .25rem;
+  padding: .25rem .25rem .25rem .25rem;
   display: flex; flex-direction: column;
   
-  scrollbar-width: thin; scrollbar-color: var(--lirio) var(--carbon);
-  &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-thumb { background-color: var(--lirio); border-radius: 4px; }
-  &::-webkit-scrollbar-track { background-color: var(--carbon); }
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
   
 }
 
