@@ -7,9 +7,9 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { isCentered, processing, searchQuery, sortKey, sortOrder, noteSortFilter } = storeToRefs(store)
+const { isCentered, processing, searchQuery, sortKey, sortOrder, noteSortFilter } = storeToRefs(store)                                // imports refs from main store
 
-function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
+function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // trigger note open
 
 </script>
 
@@ -77,7 +77,7 @@ table {
 
   &.two-columns { & .col-titulo { width: 70%; } & .col-tags { width: 30%; } }
 
-  & thead { position: sticky; top: 0; z-index: 10; background-color: var(--carbon); }
+  & thead { position: sticky; top: 0; background-color: var(--carbon); }
 
   & thead tr { 
 
@@ -156,46 +156,6 @@ table {
   /* LAYOUT */ text-align: center;
   /* FILL   */ opacity: var(--alpha-half); color: var(--humo);
   /* FONT   */ font-style: italic;
-
-}
-
-@media (max-width: 1600px) { 
-
-  table .col-fecha  { width: 20%; }
-  table .col-titulo { width: 50%; }
-  table .col-tags   { width: 30%; }
-
-}
-
-@media (max-width: 1400px) { 
-
-  table .col-fecha  { width: 20%; }
-  table .col-titulo { width: 50%; }
-  table .col-tags   { width: 30%; }
-
-}
-
-@media (max-width: 1080px) { 
-
-  table .col-fecha  { width: 20%; }
-  table .col-titulo { width: 50%; }
-  table .col-tags   { width: 30%; }
-
-}
-
-@media (max-width: 800px) { 
-
-  table .col-fecha  { width: 20%; }
-  table .col-titulo { width: 40%; }
-  table .col-tags   { width: 30%; }
-
-}
-
-@media (max-width: 580px) {
-
-  table .col-fecha  { width: 02%; }
-  table .col-titulo { width: 68%; }
-  table .col-tags   { width: 30%; }
 
 }
 

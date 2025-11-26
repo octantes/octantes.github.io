@@ -31,10 +31,6 @@ onMounted(async () => {                                                         
   
   <div class="navigation">
 
-    <div class="toggleview" @click="toggleNavMode">
-      <span>{{ navMode === 'table' ? '>' : '<' }}</span>
-    </div>
-
     <div class="nav-content">
 
       <div class="banner" :class="{'bcentered': isCentered}" @click="store.navHome(router)">
@@ -72,12 +68,17 @@ onMounted(async () => {                                                         
       </div>
       
       <div class="layoutcontrol"> 
+
         <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
+
+        <span class="toggleview" @click="toggleNavMode">{{ navMode === 'table' ? 'galería' : 'tabla' }}</span>
+
       </div>
 
       <Popup v-if="store.showPopup" />
 
     </div>
+
 
   </div>
 
@@ -96,25 +97,11 @@ onMounted(async () => {                                                         
 
 }
 
-.toggleview {
-
-  /* LAYOUT */ position: absolute; right: 0; top: 0; bottom: 0;
-  /* BOX    */ width: 1.5rem; z-index: 10;
-  /* FILL   */ background-color: var(--carbon25);
-  /* BORDER */ border-left: var(--small-outline) var(--humo10);
-  /* CURSOR */ cursor: pointer;
-  /* FLEX   */ display: flex; align-items: center; justify-content: center;
-  /* MOTION */ transition: background-color var(--animate-fast);
-
-  &:hover { background-color: var(--carbon50); color: var(--lirio); }
-
-}
-
 .nav-content {
 
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
-  /* BOX */ width: 100%; height: 100%;
-  /* PADDING */ padding: 2rem 2rem 2rem 2rem; gap: 1.25rem;
+  /* BOX    */ width: 100%; height: 100%;
+  /* PAD    */ padding: 2rem 2rem 1rem 2rem; gap: 1.25rem;
   overflow: hidden;
 
 }
@@ -174,7 +161,6 @@ onMounted(async () => {                                                         
 
   flex-grow: 1; min-height: 0; width: 100%;
   overflow-y: auto;
-  padding: .25rem .25rem .25rem .25rem;
   display: flex; flex-direction: column;
   
   scrollbar-width: none; 
@@ -185,8 +171,8 @@ onMounted(async () => {                                                         
 
 .layoutcontrol { 
 
-  /* LAYOUT */ flex-shrink: 0;
-  /* BOX    */ width: 100%; padding-left: 4rem; padding-right: 4rem;
+  /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem; flex-shrink: 0;
+  /* BOX    */ width: 100%;
   
 }
 
@@ -204,14 +190,24 @@ onMounted(async () => {                                                         
 
 }
 
-@media (max-width: 1600px) { .nav-views { padding-left: 2rem; padding-right: 2rem;} }
-@media (max-width: 1400px) { .nav-views { padding-left: 0rem; padding-right: 0rem;} }
-@media (max-width: 1080px) { .nav-views { padding-left: 2rem; padding-right: 2rem;} .bcentered { font-size: .8vw; } }
-@media (max-width: 800px)  { .nav-views { padding-left: 0rem; padding-right: 0rem;} .bcentered { font-size: .8vw; } }
+.toggleview {
+
+  /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  /* BOX    */ padding: 0.5rem 5rem;
+  /* FILL   */ background-color: var(--lirio05); color: var(--humo);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+  /* MOTION */ transition: background-color var(--animate-fast);
+
+  &:hover { background-color: var(--lirio15); }
+
+}
+
+@media (max-width: 1080px) { .bcentered { font-size: .8vw; } }
+@media (max-width: 800px)  { .bcentered { font-size: .8vw; } }
 
 @media (max-width: 580px) {
 
-  .nav-views { padding-left: 0rem; padding-right: 0rem;}
   .bcentered { font-size: .8vw; }
 
   .tabs button        { display: none; }
