@@ -7,7 +7,7 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { isCentered, processing, searchQuery, sortKey, sortOrder, currentPage, totalPages, paginatedNotes, noteSortFilter, itemsPerPage } = storeToRefs(store)
+const { isCentered, processing, searchQuery, sortKey, sortOrder, noteSortFilter } = storeToRefs(store)
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
 
@@ -33,7 +33,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
     <tbody>
 
-      <tr v-for="note in paginatedNotes" :key="note.slug" @click="noteOpen(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: processing }" >
+      <tr v-for="note in noteSortFilter" :key="note.slug" @click="noteOpen(note.type, note.slug)" :class="{ active: route.params.slug === note.slug, disabled: processing }" >
 
         <td v-if="!isCentered">{{ note.date }}</td>
         <td>{{ note.title }}</td>
@@ -56,33 +56,13 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
         <td :colspan="isCentered ? 2 : 3">no hay notas que coincidan con "{{ searchQuery }}"</td>
       </tr>
 
-      <tr v-for="i in (noteSortFilter.length > 0 ? itemsPerPage - paginatedNotes.length : 0)" :key="`placeholder-${i}`" class="bodyfill">
-        <td :colspan="isCentered ? 2 : 3">&nbsp;</td>
-      </tr>
-      
     </tbody>
-
-    <tfoot>
-
-      <tr>
-        <td :colspan="isCentered ? 2 : 3">
-
-          <div class="pagecontrols">
-            <button class="navbutton" @click="store.prevPage" :disabled="currentPage === 1 || processing"> < </button>
-            <span>{{ currentPage }} / {{ totalPages || 1 }}</span>
-            <button class="navbutton" @click="store.nextPage" :disabled="currentPage >= totalPages || processing"> > </button>
-          </div>
-
-        </td>
-      </tr>
-
-    </tfoot>
     
   </table>
 
 </template>
 
-<style> 
+<style scoped> 
 
 table { 
 
@@ -96,6 +76,8 @@ table {
   & .col-tags   { width: 20%; }
 
   &.two-columns { & .col-titulo { width: 70%; } & .col-tags { width: 30%; } }
+
+  & thead { position: sticky; top: 0; z-index: 10; background-color: var(--carbon); }
 
   & thead tr { 
 
@@ -144,13 +126,6 @@ table {
 
   }
 
-  & tfoot td { 
-
-    /* LAYOUT */ text-align: center;
-    /* BOX    */ width: 100%; padding-top: 1rem; padding-bottom: 0;
-
-  }
-
 }
 
 .tagcol { 
@@ -181,43 +156,6 @@ table {
   /* LAYOUT */ text-align: center;
   /* FILL   */ opacity: var(--alpha-half); color: var(--humo);
   /* FONT   */ font-style: italic;
-
-}
-
-.bodyfill { 
-
-  /* CURSOR */ pointer-events: none;
-  /* FILL   */ opacity: var(--alpha-invisible);
-  
-}
-
-.pagecontrols {
-
-  /* CURSOR */ user-select: none;
-  /* LAYOUT */ display: flex; justify-content: center; align-items: center; flex-shrink: 0;
-  /* BOX    */ gap: 1rem;
-
-  & span { color: var(--humo); }
-
-}
-
-.navbutton { 
-
-  /* CURSOR */ cursor: pointer;
-  /* BOX    */ padding: 0rem .5rem;
-  /* FILL   */ background-color: transparent; color: var(--lirio);
-  /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--lirio25);
-  /* FONT   */ font-size: 1.5rem;
-  /* MOTION */ transition: all var(--animate-fast);
-
-  &:hover { background-color: var(--humo25); }
-
-  &:disabled { 
-    
-    /* CURSOR */ cursor: not-allowed;
-    /* FILL   */ opacity: var(--alpha-disabled);
-  
-  }
 
 }
 

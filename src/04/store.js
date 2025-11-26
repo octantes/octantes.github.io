@@ -48,15 +48,10 @@ export const useStore = defineStore('store', () => {
 
   ]
 
-  const defaultItemsPerPage        = 8                                                                                                // default number of notes per page
-  const centeredItemsPerPage       = 10                                                                                               // number of notes per page when centered
-  const itemsPerPage               = computed(() => isCentered.value ? centeredItemsPerPage : defaultItemsPerPage)                    // dynamic number of notes per page
-  const totalPages                 = computed(() => { return Math.ceil(noteSortFilter.value.length / itemsPerPage.value) })           // returns total page number
   const activeFilter               = ref('full')                                                                                      // active tab filter name
   const sortKey                    = ref('isoDate')                                                                                   // current sort column
   const sortOrder                  = ref('desc')                                                                                      // current sort order
   const searchQuery                = ref('')                                                                                          // searchbox current search
-  const currentPage                = ref(1)                                                                                           // current page number
 
   // ASCII PRE
 
@@ -83,9 +78,6 @@ export const useStore = defineStore('store', () => {
   function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
 
-  function prevPage()                   { if (currentPage.value > 1 && !processing.value) { currentPage.value-- } }                   // reduce current table page
-  function nextPage()                   { if (currentPage.value < totalPages.value && !processing.value) { currentPage.value++ } }    // advance current table page
-  
   async function fetchPost(slug) {                                                                                                    // fetch post html 
 
     if (!slug) { setCurrentPost(null); return { html: '', error: null } }
@@ -353,15 +345,6 @@ export const useStore = defineStore('store', () => {
 
   })
 
-  const paginatedNotes    = computed(() => {                                                                                          // compute table pages 
-
-    const start = (currentPage.value - 1) * itemsPerPage.value
-    const end = start + itemsPerPage.value
-
-    return noteSortFilter.value.slice(start, end)
-
-  })
-
   return { 
 
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
@@ -371,9 +354,9 @@ export const useStore = defineStore('store', () => {
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ isCentered, processing, showPopup, navMode,
     /* VIEWS FUN */ setCentered, setProcessing, togglePopup, toggleNavMode,
-    /* NAVIG VAR */ itemsPerPage, totalPages, activeFilter, sortKey, sortOrder, searchQuery, currentPage, tabs,
-    /* NAVIG FUN */ prevPage, nextPage, setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
-    /* NAVIG COM */ noteSortFilter, paginatedNotes,
+    /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
+    /* NAVIG COM */ noteSortFilter,
 
   }
 
