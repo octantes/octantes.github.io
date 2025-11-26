@@ -1,13 +1,14 @@
 <script setup> 
 import { useStore } from '../04/store.js'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import authorpic from '../../content/assets/kaste.jpg'
 
+const router = useRouter()
 const store = useStore()
-const { activeFilter } = storeToRefs(store)
+const { activeFilter, processing } = storeToRefs(store)
 
-const loadReference = (type, slug) => { store.loadContent(type, slug) }
-
+function loadReference(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
 </script>
 
 <template> 
@@ -233,12 +234,10 @@ const loadReference = (type, slug) => { store.loadContent(type, slug) }
 .side { 
 
   /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
-  /* BOX    */ width: 100%; padding: 4rem 3rem 2rem 3rem; gap: 1rem; z-index: 1; overflow-wrap: break-word;
+  /* BOX    */ z-index: 1; width: 100%; padding: 4rem 3rem 2rem 3rem; gap: 1rem; overflow-wrap: break-word;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
-  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
-
-  &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled); }
+  /* FONT   */ font-size: .72vw; line-height: 1.5; word-break: break-word;
 
 }
 
@@ -262,6 +261,7 @@ const loadReference = (type, slug) => { store.loadContent(type, slug) }
 
 }
 
-@media (max-width: 1400px) { .sidefilter { font-size: 0.9rem; } }
+@media (max-width: 1400px) { .side { font-size: .65vw } }
+@media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 8rem; } }
 
 </style>

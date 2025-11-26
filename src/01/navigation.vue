@@ -9,7 +9,7 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
-const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos' ]                                         // random taglines
+const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales' ]                 // random taglines
 
 const { isCentered, processing, searchQuery, activeFilter } = storeToRefs(store)                                                      // imports refs from main store
 const { changeFilter, emptyFilter, tabs } = store                                                                                     // destructure store refs

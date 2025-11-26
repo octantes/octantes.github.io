@@ -16,6 +16,9 @@
     --humo25:    #AAABAC25;
     --humo50:    #AAABAC50;
     --niebla:    #D8DADE;
+    --niebla99:  #D8DADE99;
+    --niebla50:  #D8DADE50;
+    --niebla25:  #D8DADE25;
     --brillo:    #F2F2F2;
     --lirio:     #986C98;
     --lirio99:   #986C9899;
@@ -112,5 +115,25 @@ audio::-webkit-media-controls-enclosure {
 audio::-webkit-media-controls-enclosure:hover { 
 
   /* FILL   */ background-color: var(--lirio65);
+
+}
+
+.figlet { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+  /* BOX    */ width: 100%; overflow: hidden;
+  /* FONT   */ font-size: .8vw;
+
+  &.clickable { cursor: pointer; }
+
+  & pre {
+  
+    /* LAYOUT */ flex-shrink: 0;
+    /* BOX    */ margin-bottom: .25rem; margin-top: .8rem; overflow: visible;
+    /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); color: var(--lirio);
+    /* FONT   */ font-family: monospace;
+    /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
+  
+  }
 
 }
