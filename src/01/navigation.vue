@@ -4,6 +4,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import Table from '../02/table.vue'
+import Gallery from '../02/gallery.vue'
+import Popup from '../02/popup.vue'
 
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
@@ -11,8 +13,8 @@ const store           = useStore()                                              
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales' ]                 // random taglines
 
-const { isCentered, processing, searchQuery, activeFilter } = storeToRefs(store)                                                      // imports refs from main store
-const { changeFilter, emptyFilter, tabs } = store                                                                                     // destructure store refs
+const { isCentered, processing, searchQuery, activeFilter, navMode } = storeToRefs(store)                                             // imports refs from main store
+const { changeFilter, emptyFilter, tabs, toggleNavMode } = store                                                                      // destructure store refs
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
@@ -33,41 +35,58 @@ onMounted(async () => {                                                         
   
   <div class="navigation">
 
-    <div class="banner clickable" :class="{'bcentered': isCentered}" @click="store.navHome(router)">
-
-<pre>
- ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
-██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝██╔════╝██╔════╝
-██║   ██║██║        ██║   ███████║██╔██╗ ██║   ██║   █████╗  ███████╗
-██║   ██║██║        ██║   ██╔══██║██║╚██╗██║   ██║   ██╔══╝  ╚════██║
-╚██████╔╝╚██████╗   ██║   ██║  ██║██║ ╚████║   ██║   ███████╗███████║
- ╚═════╝  ╚═════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝
-</pre>
-      
+    <div class="toggleview" @click="toggleNavMode">
+      <span>{{ navMode === 'table' ? '>' : '<' }}</span>
     </div>
 
-    <div class="filters"> 
+    <div class="nav-content">
 
-      <button @click="changeFilter(router, -1)" :disabled="processing"> < </button>
+      <div class="banner clickable" :class="{'bcentered': isCentered}" @click="store.navHome(router)">
 
-      <div class="tabs">
-        <template v-for="tab in tabs" :key="tab.value">
-          <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
-        </template>
+  <pre>
+  ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
+  ██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝██╔════╝██╔════╝
+  ██║   ██║██║        ██║   ███████║██╔██╗ ██║   ██║   █████╗  ███████╗
+  ██║   ██║██║        ██║   ██╔══██║██║╚██╗██║   ██║   ██╔══╝  ╚════██║
+  ╚██████╔╝╚██████╗   ██║   ██║  ██║██║ ╚████║   ██║   ███████╗███████║
+  ╚═════╝  ╚═════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝
+  </pre>
+        
       </div>
 
-      <button @click="changeFilter(router, +1)" :disabled="processing"> > </button>
+      <div class="filters"> 
 
-    </div>
+        <button @click="changeFilter(router, -1)" :disabled="processing"> < </button>
 
-    <div class="tablediv"> <Table /> </div>
-    
-    <div class="layoutcontrol">
-      <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
-    </div>
+        <div class="tabs">
+          <template v-for="tab in tabs" :key="tab.value">
+            <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+          </template>
+        </div>
 
-    <div class="bottom">
-      <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+        <button @click="changeFilter(router, +1)" :disabled="processing"> > </button>
+
+      </div>
+
+      <div class="nav-views">
+
+        <div class="tablediv"> 
+          <Table v-if="navMode === 'table'" />
+          <Gallery v-else />
+        </div>
+        
+      </div>
+      
+      <div class="layoutcontrol">
+        <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
+      </div>
+
+      <div class="bottom">
+        <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+      </div>
+
+      <Popup v-if="store.showPopup" />
+
     </div>
 
   </div>
@@ -79,12 +98,40 @@ onMounted(async () => {                                                         
 .navigation { 
 
   /* CURSOR */ user-select: none;
-  /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; position: relative;
   /* BOX    */ padding: 2.25rem 2rem 1.5rem 2rem; gap: .8rem;
   /* FILL   */ background-color: var(--carbon); color: var(--niebla);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
   /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
 
+}
+
+.toggleview {
+
+  /* LAYOUT */ position: absolute; right: 0; top: 0; bottom: 0;
+  /* BOX    */ width: 1.5rem; z-index: 10;
+  /* FILL   */ background-color: var(--carbon25);
+  /* BORDER */ border-left: var(--small-outline) var(--humo10);
+  /* CURSOR */ cursor: pointer;
+  /* FLEX   */ display: flex; align-items: center; justify-content: center;
+  /* MOTION */ transition: background-color var(--animate-fast);
+
+  &:hover { background-color: var(--carbon50); color: var(--lirio); }
+
+}
+
+.nav-content {
+
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
+  /* BOX */ width: 100%; height: 100%;
+  /* PADDING */ padding: 2.25rem 3.5rem 1.5rem 2rem; gap: .8rem;
+  overflow-y: auto;
+
+}
+
+.nav-views {
+  /* LAYOUT */ flex-grow: 1; width: 100%; min-height: 0; overflow: hidden;
+  /* FLEX */ display: flex; flex-direction: column;
 }
 
 .banner { 
