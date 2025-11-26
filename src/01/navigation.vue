@@ -99,10 +99,9 @@ onMounted(async () => {                                                         
 
 .nav-content {
 
-  /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; overflow: hidden;
   /* BOX    */ width: 100%; height: 100%;
   /* PAD    */ padding: 2rem 2rem 2rem 2rem; gap: 2rem;
-  overflow: hidden;
 
 }
 
@@ -180,7 +179,7 @@ onMounted(async () => {                                                         
 
   /* CURSOR */ cursor: text;
   /* LAYOUT */ text-align: center;
-  /* BOX    */ width: 100%; padding: 0.5rem 1rem;
+  /* BOX    */ width: 50%; padding: 0.5rem 1rem;
   /* FILL   */ background-color: transparent; color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
   /* FONT   */ font-family: var(--font-main); font-style: italic;
@@ -194,7 +193,7 @@ onMounted(async () => {                                                         
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  /* BOX    */ padding: 0.5rem 5rem;
+  /* BOX    */ width: 50%; padding: 0.5rem 5rem;
   /* FILL   */ background-color: transparent; color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
   /* FONT   */ font-family: var(--font-main); font-style: italic;
