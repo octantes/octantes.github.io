@@ -3,21 +3,6 @@ import { ref, computed } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
-  const error404 =
-
-`
-<div class="figlet">
-  <pre>
-██╗  ██╗ ██████╗ ██╗  ██╗
-██║  ██║██╔═████╗██║  ██║
-███████║██║██╔██║███████║
-╚════██║████╔╝██║╚════██║
-     ██║╚██████╔╝     ██║
-     ╚═╝ ╚═════╝      ╚═╝
-  </pre>
-</div>
-`
-
   // CONTENT                                                                                                                          // LOAD DATA
 
   const notesIndex                 = ref([])                                                                                          // note index array
@@ -70,6 +55,23 @@ export const useStore = defineStore('store', () => {
   const sortOrder                  = ref('desc')                                                                                      // current sort order
   const searchQuery                = ref('')                                                                                          // searchbox current search
   const currentPage                = ref(1)                                                                                           // current page number
+
+  // ASCII PRE
+
+    const error404 =
+
+`
+<div class="figlet">
+  <pre>
+██╗  ██╗ ██████╗ ██╗  ██╗
+██║  ██║██╔═████╗██║  ██║
+███████║██║██╔██║███████║
+╚════██║████╔╝██║╚════██║
+     ██║╚██████╔╝     ██║
+     ╚═╝ ╚═════╝      ╚═╝
+  </pre>
+</div>
+`
 
   // FUNCTIONS                                                                                                                        // FUNCTION
   
