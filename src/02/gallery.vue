@@ -1,10 +1,11 @@
 <script setup> 
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
-const router = useRouter()
-const store = useStore()
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
 
 const { noteSortFilter, processing } = storeToRefs(store) 
 
@@ -14,14 +15,14 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 <template> 
     
-  <div class="grid">
+  <div class="gallery">
     
-    <div v-for="note in noteSortFilter" :key="note.slug" class="card" @click="noteOpen(note.type, note.slug)" :class="{ disabled: processing }" >
+    <div v-for="note in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)" :class="{ disabled: processing, active: route.params.slug === note.slug }" >
     
       <div class="card-cover">
 
         <img v-if="note.portada" :src="note.portada" loading="lazy" alt="cover" />
-        <div v-else class="placeholder-img">/</div>
+        <div v-else class="card-placeholder">/</div>
         
       </div>
 
@@ -44,21 +45,20 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 <style scoped> 
 
-.grid { 
+.gallery { 
 
   /* GRID   */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  /* BOX    */ gap: 1rem; width: 100%; padding-bottom: 2rem;
+  /* BOX    */ width: 100%; max-height: 25rem; padding-bottom: 2rem; gap: 1rem;
 
 }
 
-.card {
+.notecard {
 
-  /* LAYOUT */ display: flex; flex-direction: column;
-  /* BOX    */ background-color: var(--carbon25); border-radius: var(--radius-ss);
-  /* BORDER */ border: var(--small-outline) var(--humo10);
   /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ display: flex; flex-direction: column; overflow: hidden;
+  /* BOX    */ height: 100%; background-color: var(--carbon25); border-radius: var(--radius-ss);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
   /* MOTION */ transition: all var(--animate-fast);
-  overflow: hidden; height: 100%;
 
   &:hover {
 
@@ -68,6 +68,12 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     & img { filter: grayscale(0); transform: scale(1.05); }
 
   }
+
+  &.active {
+    border-color: var(--lirio);
+    & .title { color: var(--cristal); }
+    & img { filter: grayscale(0); }
+  } 
 
   &.disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
 
@@ -85,7 +91,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.placeholder-img {
+.card-placeholder {
   display: flex; align-items: center; justify-content: center;
   width: 100%; height: 100%; color: var(--humo25); font-size: 2rem;
 }
