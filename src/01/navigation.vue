@@ -114,7 +114,7 @@ onMounted(async () => {                                                         
 
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center;
   /* BOX */ width: 100%; height: 100%;
-  /* PADDING */ padding: 2.25rem 3.5rem 1.5rem 2rem; gap: .8rem;
+  /* PADDING */ padding: 2.25rem 3.5rem 1.5rem 2rem; gap: 1.25rem;
   overflow: hidden;
 
 }
@@ -173,8 +173,8 @@ onMounted(async () => {                                                         
 .nav-views { 
 
   flex-grow: 1; min-height: 0; width: 100%;
-  overflow-y: auto; /* El scroll vive AQUI */
-  padding-left: 4rem; padding-right: 4rem; 
+  overflow-y: auto;
+  padding: .25rem 4rem 1rem .25rem;
   display: flex; flex-direction: column;
   
   scrollbar-width: thin; scrollbar-color: var(--lirio) var(--carbon);
