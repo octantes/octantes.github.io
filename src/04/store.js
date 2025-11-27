@@ -24,8 +24,10 @@ export const useStore = defineStore('store', () => {
   const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
   const processing                 = ref(false)                                                                                       // disabled component state
   const showPopup                  = ref(true)                                                                                        // enable popup in navigation
-  const navMode                    = ref('table')                                                                                     // navigation view style
-
+  const navMode                    = ref('gallery')                                                                                   // navigation view style
+  const popLink                    = ref('https://youtu.be/ze5ECrM9Wk0?si=AgNvT6imqX225vdj')                                                                   // popup go link
+  const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                     // popup text
+  
   // STATUS                                                                                                                           // BOTTOM BAR
 
   const btcPrice    = ref('---')                                                                                                      // btc price fetch result
@@ -350,7 +352,7 @@ export const useStore = defineStore('store', () => {
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
-    /* VIEWS VAR */ isCentered, processing, showPopup, navMode,
+    /* VIEWS VAR */ isCentered, processing, showPopup, navMode, popLink, popString,
     /* VIEWS FUN */ setCentered, setProcessing, togglePopup, toggleNavMode,
     /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
