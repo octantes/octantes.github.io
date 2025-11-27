@@ -8,13 +8,13 @@ const store = useStore()
 
 <template> 
 
-  <div class="backdrop">
+  <div class="backdrop" @click="store.togglePopup">
 
     <div class="popup">
 
       <img  class="sigil" :src="sigil" alt="sigilo" />
       
-      <button class="closebutton" @click="store.togglePopup">✘</button>
+      <button class="closebutton" @click.stop="store.togglePopup">✘</button>
 
       <div class="postbox">
         

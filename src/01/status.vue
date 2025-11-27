@@ -24,6 +24,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
     <div class="stleft">
 
       <a href="#" @click.prevent="openLatest">ultima nota - {{ latestPost.title }}</a>
+      <span>//</span>
+      <a :href="'mailto:' + store.mailtoDir" target="_blank">contactame!</a>
 
     </div>
 
@@ -37,8 +39,10 @@ onUnmounted(() => { store.stopStatusUpdates() })
     
     <div class="stright">
 
-      <span>BTC: {{ btcPrice }}</span>
-      <span>//</span>
+      <a href="/feed.xml" target="_blank" title="feed RSS">RSS</a>
+      <span class="btc">//</span>
+      <span class="btc">BTC: {{ btcPrice }}</span>
+      <span class="btc">//</span>
       <span>{{ currentTime }}</span>
 
     </div>
@@ -69,7 +73,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 .stleft { 
 
   /* LAYOUT */ display: flex; flex-shrink: 1; align-items: center;
-  /* BOX    */ min-width: 0; gap: 1rem; margin-bottom: .25rem; overflow: hidden;
+  /* BOX    */ min-width: 0; height: 2rem; gap: 1rem; overflow: hidden;
   /* FILL   */ color: var(--humo);
   /* FONT   */ white-space: nowrap;
 
@@ -85,7 +89,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 .stright { 
 
   /* LAYOUT */ display: flex; flex-shrink: 0; align-items: center;
-  /* BOX    */ min-width: 0; gap: 1rem; overflow: hidden;
+  /* BOX    */ min-width: 0; height: 2rem; gap: 1rem; overflow: hidden;
   /* FILL   */ color: var(--humo);
   /* FONT   */ white-space: nowrap;
 
@@ -117,7 +121,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
 @keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
 
-@media (max-width: 590px) { .stcenter { display:none; } }
-@media (max-width: 312px) { .stleft { display:none; } .statusbar { justify-content: center; } }
+@media (max-width: 590px) { .stcenter { display: none; } .btc { display: none; } }
+@media (max-width: 312px) { .stleft { display: none; } .statusbar { justify-content: center; } }
 
 </style>
