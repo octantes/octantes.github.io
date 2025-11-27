@@ -81,14 +81,14 @@ function handleResize() {
 
 @media (max-width: 1080px) { 
 
-  .layout            { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+  .layout            { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; } }
 
   .navigation, .portada, .articulos, .side { overflow-y: visible; min-height: auto; height: auto; }
 
   .portada { order: 1; } .navigation { order: 2; } .articulos { order: 3; } .side { order: 4; }
 
   .footer            { padding: 1rem;     }
-  .content           { min-height: 35rem; }
+  .content           { height: 40rem; }
 
 }
 
