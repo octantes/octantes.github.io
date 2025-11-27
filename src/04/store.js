@@ -83,26 +83,6 @@ export const useStore = defineStore('store', () => {
 
   // en store.js
 
-  function trackAuthor(handle) {                                                                                                      // track click to @kaste 
-
-      if (handle === 'kaste') { 
-          
-          const counterHtml = '<script language="javascript" src="http://hitcounters.net/counter.php?id=11908&cmd=cookie"></script><img src="http://hitcounters.net/counter.php?id=11908&cmd=img_only" alt="bamcarinsurance.com" border="0" ><br><a href="http://www.bamcarinsurance.com" title="bamcarinsurance.com" target="_blank" style="color:990000; font: normal 10px arial, verdana, sans-serif;">bamcarinsurance.com</a>';
-          const tempDiv = document.createElement('div');
-          tempDiv.style.position = 'absolute';
-          tempDiv.style.top = '-9999px';
-          tempDiv.style.width = '1px';
-          tempDiv.style.height = '1px';
-          tempDiv.style.overflow = 'hidden';
-          tempDiv.style.pointerEvents = 'none';
-          tempDiv.innerHTML = counterHtml;
-          document.body.appendChild(tempDiv);
-          setTimeout(() => { if (document.body.contains(tempDiv)) { document.body.removeChild(tempDiv); } }, 1000);
-
-      }
-
-  }
-
   async function fetchPost(slug) {                                                                                                    // fetch post html 
 
     if (!slug) { setCurrentPost(null); return { html: '', error: null } }
@@ -371,7 +351,7 @@ export const useStore = defineStore('store', () => {
   return { 
 
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
-    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, trackAuthor,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost,
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
