@@ -6,11 +6,14 @@
     --font-mono:    'Inconsolata',   monospace;
     --font-grotesk: 'Space Grotesk', sans-serif;
 
+    --carbon15:  #1B1C1C15;
     --carbon25:  #1B1C1C25;
     --carbon50:  #1B1C1C50;
     --carbon99:  #1B1C1C99;
     --carbon:    #1B1C1C;
     --ceniza:    #2B2C2C;
+    --ceniza25:  #2B2C2C25;
+    --ceniza50:  #2B2C2C50;
     --polvo:     #3C3C3C;
     --humo:      #AAABAC;
     --humo10:    #AAABAC10;
@@ -35,6 +38,11 @@
     --cristal:   #8AB6BB;
     --cristal80: #8AB6BB80;
     --cristal25: #8AB6BB25;
+    --malva90:   #85494990;
+    --malva80:   #85494980;
+    --malva50:   #85494950;
+    --malva25:   #85494925;
+    --malva:     #854949;
 
     --shadow-border: inset 0 0 0 1px;
     --small-outline: 1px solid;
@@ -126,8 +134,8 @@ audio::-webkit-media-controls-enclosure:hover {
 
 .figlet { 
 
-  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
-  /* BOX    */ width: 100%; overflow: hidden;
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0; user-select: none;
+  /* BOX    */ width: 100%; height: 100%; overflow: hidden;
   /* FONT   */ font-size: .8vw; line-height: 1.24;
 
   &.clickable { cursor: pointer; }

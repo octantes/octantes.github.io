@@ -1,146 +1,109 @@
-<script setup>
+<script setup> 
 import { useStore } from '../04/store.js'
+import sigil from '../../content/assets/sigil.png'
+
 const store = useStore()
+
 </script>
 
-<template>
+<template> 
+
   <div class="backdrop">
-    
-    <div class="popup-frame">
+
+    <div class="popup">
+
+      <img  class="sigil" :src="sigil" alt="sigilo" />
       
-      <div class="sidebar">
-        <div class="glyph-container">
-          <pre>
-▓▓
-░░
-▓▓
-▒▒
-▓▓
-          </pre>
-        </div>
-      </div>
+      <button class="closebutton" @click="store.togglePopup">⥋</button>
 
-      <div class="main-body">
+      <div class="postbox">
         
-        <button class="close-btn" @click="store.togglePopup">X</button>
+        <div class="poptext">
 
-        <div class="content">
-          <slot>
-            cien vientos rompen<br>hacia el cielo
-          </slot>
+          <span v-html="store.popString"></span>
+          
         </div>
-
-        <div class="corner-deco"></div>
+        
+        <a :href="store.popLink" class="ghostlink" target="_blank"></a>
 
       </div>
+
+      <div class="underbox"/>
 
     </div>
 
   </div>
+
 </template>
 
-<style scoped>
-.backdrop {
-  /* esto asegura que cubra SOLO al padre relativo (navigation) */
-  position: absolute;
-  inset: 0; 
-  z-index: 50;
+<style scoped> 
+
+.backdrop { 
+
+  /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0;
+  /* FILL   */ background-color: var(--carbon99); backdrop-filter: blur(8px);
+  /* MOTION */ animation: fadeIn var(--animate-mid);
+
+}
+
+.popup { position: relative; animation: fadeIn var(--animate-mid); }
+
+.sigil { 
   
-  /* oscurecimiento y blur */
-  background-color: var(--carbon99); 
-  backdrop-filter: blur(2px);
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: block; position: absolute; z-index: 20;
+  /* BOX    */ width: 5rem; top: -1.5rem; left: -1.5rem;
+  /* IMAGE  */ image-rendering: pixelated; transform: translateZ(0); backface-visibility: hidden; pointer-events: none;
+
+}
+
+.postbox { 
+
+  /* LAYOUT */ position: relative; display: flex; align-items: center; justify-content: center; z-index: 2;
+  /* BOX    */ width: 480px; height: 480px;
+  /* FILL   */ background-color: var(--niebla);
+  /* SHAPE  */ clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%); filter: drop-shadow(0 0 1px var(--ceniza));
+  /* IMAGE  */ background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, var(--humo25) 2px, var(--humo25) 4px);
+
+  &:hover { box-shadow: inset 0rem 0rem 5rem var(--ceniza); }
+  &::after { content: ""; position: absolute; inset: 0; background-color: var(--malva); opacity: 0; transition: opacity var(--animate-fast); pointer-events: none; }
+  &:hover::after { opacity: 0.25; }
   
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.ghostlink { position: absolute; inset: 0; z-index: 10; cursor: pointer; }
+
+.poptext { 
+
+  /* LAYOUT */ text-align: center; line-height: 1.5;
+  /* FONT   */ font-family: var(--font-mono); font-weight: bold; font-size: 1.5rem;
+  /* FILL   */ color: var(--carbon);
+  /* BORDER */ text-shadow: .5px .5px 0px var(--malva80);
   
-  /* animación de entrada simple */
-  animation: fadeIn var(--animate-fast);
 }
 
-.popup-frame {
-  display: flex;
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
-  max-width: 90%;
-}
-
-.sidebar {
-  background-color: #5d3a3a; /* tono rojizo de tu ref */
-  width: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: var(--small-outline) var(--humo25);
-  border-right: none;
-}
-
-.glyph-container pre {
-  font-family: var(--font-mono);
-  color: var(--brillo);
-  line-height: 1;
-  font-size: 10px;
-  margin: 0;
-}
-
-.main-body {
-  position: relative;
-  background-color: var(--niebla); /* gris commodore */
-  padding: 3rem 2rem;
-  min-width: 260px;
-  min-height: 260px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: var(--small-outline) var(--humo25);
+.underbox { 
   
-  /* patrón de grilla sutil */
-  background-image: 
-    linear-gradient(var(--humo25) 1px, transparent 1px),
-    linear-gradient(90deg, var(--humo25) 1px, transparent 1px);
-  background-size: 20px 20px;
+  /* LAYOUT */ position: absolute; z-index: 1;
+  /* BOX    */ width: 480px; height: 480px; inset: 0; scale: 96%;
+  /* BORDER */ border: .35rem solid var(--ceniza); box-shadow: inset 0 0 0 1rem var(--malva), inset 0 0 0 calc(1rem + .35rem) var(--ceniza);
+
 }
 
-.content {
-  font-family: var(--font-mono);
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: var(--carbon);
-  text-align: center;
-  line-height: 1.6;
-}
+.closebutton { 
 
-.close-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #5d3a3a;
-  color: var(--brillo);
-  border: none;
-  border-bottom: var(--small-outline) var(--humo25);
-  border-left: var(--small-outline) var(--humo25);
-  cursor: pointer;
-  padding: 0.5rem 0.8rem;
-  font-family: var(--font-mono);
-  font-weight: bold;
-  transition: all var(--animate-fast);
-}
+  /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ user-select: none; display: block; position: absolute; z-index: 20;
+  /* BOX    */ top: -1rem; right: -1rem; width: 3rem; height: 3rem;
+  /* FILL   */ color: var(--ceniza); background: var(--malva);
+  /* FONT   */ font-size: 2rem; font-weight: bold;
+  /* BORDER */ border: none; box-shadow: inset 0 0 0 .25rem var(--ceniza), inset 0rem 0rem .8rem var(--ceniza);
+  /* MOTION */ transition: all var(--animate-fast);
 
-.close-btn:hover {
-  background-color: var(--lirio);
-  color: var(--carbon);
-}
-
-.corner-deco {
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-  width: 0; 
-  height: 0; 
-  border-left: 15px solid transparent;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid #5d3a3a;
-  border-right: 15px solid #5d3a3a;
+  &:hover { color: var(--ceniza); background: var(--humo); }
+  
 }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
 </style>
