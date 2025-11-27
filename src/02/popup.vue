@@ -14,7 +14,7 @@ const store = useStore()
 
       <img  class="sigil" :src="sigil" alt="sigilo" />
       
-      <button class="closebutton" @click="store.togglePopup">⥋</button>
+      <button class="closebutton" @click="store.togglePopup">✘</button>
 
       <div class="postbox">
         
@@ -24,7 +24,7 @@ const store = useStore()
           
         </div>
         
-        <a :href="store.popLink" class="ghostlink" target="_blank"></a>
+        <a :href="store.popLink" class="ghostlink" target="_blank" @click="store.togglePopup"></a>
 
       </div>
 
@@ -96,7 +96,7 @@ const store = useStore()
   /* LAYOUT */ user-select: none; display: block; position: absolute; z-index: 20;
   /* BOX    */ top: -1rem; right: -1rem; width: 3rem; height: 3rem;
   /* FILL   */ color: var(--ceniza); background: var(--malva);
-  /* FONT   */ font-size: 2rem; font-weight: bold;
+  /* FONT   */ font-size: 1.5rem; font-weight: bold;
   /* BORDER */ border: none; box-shadow: inset 0 0 0 .25rem var(--ceniza), inset 0rem 0rem .8rem var(--ceniza);
   /* MOTION */ transition: all var(--animate-fast);
 
@@ -105,5 +105,7 @@ const store = useStore()
 }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 1080px) { .popup { scale: 50%; } }
 
 </style>
