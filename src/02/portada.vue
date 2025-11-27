@@ -7,7 +7,12 @@ const store               = useStore()                                          
 const { computedPortada } = storeToRefs(store)                                                                                        // imports refs from main store
 const data = computed(() => computedPortada.value)                                                                                    // note data for text content
 
-function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }                                                      // open author link
+function openAuthor(author) {                                                                                                         // open author link and track 
+
+  if (author.handle === 'kaste') { store.trackAuthor(author.handle); }
+  window.open(author.link, '_blank', 'noopener,noreferrer');
+
+}
 
 </script>
 
@@ -24,9 +29,9 @@ function openAuthor(link) { window.open(link, '_blank', 'noopener,noreferrer') }
 
         <hr />
 
-        <div class="authors">
+        <div class="authors"> 
           
-          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author.link)" >
+          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author)" >
 
             <img class="userpic" :src="author.img" />
             <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>

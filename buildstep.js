@@ -544,6 +544,58 @@ async function writeSitemap() {                                                 
 
 }
 
+async function writeFeed() {                                                     // create RSS feed XML 
+
+  await fs.mkdir(outputDir, { recursive: true })
+  const feedPath = path.join(outputDir, 'feed.xml')
+  
+  const now = new Date().toUTCString()
+  const feedTitle = 'octantes.net'
+  const feedUrl = `${webURL}/feed.xml`
+  const feedDescription = 'un portal web de contenido multimedia, sin algoritmos ni intermediarios'
+
+  const channelItems = indexItems.map(post => {
+    const postUrl = `${webURL}${post.url}`
+    const postDate = new Date(post.isoDate).toUTCString()
+    const escapedDescription = post.description
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+
+    return `<item>
+      <title>${post.title}</title>
+      <link>${postUrl}</link>
+      <guid isPermaLink="true">${postUrl}</guid>
+      <pubDate>${postDate}</pubDate>
+      <description>${escapedDescription}</description>
+      <author>kaste@octantes.net (kaste)</author>
+    </item>`
+  }).join('\n')
+
+  const feedXml = 
+  `<?xml version="1.0" encoding="UTF-8"?>
+  <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>${feedTitle}</title>
+    <link>${webURL}</link>
+    <description>${feedDescription}</description>
+    <lastBuildDate>${now}</lastBuildDate>
+    <generator>buildstep.js (custom)</generator>
+    <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
+  ${channelItems}
+  </channel>
+  </rss>`
+
+  let prevFeed = ''
+  try { prevFeed = await fs.readFile(feedPath, 'utf-8') } catch {}
+
+  if (prevFeed !== feedXml) { await fs.writeFile(feedPath, feedXml); console.log('feed.xml updated') }
+  else { console.log('skipping feed.xml (unchanged)') }
+
+}
+
 async function finalizeBuild() {                                                 // update cache and create 404 from index 
 
   await fs.mkdir(path.dirname(cacheFile), { recursive: true })
@@ -566,6 +618,7 @@ async function main() {                                                         
   await processPosts()
   await writeIndex()
   await writeSitemap()
+  await writeFeed()
   await finalizeBuild()
 
   console.log('build completed successfully: static notes, index, SEO files, and cache updated.')

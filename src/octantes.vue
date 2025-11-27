@@ -81,7 +81,7 @@ function handleResize() {
 
 @media (max-width: 1080px) { 
 
-  .layout            { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; } }
+  .layout            { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; padding-bottom: 0; } }
 
   .navigation, .portada, .articulos, .side { overflow-y: visible; min-height: auto; height: auto; }
 

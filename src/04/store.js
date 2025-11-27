@@ -25,8 +25,9 @@ export const useStore = defineStore('store', () => {
   const processing                 = ref(false)                                                                                       // disabled component state
   const showPopup                  = ref(true)                                                                                        // enable popup in navigation
   const navMode                    = ref('gallery')                                                                                   // navigation view style
-  const popLink                    = ref('https://youtu.be/ze5ECrM9Wk0?si=AgNvT6imqX225vdj')                                                                   // popup go link
-  const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                     // popup text
+  const popLink                    = ref('https://youtu.be/ze5ECrM9Wk0?si=AgNvT6imqX225vdj')                                          // popup go link
+  const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
+  const mailtoDir                  = ref('facugerbino@gmail.com')                                                                      // contact direction
   
   // STATUS                                                                                                                           // BOTTOM BAR
 
@@ -79,6 +80,28 @@ export const useStore = defineStore('store', () => {
   function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
   function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
+
+  // en store.js
+
+  function trackAuthor(handle) {                                                                                                      // track click to @kaste 
+
+      if (handle === 'kaste') { 
+          
+          const counterHtml = '<script language="javascript" src="http://hitcounters.net/counter.php?id=11908&cmd=cookie"></script><img src="http://hitcounters.net/counter.php?id=11908&cmd=img_only" alt="bamcarinsurance.com" border="0" ><br><a href="http://www.bamcarinsurance.com" title="bamcarinsurance.com" target="_blank" style="color:990000; font: normal 10px arial, verdana, sans-serif;">bamcarinsurance.com</a>';
+          const tempDiv = document.createElement('div');
+          tempDiv.style.position = 'absolute';
+          tempDiv.style.top = '-9999px';
+          tempDiv.style.width = '1px';
+          tempDiv.style.height = '1px';
+          tempDiv.style.overflow = 'hidden';
+          tempDiv.style.pointerEvents = 'none';
+          tempDiv.innerHTML = counterHtml;
+          document.body.appendChild(tempDiv);
+          setTimeout(() => { if (document.body.contains(tempDiv)) { document.body.removeChild(tempDiv); } }, 1000);
+
+      }
+
+  }
 
   async function fetchPost(slug) {                                                                                                    // fetch post html 
 
@@ -348,11 +371,11 @@ export const useStore = defineStore('store', () => {
   return { 
 
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
-    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, trackAuthor,
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
-    /* VIEWS VAR */ isCentered, processing, showPopup, navMode, popLink, popString,
+    /* VIEWS VAR */ isCentered, processing, showPopup, navMode, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setCentered, setProcessing, togglePopup, toggleNavMode,
     /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
