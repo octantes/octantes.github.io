@@ -9,7 +9,6 @@ const data = computed(() => computedPortada.value)                              
 
 function openAuthor(author) {                                                                                                         // open author link and track 
 
-  if (author.handle === 'kaste') { store.trackAuthor(author.handle); }
   window.open(author.link, '_blank', 'noopener,noreferrer');
 
 }
