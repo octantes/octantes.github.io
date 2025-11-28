@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import router from './04/router.js'
 import App from './octantes.vue'
-import VueGtag from 'vue-gtag-next'
 import './04/baseline.css'
 import './04/content.css'
 
@@ -11,7 +10,5 @@ const app = createApp(App)
 
 app.use(router)
 app.use(pinia)
-
-app.use(VueGtag, { property: { id: 'G-8LPD65HMJ8' } }, router)
 
 app.mount('#octantes')
