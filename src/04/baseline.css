@@ -199,6 +199,8 @@ a {
 
 }
 
+a:focus, button:focus, input:focus, textarea:focus, select:focus, tbody tr:focus-within { outline: none; box-shadow: inset 0 0 0 250px var(--lirio80), 0 0 0 2px var(--carbon99); transition: all var(--animate-fast); }
+
 ::selection               { background-color: var(--lirio); color: var(--carbon); }
 ::-moz-selection          { background-color: var(--lirio); color: var(--carbon); }
 ::-webkit-scrollbar       { background-color: var(--polvo); width: 4px;           }
