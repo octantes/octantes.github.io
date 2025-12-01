@@ -1,57 +1,151 @@
-/* PALETTE */
-
 :root { 
 
     --font-main:    'Outfit',        sans-serif;
     --font-mono:    'Inconsolata',   monospace;
     --font-grotesk: 'Space Grotesk', sans-serif;
 
+    --carbon05:  #1B1C1C05;
+    --carbon10:  #1B1C1C10;
     --carbon15:  #1B1C1C15;
     --carbon25:  #1B1C1C25;
+    --carbon35:  #1B1C1C35;
     --carbon50:  #1B1C1C50;
+    --carbon65:  #1B1C1C65;
+    --carbon80:  #1B1C1C80;
+    --carbon90:  #1B1C1C90;
     --carbon99:  #1B1C1C99;
+
     --carbon:    #1B1C1C;
-    --ceniza:    #2B2C2C;
+
+    --ceniza05:  #2B2C2C05;
+    --ceniza10:  #2B2C2C10;
+    --ceniza15:  #2B2C2C15;
     --ceniza25:  #2B2C2C25;
+    --ceniza35:  #2B2C2C35;
     --ceniza50:  #2B2C2C50;
+    --ceniza65:  #2B2C2C65;
+    --ceniza80:  #2B2C2C80;
+    --ceniza90:  #2B2C2C90;
+    --ceniza99:  #2B2C2C99;
+
+    --ceniza:    #2B2C2C;
+
+    --polvo05:   #3C3C3C05;
+    --polvo10:   #3C3C3C10;
+    --polvo15:   #3C3C3C15;
+    --polvo25:   #3C3C3C25;
+    --polvo35:   #3C3C3C35;
+    --polvo50:   #3C3C3C50;
+    --polvo65:   #3C3C3C65;
+    --polvo80:   #3C3C3C80;
+    --polvo90:   #3C3C3C90;
+    --polvo99:   #3C3C3C99;
+
     --polvo:     #3C3C3C;
-    --humo:      #AAABAC;
+
+    --humo05:    #AAABAC05;
     --humo10:    #AAABAC10;
+    --humo15:    #AAABAC15;
     --humo25:    #AAABAC25;
+    --humo35:    #AAABAC35;
     --humo50:    #AAABAC50;
+    --humo65:    #AAABAC65;
     --humo80:    #AAABAC80;
-    --niebla:    #D8DADE;
-    --niebla99:  #D8DADE99;
-    --niebla50:  #D8DADE50;
-    --niebla25:  #D8DADE25;
-    --niebla10:  #D8DADE10;
+    --humo90:    #AAABAC90;
+    --humo99:    #AAABAC99;
+
+    --humo:      #AAABAC;
+
     --niebla05:  #D8DADE05;
+    --niebla10:  #D8DADE10;
+    --niebla15:  #D8DADE15;
+    --niebla25:  #D8DADE25;
+    --niebla35:  #D8DADE35;
+    --niebla50:  #D8DADE50;
+    --niebla65:  #D8DADE65;
+    --niebla80:  #D8DADE80;
+    --niebla90:  #D8DADE90;
+    --niebla99:  #D8DADE99;
+
+    --niebla:    #D8DADE;
+
+    --brillo05:  #F2F2F205;
+    --brillo10:  #F2F2F210;
+    --brillo15:  #F2F2F215;
+    --brillo25:  #F2F2F225;
+    --brillo35:  #F2F2F235;
+    --brillo50:  #F2F2F250;
+    --brillo65:  #F2F2F265;
+    --brillo80:  #F2F2F280;
+    --brillo90:  #F2F2F290;
+    --brillo99:  #F2F2F299;
+
     --brillo:    #F2F2F2;
-    --lirio:     #986C98;
-    --lirio99:   #986C9899;
-    --lirio80:   #986C9880;
-    --lirio65:   #986C9865;
-    --lirio35:   #986C9835;
-    --lirio25:   #986C9825;
-    --lirio15:   #986C9815;
+
     --lirio05:   #986C9805;
-    --cristal:   #8AB6BB;
-    --cristal80: #8AB6BB80;
+    --lirio10:   #986C9810;
+    --lirio15:   #986C9815;
+    --lirio25:   #986C9825;
+    --lirio35:   #986C9835;
+    --lirio50:   #986C9850;
+    --lirio65:   #986C9865;
+    --lirio80:   #986C9880;
+    --lirio90:   #986C9890;
+    --lirio99:   #986C9899;
+
+    --lirio:     #986C98;
+    
+    --cristal05: #8AB6BB05;
+    --cristal10: #8AB6BB10;
+    --cristal15: #8AB6BB15;
     --cristal25: #8AB6BB25;
-    --malva90:   #85494990;
-    --malva80:   #85494980;
-    --malva50:   #85494950;
-    --malva25:   #85494925;
-    --malva:     #854949;
+    --cristal35: #8AB6BB35;
+    --cristal50: #8AB6BB50;
+    --cristal65: #8AB6BB65;
+    --cristal80: #8AB6BB80;
+    --cristal90: #8AB6BB90;
+    --cristal99: #8AB6BB99;
+
+    --cristal:   #8AB6BB;
+
+    --arcilla05: #85494905;
+    --arcilla10: #85494910;
+    --arcilla15: #85494915;
+    --arcilla25: #85494925;
+    --arcilla35: #85494935;
+    --arcilla50: #85494950;
+    --arcilla65: #85494965;
+    --arcilla80: #85494980;
+    --arcilla90: #85494990;
+    --arcilla99: #85494999;
+
+    --arcilla:   #854949;
+
+    --poma05:    #6FAC6705;
+    --poma10:    #6FAC6710;
+    --poma15:    #6FAC6715;
+    --poma25:    #6FAC6725;
+    --poma35:    #6FAC6735;
+    --poma50:    #6FAC6750;
+    --poma65:    #6FAC6765;
+    --poma80:    #6FAC6780;
+    --poma90:    #6FAC6790;
+    --poma99:    #6FAC6799;
+
+    --poma:      #6FAC67;
 
     --shadow-border: inset 0 0 0 1px;
     --small-outline: 1px solid;
 
-    --radius-xs: 5px;
-    --radius-ss: 3px;
+    --radius-xl: 12px;
+    --radius-ll: 10px;
+    --radius-mm: 08px;
+    --radius-ss: 05px;
+    --radius-xs: 03px;
 
     --animate-fast: 0.25s ease;
     --animate-mid:  0.50s ease;
+    --animate-long: 0.80s ease;
 
     --alpha-invisible: 0.00;
     --alpha-half:      0.50;
@@ -61,8 +155,6 @@
     --scale-low: scale(0.95);
 
 }
-
-/* RESET */
 
 html, body, #octantes { 
 

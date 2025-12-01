@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada } = storeToRefs(store)                                                                                        // imports refs from main store
-const data = computed(() => computedPortada.value)                                                                                    // note data for text content
+const data = computed(()  => computedPortada.value)                                                                                   // note data for text content
 
 function openAuthor(author) {                                                                                                         // open author link and track 
 

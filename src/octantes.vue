@@ -23,7 +23,7 @@ function handleResize() {
 </script>
 
 <template> 
-
+  
   <div class="pagina">
 
     <div class="layout" :class="{ centered: store.isCentered, fullscreen: computedFullscreen }" >

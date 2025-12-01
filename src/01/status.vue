@@ -59,7 +59,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
   /* LAYOUT */ display: flex; justify-content: space-between; align-items: center;
   /* BOX    */ min-width: 0; width: 100%; padding: .5rem 1rem; gap: 1.5rem; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   
 }
 
@@ -107,7 +107,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
   /* CURSOR */ user-select: none;
   /* BOX    */ width: 100%; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); color: var(--humo50);
-  /* BORDER */ border-radius: var(--radius-xs);
+  /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); line-height: 1.5; white-space: nowrap;
   
 }

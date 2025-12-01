@@ -3,10 +3,10 @@ import Content from '../01/content.vue'
 
 const routes = [
 
-  { path: '/:type/:slug', component: Content, props: route => ({ slug: route.params.slug, type: route.params.type }) }, // pasa el slug como prop para content
+  { path: '/:type/:slug', component: Content, props: route => ({ slug: route.params.slug, type: route.params.type }) }, // sends slug to content as prop
   { path: '/:filterType', component: Content, props: route => ({ filterType: route.params.filterType }) },
   { path: '/', component: Content },
-  { path: '/:catchAll(.*)', component: Content, props: { slug: '404' } } // mantener siempre al final
+  { path: '/:catchAll(.*)', component: Content, props: { slug: '404' } } // keep at the end
 
 ]
 
