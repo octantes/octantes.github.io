@@ -11,8 +11,8 @@ const submitButtonText = computed(() => {                                       
 
   switch (subState.value) {
 
-    case 'success': return '     ✓     '
-    case 'error':   return '     ✘     '
+    case 'success': return '✓'
+    case 'error':   return '✘'
 
     default:        return 'suscribirme'
 
@@ -33,9 +33,9 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
     <div class="form">
 
       <input class="honeypot" type="text"  v-model="subHoney" name="user"  tabindex="-1" autocomplete="off"/>
-      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required :class="{ [subState]: subState !== 'default'}" />
+      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required :class="{ [subState]: subState !== 'default'}" title="ingresar tu correo para suscribirte" aria-label="campo para ingresar correo electrónico"/>
 
-      <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription">{{ submitButtonText }}</div>
+      <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</div>
 
     </div>
 
@@ -91,7 +91,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  /* BOX    */ padding: .5rem 1rem;
+  /* BOX    */ padding: .5rem 1rem; min-width: 10rem;
   /* FILL   */ background-color: var(--lirio); color: var(--carbon);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-main); font-style: italic;

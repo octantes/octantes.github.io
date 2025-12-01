@@ -170,7 +170,7 @@ watch(                                                                          
 
       <Shader class="shader" ref="shaderRef"/>
 
-      <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)">X</button>
+      <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" title="salir de la vista en pantalla completa" aria-label="cerrar el contenido en pantalla completa">X</button>
 
       <div class="post" :class="{ 'fs-mode': computedFullscreen }">
 
@@ -179,7 +179,7 @@ watch(                                                                          
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />     <!-- for vuecomp/fullscreen  -->
           <div v-else :class="computedNoteClass" v-html="noteContent" />                   <!-- for html posts          -->
 
-          <br><hr><br>
+          <div v-if="currentPost && !computedNoteComp && !computedFullscreen"> <br><hr><br> </div>
 
           <Subscribe v-if="currentPost && !computedNoteComp && !computedFullscreen" />     <!-- subscribe to newsletter -->
           

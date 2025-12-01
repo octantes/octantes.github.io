@@ -30,14 +30,14 @@ function openAuthor(author) {                                                   
 
         <div class="authors"> 
           
-          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author)" >
+          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author)" :title="'ver perfil de ' + author.handle" :aria-label="'ver el perfil de autor @' + author.handle + ' en una pestaña nueva'">
 
-            <img class="userpic" :src="author.img" />
+            <img class="userpic" :src="author.img" :alt="'foto de perfil de @' + author.handle"/>
             <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
 
           </div>
 
-          <button @click="store.setCentered()" class="sidebutton">{{ store.isCentered ? '<' : '>' }}</button>
+          <button @click="store.setCentered()" class="sidebutton" :title="store.isCentered ? 'abrir columna lateral' : 'cerrar columna lateral'" :aria-label="store.isCentered ? 'abrir la columna de información lateral' : 'cerrar la columna de información lateral'">{{ store.isCentered ? '<' : '>' }}</button>
 
         </div>
 
@@ -47,7 +47,7 @@ function openAuthor(author) {                                                   
 
     <div class="cover" v-if="data.portada">
 
-      <img :src="data.portada" alt="" />
+      <img :src="data.portada" :alt="'portada para la nota: ' + data.title" />
         
     </div>
 

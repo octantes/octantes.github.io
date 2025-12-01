@@ -33,9 +33,9 @@ onMounted(async () => {                                                         
 
     <div class="nav-content">
 
-      <div class="banner" :class="{'bcentered': isCentered}" @click="store.navHome(router)">
+      <div class="banner" :class="{'bcentered': isCentered}" @click="store.navHome(router)" title="volver al inicio" aria-label="banner octantes.net, hacer click para volver al inicio">
 
-<pre>
+<pre aria-hidden="true">
  ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
 ██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝██╔════╝██╔════╝
 ██║   ██║██║        ██║   ███████║██╔██╗ ██║   ██║   █████╗  ███████╗
@@ -48,15 +48,17 @@ onMounted(async () => {                                                         
 
       <div class="filters"> 
 
-        <button @click="changeFilter(router, -1)" :disabled="processing"> < </button>
+        <button @click="changeFilter(router, -1)" :disabled="processing" title="ver el filtro anterior" aria-label="navegar al filtro de contenido anterior"> < </button>
 
         <div class="tabs">
           <template v-for="tab in tabs" :key="tab.value">
-            <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }" :disabled="processing" > {{ tab.label }} </button>
+            <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }"
+              :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
+            </button>
           </template>
         </div>
 
-        <button @click="changeFilter(router, +1)" :disabled="processing"> > </button>
+        <button @click="changeFilter(router, +1)" :disabled="processing" title="ver el filtro siguiente" aria-label="navegar al filtro de contenido siguiente"> > </button>
 
       </div>
 
@@ -69,9 +71,9 @@ onMounted(async () => {                                                         
       
       <div class="layoutcontrol"> 
 
-        <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" />
+        <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" title="buscar en la tabla de notas" aria-label="caja de búsqueda para notas"/>
 
-        <span class="toggleview" @click="toggleNavMode">{{ navMode === 'table' ? 'galería' : 'tabla' }}</span>
+        <span class="toggleview" @click="toggleNavMode" :title="navMode === 'table' ? 'cambiar a vista galería' : 'cambiar a vista tabla'" :aria-label="'alternar a vista ' + (navMode === 'table' ? 'galería' : 'tabla')">{{ navMode === 'table' ? 'galería' : 'tabla' }}</span>
 
       </div>
 
