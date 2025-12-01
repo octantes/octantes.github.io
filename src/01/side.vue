@@ -282,26 +282,27 @@ onMounted(async () => {                                                         
   /* LAYOUT */ display: inline-flex; align-items: center; white-space: nowrap; z-index: 5;
   /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
   /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
-  /* FILL   */ background-color: var(--carbon); 
+  /* FILL   */ background-color: var(--carbon);
+  /* FONT   */ font-size: .65vw;
   
 }
 
 .status-emoji {
 
   /* LAYOUT */ text-align: center;
-  /* FONT   */ font-size: .65vw; line-height: 1;
+  /* FONT   */ line-height: 1;
   /* FILL   */ color: var(--lirio);
 
 }
 
 .status-message {
 
-  /* FONT   */ font-family: var(--font-mono); font-size: .65vw; font-weight: bold; line-height: 1;
+  /* FONT   */ font-family: var(--font-mono); font-weight: bold; line-height: 1;
   /* FILL   */ color: var(--humo);
   
 }
 
-@media (max-width: 1400px) { .side { font-size: .65vw; } }
-@media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 8rem; } }
+@media (max-width: 1400px) { .side { font-size: .65vw; } .user-status { font-size: .65vw; } }
+@media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 8rem; } .user-status { font-size: 2vw; } }
 
 </style>
