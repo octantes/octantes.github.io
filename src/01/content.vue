@@ -178,6 +178,9 @@ watch(                                                                          
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />     <!-- for vuecomp/fullscreen  -->
           <div v-else :class="computedNoteClass" v-html="noteContent" />                   <!-- for html posts          -->
+
+          <br><hr><br>
+
           <Subscribe v-if="currentPost && !computedNoteComp && !computedFullscreen" />     <!-- subscribe to newsletter -->
           
         </div>
