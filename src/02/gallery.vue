@@ -7,9 +7,9 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { noteSortFilter, processing } = storeToRefs(store) 
+const { noteSortFilter, processing } = storeToRefs(store)                                                                             // imports refs from main store
 
-function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
+function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
 
 </script>
 

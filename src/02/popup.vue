@@ -2,7 +2,7 @@
 import { useStore } from '../04/store.js'
 import sigil from '../../content/assets/sigil.png'
 
-const store = useStore()
+const store           = useStore()                                                                                                    // initializes global store
 
 </script>
 
