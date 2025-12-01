@@ -3,7 +3,35 @@ import { ref, computed } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
-  const error404 =
+  const tabs                       = [                                                                                                // names for filters 
+
+    { label: 'completo',   value: 'full'       },
+    { label: 'diseño',     value: 'diseño'     },
+    { label: 'desarrollo', value: 'desarrollo' },
+    { label: 'música',     value: 'musica'     },
+    { label: 'textos',     value: 'textos'     },
+    { label: 'juegos',     value: 'juegos'     },
+
+  ]
+
+  const authorsMap = {                                                                                                                // author profile pic and link 
+
+    swim:     { img: '/assets/swim.webp',  link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
+    kaste:    { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+    octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+
+  }
+
+  const statusMap  = {                                                                                                                // status lines with emojis 
+
+    frenzy:   { emoji: '❤️‍🔥', message: 'in a frenzy!'       },
+    dominion: { emoji: '🪡', message: 'dominando el mundo' },
+    stuck:    { emoji: '🌀', message: 'stuck in a loop'    },
+    default:  { emoji: '🪡', message: 'dominando el mundo' },
+
+  }
+
+  const error404   =                                                                                                                  // div for content miss 
 `
 <div class="figlet">
   <pre aria-hidden="true">
@@ -25,22 +53,6 @@ export const useStore = defineStore('store', () => {
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
 
-  const authorsMap = {                                                                                                                // author profile pic and link 
-
-    swim:     { img: '/assets/swim.webp',  link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
-    kaste:    { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
-    octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
-
-  }
-
-  const statusMap = {
-
-    frenzy:   { emoji: '❤️‍🔥', message: 'in a frenzy!'       },
-    dominion: { emoji: '🪡', message: 'dominando el mundo' },
-    stuck:    { emoji: '🌀', message: 'stuck in a loop'    },
-    default:  { emoji: '🪡', message: 'dominando el mundo' },
-
-  }
 
   // STATES                                                                                                                           // CHANGE STATES
 
@@ -77,16 +89,7 @@ export const useStore = defineStore('store', () => {
   const sortKey                    = ref('isoDate')                                                                                   // current sort column
   const sortOrder                  = ref('desc')                                                                                      // current sort order
   const searchQuery                = ref('')                                                                                          // searchbox current search
-  const tabs                       = [                                                                                                // names for filters 
 
-    { label: 'completo',   value: 'full'       },
-    { label: 'diseño',     value: 'diseño'     },
-    { label: 'desarrollo', value: 'desarrollo' },
-    { label: 'música',     value: 'musica'     },
-    { label: 'textos',     value: 'textos'     },
-    { label: 'juegos',     value: 'juegos'     },
-
-  ]
 
 
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -360,7 +363,7 @@ export const useStore = defineStore('store', () => {
     return { 
 
       title: metadata.title || 'bienvenido a octantes.net!',
-      description: metadata.description || 'toca una nota de la tabla para cargarla y empezar a leer, o tambien podes filtrar segun el tipo de post que queres encontrar en la pagina',
+      description: metadata.description || 'toca un posteo de la tabla para cargarlo; tambien podes filtrar segun el tipo de contenido que queres encontrar en la pagina',
       authors: postAuthors,
       portada: metadata.portada || '',
 
