@@ -66,7 +66,7 @@ const store = useStore()
   /* IMAGE  */ background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, var(--humo25) 2px, var(--humo25) 4px);
 
   &:hover { box-shadow: inset 0rem 0rem 5rem var(--ceniza); }
-  &::after { content: ""; position: absolute; inset: 0; background-color: var(--malva); opacity: 0; transition: opacity var(--animate-fast); pointer-events: none; }
+  &::after { content: ""; position: absolute; inset: 0; background-color: var(--arcilla); opacity: 0; transition: opacity var(--animate-fast); pointer-events: none; }
   &:hover::after { opacity: 0.25; }
   
 }
@@ -78,7 +78,7 @@ const store = useStore()
   /* LAYOUT */ text-align: center; line-height: 1.5;
   /* FONT   */ font-family: var(--font-mono); font-weight: bold; font-size: 1.5rem;
   /* FILL   */ color: var(--carbon);
-  /* BORDER */ text-shadow: .5px .5px 0px var(--malva80);
+  /* BORDER */ text-shadow: .5px .5px 0px var(--arcilla80);
   
 }
 
@@ -86,7 +86,7 @@ const store = useStore()
   
   /* LAYOUT */ position: absolute; z-index: 1;
   /* BOX    */ width: 480px; height: 480px; inset: 0; scale: 96%;
-  /* BORDER */ border: .35rem solid var(--ceniza); box-shadow: inset 0 0 0 1rem var(--malva), inset 0 0 0 calc(1rem + .35rem) var(--ceniza);
+  /* BORDER */ border: .35rem solid var(--ceniza); box-shadow: inset 0 0 0 1rem var(--arcilla), inset 0 0 0 calc(1rem + .35rem) var(--ceniza);
 
 }
 
@@ -95,7 +95,7 @@ const store = useStore()
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ user-select: none; display: block; position: absolute; z-index: 20;
   /* BOX    */ top: -1rem; right: -1rem; width: 3rem; height: 3rem;
-  /* FILL   */ color: var(--ceniza); background: var(--malva);
+  /* FILL   */ color: var(--ceniza); background: var(--arcilla);
   /* FONT   */ font-size: 1.5rem; font-weight: bold;
   /* BORDER */ border: none; box-shadow: inset 0 0 0 .25rem var(--ceniza), inset 0rem 0rem .8rem var(--ceniza);
   /* MOTION */ transition: all var(--animate-fast);

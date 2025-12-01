@@ -92,7 +92,7 @@ onMounted(async () => {                                                         
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center; position: relative;
   /* BOX    */ padding: 2rem; padding-top: 1rem; gap: .8rem;
   /* FILL   */ background-color: var(--carbon); color: var(--niebla);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-xs);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
 
 }
@@ -137,7 +137,7 @@ onMounted(async () => {                                                         
     /* CURSOR */ cursor: pointer;
     /* BOX    */ padding: 0.5rem 1rem;
     /* FILL   */ background-color: transparent; color: var(--humo);
-    /* BORDER */ border: none; border-radius: var(--radius-xs);
+    /* BORDER */ border: none; border-radius: var(--radius-ss);
     /* FONT   */ font-family: var(--font-main);
     /* MOTION */ transition: all var(--animate-fast);
     
@@ -181,7 +181,7 @@ onMounted(async () => {                                                         
   /* LAYOUT */ text-align: center;
   /* BOX    */ width: 75%; padding: 0.5rem 1rem;
   /* FILL   */ background-color: transparent; color: var(--humo);
-  /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--humo10);
   /* FONT   */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
@@ -195,7 +195,7 @@ onMounted(async () => {                                                         
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   /* BOX    */ width: 25%; padding: 0.5rem 5rem;
   /* FILL   */ background-color: transparent; color: var(--humo);
-  /* BORDER */ border: none; border-radius: var(--radius-xs); box-shadow: var(--shadow-border) var(--humo10);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--humo10);
   /* FONT   */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: background-color var(--animate-fast);
 
