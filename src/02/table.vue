@@ -23,11 +23,11 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
       <col class="col-tags">
     </colgroup>
 
-    <thead>
+    <thead>z
       <tr>
-        <th @click="store.navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder" v-if="!isCentered">fecha</th>
-        <th @click="store.navSort('title')" :class="{ active: sortKey === 'title' }" :data-order="sortOrder">título</th>
-        <th @click="store.navSort('tags')" :class="{ active: sortKey === 'tags' }" :data-order="sortOrder">tags</th>
+        <th @click="store.navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder" v-if="!isCentered" title="ordenar por fecha" aria-label="ordenar notas por fecha">fecha</th>
+        <th @click="store.navSort('title')"   :class="{ active: sortKey === 'title' }"   :data-order="sortOrder" title="ordenar por título" aria-label="ordenar notas por título">título</th>
+        <th @click="store.navSort('tags')"    :class="{ active: sortKey === 'tags' }"    :data-order="sortOrder" title="ordenar por tags"   aria-label="ordenar notas por tags">tags</th>
       </tr>
     </thead>
 
@@ -41,7 +41,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
         <td class="tagcol">
 
           <template v-if="!isCentered">
-            <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="store.setSearchQuery(tag)" :disabled="processing"> {{ tag }} </button>
+            <button v-for="tag in note.tags" :key="tag" class="tagfilter" @click.stop="store.setSearchQuery(tag)" :disabled="processing" :title="'buscar notas con el tag: ' + tag" :aria-label="'filtrar notas por el tag ' + tag"> {{ tag }} </button>
           </template>
 
           <template v-else>

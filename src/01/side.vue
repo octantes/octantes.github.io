@@ -8,7 +8,7 @@ import authorpic from '../../content/assets/kaste.jpg'
 const router          = useRouter()                                                                                                   // handles note open route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { activeFilter, processing } = storeToRefs(store)                                                                               // imports refs from main store
+const { activeFilter, processing, userStatus } = storeToRefs(store)                                                                   // imports refs from main store
 
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales' ]                 // random taglines
@@ -30,11 +30,19 @@ onMounted(async () => {                                                         
 
     <div class="profile-head">
 
-      <img class="profilepic" :src="authorpic" alt="kaste profile pic"/>
+      <img class="profilepic" :src="authorpic" alt="foto de perfil" title="foto de perfil"/>
+
       <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
 
-    </div>
+      <div class="user-status">
+        
+        <span class="status-emoji" aria-hidden="true">{{ userStatus.emoji }}</span>
+        <span class="status-message">{{ userStatus.message }}</span>
+        
+      </div>
 
+    </div>
+    
     <div v-if="activeFilter === 'full'"> 
 
       <p>
@@ -243,19 +251,19 @@ onMounted(async () => {                                                         
 .side { 
 
   /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
-  /* BOX    */ z-index: 1; width: 100%; padding: 3.6rem 3rem 2rem 3rem; gap: 1.8rem; overflow-wrap: break-word;
+  /* BOX    */ z-index: 1; width: 100%; padding: 3.6rem 3rem 2rem 3rem; gap: 1.25rem; overflow-wrap: break-word;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* FONT   */ font-size: .72vw; line-height: 1.5; word-break: break-word;
 
 }
 
-.profile-head { display: flex; flex-direction: column; justify-content: center; gap: 2rem; }
+.profile-head { display: flex; flex-direction: column; position: relative; justify-content: center; gap: 2rem; }
 
 .profilepic { 
 
   /* LAYOUT */ border-radius: 50%;
-  /* BOX    */ width: 5rem; height: 5rem;
+  /* BOX    */ width: 7rem; height: 7rem;
   /* FONT   */ align-self: center;
   /* BORDER */ border: var(--small-outline) var(--humo25);
 
@@ -269,7 +277,31 @@ onMounted(async () => {                                                         
 
 }
 
-@media (max-width: 1400px) { .side { font-size: .65vw } }
+.user-status { 
+
+  /* LAYOUT */ display: inline-flex; align-items: center; white-space: nowrap; z-index: 5;
+  /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
+  /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
+  /* FILL   */ background-color: var(--carbon); 
+  
+}
+
+.status-emoji {
+
+  /* LAYOUT */ text-align: center;
+  /* FONT   */ font-size: .65vw; line-height: 1;
+  /* FILL   */ color: var(--lirio);
+
+}
+
+.status-message {
+
+  /* FONT   */ font-family: var(--font-mono); font-size: .65vw; font-weight: bold; line-height: 1;
+  /* FILL   */ color: var(--humo);
+  
+}
+
+@media (max-width: 1400px) { .side { font-size: .65vw; } }
 @media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 8rem; } }
 
 </style>

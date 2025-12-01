@@ -6,7 +6,7 @@ export const useStore = defineStore('store', () => {
   const error404 =
 `
 <div class="figlet">
-  <pre>
+  <pre aria-hidden="true">
 ██╗  ██╗ ██████╗ ██╗  ██╗
 ██║  ██║██╔═████╗██║  ██║
 ███████║██║██╔██║███████║
@@ -24,11 +24,21 @@ export const useStore = defineStore('store', () => {
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
+
   const authorsMap = {                                                                                                                // author profile pic and link 
 
-    swim:     { img: '/assets/swim.webp', link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
+    swim:     { img: '/assets/swim.webp',  link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
     kaste:    { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
     octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+
+  }
+
+  const statusMap = {
+
+    frenzy:   { emoji: '❤️‍🔥', message: 'in a frenzy!'       },
+    dominion: { emoji: '🪡', message: 'dominando el mundo' },
+    stuck:    { emoji: '🌀', message: 'stuck in a loop'    },
+    default:  { emoji: '🪡', message: 'dominando el mundo' },
 
   }
 
@@ -41,6 +51,7 @@ export const useStore = defineStore('store', () => {
   const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link
   const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
   const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
+  const userStatus                 = ref(statusMap['frenzy'])                                                                         // current user status var
 
   // SUBS                                                                                                                             // SUBSCRIPTION HANDLING
 
@@ -54,11 +65,11 @@ export const useStore = defineStore('store', () => {
   
   // STATUS                                                                                                                           // BOTTOM BAR
 
+  let   timeInterval = null                                                                                                           // time update interval
+  let   btcInterval  = null                                                                                                           // btc update interval
   const btcPrice     = ref('---')                                                                                                     // btc price fetch result
   const currentTime  = ref('--:--')                                                                                                   // current time fetch result
   const barContent   = ref('/ '.repeat(300))                                                                                          // progress bar animation content
-  let   timeInterval = null                                                                                                           // time update interval
-  let   btcInterval  = null                                                                                                           // btc update interval
 
   // NAVIGATION                                                                                                                       // NOTE TABLE
 
@@ -86,62 +97,6 @@ export const useStore = defineStore('store', () => {
   function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
   function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
-
-  async function fetchPost(slug) {                                                                                                    // fetch post html 
-
-    if (!slug) { setCurrentPost(null); return { html: '', error: null } }
-    if (!notesLoaded.value) { await loadNotesIndex() }
-
-    const metadataSlug = notesIndex.value.find(p => p.slug === slug)
-    setCurrentPost(metadataSlug || { type: 'textos', slug })
-    const post = currentPost.value
-
-    try {
-
-      const fetchPath = post.url || `${base.value}/posts/${post.type || 'textos'}/${slug}/`
-      const res = await fetch(fetchPath)
-      const html = await res.text()
-
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-      if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
-
-      return { html, error: null }
-
-    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: error404, error: e } }
-    
-  }
-
-  async function loadNotesIndex() {                                                                                                   // fetch full note index 
-
-    if (notesLoaded.value) return notesIndex.value
-
-    try {
-
-      const response = await fetch('/index.json')
-      if (!response.ok) throw new Error('no se encontró el index.json')
-      notesIndex.value = await response.json()
-      notesLoaded.value = true
-
-    } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
-
-    return notesIndex.value
-
-  }
-
-  async function fetchBTC() {                                                                                                         // fetch and update btc price 
-
-    try {
-
-      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-      if (!response.ok) throw new Error('la respuesta de la api falló')
-      const data = await response.json()
-      const price = data.bitcoin.usd
-      const formattedPrice = Math.floor((price / 1000) * 10) / 10
-      btcPrice.value = `${formattedPrice}K`
-
-    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
-
-  }
 
   function fetchTime() {                                                                                                              // fetch and update current time  
 
@@ -280,6 +235,77 @@ export const useStore = defineStore('store', () => {
     
   }
 
+  function setUserStatus(key) {                                                                                                       // set emoji and status phrase 
+
+    const status = statusMap[key] || statusMap['default']
+    userStatus.value = status
+
+  }
+
+  
+  // ASYNCS -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  async function fetchPost(slug) {                                                                                                    // fetch post html 
+
+    if (!slug) { setCurrentPost(null); return { html: '', error: null } }
+    if (!notesLoaded.value) { await loadNotesIndex() }
+
+    const metadataSlug = notesIndex.value.find(p => p.slug === slug)
+    setCurrentPost(metadataSlug || { type: 'textos', slug })
+    const post = currentPost.value
+
+    try {
+
+      const fetchPath = post.url || `${base.value}/posts/${post.type || 'textos'}/${slug}/`
+      const res = await fetch(fetchPath)
+      const html = await res.text()
+
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+      if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
+
+      return { html, error: null }
+
+    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: error404, error: e } }
+    
+  }
+
+  async function loadNotesIndex() {                                                                                                   // fetch full note index 
+
+    if (notesLoaded.value) return notesIndex.value
+
+    try {
+
+      const response = await fetch('/index.json')
+      if (!response.ok) throw new Error('no se encontró el index.json')
+      notesIndex.value = await response.json()
+      notesLoaded.value = true
+
+    } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
+
+    return notesIndex.value
+
+  }
+
+  async function fetchBTC() {                                                                                                         // fetch and update btc price 
+
+    try {
+
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+      if (!response.ok) throw new Error('la respuesta de la api falló')
+      const data = await response.json()
+      const price = data.bitcoin.usd
+      const formattedPrice = Math.floor((price / 1000) * 10) / 10
+      btcPrice.value = `${formattedPrice}K`
+
+    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
+
+  }
+
+
+  // COMPUTEDS ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
   const computedNoteComp  = computed(() => {                                                                                          // compute vuecomp if it exists 
 
     if (currentPost.value) {
@@ -392,10 +418,14 @@ export const useStore = defineStore('store', () => {
 
   })
 
+
+  // RETURN -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
   return { 
 
-    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState,
-    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, resetSub, updateSub, emitSub,
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, statusMap, userStatus,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, resetSub, updateSub, emitSub, setUserStatus,
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,

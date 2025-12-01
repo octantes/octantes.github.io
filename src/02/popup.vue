@@ -14,7 +14,7 @@ const store           = useStore()                                              
 
       <img  class="sigil" :src="sigil" alt="sigilo" />
       
-      <button class="closebutton" @click.stop="store.togglePopup">✘</button>
+      <button class="closebutton" @click.stop="store.togglePopup" title="cerrar notificacion" aria-label="cerrar la notificación popup">✘</button>
 
       <div class="postbox">
         
@@ -24,7 +24,7 @@ const store           = useStore()                                              
           
         </div>
         
-        <a :href="store.popLink" class="ghostlink" target="_blank" @click="store.togglePopup"></a>
+        <a :href="store.popLink" class="ghostlink" target="_blank" @click="store.togglePopup" :title="'ir al enlace: ' + store.popString" :aria-label="'abrir enlace de la notificación: ' + store.popString"></a>
 
       </div>
 
