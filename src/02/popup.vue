@@ -24,7 +24,7 @@ const store           = useStore()                                              
           
         </div>
         
-        <a :href="store.popLink" class="ghostlink" target="_blank" @click="store.togglePopup" :title="'ir al enlace: ' + store.popString" :aria-label="'abrir enlace de la notificación: ' + store.popString"></a>
+        <a :href="store.popLink" class="ghostlink" target="_blank" @click="store.togglePopup" :title="'ir al enlace'" :aria-label="'abrir enlace de la notificación'"></a>
 
       </div>
 

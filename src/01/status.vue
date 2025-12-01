@@ -24,8 +24,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
     <div class="stleft">
 
       <a href="#" @click.prevent="openLatest" title="abrir la última nota publicada" aria-label="abrir la última nota publicada, que es: {{ latestPost.title }}">ultima nota - {{ latestPost.title }}</a>
-      <span>//</span>
-      <a :href="'mailto:' + store.mailtoDir" target="_blank" title="enviar un correo a {{ store.mailtoDir }}" aria-label="enviar correo electrónico al autor">contactame!</a>
+      <span class="divisions">//</span>
+      <a :href="'mailto:' + store.mailtoDir" target="_blank" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
 
     </div>
 
@@ -40,9 +40,9 @@ onUnmounted(() => { store.stopStatusUpdates() })
     <div class="stright">
 
       <a href="/feed.xml" target="_blank" title="suscribirse al feed RSS" aria-label="suscribirse a las últimas publicaciones por feed RSS">RSS</a>
-      <span class="btc">//</span>
+      <span class="btc divisions">//</span>
       <span class="btc">BTC: {{ btcPrice }}</span>
-      <span class="btc">//</span>
+      <span class="btc division">//</span>
       <span>{{ currentTime }}</span>
 
     </div>
@@ -101,6 +101,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
   }
 
 }
+
+.divisions { color: var(--humo50); }
 
 .progress-bar { 
 
