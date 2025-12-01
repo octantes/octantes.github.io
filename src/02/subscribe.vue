@@ -11,8 +11,8 @@ const submitButtonText = computed(() => {                                       
 
   switch (subState.value) {
 
-    case 'success': return '✓'
-    case 'error':   return '✘'
+    case 'success': return '     ✓     '
+    case 'error':   return '     ✘     '
 
     default:        return 'suscribirme'
 
