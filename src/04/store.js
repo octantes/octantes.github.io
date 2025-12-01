@@ -3,6 +3,20 @@ import { ref, computed } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
+  const error404 =
+`
+<div class="figlet">
+  <pre>
+██╗  ██╗ ██████╗ ██╗  ██╗
+██║  ██║██╔═████╗██║  ██║
+███████║██║██╔██║███████║
+╚════██║████╔╝██║╚════██║
+     ██║╚██████╔╝     ██║
+     ╚═╝ ╚═════╝      ╚═╝
+  </pre>
+</div>
+`
+
   // CONTENT                                                                                                                          // LOAD DATA
 
   const notesIndex                 = ref([])                                                                                          // note index array
@@ -10,7 +24,6 @@ export const useStore = defineStore('store', () => {
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
-
   const authorsMap = {                                                                                                                // author profile pic and link 
 
     swim:     { img: '/assets/swim.webp', link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
@@ -25,21 +38,34 @@ export const useStore = defineStore('store', () => {
   const processing                 = ref(false)                                                                                       // disabled component state
   const showPopup                  = ref(true)                                                                                        // enable popup in navigation
   const navMode                    = ref('gallery')                                                                                   // navigation view style
-  const popLink                    = ref('https://youtu.be/ze5ECrM9Wk0?si=AgNvT6imqX225vdj')                                          // popup go link
+  const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link
   const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
-  const mailtoDir                  = ref('facugerbino@gmail.com')                                                                      // contact direction
+  const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
+
+  // SUBS                                                                                                                             // SUBSCRIPTION HANDLING
+
+  const subEmail                   = ref('')                                                                                          // email
+  const subHoney                   = ref('')                                                                                          // bot honeypot
+  const subMessage                 = ref('dejá tu mail acá...')                                                                       // status message
+  const subState                   = ref('default')                                                                                   // status states
+  const emailRegex                 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/                                                                     // email regex
+  const lsCounter                  = 3                                                                                                // localstorage counter
+  const subResetTime               = 3000                                                                                             // submit reset timer
   
   // STATUS                                                                                                                           // BOTTOM BAR
 
-  const btcPrice    = ref('---')                                                                                                      // btc price fetch result
-  const currentTime = ref('--:--')                                                                                                    // current time fetch result
-  const barContent  = ref('/ '.repeat(300))                                                                                           // progress bar animation content
-
-  let timeInterval  = null                                                                                                            // time update interval
-  let btcInterval   = null                                                                                                            // btc update interval
+  const btcPrice     = ref('---')                                                                                                     // btc price fetch result
+  const currentTime  = ref('--:--')                                                                                                   // current time fetch result
+  const barContent   = ref('/ '.repeat(300))                                                                                          // progress bar animation content
+  let   timeInterval = null                                                                                                           // time update interval
+  let   btcInterval  = null                                                                                                           // btc update interval
 
   // NAVIGATION                                                                                                                       // NOTE TABLE
 
+  const activeFilter               = ref('full')                                                                                      // active tab filter name
+  const sortKey                    = ref('isoDate')                                                                                   // current sort column
+  const sortOrder                  = ref('desc')                                                                                      // current sort order
+  const searchQuery                = ref('')                                                                                          // searchbox current search
   const tabs                       = [                                                                                                // names for filters 
 
     { label: 'completo',   value: 'full'       },
@@ -51,37 +77,15 @@ export const useStore = defineStore('store', () => {
 
   ]
 
-  const activeFilter               = ref('full')                                                                                      // active tab filter name
-  const sortKey                    = ref('isoDate')                                                                                   // current sort column
-  const sortOrder                  = ref('desc')                                                                                      // current sort order
-  const searchQuery                = ref('')                                                                                          // searchbox current search
 
-  // ASCII PRE
+  // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    const error404 =
 
-`
-<div class="figlet">
-  <pre>
-██╗  ██╗ ██████╗ ██╗  ██╗
-██║  ██║██╔═████╗██║  ██║
-███████║██║██╔██║███████║
-╚════██║████╔╝██║╚════██║
-     ██║╚██████╔╝     ██║
-     ╚═╝ ╚═════╝      ╚═╝
-  </pre>
-</div>
-`
-
-  // FUNCTIONS                                                                                                                        // FUNCTION
-  
   function setCentered()                { isCentered.value = !isCentered.value }                                                      // toggle centered state
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
   function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
   function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
-
-  // en store.js
 
   async function fetchPost(slug) {                                                                                                    // fetch post html 
 
@@ -183,7 +187,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function toggleNavMode() {                                                                                                          // toggle navigation view mode
+  function toggleNavMode() {                                                                                                          // toggle navigation view mode 
   
     if (processing.value) return
     navMode.value = navMode.value === 'table' ? 'gallery' : 'table'
@@ -234,6 +238,46 @@ export const useStore = defineStore('store', () => {
     
     return notesIndex.value.some(note => note.type === actualType)
 
+  }
+
+  function resetSub() {                                                                                                               // reset sub message and value 
+
+    subMessage.value = 'dejá tu mail acá...'
+    subState.value = 'default'
+
+  }
+
+  function updateSub(state, text, clearInput = false) {                                                                               // update sub message and value 
+
+    subState.value   = state
+    subMessage.value = text
+
+    if (clearInput) subEmail.value = ''
+    if (state !== 'default') { setTimeout(resetSub, subResetTime) }
+
+  }
+
+  function emitSub(e) {                                                                                                               // check and emit umami event 
+
+    if (subState.value !== 'default') return
+    
+    const email = subEmail.value
+    const submissionsKey = 'subscription_count'
+    const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10)
+    
+    if (subHoney.value)              { updateSub('success', 'mail registrado!',             true); return }
+    if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!',       true); return }
+    if (currentCount >= lsCounter)         { updateSub('error',   'no podés registrar más mails', true); return }
+
+    if (window.umami && typeof window.umami.track === 'function') {
+
+        window.umami.track('suscripcion', { email: email })
+        localStorage.setItem(submissionsKey, currentCount + 1)
+
+        updateSub('success', `gracias por sumarte!`, true)
+        
+    } else { updateSub('error', 'falló el registro', true) }
+    
   }
 
   const computedNoteComp  = computed(() => {                                                                                          // compute vuecomp if it exists 
@@ -350,8 +394,8 @@ export const useStore = defineStore('store', () => {
 
   return { 
 
-    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base,
-    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost,
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, resetSub, updateSub, emitSub,
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,

@@ -1,17 +1,15 @@
-<script setup>
-import { ref, computed } from 'vue'
+<script setup> 
+import { computed } from 'vue'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
 
-const emailInput    = ref('')
-const honeyInput    = ref('')
-const message       = ref('dejá tu mail acá...')
-const messageState  = ref('default')
-const emailRegex    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const lhCounter     = 3
-const resetTimeout  = 3000
+const store = useStore()                                                                                                              // initializes global store
 
-const submitButtonText = computed(() => {
+const { subEmail, subHoney, subMessage, subState } = storeToRefs(store)                                                               // imports refs from main store
 
-  switch (messageState.value) {
+const submitButtonText = computed(() => {                                                                                             // switch for message and button 
+
+  switch (subState.value) {
 
     case 'success': return '✓'
     case 'error':   return '✘'
@@ -22,50 +20,11 @@ const submitButtonText = computed(() => {
 
 })
 
-function resetState() {
-
-  message.value = 'dejá tu mail acá...'
-  messageState.value = 'default'
-
-}
-
-function updateState(state, text, clearInput = false) {
-
-  messageState.value = state
-  message.value = text
-
-  if (clearInput) emailInput.value = ''
-  if (state !== 'default') { setTimeout(resetState, resetTimeout) }
-
-}
-
-function emitSubscription(e) {
-
-    if (e) e.preventDefault() 
-    if (messageState.value !== 'default') return
-    
-    const email = emailInput.value
-    const submissionsKey = 'subscription_count'
-    const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10)
-    
-    if (honeyInput.value)                  { updateState('success', 'mail registrado!',             true); return }
-    if (!email || !emailRegex.test(email)) { updateState('error',   'ese mail no es válido!',       true); return }
-    if (currentCount >= lhCounter)         { updateState('error',   'no podés registrar más mails', true); return }
-
-    if (window.umami && typeof window.umami.track === 'function') {
-
-        window.umami.track('suscripcion', { email: email })
-        localStorage.setItem(submissionsKey, currentCount + 1)
-
-        updateState('success', `gracias por sumarte!`, true)
-        
-    } else { updateState('error', 'falló el registro', true) }
-    
-}
+function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }                                                         // validate and emit subscription
 
 </script>
 
-<template>
+<template> 
 
   <div class="subscribe">
 
@@ -73,10 +32,10 @@ function emitSubscription(e) {
 
     <div class="form">
 
-      <input class="honeypot" type="text"  v-model="honeyInput" name="user"  tabindex="-1" autocomplete="off"/>
-      <input class="textbox"  type="email" v-model="emailInput" name="email" :placeholder="message" required :class="{ [messageState]: messageState !== 'default'}" />
+      <input class="honeypot" type="text"  v-model="subHoney" name="user"  tabindex="-1" autocomplete="off"/>
+      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required :class="{ [subState]: subState !== 'default'}" />
 
-      <div class="submit" :class="{ [messageState]: messageState !== 'default' }" @click="emitSubscription">{{ submitButtonText }}</div>
+      <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription">{{ submitButtonText }}</div>
 
     </div>
 
@@ -84,7 +43,7 @@ function emitSubscription(e) {
 
 </template>
 
-<style scoped>
+<style scoped> 
 
 .subscribe { 
 

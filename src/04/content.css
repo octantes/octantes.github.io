@@ -103,5 +103,5 @@
 
 }
 
-@media (max-width: 1405px) { .S6, .S7TEXT { font-size: .75vw } }
-@media (max-width: 1080px) { .S6, .S7TEXT { font-size: 2vw; } }
+@media (max-width: 1405px) { .S6, .S7TEXT { font-size: .75vw  } }
+@media (max-width: 1080px) { .S6, .S7TEXT { font-size:   2vw; } }
