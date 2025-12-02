@@ -89,7 +89,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* LAYOUT */ position: relative;
   /* BOX    */ width: 100%; padding-top: 56.25%; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); 
-  /* BORDER */ border-bottom: var(--small-outline) var(--humo10);
+  /* BORDER */ border-bottom: var(--small-outline) var(--humo10); border-top-left-radius: var(--radius-ss); border-top-right-radius: var(--radius-ss);
+  
   
   & img {
 
