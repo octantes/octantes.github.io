@@ -528,6 +528,7 @@ function generateGroupedSidebar() {                                             
   })
 
   const order = ['textos', 'diseño', 'desarrollo', 'musica', 'juegos']
+
   let html = ''
 
   order.forEach(type => {
@@ -585,8 +586,10 @@ async function writeBasicIndex() {                                              
         <div class="site-logo">OCTANTES</div>
         <div class="site-subtitle">tejiendo hechizos</div>
         <div class="profile-box">
-          <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
-          <div class="profile-text"><strong>kaste</strong><br><i>diseño, desarrollo, música y escritura</i></div>
+          <a href="https://x.com/octantes" target="_blank" class="profile-link">
+            <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
+          </a>
+          <div class="profile-text"><strong>kaste</strong><br><i>música, diseño, desarrollo y escritura</i></div>
         </div>
         <nav class="nav-links"><a href="/archivo.html">[ARCHIVO]</a><a href="/">[PORTAL]</a><a href="/feed.xml">[RSS]</a></nav>
         <div class="separator">artículos</div>
