@@ -1,24 +1,5 @@
 [
   {
-    "slug": "fullscreen",
-    "title": "fullscreen",
-    "description": "testeando la funcionalidad de fullscreen",
-    "type": "textos",
-    "tags": [
-      "fullscreen",
-      "test"
-    ],
-    "portada": "",
-    "handle": [
-      "kaste"
-    ],
-    "date": "25/11/2025",
-    "isoDate": "2025-11-25T00:00:00.000Z",
-    "url": "/posts/textos/fullscreen/",
-    "vuecomp": null,
-    "fullscreen": "background"
-  },
-  {
     "slug": "arch-hud",
     "title": "arch-hud",
     "description": "pack de herramientas suckless para convertir arch linux en un heads up display",

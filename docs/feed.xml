@@ -4,18 +4,10 @@
     <title>octantes.net</title>
     <link>https://octantes.github.io</link>
     <description>un portal web de contenido multimedia, sin algoritmos ni intermediarios</description>
-    <lastBuildDate>Mon, 01 Dec 2025 08:07:23 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 02 Dec 2025 02:32:40 GMT</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="https://octantes.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
-      <title>fullscreen</title>
-      <link>https://octantes.github.io/posts/textos/fullscreen/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/fullscreen/</guid>
-      <pubDate>Tue, 25 Nov 2025 00:00:00 GMT</pubDate>
-      <description>testeando la funcionalidad de fullscreen</description>
-      <author>kaste@octantes.net (kaste)</author>
-    </item>
-<item>
       <title>arch-hud</title>
       <link>https://octantes.github.io/posts/desarrollo/arch-hud/</link>
       <guid isPermaLink="true">https://octantes.github.io/posts/desarrollo/arch-hud/</guid>
