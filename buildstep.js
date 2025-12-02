@@ -410,8 +410,9 @@ async function processPosts() {                                                 
     const finalHash = hash.digest('hex')
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
     const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
-    const isoDate = attributes.date || dateObj.toISOString() 
-    const portadaUrl = attributes.portada ? `${webURL}/posts/${postType}/${slug}/${attributes.portada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
+    const isoDate = attributes.date || dateObj.toISOString()
+    const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
+    const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const canonicalUrl = `${webURL}/${postType}/${slug}/`
 
     const rawHandle = attributes.handle
