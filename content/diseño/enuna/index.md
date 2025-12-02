@@ -3,7 +3,7 @@ tags: [branding, portfolio]
 type: diseño
 title: en una - branding
 description: descripcion corta para seo
-portada: 
+portada: portada.png
 date: 2023-09-06
 handle: kaste
 ---

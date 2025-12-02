@@ -3,7 +3,7 @@ tags: [branding, portfolio]
 type: musica
 title: geminis
 description: la musica de mi hermano, sumando un tema mio al final
-portada: 
+portada: portada.png
 date: 2025-06-06
 handle: kaste
 ---

@@ -3,7 +3,7 @@ tags: [branding, portfolio]
 type: musica
 title: viñetas
 description: descripcion corta para seo
-portada: 
+portada: portada.png
 date: 2024-12-22
 handle: kaste
 ---
