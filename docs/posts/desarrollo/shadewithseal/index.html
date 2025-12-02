@@ -4,51 +4,98 @@
 
   <head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
 
-    <meta charset="UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/assets/neocities.css"> <!-- stylesheet for second basic webpage layer -->
     <link rel="alternate" type="application/rss+xml" title="octantes.net rss feed" href="https://octantes.github.io/feed.xml" />
 
     <title>shadewithseal</title>
+
     <meta name="description" content="playground para programar y grabar fragment shaders GLSL directamente en el navegador">
     <link rel="canonical" href="https://octantes.github.io/desarrollo/shadewithseal/">
 
-    <!-- open graph -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="shadewithseal">
     <meta property="og:description" content="playground para programar y grabar fragment shaders GLSL directamente en el navegador">
     <meta property="og:url" content="https://octantes.github.io/desarrollo/shadewithseal/">
     <meta property="og:image" content="https://octantes.github.io/posts/desarrollo/shadewithseal/portada.webp">
 
-    <!-- twitter card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="shadewithseal">
     <meta name="twitter:description" content="playground para programar y grabar fragment shaders GLSL directamente en el navegador">
     <meta name="twitter:image" content="https://octantes.github.io/posts/desarrollo/shadewithseal/portada.webp">
     <meta name="twitter:creator" content="@kaste">
 
-    <!-- json-ld structured data -->
     <script type="application/ld+json">{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;BlogPosting&quot;,&quot;mainEntityOfPage&quot;:{&quot;@type&quot;:&quot;WebPage&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/desarrollo/shadewithseal/&quot;},&quot;headline&quot;:&quot;shadewithseal&quot;,&quot;image&quot;:&quot;https://octantes.github.io/posts/desarrollo/shadewithseal/portada.webp&quot;,&quot;author&quot;:{&quot;@type&quot;:&quot;Person&quot;,&quot;name&quot;:&quot;kaste&quot;,&quot;url&quot;:&quot;https://x.com/kaste&quot;},&quot;publisher&quot;:{&quot;@type&quot;:&quot;Organization&quot;,&quot;name&quot;:&quot;octantes.net&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;,&quot;url&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;}},&quot;datePublished&quot;:&quot;2025-07-03T00:00:00.000Z&quot;,&quot;dateModified&quot;:&quot;2025-07-03T00:00:00.000Z&quot;,&quot;description&quot;:&quot;playground para programar y grabar fragment shaders GLSL directamente en el navegador&quot;,&quot;keywords&quot;:&quot;herramientas, portfolio&quot;}</script>
 
   </head>
 
   <body>
-      <nav class="static-nav">
-        <a href="/archivo.html">← VOLVER AL ARCHIVO</a>
-        <span>// shadewithseal</span>
-      </nav>
 
-    <p><a href="https://github.com/octantes/shadewithseal" target="_blank" rel="noopener noreferrer">seal</a> es una herramienta local para <em>crear, guardar y grabar frag shaders</em> en el browser<br />no necesita instalación ni tener internet: solo descargá el HTML y abrilo con el navegador</p>
+    <aside class="static-nav">
+      
+      <div class="sidebar-content">
+        <div class="site-logo">OCTANTES</div>
+        <div class="site-subtitle">thought experiments</div>
+
+        <div class="profile-box">
+          <pre>
+   .---.
+  /     \
+  |  O  |
+  \     /
+   '---'</pre>
+          <div class="profile-text">
+            <strong>kaste</strong><br>
+            dev & design
+          </div>
+        </div>
+
+        <nav class="nav-links">
+          <a href="/archivo.html">[home]</a>
+          <a href="/">[spa]</a>
+          <a href="/feed.xml">[rss]</a>
+        </nav>
+
+        <div class="separator">artigles</div>
+        
+        <ul class="article-list">
+          <li><a href="https://octantes.github.io/posts/desarrollo/arch-hud/">arch hud</a></li>
+<li><a href="https://octantes.github.io/posts/desarrollo/shadewithseal/">shadewithseal</a></li>
+<li><a href="https://octantes.github.io/posts/desarrollo/trackwithslate/">trackwithslate</a></li>
+<li><a href="https://octantes.github.io/posts/diseño/cruzar/">cruzar</a></li>
+<li><a href="https://octantes.github.io/posts/diseño/dinamik/">dinamik</a></li>
+<li><a href="https://octantes.github.io/posts/diseño/enuna/">enuna</a></li>
+<li><a href="https://octantes.github.io/posts/musica/geminis/">geminis</a></li>
+<li><a href="https://octantes.github.io/posts/musica/moodworktapes/">moodworktapes</a></li>
+<li><a href="https://octantes.github.io/posts/musica/seance/">seance</a></li>
+<li><a href="https://octantes.github.io/posts/musica/sixminutesolder/">sixminutesolder</a></li>
+<li><a href="https://octantes.github.io/posts/musica/viñetas/">viñetas</a></li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <main class="post-content">
+
+      <header class="post-header">
+        <h1>shadewithseal</h1>
+        <div class="meta">03/07/2025 // kaste</div>
+      </header>
+      
+      <p><a href="https://github.com/octantes/shadewithseal" target="_blank" rel="noopener noreferrer">seal</a> es una herramienta local para <em>crear, guardar y grabar frag shaders</em> en el browser<br />no necesita instalación ni tener internet: solo descargá el HTML y abrilo con el navegador</p>
 <p>armado para artistas/programadores que quieran un playground liviano para prototipar<br />ideal para quienes buscan simplicidad y privacidad: no está pensada para uso profesional<br />sin embargo, se cubren algunos edge-cases importantes</p>
 <p>toda la información se mantiene en tu máquina, sin cuentas, servidores o sincronización<br />la información <em>queda en tu browser hasta que la exportás</em> - hacé backups regularmente</p>
 <p>cada release es estable, con el objetivo de mantenerlo <strong>simple</strong>: abrilo y empezá a codear</p>
 <p><em>live-coding</em>: programá shaders en GLSL mientras ves los resultados en tiempo real<br /><em>renderizado</em>: render-loop simple y minimalista basado en webGL (por ahora solo 1.0)<br /><em>compatibilidad</em>: se implementaron la mayoría de las variables custom de shadertoy<br /><em>grabación</em>: funciones para grabar, reproducir, pausar y descargar el shader a .webm<br /><em>almacenamiento</em>: todo se guarda dentro del browser cache usando indexedDB<br /><em>superligero</em>: compatible con cualquier navegador, incluyendo móvil; solo ~100 KB</p>
 <p><strong>wip</strong>: webGL2 &gt; export JSON &gt; overlay de canvas + blending modes &gt; aspect ratios</p>
 <p>pro-tip: <em>guardalo como favorito para acceder rápidamente</em></p>
-    
+
+    </main>
+
   </body>
 
 </html>

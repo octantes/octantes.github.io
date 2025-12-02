@@ -4,49 +4,96 @@
 
   <head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
 
-    <meta charset="UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/assets/neocities.css"> <!-- stylesheet for second basic webpage layer -->
     <link rel="alternate" type="application/rss+xml" title="octantes.net rss feed" href="https://octantes.github.io/feed.xml" />
 
     <title>arch-hud</title>
+
     <meta name="description" content="pack de herramientas suckless para convertir arch linux en un heads up display">
     <link rel="canonical" href="https://octantes.github.io/desarrollo/arch-hud/">
 
-    <!-- open graph -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="arch-hud">
     <meta property="og:description" content="pack de herramientas suckless para convertir arch linux en un heads up display">
     <meta property="og:url" content="https://octantes.github.io/desarrollo/arch-hud/">
     <meta property="og:image" content="https://octantes.github.io/posts/desarrollo/arch-hud/portada.webp">
 
-    <!-- twitter card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="arch-hud">
     <meta name="twitter:description" content="pack de herramientas suckless para convertir arch linux en un heads up display">
     <meta name="twitter:image" content="https://octantes.github.io/posts/desarrollo/arch-hud/portada.webp">
     <meta name="twitter:creator" content="@kaste">
 
-    <!-- json-ld structured data -->
     <script type="application/ld+json">{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;BlogPosting&quot;,&quot;mainEntityOfPage&quot;:{&quot;@type&quot;:&quot;WebPage&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/desarrollo/arch-hud/&quot;},&quot;headline&quot;:&quot;arch-hud&quot;,&quot;image&quot;:&quot;https://octantes.github.io/posts/desarrollo/arch-hud/portada.webp&quot;,&quot;author&quot;:{&quot;@type&quot;:&quot;Person&quot;,&quot;name&quot;:&quot;kaste&quot;,&quot;url&quot;:&quot;https://x.com/kaste&quot;},&quot;publisher&quot;:{&quot;@type&quot;:&quot;Organization&quot;,&quot;name&quot;:&quot;octantes.net&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;,&quot;url&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;}},&quot;datePublished&quot;:&quot;2025-09-14T00:00:00.000Z&quot;,&quot;dateModified&quot;:&quot;2025-09-14T00:00:00.000Z&quot;,&quot;description&quot;:&quot;pack de herramientas suckless para convertir arch linux en un heads up display&quot;,&quot;keywords&quot;:&quot;herramientas, portfolio&quot;}</script>
 
   </head>
 
   <body>
-      <nav class="static-nav">
-        <a href="/archivo.html">← VOLVER AL ARCHIVO</a>
-        <span>// arch-hud</span>
-      </nav>
 
-    <p><a href="https://github.com/octantes/arch-hud" target="_blank" rel="noopener noreferrer">arch-hud</a> es una build personal de herramientas <a href="https://suckless.org/" target="_blank" rel="noopener noreferrer">suckless</a> para uso diario en arch linux</p>
+    <aside class="static-nav">
+      
+      <div class="sidebar-content">
+        <div class="site-logo">OCTANTES</div>
+        <div class="site-subtitle">thought experiments</div>
+
+        <div class="profile-box">
+          <pre>
+   .---.
+  /     \
+  |  O  |
+  \     /
+   '---'</pre>
+          <div class="profile-text">
+            <strong>kaste</strong><br>
+            dev & design
+          </div>
+        </div>
+
+        <nav class="nav-links">
+          <a href="/archivo.html">[home]</a>
+          <a href="/">[spa]</a>
+          <a href="/feed.xml">[rss]</a>
+        </nav>
+
+        <div class="separator">artigles</div>
+        
+        <ul class="article-list">
+          <li><a href="https://octantes.github.io/posts/desarrollo/arch-hud/">arch hud</a></li>
+<li><a href="https://octantes.github.io/posts/desarrollo/shadewithseal/">shadewithseal</a></li>
+<li><a href="https://octantes.github.io/posts/desarrollo/trackwithslate/">trackwithslate</a></li>
+<li><a href="https://octantes.github.io/posts/diseño/cruzar/">cruzar</a></li>
+<li><a href="https://octantes.github.io/posts/diseño/dinamik/">dinamik</a></li>
+<li><a href="https://octantes.github.io/posts/diseño/enuna/">enuna</a></li>
+<li><a href="https://octantes.github.io/posts/musica/geminis/">geminis</a></li>
+<li><a href="https://octantes.github.io/posts/musica/moodworktapes/">moodworktapes</a></li>
+<li><a href="https://octantes.github.io/posts/musica/seance/">seance</a></li>
+<li><a href="https://octantes.github.io/posts/musica/sixminutesolder/">sixminutesolder</a></li>
+<li><a href="https://octantes.github.io/posts/musica/viñetas/">viñetas</a></li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <main class="post-content">
+
+      <header class="post-header">
+        <h1>arch-hud</h1>
+        <div class="meta">14/09/2025 // kaste</div>
+      </header>
+      
+      <p><a href="https://github.com/octantes/arch-hud" target="_blank" rel="noopener noreferrer">arch-hud</a> es una build personal de herramientas <a href="https://suckless.org/" target="_blank" rel="noopener noreferrer">suckless</a> para uso diario en arch linux</p>
 <p>las herramientas fueron implementadas pensando en el concepto de un <em>heads up display</em><br />buscando que la pc vuelva a ser una herramienta y deje de ser un agujero negro cognitivo<br />se implementaron varios parches sobre DWM junto a una estética simple de estilo retro<br />sin gaps, transparencia ni compositor por defecto; <strong>sin distracciones innecesarias</strong></p>
 <p>para compilar, entrá en cada dir y ejecutá <em>sudo make clean install</em> (script pendiente)</p>
 <p><a href="https://dwm.suckless.org/" target="_blank" rel="noopener noreferrer">dwm</a> - tiling windows manager<br /><a href="https://tools.suckless.org/dmenu/" target="_blank" rel="noopener noreferrer">dmenu</a> - menú de scripts dinámico<br /><a href="https://st.suckless.org/" target="_blank" rel="noopener noreferrer">st</a> - emulador de terminal simple<br /><a href="https://surf.suckless.org/" target="_blank" rel="noopener noreferrer">surf</a> - navegador minimalista<br /><a href="https://tools.suckless.org/tabbed/" target="_blank" rel="noopener noreferrer">tabbed</a> - implementa pestañas en la terminal y el browser<br /><a href="https://github.com/dunst-project/dunst" target="_blank" rel="noopener noreferrer">dunst</a> - daemon de notificaciones súper simple</p>
 <p>podés sumar el compositor <a href="https://github.com/yshui/picom" target="_blank" rel="noopener noreferrer">picom</a> si experimentás screen tearing</p>
-    
+
+    </main>
+
   </body>
 
 </html>
