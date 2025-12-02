@@ -3,7 +3,7 @@ tags: [herramientas, portfolio]
 type: desarrollo
 title: trackwithslate
 description: herramienta simple para editar y organizar información tabular CSV directamente en el navegador
-portada:
+portada: portada.png
 date: 2025-06-23
 handle: kaste
 ---

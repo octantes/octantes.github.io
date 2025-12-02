@@ -3,7 +3,7 @@ tags: [branding, portfolio]
 type: musica
 title: mood worktapes
 description: primer disquito, aprendiendo a usar ableton live
-portada: 
+portada: portada.png
 date: 2019-04-11
 handle: kaste
 ---

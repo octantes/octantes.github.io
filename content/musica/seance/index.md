@@ -3,7 +3,7 @@ tags: [branding, portfolio]
 type: musica
 title: seance
 description: primer disquito con guitarra y visualizer
-portada: 
+portada: portada.png
 date: 2022-05-08
 handle: kaste
 ---

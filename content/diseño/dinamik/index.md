@@ -3,7 +3,7 @@ tags: [branding, portfolio]
 type: diseño
 title: dinamik - branding
 description: descripcion corta para seo
-portada:
+portada: portada.png
 date: 2024-11-30
 handle: kaste
 ---
