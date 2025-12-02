@@ -37,7 +37,5 @@ hoy decido subirlo así como quedó guardado, para retomar ese camino
 toca volver a ser un canal para esas ideas y lo primero es **aceptarlas** como son
 queda en ustedes ver si hay algo ahí y completar el ciclo
 
-![embed de viñetas en spotify](https://open.spotify.com/album/5TBo1dh94oSvKd0ilU3cli?si=-azhriINQjCxwQ6UvvQdpw)
-
 pronto más cosas, como dice dano
 **siempre cosas**

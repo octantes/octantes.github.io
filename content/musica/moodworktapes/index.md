@@ -9,5 +9,3 @@ handle: kaste
 ---
 
 ![embed de mood worktapes en youtube](https://www.youtube.com/watch?v=DZ6w0VFpsbg)
-
-![embed de mood worktapes en spotify](https://open.spotify.com/album/7dPBBrHRKLl369gdYGiEbp?si=w696RnruTvKdn9-aDWffFg)
