@@ -2,9 +2,10 @@
 
 :root {
   --bg: #1B1C1C;       /* carbon */
+  --sidebar-bg: #202121; /* un toque mas claro para contraste */
   --text: #AAABAC;     /* humo */
-  --accent: #8AB6BB;   /* cristal (italics) */
-  --highlight: #986C98;/* lirio (bolds) */
+  --accent: #8AB6BB;   /* cristal */
+  --highlight: #986C98;/* lirio */
   --border: #3C3C3C;   /* polvo */
   --dim: #2B2C2C;      /* ceniza */
 }
@@ -15,224 +16,229 @@
 body {
   background-color: var(--bg);
   color: var(--text);
-  /* INCONSOLATA PARA TODO */
   font-family: 'Inconsolata', monospace; 
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 13px; /* achicado para match visual */
+  line-height: 1.4;
   margin: 0;
   padding: 0;
   min-height: 100vh;
   
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 260px 1fr; /* sidebar mas angosto */
 }
 
-/* ESTILOS DE TEXTO GLOBALES (REGLA SOLICITADA) */
+/* GLOBAL STYLES */
 strong, b { color: var(--highlight); font-weight: 700; }
 i, em     { color: var(--accent);    font-style: italic; }
-a         { color: var(--text); text-decoration: none; transition: all 0.2s ease; }
+a         { color: var(--text); text-decoration: none; }
 a:hover   { color: var(--accent); text-decoration: underline; }
 
 /* --- SIDEBAR --- */
 .static-nav {
-  background: var(--bg);
+  background: var(--sidebar-bg); /* contraste solicitado */
   border-right: 1px solid var(--border);
   height: 100vh;
   position: sticky;
   top: 0;
   overflow-y: auto;
-  padding: 2.5rem 2rem;
+  padding: 2rem 1.5rem; /* padding mas compacto */
   display: flex;
   flex-direction: column;
 }
 
 .site-logo {
-  font-size: 2rem; 
+  font-size: 1.8rem; 
   font-weight: 700;
   letter-spacing: 2px;
   color: var(--highlight);
   line-height: 1;
   margin-bottom: 0.2rem;
+  font-variant: small-caps; /* estilo bancore */
 }
 
 .site-subtitle { 
   font-style: italic; 
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text);
   opacity: 0.8;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* PERFIL */
+/* PERFIL - IMITACION ESTILO DE REF */
 .profile-box {
   display: flex;
-  align-items: center; /* Centrado vertical */
-  gap: 1rem;
-  padding: 1rem;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.8rem;
   border: 1px solid var(--border);
-  background-color: var(--dim);
-  border-radius: 4px;
-  margin-bottom: 2rem; /* Separacion con los botones nav */
+  border-top: 6px solid var(--accent); /* el borde grueso superior */
+  background-color: transparent;
+  border-radius: 0; /* bordes duros */
+  margin-bottom: 2rem;
 }
 
-/* Link de la imagen de perfil */
 .profile-link {
-  display: block;
   flex-shrink: 0;
   cursor: pointer;
 }
 
 .profile-img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
   border: 1px solid var(--border);
+  border-radius: 0; /* imagen cuadrada */
   object-fit: cover;
   display: block;
-  transition: border-color 0.2s;
 }
-
 .profile-link:hover .profile-img { border-color: var(--highlight); }
 
 .profile-text {
-  font-size: 0.85rem;
-  line-height: 1.2; /* Menor interlineado */
-  display: flex;
-  flex-direction: column;
-  gap: 2px; /* Menor espacio entre nombre y descripcion */
+  font-size: 0.8rem;
+  line-height: 1.2;
 }
 
 /* NAVEGACION */
 .nav-links {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+  flex-direction: column; /* lista vertical como ref */
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
 }
 
 .nav-links a {
   border: 1px solid var(--border);
-  padding: 0.3rem 0.6rem;
-  font-size: 0.85rem;
+  padding: 2px 6px;
+  font-size: 0.8rem;
   color: var(--accent);
+  display: inline-block;
 }
 
 .nav-links a:hover {
-  background-color: var(--dim);
+  font-weight: 700;
   border-color: var(--accent);
   text-decoration: none;
 }
 
 /* SEPARADOR ARTICULOS */
 .separator {
-  margin-top: 2rem;      /* Espacio arriba */
-  margin-bottom: 1rem;
-  padding-top: 0.5rem;   /* Padding interno */
-  padding-bottom: 0.5rem;
-  
-  /* Doble borde (arriba y abajo) */
-  border-top: 1px dashed var(--border); 
-  border-bottom: 1px dashed var(--border);
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px dashed var(--border); 
+  border-top: none;
   
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: lowercase; /* estilo mas hacker */
   color: var(--highlight);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 1px;
-  text-align: center;
+  text-align: left;
 }
 
-/* LISTAS */
+/* LISTAS DE ARTICULOS */
 .article-list { list-style: none; padding: 0; margin: 0; }
-.article-list li { margin-bottom: 0.4rem; }
+.article-list li { margin-bottom: 0.2rem; } /* bien apretado */
 
 .article-list a {
   display: block;
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.8;
-  font-size: 0.95rem;
+  opacity: 0.9;
+  font-size: 0.85rem;
 }
-.article-list a:hover { opacity: 1; color: var(--accent); }
-.article-list a::before { content: ">"; margin-right: 8px; color: var(--border); }
+.article-list a:hover { opacity: 1; color: var(--accent); text-decoration: underline; }
+
+/* El punto (·) de la referencia */
+.article-list a::before { 
+  content: "\00b7"; /* middle dot */
+  margin-right: 6px; 
+  font-weight: bold;
+  color: var(--border); 
+}
 .article-list a:hover::before { color: var(--highlight); }
 
+/* headers de categorias en sidebar si los usas */
 .cat-header {
   color: var(--text);
   font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  padding-left: 2px;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
   opacity: 0.6;
 }
-.cat-header:first-of-type { margin-top: 0; }
 
 /* --- CONTENIDO PRINCIPAL --- */
 .post-content {
-  padding: 4rem 5rem;
+  padding: 2rem 3rem;
+  /* El padding derecho gigante de la referencia */
+  padding-right: 35vw; 
   width: 100%;
-  box-sizing: border-box;
   overflow-y: auto;
 }
 
 /* Header del Post */
-.post-header { margin-bottom: 3rem; }
+.post-header { margin-bottom: 2rem; }
 
 .post-header h1 {
-  font-family: 'Inconsolata', monospace; /* Forzado */
-  font-size: 2.5rem;
+  font-family: 'Inconsolata', monospace;
+  font-size: 2rem;
+  font-variant: small-caps; /* key style */
   line-height: 1.1;
   color: var(--accent);
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.5rem 0;
   border-bottom: 1px dashed var(--border);
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 .post-header .meta {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  font-style: italic;
   color: var(--highlight);
-  display: inline-block;
 }
 
 /* Contenido Markdown */
-/* Quitamos max-width para que ocupe todo */
-p { margin-bottom: 1.5rem; max-width: none; } 
+p { margin-bottom: 1rem; max-width: none; font-size: 0.95rem; } 
 
 img { 
   max-width: 100%; 
-  height: auto; 
-  display: block; 
   border: 1px solid var(--border); 
-  border-radius: 4px;
-  margin: 2rem 0; 
+  margin: 1.5rem 0; 
 }
 
 blockquote {
   border-left: 3px solid var(--highlight);
-  margin: 2rem 0;
-  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  padding: 0.5rem 1rem;
   background-color: var(--dim);
   font-style: italic;
-  color: var(--text);
+  font-size: 0.9rem;
 }
 
-ul, ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
-li { margin-bottom: 0.5rem; }
-hr { border: 0; border-top: 1px dashed var(--border); margin: 3rem 0; }
+ul, ol { margin-bottom: 1rem; padding-left: 1.2rem; }
+li { margin-bottom: 0.3rem; }
+hr { border: 0; border-top: 1px dashed var(--border); margin: 2rem 0; }
 
-/* Scrollbars */
-::-webkit-scrollbar { width: 6px; }
+/* Scrollbars finos */
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--dim); }
+::-webkit-scrollbar-thumb { background: var(--border); border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* MOVIL */
 @media (max-width: 900px) {
-  body { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-  .static-nav { height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); padding: 1.5rem; }
-  .post-content { padding: 2rem 1.5rem; }
-  .post-header h1 { font-size: 2rem; }
+  body { grid-template-columns: 1fr; }
+  .static-nav { 
+    height: auto; 
+    position: relative; 
+    border-right: none; 
+    border-bottom: 1px solid var(--border); 
+    padding: 1.5rem; 
+  }
+  .post-content { 
+    padding: 1.5rem; 
+    padding-right: 1.5rem; /* reset del padding gigante en movil */
+  }
+  .nav-links { flex-direction: row; flex-wrap: wrap; }
 }
