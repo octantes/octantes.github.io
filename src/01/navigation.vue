@@ -187,7 +187,7 @@ onMounted(async () => {                                                         
   /* FONT   */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
-  &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
+  &:focus { background-color: var(--lirio15); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
 
 }
 
@@ -196,12 +196,12 @@ onMounted(async () => {                                                         
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   /* BOX    */ width: 25%; padding: 0.5rem 5rem;
-  /* FILL   */ background-color: transparent; color: var(--humo);
+  /* FILL   */ background-color: var(--lirio15); color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--humo10);
   /* FONT   */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: background-color var(--animate-fast);
 
-  &:hover { background-color: var(--lirio15); }
+  &:hover { background-color: var(--cristal15); }
 
 }
 
