@@ -67,7 +67,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     border-color: var(--lirio);
 
     & .title { color: var(--cristal); }
-    & img { filter: grayscale(0); transform: scale(1.05); }
+    & img { transform: scale(1.05); }
 
   }
 
@@ -76,7 +76,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     border-color: var(--lirio);
 
     & .title { color: var(--cristal); }
-    & img { filter: grayscale(0); transform: scale(1.05); }
+    & img { transform: scale(1.05); }
 
   } 
 
@@ -93,7 +93,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   & img {
 
     width: 100%; height: 100%; object-fit: cover;
-    filter: grayscale(1); transition: all var(--animate-mid);
+    transition: all var(--animate-mid);
 
   }
 
