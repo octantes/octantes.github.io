@@ -523,24 +523,31 @@ function generateGroupedSidebar() {                                             
   const groups = {}
 
   indexItems.forEach(item => {
+
     if (!groups[item.type]) groups[item.type] = []
     groups[item.type].push(item)
+
   })
 
   const order = ['textos', 'diseño', 'desarrollo', 'musica', 'juegos']
+  
+  Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
 
   let html = ''
 
   order.forEach(type => {
+
     if (groups[type]) {
+
       html += `<li class="cat-header">${type}</li>`
-      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
-        html += `<li><a href="${webURL}${p.url}">${p.title}</a></li>`
-      })
+      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => { html += `<li><a href="${webURL}${p.url}">${p.title}</a></li>` })
+
     }
+
   })
   
   return html
+
 }
 
 async function writeBasicIndex() {                                               // create archivo.html with basic site structure 
@@ -550,23 +557,25 @@ async function writeBasicIndex() {                                              
 
   const mainContent =
   `
-    <h1>abriendo portales a universos alternativos</h1>
-    <div class="meta">archivo plano // octantes.net</div>
+    <header class="post-header">
+      <h1>abriendo portales a universos alternativos</h1>
+      <div class="meta">archivo plano // octantes.net</div>
+    </header>
     
-    <p>seleccioná una nota del menú izquierdo para comenzar la lectura</p>
+    <p>seleccioná una nota del menú izquierdo para comenzar la lectura.</p>
     
-    <div style="border: 1px dashed #3C3C3C; padding: 1.5rem; margin-top: 2rem;">
-      <p style="margin-top:0; color:#986C98; font-weight:bold;">// ÚLTIMAS ACTUALIZACIONES</p>
-      <ul style="list-style:none; padding:0;">
-        ${sortedItems.slice(0, 10).map(i => `
-          <li style="margin-bottom:0.5rem;">
-            <span style="color:#666; font-size:0.8em; margin-right:10px;">[${i.date}]</span>
-            <a href="${i.url}" style="font-weight:bold;">${i.title}</a> 
-            <span style="opacity:0.5; font-size:0.8em;">/ ${i.type}</span>
-          </li>
-        `).join('\n')}
-      </ul>
-    </div>
+    <div class="separator" style="text-align: left; margin-top: 3rem;">últimas actualizaciones</div>
+
+    <ul class="article-list">
+      ${sortedItems.slice(0, 15).map(i => `
+        <li>
+          <a href="${i.url}">
+            <span style="font-family: monospace; opacity: 0.6; margin-right: 8px;">[${i.date}]</span>
+            ${i.title}
+          </a>
+        </li>
+      `).join('\n')}
+    </ul>
   `
 
   const basicHtml = 
@@ -581,28 +590,45 @@ async function writeBasicIndex() {                                              
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
   </head>
   <body>
+  
     <aside class="static-nav">
       <div class="sidebar-content">
+      
         <div class="site-logo">OCTANTES</div>
         <div class="site-subtitle">tejiendo hechizos</div>
+        
         <div class="profile-box">
           <a href="https://x.com/octantes" target="_blank" class="profile-link">
             <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
           </a>
-          <div class="profile-text"><strong>kaste</strong><br><i>música, diseño, desarrollo y escritura</i></div>
+          <div class="profile-text">
+            <strong>kaste</strong><br>
+            <i>música, diseño, desarrollo y escritura</i>
+          </div>
         </div>
-        <nav class="nav-links"><a href="/archivo.html">[ARCHIVO]</a><a href="/">[PORTAL]</a><a href="/feed.xml">[RSS]</a></nav>
+        
+        <nav class="nav-links">
+          <a href="/archivo.html">[ARCHIVO]</a>
+          <a href="/">[PORTAL]</a>
+          <a href="/feed.xml">[RSS]</a>
+        </nav>
+        
         <div class="separator">artículos</div>
         <ul class="article-list">${sidebarHTML}</ul>
+        
       </div>
     </aside>
-    <main class="post-content">${mainContent}</main>
+    
+    <main class="post-content">
+      ${mainContent}
+    </main>
+    
   </body>
   </html>
   `
 
   await fs.writeFile(path.join(outputDir, 'archivo.html'), basicHtml)
-  console.log('archivo.html generated')
+  console.log('archivo.html generated (clean styles)')
 
 }
 
