@@ -171,7 +171,8 @@ html, body, #octantes {
   
 }
 
-*, *::before, *::after { box-sizing: inherit;                   }
+*, *::before, *::after { box-sizing: inherit; scrollbar-width: thin; scrollbar-color: var(--lirio) var(--polvo); }
+
 body, i, strong        { font-family: var(--font-main);         }
 h1, h2, h3, h4, h5, h6 { font-family: var(--font-grotesk);      }
 code, pre              { font-family: var(--font-mono);         }

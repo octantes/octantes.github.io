@@ -262,6 +262,11 @@ watch(                                                                          
 
 }
 
-@media (max-width: 1080px) { .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; } }
+@media (max-width: 1080px) { 
+
+  .post { scrollbar-color: var(--cristal) var(--polvo) !important; }
+  .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
+  
+}
 
 </style>
