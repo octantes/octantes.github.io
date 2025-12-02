@@ -45,12 +45,6 @@ function openAuthor(author) {                                                   
 
     </div>
 
-    <div class="cover" v-if="data.portada">
-
-      <img :src="data.portada" :alt="'portada para la nota: ' + data.title" />
-        
-    </div>
-
   </div>
 
 </template>
@@ -79,7 +73,7 @@ function openAuthor(author) {                                                   
 
   /* LAYOUT */ display: flex; flex-direction: column; justify-content: center;
   /* FONT   */ font-family: var(--font-mono);
-  /* BOX    */ width: 100%; height: 100%; min-width: 50%; padding: 1.5rem; gap: 1rem;
+  /* BOX    */ width: 100%; height: 100%; padding: 1.5rem; gap: 1rem;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:hover { transform: var(--scale-min); }
@@ -148,17 +142,6 @@ function openAuthor(author) {                                                   
   &:hover  { cursor: pointer; background-color: var(--carbon50); }
   &:active { transform: var(--scale-min); }
   
-}
-
-.cover { 
-
-  /* LAYOUT */ max-width: 50%;
-  /* FILL   */ background-color: var(--lirio);
-  /* MOTION */ transition: all var(--animate-mid);
-
-  &:hover { filter: grayscale() }
-  & img   { display: block; width: 100%; height: 100%; object-fit: cover; }
-
 }
 
 @media (max-width: 1080px) { .sidebutton { display: none; } }
