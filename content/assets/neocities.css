@@ -145,18 +145,13 @@ a:hover   { color: var(--accent); text-decoration: underline; }
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.9;
-  font-size: 0.85rem;
+  opacity: 0.8;
+  font-size: 0.95rem;
 }
-.article-list a:hover { opacity: 1; color: var(--accent); text-decoration: underline; }
+.article-list a:hover { opacity: 1; color: var(--accent); }
 
 /* El punto (·) de la referencia */
-.article-list a::before { 
-  content: "\00b7"; /* middle dot */
-  margin-right: 6px; 
-  font-weight: bold;
-  color: var(--border); 
-}
+.article-list a::before { content: ">"; margin-right: 8px; color: var(--border); }
 .article-list a:hover::before { color: var(--highlight); }
 
 /* headers de categorias en sidebar si los usas */
