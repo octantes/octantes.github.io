@@ -1,30 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
 
 :root {
-  --bg: #080808;
-  --text: #86ea16;
-  --dim: #4a800e;
-  --border: #86ea16;
+  /* PALETA ORIGINAL */
+  --bg: #1B1C1C;       /* carbon */
+  --text: #AAABAC;     /* humo */
+  --cyan: #8AB6BB;     /* cristal */
+  --pink: #986C98;     /* lirio */
+  --border: #3C3C3C;   /* polvo */
+  --dim: #2B2C2C;      /* ceniza */
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Roboto Mono', monospace;
-  font-size: 12px;
+  font-family: 'Inconsolata', monospace; /* TU FONT */
+  font-size: 14px; /* Un poco mas legible que 12px */
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  
   display: grid;
   grid-template-columns: 300px 1fr;
 }
 
-a { color: var(--text); text-decoration: none; }
-a:hover { text-decoration: underline; font-weight: bold; }
+a { color: var(--text); text-decoration: none; transition: color 0.2s ease; }
+a:hover { text-decoration: underline; color: var(--cyan); }
 
 /* --- SIDEBAR --- */
 .static-nav {
-  background: var(--bg);
+  background: var(--bg); /* Mismo fondo */
   border-right: 1px solid var(--border);
   height: 100vh;
   position: sticky;
@@ -37,23 +41,28 @@ a:hover { text-decoration: underline; font-weight: bold; }
 }
 
 .site-logo {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: bold;
-  letter-spacing: 4px;
-  font-variant: small-caps;
+  letter-spacing: 2px;
+  color: var(--pink);
   margin-bottom: 5px;
 }
 
-.site-subtitle { margin-bottom: 24px; font-style: italic; color: var(--text); }
+.site-subtitle { 
+  margin-bottom: 24px; 
+  font-style: italic; 
+  color: var(--text);
+  opacity: 0.8;
+}
 
 /* PERFIL */
 .profile-box {
   border: 1px solid var(--border);
-  border-top: 8px solid var(--border);
   padding: 12px;
   margin-bottom: 24px;
   min-height: 60px;
-  display: flow-root; /* Clearfix para el float */
+  display: flow-root; 
+  background-color: var(--dim); /* Fondo sutil para destacar */
 }
 
 .profile-img {
@@ -62,11 +71,12 @@ a:hover { text-decoration: underline; font-weight: bold; }
   margin-right: 12px;
   width: 50px; 
   height: 50px;
-  margin: 0 !important; /* Override reglas generales */
+  margin: 0 !important;
   display: block !important;
 }
 
-.profile-text { margin-top: 2px; line-height: 1.3; }
+.profile-text { margin-top: 2px; line-height: 1.3; font-size: 0.9em;}
+.profile-text strong { color: var(--pink); }
 
 /* NAVEGACION */
 .nav-links a {
@@ -74,10 +84,18 @@ a:hover { text-decoration: underline; font-weight: bold; }
   display: inline-block;
   margin-bottom: 6px;
   font-weight: bold;
+  color: var(--cyan);
 }
-.nav-links a:hover { color: #fff; text-decoration: none; background-color: var(--dim); }
+.nav-links a:hover { color: var(--bg); background-color: var(--cyan); text-decoration: none; }
 
-.separator { margin-top: 20px; margin-bottom: 10px; text-decoration: underline; font-weight: bold; text-transform: uppercase;}
+.separator { 
+  margin-top: 20px; 
+  margin-bottom: 10px; 
+  text-decoration: underline; 
+  font-weight: bold; 
+  text-transform: uppercase;
+  color: var(--pink);
+}
 
 /* LISTA DE ARTICULOS */
 .article-list { list-style: none; padding: 0; margin: 0; }
@@ -87,10 +105,24 @@ a:hover { text-decoration: underline; font-weight: bold; }
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.8;
+  opacity: 0.7;
 }
-.article-list a:hover { opacity: 1; font-weight: bold; }
-.article-list a:before { content: "\00b7"; margin-right: 6px; display: inline-block; }
+.article-list a:hover { opacity: 1; color: var(--cyan); }
+.article-list a:before { content: ">"; margin-right: 8px; display: inline-block; color: var(--pink); font-size: 0.8em; }
+
+/* CATEGORIAS */
+.cat-header {
+  color: var(--pink);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  list-style: none;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 2px;
+}
+.cat-header:first-child { margin-top: 0; }
 
 /* --- CONTENIDO PRINCIPAL --- */
 .post-content {
@@ -101,40 +133,36 @@ a:hover { text-decoration: underline; font-weight: bold; }
 }
 
 .post-header h1 {
-  font-variant: small-caps;
+  font-family: 'Space Grotesk', sans-serif; /* Tu font de titulos */
   border-bottom: 1px dashed var(--border);
-  color: var(--text);
+  color: var(--cyan);
   margin-top: 0;
-  font-size: 2em;
+  font-size: 2.5em;
+  line-height: 1.2;
 }
-.post-header .meta { font-style: italic; margin-bottom: 30px; display: block; opacity: 0.8; }
+.post-header .meta { 
+  font-style: italic; 
+  margin-bottom: 40px; 
+  display: block; 
+  color: var(--pink);
+}
 
 /* MARKDOWN STYLES */
-p { line-height: 1.6; margin-bottom: 16px; }
-img { max-width: 100%; border: 1px solid var(--border); margin: 20px 0; display: block; }
-blockquote { border-left: 4px solid var(--border); margin-left: 0; padding-left: 16px; color: #aaffaa; font-style: italic; }
-ul, ol { margin-bottom: 16px; }
+p { line-height: 1.6; margin-bottom: 1.5rem; }
+img { max-width: 100%; border: 1px solid var(--border); margin: 2rem 0; display: block; }
+blockquote { border-left: 3px solid var(--pink); margin-left: 0; padding-left: 1rem; color: var(--text); font-style: italic; background: var(--dim); padding: 1rem; }
+ul, ol { margin-bottom: 16px; padding-left: 20px; }
+li { margin-bottom: 5px; }
 
 /* SCROLLBARS */
-::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
 
 /* MOVIL */
 @media (max-width: 800px) {
   body { grid-template-columns: 1fr; }
   .static-nav { height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
-  .post-content { padding: 2rem 1rem; }
+  .post-content { padding: 2rem 1.5rem; }
 }
-
-/* estilos para los titulos de categoria en el sidebar */
-.cat-header {
-  color: var(--pink);
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 0.9em;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  list-style: none; /* quitar punto de lista */
-}
-.cat-header:first-child { margin-top: 0; }
