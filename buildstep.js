@@ -543,20 +543,29 @@ function generateGroupedSidebar() {                                             
 }
 
 async function writeBasicIndex() {                                               // create archivo.html with basic site structure 
-  
+ 
   const sidebarHTML = generateGroupedSidebar()
   const sortedItems = [...indexItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
 
   const mainContent =
   `
-    <h1>knowledge disappears</h1>
-    <div class="meta">archivo maestro // octantes.net</div>
-    <p>selecciona una nota del menú izquierdo para comenzar la lectura.</p>
-    <br>
-    <p><strong>últimas actualizaciones:</strong></p>
-    <ul>
-      ${sortedItems.slice(0, 10).map(i => `<li>[${i.date}] <a href="${i.url}">${i.title}</a> <span style="opacity:0.7">/ ${i.type}</span></li>`).join('\n')}
-    </ul>
+    <h1>abriendo portales a universos alternativos</h1>
+    <div class="meta">archivo plano // octantes.net</div>
+    
+    <p>seleccioná una nota del menú izquierdo para comenzar la lectura</p>
+    
+    <div style="border: 1px dashed #3C3C3C; padding: 1.5rem; margin-top: 2rem;">
+      <p style="margin-top:0; color:#986C98; font-weight:bold;">// ÚLTIMAS ACTUALIZACIONES</p>
+      <ul style="list-style:none; padding:0;">
+        ${sortedItems.slice(0, 10).map(i => `
+          <li style="margin-bottom:0.5rem;">
+            <span style="color:#666; font-size:0.8em; margin-right:10px;">[${i.date}]</span>
+            <a href="${i.url}" style="font-weight:bold;">${i.title}</a> 
+            <span style="opacity:0.5; font-size:0.8em;">/ ${i.type}</span>
+          </li>
+        `).join('\n')}
+      </ul>
+    </div>
   `
 
   const basicHtml = 
@@ -577,31 +586,20 @@ async function writeBasicIndex() {                                              
         <div class="site-subtitle">tejiendo hechizos</div>
         <div class="profile-box">
           <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
-          <div class="profile-text">
-            <strong>kaste</strong><br>
-            <i>diseño, desarrollo, música y escritura</i>
-          </div>
+          <div class="profile-text"><strong>kaste</strong><br><i>diseño, desarrollo, música y escritura</i></div>
         </div>
-        <nav class="nav-links">
-          <a href="/archivo.html">[ARCHIVO]</a>
-          <a href="/">[PORTAL]</a>
-          <a href="/feed.xml">[RSS]</a>
-        </nav>
+        <nav class="nav-links"><a href="/archivo.html">[ARCHIVO]</a><a href="/">[PORTAL]</a><a href="/feed.xml">[RSS]</a></nav>
         <div class="separator">artículos</div>
-        <ul class="article-list">
-          ${sidebarHTML}
-        </ul>
+        <ul class="article-list">${sidebarHTML}</ul>
       </div>
     </aside>
-    <main class="post-content">
-      ${mainContent}
-    </main>
+    <main class="post-content">${mainContent}</main>
   </body>
   </html>
   `
 
   await fs.writeFile(path.join(outputDir, 'archivo.html'), basicHtml)
-  console.log('archivo.html (basic index) generated')
+  console.log('archivo.html generated')
 
 }
 
