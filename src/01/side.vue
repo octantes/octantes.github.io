@@ -11,7 +11,12 @@ const store           = useStore()                                              
 const { activeFilter, processing, userStatus } = storeToRefs(store)                                                                   // imports refs from main store
 
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
-const taglines        = [ 'tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales' ]                 // random taglines
+const taglines        = [                                                                                                             // random taglines 
+  'tejiendo hechizos',
+  'abriendo ventanas a universos alternativos',
+  'desplegando portales',
+  'investigando dualidades'
+]
 
 function loadReference(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
 
@@ -250,20 +255,21 @@ onMounted(async () => {                                                         
 
 .side { 
 
-  /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
-  /* BOX    */ z-index: 1; width: 100%; padding: 3.6rem 3rem 2rem 3rem; gap: 1.25rem; overflow-wrap: break-word;
+  /* LAYOUT */ display: flex; flex-direction: column; text-align: center; overflow-y: auto;
+  /* BOX    */ z-index: 1; width: 100%; height: 100%; padding: 3.6rem 3rem 2rem 3rem; gap: 1.25rem; overflow-wrap: break-word;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* FONT   */ font-size: .72vw; line-height: 1.5; word-break: break-word;
+  /* SCROLL */ scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; }
 
 }
 
-.profile-head { display: flex; flex-direction: column; position: relative; justify-content: center; gap: 2rem; }
+.profile-head { display: flex; flex-direction: column; position: relative; justify-content: center; gap: 1.5rem; }
 
 .profilepic { 
 
   /* LAYOUT */ border-radius: 50%;
-  /* BOX    */ width: 7rem; height: 7rem;
+  /* BOX    */ width: 5rem; height: 5rem;
   /* FONT   */ align-self: center;
   /* BORDER */ border: var(--small-outline) var(--humo25);
 
@@ -303,6 +309,6 @@ onMounted(async () => {                                                         
 }
 
 @media (max-width: 1400px) { .side { font-size: .65vw; } .user-status { font-size: .65vw; } }
-@media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 8rem; } .user-status { font-size: 2vw; } }
+@media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 8rem; height: auto; overflow-y: visible; } .user-status { font-size: 2vw; } }
 
 </style>

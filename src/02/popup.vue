@@ -40,13 +40,13 @@ const store           = useStore()                                              
 
 .backdrop { 
 
-  /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0;
-  /* FILL   */ background-color: var(--carbon99); backdrop-filter: blur(8px);
+  /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0; container-type: inline-size;
+  /* FILL   */ background-color: var(--carbon99); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   /* MOTION */ animation: fadeIn var(--animate-mid);
 
 }
 
-.popup { position: relative; animation: fadeIn var(--animate-mid); }
+.popup { position: relative; animation: fadeIn var(--animate-mid), all var(--animate-mid); }
 
 .sigil { 
   
@@ -94,10 +94,10 @@ const store           = useStore()                                              
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ user-select: none; display: block; position: absolute; z-index: 20;
-  /* BOX    */ top: -1rem; right: -1rem; width: 3rem; height: 3rem;
+  /* BOX    */ top: -1rem; right: -1rem; width: 2.8rem; height: 2.8rem;
   /* FILL   */ color: var(--ceniza); background: var(--arcilla);
   /* FONT   */ font-size: 1.5rem; font-weight: bold;
-  /* BORDER */ border: none; box-shadow: inset 0 0 0 .25rem var(--ceniza), inset 0rem 0rem .8rem var(--ceniza);
+  /* BORDER */ border: none; box-shadow: 0 0 0 .25rem var(--ceniza), inset 0rem 0rem .8rem var(--ceniza);
   /* MOTION */ transition: all var(--animate-fast);
 
   &:hover { color: var(--ceniza); background: var(--humo); }
@@ -106,6 +106,15 @@ const store           = useStore()                                              
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@media (max-width: 1080px) { .popup { scale: 50%; } }
+@media (max-width: 1080px) {      .popup { scale: 50%;  } }
+@media (min-width: 1080px) { 
+  
+  @container (max-width: 680px) { .popup { scale: 0.90; } }
+  @container (max-width: 560px) { .popup { scale: 0.80; } }
+  @container (max-width: 480px) { .popup { scale: 0.60; } }
+  @container (max-width: 400px) { .popup { scale: 0.40; } }
+  @container (max-width: 340px) { .popup { scale: 0.30; } }
+
+}
 
 </style>
