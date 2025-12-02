@@ -289,7 +289,7 @@ function initContext() {                                                // prepa
 
   // cols + rows based on cpu
   const cores = navigator.hardwareConcurrency || 2;
-  const memory = navigator.deviceMemory || 2;
+  const memory = navigator.deviceMemory || 8;
   
   if (cores >= TIER_CONFIGS.high.minCores && memory >= TIER_CONFIGS.high.minMemory) { maxCols = TIER_CONFIGS.high.maxCols; maxRows = TIER_CONFIGS.high.maxRows }
   else if (cores >= TIER_CONFIGS.medium.minCores && memory >= TIER_CONFIGS.medium.minMemory) { maxCols = TIER_CONFIGS.medium.maxCols; maxRows = TIER_CONFIGS.medium.maxRows }

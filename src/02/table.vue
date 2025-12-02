@@ -23,7 +23,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
       <col class="col-tags">
     </colgroup>
 
-    <thead>z
+    <thead>
       <tr>
         <th @click="store.navSort('isoDate')" :class="{ active: sortKey === 'isoDate' }" :data-order="sortOrder" v-if="!isCentered" title="ordenar por fecha" aria-label="ordenar notas por fecha">fecha</th>
         <th @click="store.navSort('title')"   :class="{ active: sortKey === 'title' }"   :data-order="sortOrder" title="ordenar por título" aria-label="ordenar notas por título">título</th>

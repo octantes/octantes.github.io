@@ -85,15 +85,17 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 }
 
 .card-cover {
-  
-  /* BOX    */ width: 100%; aspect-ratio: 16/9; overflow: hidden;
+
+  /* LAYOUT */ position: relative;
+  /* BOX    */ width: 100%; padding-top: 56.25%; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); 
   /* BORDER */ border-bottom: var(--small-outline) var(--humo10);
   
   & img {
 
-    width: 100%; height: 100%; object-fit: cover;
-    transition: all var(--animate-mid);
+    /* LAYOUT */ position: absolute; top: 0; left: 0;
+    /* BOX    */ width: 100%; height: 100%; object-fit: cover;
+    /* MOTION */ transition: all var(--animate-mid);
 
   }
 
@@ -101,7 +103,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 .card-placeholder {
 
-  /* LAYOUT */ display: flex; align-items: center; justify-content: center;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0;
   /* BOX    */ width: 100%; height: 100%;
   /* FILL   */ color: var(--humo25);
   /* FONT   */ font-size: 2rem;
