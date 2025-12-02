@@ -46,14 +46,14 @@ const store           = useStore()                                              
 
 }
 
-.popup { position: relative; animation: fadeIn var(--animate-mid), all var(--animate-mid); }
+.popup { position: relative; animation: fadeIn var(--animate-mid); transition: all var(--animate-mid); }
 
 .sigil { 
   
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: block; position: absolute; z-index: 20;
   /* BOX    */ width: 5rem; top: -1.5rem; left: -1.5rem;
-  /* IMAGE  */ image-rendering: pixelated; transform: translateZ(0); backface-visibility: hidden; pointer-events: none;
+  /* IMAGE  */ image-rendering: -moz-crisp-edges; image-rendering: pixelated; transform: translateZ(0); backface-visibility: hidden; pointer-events: none;
 
 }
 
@@ -107,7 +107,7 @@ const store           = useStore()                                              
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 @media (max-width: 1080px) {      .popup { scale: 50%;  } }
-@media (min-width: 1080px) { 
+@media (min-width: 1081px) { 
   
   @container (max-width: 680px) { .popup { scale: 0.90; } }
   @container (max-width: 560px) { .popup { scale: 0.80; } }
