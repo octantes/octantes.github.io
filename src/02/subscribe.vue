@@ -64,7 +64,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 .form { 
   
   /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem; justify-content: center;
-  /* BOX    */ padding-top: 1rem; padding-bottom: 1rem; padding-left: 2rem; padding-right: 2rem; width: 100%;
+  /* BOX    */ padding-top: 1rem; padding-bottom: 1rem; padding-left: 4rem; padding-right: 4rem; width: 100%;
   /* FILL   */ color: var(--humo);
 
 }
