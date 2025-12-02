@@ -55,7 +55,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 .notecard {
 
   /* CURSOR */ cursor: pointer;
-  /* LAYOUT */ display: flex; flex-direction: column; overflow: hidden;
+  /* LAYOUT */ display: flex; flex-direction: column;
+  /* BOX    */ height: 100%;
   /* FILL   */ background-color: var(--carbon25);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* MOTION */ transition: all var(--animate-fast);
