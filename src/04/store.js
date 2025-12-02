@@ -262,9 +262,19 @@ export const useStore = defineStore('store', () => {
 
       const fetchPath = post.url || `${base.value}/posts/${post.type || 'textos'}/${slug}/`
       const res = await fetch(fetchPath)
-      const html = await res.text()
 
       if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+
+      const rawText = await res.text()
+
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(rawText, 'text/html')
+      const staticNav = doc.querySelector('.static-nav')
+
+      if (staticNav) staticNav.remove()
+
+      const html = doc.body.innerHTML
+
       if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
 
       return { html, error: null }
