@@ -1,77 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 :root {
-  --bg: #111111;
-  --text: #AAABAC;
-  --cyan: #8AB6BB;
-  --pink: #986C98;
-  --border: #333;
+  --bg: #080808;
+  --text: #86ea16;
+  --dim: #4a800e;
+  --border: #86ea16;
 }
 
-/* GRIDS Y LAYOUT GENERAL */
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Inconsolata', monospace;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
   margin: 0;
+  padding: 0;
   min-height: 100vh;
-  
-  /* Aquí definimos las dos columnas: Sidebar fijo (300px) | Contenido (resto) */
   display: grid;
   grid-template-columns: 300px 1fr;
 }
 
-/* SIDEBAR (Lo que se borra en la SPA) */
+a { color: var(--text); text-decoration: none; }
+a:hover { text-decoration: underline; font-weight: bold; }
+
+/* --- SIDEBAR --- */
 .static-nav {
-  background: #161616;
-  border-right: 1px dashed var(--border);
+  background: var(--bg);
+  border-right: 1px solid var(--border);
   height: 100vh;
-  position: sticky; /* Se queda fijo al scrollear */
+  position: sticky;
   top: 0;
   overflow-y: auto;
   padding: 2rem;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-.site-logo { color: var(--pink); font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; }
-.site-subtitle { font-size: 0.8rem; color: #666; margin-bottom: 2rem; }
-
-.profile-box { 
-  border: 1px solid var(--cyan); 
-  padding: 1rem; 
-  color: var(--cyan); 
-  margin-bottom: 2rem; 
-  font-size: 0.8rem;
-  text-align: center;
+.site-logo {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  font-variant: small-caps;
+  margin-bottom: 5px;
 }
 
-.nav-links a { display: inline-block; margin-right: 10px; color: var(--text); text-decoration: none; }
-.nav-links a:hover { color: var(--cyan); }
+.site-subtitle { margin-bottom: 24px; font-style: italic; color: var(--text); }
 
-.separator { border-bottom: 1px dashed var(--border); margin: 1.5rem 0 0.5rem 0; color: var(--pink); }
+/* PERFIL */
+.profile-box {
+  border: 1px solid var(--border);
+  border-top: 8px solid var(--border);
+  padding: 12px;
+  margin-bottom: 24px;
+  min-height: 60px;
+  display: flow-root; /* Clearfix para el float */
+}
 
-.article-list { list-style: none; padding: 0; }
-.article-list li { margin-bottom: 0.5rem; }
-.article-list a { text-decoration: none; color: var(--text); transition: 0.2s; }
-.article-list a:hover { color: var(--cyan); padding-left: 5px; }
+.profile-img {
+  border: 1px solid var(--border);
+  float: left;
+  margin-right: 12px;
+  width: 50px; 
+  height: 50px;
+  margin: 0 !important; /* Override reglas generales */
+  display: block !important;
+}
 
-/* CONTENIDO PRINCIPAL (Lo que se ve en ambos lados) */
-/* En la SPA, este <main> simplemente será un div más dentro del layout de Vue */
+.profile-text { margin-top: 2px; line-height: 1.3; }
+
+/* NAVEGACION */
+.nav-links a {
+  padding: 4px 8px 4px 0px;
+  display: inline-block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+.nav-links a:hover { color: #fff; text-decoration: none; background-color: var(--dim); }
+
+.separator { margin-top: 20px; margin-bottom: 10px; text-decoration: underline; font-weight: bold; text-transform: uppercase;}
+
+/* LISTA DE ARTICULOS */
+.article-list { list-style: none; padding: 0; margin: 0; }
+.article-list li { margin-bottom: 4px; }
+.article-list a {
+  display: block;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+.article-list a:hover { opacity: 1; font-weight: bold; }
+.article-list a:before { content: "\00b7"; margin-right: 6px; display: inline-block; }
+
+/* --- CONTENIDO PRINCIPAL --- */
 .post-content {
-  padding: 3rem 5rem;
-  max-width: 900px;
+  padding: 40px 60px;
+  padding-right: 10vw;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
-.post-header h1 { color: var(--cyan); border-bottom: 1px dashed var(--border); padding-bottom: 1rem; }
-.post-header .meta { color: var(--pink); font-style: italic; margin-bottom: 2rem; }
+.post-header h1 {
+  font-variant: small-caps;
+  border-bottom: 1px dashed var(--border);
+  color: var(--text);
+  margin-top: 0;
+  font-size: 2em;
+}
+.post-header .meta { font-style: italic; margin-bottom: 30px; display: block; opacity: 0.8; }
 
-/* Ajustes para imágenes y texto */
-img { max-width: 100%; height: auto; display: block; border: 1px solid var(--border); margin: 2rem 0; }
-p { line-height: 1.6; margin-bottom: 1.5rem; }
-a { color: var(--cyan); }
-blockquote { border-left: 2px solid var(--pink); margin-left: 0; padding-left: 1rem; color: #888; }
+/* MARKDOWN STYLES */
+p { line-height: 1.6; margin-bottom: 16px; }
+img { max-width: 100%; border: 1px solid var(--border); margin: 20px 0; display: block; }
+blockquote { border-left: 4px solid var(--border); margin-left: 0; padding-left: 16px; color: #aaffaa; font-style: italic; }
+ul, ol { margin-bottom: 16px; }
 
-/* MÓVIL */
+/* SCROLLBARS */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* MOVIL */
 @media (max-width: 800px) {
   body { grid-template-columns: 1fr; }
-  .static-nav { height: auto; position: relative; border-right: none; border-bottom: 1px dashed var(--border); }
+  .static-nav { height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
   .post-content { padding: 2rem 1rem; }
 }
+
+/* estilos para los titulos de categoria en el sidebar */
+.cat-header {
+  color: var(--pink);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  list-style: none; /* quitar punto de lista */
+}
+.cat-header:first-child { margin-top: 0; }

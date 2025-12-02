@@ -171,6 +171,9 @@ html, body, #octantes {
   
 }
 
+:root:has(#octantes > .root) .static-nav, :root:has(#octantes > .root) .post-header { display: none !important; }
+.post .static-nav, .post .post-header { display: none !important; }
+
 *, *::before, *::after { box-sizing: inherit; }
 
 

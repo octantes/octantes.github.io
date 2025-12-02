@@ -9,7 +9,7 @@
 
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
 
-    <link rel="stylesheet" href="/assets/neocities.css"> <!-- stylesheet for second basic webpage layer -->
+    <link rel="stylesheet" href="/assets/neocities.css">
     <link rel="alternate" type="application/rss+xml" title="octantes.net rss feed" href="{{webURL}}/feed.xml" />
 
     <title>{{title}}</title>
@@ -30,7 +30,7 @@
     <meta name="twitter:creator" content="@{{handle}}">
 
     <script type="application/ld+json">{{articleJson}}</script>
-
+    
   </head>
 
   <body>
@@ -38,33 +38,31 @@
     <aside class="static-nav">
       
       <div class="sidebar-content">
+
         <div class="site-logo">OCTANTES</div>
-        <div class="site-subtitle">thought experiments</div>
+        <div class="site-subtitle">tejiendo hechizos</div>
 
         <div class="profile-box">
-          <pre>
-   .---.
-  /     \
-  |  O  |
-  \     /
-   '---'</pre>
+
+          <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
+
           <div class="profile-text">
-            <strong>kaste</strong><br>
-            dev & design
+            <strong>kaste</strong>
+            <br>
+            <i>diseño, desarrollo, música y escritura</i>
           </div>
         </div>
 
         <nav class="nav-links">
-          <a href="/archivo.html">[home]</a>
-          <a href="/">[spa]</a>
-          <a href="/feed.xml">[rss]</a>
+          <a href="/archivo.html">[ARCHIVO]</a>
+          <a href="/">[PORTAL]</a>
+          <a href="/feed.xml">[RSS]</a>
         </nav>
 
-        <div class="separator">artigles</div>
+        <div class="separator">artículos</div>
         
-        <ul class="article-list">
-          {{sidebarLinks}}
-        </ul>
+        <ul class="article-list">{{sidebarLinks}}</ul>
+
       </div>
 
     </aside>

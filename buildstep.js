@@ -518,19 +518,49 @@ async function writeIndex() {                                                   
 
 }
 
-async function writeBasicIndex() {                                               // create neocities style index for plain version 
-  
-  const sortedItems = indexItems.sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
-  
-  const listItems = sortedItems.map(post => {
-    return `<li>
-      <span style="color:#AAABAC">[${post.date}]</span> 
-      <a href="${post.url}">${post.title}</a> 
-      <span style="font-size:0.8em; color:#6FAC67">/ ${post.type}</span>
-    </li>`
-  }).join('\n')
+function generateGroupedSidebar() {                                              // create sidebar for basic archive webpage 
 
-  const basicHtml = `
+  const groups = {}
+
+  indexItems.forEach(item => {
+    if (!groups[item.type]) groups[item.type] = []
+    groups[item.type].push(item)
+  })
+
+  const order = ['textos', 'diseño', 'desarrollo', 'musica', 'juegos']
+  let html = ''
+
+  order.forEach(type => {
+    if (groups[type]) {
+      html += `<li class="cat-header">${type}</li>`
+      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
+        html += `<li><a href="${webURL}${p.url}">${p.title}</a></li>`
+      })
+    }
+  })
+  
+  return html
+}
+
+async function writeBasicIndex() {                                               // create archivo.html with basic site structure 
+  
+  const sidebarHTML = generateGroupedSidebar()
+  const sortedItems = [...indexItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
+
+  const mainContent =
+  `
+    <h1>knowledge disappears</h1>
+    <div class="meta">archivo maestro // octantes.net</div>
+    <p>selecciona una nota del menú izquierdo para comenzar la lectura.</p>
+    <br>
+    <p><strong>últimas actualizaciones:</strong></p>
+    <ul>
+      ${sortedItems.slice(0, 10).map(i => `<li>[${i.date}] <a href="${i.url}">${i.title}</a> <span style="opacity:0.7">/ ${i.type}</span></li>`).join('\n')}
+    </ul>
+  `
+
+  const basicHtml = 
+  `
   <!DOCTYPE html>
   <html lang="es">
   <head>
@@ -538,22 +568,62 @@ async function writeBasicIndex() {                                              
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>octantes.net - archivo</title>
     <link rel="stylesheet" href="/assets/neocities.css">
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
   </head>
   <body>
-    <nav class="static-nav">
-      <span style="background:#6FAC67; color:#1B1C1C">OCTANTES.NET // ARCHIVO</span>
-    </nav>
-    <main>
-      <p>version solo texto y html. <a href="/">ir a la version interactiva</a></p>
-      <ul style="list-style-type: square;">
-        ${listItems}
-      </ul>
+    <aside class="static-nav">
+      <div class="sidebar-content">
+        <div class="site-logo">OCTANTES</div>
+        <div class="site-subtitle">tejiendo hechizos</div>
+        <div class="profile-box">
+          <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
+          <div class="profile-text">
+            <strong>kaste</strong><br>
+            <i>diseño, desarrollo, música y escritura</i>
+          </div>
+        </div>
+        <nav class="nav-links">
+          <a href="/archivo.html">[ARCHIVO]</a>
+          <a href="/">[PORTAL]</a>
+          <a href="/feed.xml">[RSS]</a>
+        </nav>
+        <div class="separator">artículos</div>
+        <ul class="article-list">
+          ${sidebarHTML}
+        </ul>
+      </div>
+    </aside>
+    <main class="post-content">
+      ${mainContent}
     </main>
   </body>
-  </html>`
+  </html>
+  `
 
   await fs.writeFile(path.join(outputDir, 'archivo.html'), basicHtml)
   console.log('archivo.html (basic index) generated')
+
+}
+
+async function updateSidebars() {                                                // update old archive website sidebars 
+
+  const sidebarHTML = generateGroupedSidebar()
+  
+  for (const item of indexItems) {
+
+    const filePath = path.join(outputDir, 'posts', item.type, item.slug, 'index.html')
+
+    try {
+
+      let html = await fs.readFile(filePath, 'utf-8')
+      html = html.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, `<ul class="article-list">${sidebarHTML}</ul>`)
+      await fs.writeFile(filePath, html)
+
+    } catch (e) { console.error(`Error updating sidebar for ${item.slug}`, e) }
+
+  }
+
+  console.log('sidebars updated globally')
 
 }
 
@@ -666,6 +736,7 @@ async function main() {                                                         
   await cleanOrphans()
   await processPosts()
   await writeIndex()
+  await updateSidebars()
   await writeBasicIndex()
   await writeSitemap()
   await writeFeed()
