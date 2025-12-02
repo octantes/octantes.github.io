@@ -4,41 +4,82 @@
 
   <head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
 
-    <meta charset="UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/assets/neocities.css"> <!-- stylesheet for second basic webpage layer -->
     <link rel="alternate" type="application/rss+xml" title="octantes.net rss feed" href="{{webURL}}/feed.xml" />
 
     <title>{{title}}</title>
+
     <meta name="description" content="{{description}}">
     <link rel="canonical" href="{{canonicalUrl}}">
 
-    <!-- open graph -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="{{title}}">
     <meta property="og:description" content="{{description}}">
     <meta property="og:url" content="{{canonicalUrl}}">
     <meta property="og:image" content="{{portada}}">
 
-    <!-- twitter card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{title}}">
     <meta name="twitter:description" content="{{description}}">
     <meta name="twitter:image" content="{{portada}}">
     <meta name="twitter:creator" content="@{{handle}}">
 
-    <!-- json-ld structured data -->
     <script type="application/ld+json">{{articleJson}}</script>
 
   </head>
 
   <body>
 
-    {{htmlContent}}
-    
+    <aside class="static-nav">
+      
+      <div class="sidebar-content">
+        <div class="site-logo">OCTANTES</div>
+        <div class="site-subtitle">thought experiments</div>
+
+        <div class="profile-box">
+          <pre>
+   .---.
+  /     \
+  |  O  |
+  \     /
+   '---'</pre>
+          <div class="profile-text">
+            <strong>kaste</strong><br>
+            dev & design
+          </div>
+        </div>
+
+        <nav class="nav-links">
+          <a href="/archivo.html">[home]</a>
+          <a href="/">[spa]</a>
+          <a href="/feed.xml">[rss]</a>
+        </nav>
+
+        <div class="separator">artigles</div>
+        
+        <ul class="article-list">
+          {{sidebarLinks}}
+        </ul>
+      </div>
+
+    </aside>
+
+    <main class="post-content">
+
+      <header class="post-header">
+        <h1>{{title}}</h1>
+        <div class="meta">{{date}} // {{handle}}</div>
+      </header>
+      
+      {{htmlContent}}
+
+    </main>
+
   </body>
 
 </html>

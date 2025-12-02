@@ -348,6 +348,7 @@ async function processPosts() {                                                 
     const { attributes, body } = fm(raw)
     const postType = attributes.type || typeFolder
     const noteOutputDir = path.join(outputDir, 'posts', postType, slug)
+    const sidebarLinks = postDirs.map(p => `<li><a href="${webURL}/posts/${p.typeDir}/${p.slug}/">${p.slug.replace(/-/g, ' ')}</a></li>`).join('\n')
 
     await fs.mkdir(noteOutputDir, { recursive: true })
 
@@ -475,7 +476,7 @@ async function processPosts() {                                                 
         .replace(/{{articleJson}}/g, finalArticleJson)
         .replace(/{{htmlContent}}/g, htmlContent)
         .replace(/{{webURL}}/g, webURL)
-        .replace('<body>', `<body>${staticNav}`)
+        .replace(/{{sidebarLinks}}/g, sidebarLinks)
 
       await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
       cache[`${postType}/${slug}/index.md`] = finalHash

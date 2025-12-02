@@ -1,42 +1,77 @@
-/* assets/neocities.css */
+:root {
+  --bg: #111111;
+  --text: #AAABAC;
+  --cyan: #8AB6BB;
+  --pink: #986C98;
+  --border: #333;
+}
+
+/* GRIDS Y LAYOUT GENERAL */
 body {
-  background-color: #1B1C1C;
-  color: #6FAC67; /* verde poma */
+  background-color: var(--bg);
+  color: var(--text);
   font-family: 'Inconsolata', monospace;
   margin: 0;
-  padding: 1rem;
-  line-height: 1.5;
+  min-height: 100vh;
+  
+  /* Aquí definimos las dos columnas: Sidebar fijo (300px) | Contenido (resto) */
+  display: grid;
+  grid-template-columns: 300px 1fr;
 }
 
-/* la barra de navegacion estatica */
+/* SIDEBAR (Lo que se borra en la SPA) */
 .static-nav {
-  display: block;
-  border-bottom: 1px dashed #6FAC67;
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
-  font-size: 1.2rem;
+  background: #161616;
+  border-right: 1px dashed var(--border);
+  height: 100vh;
+  position: sticky; /* Se queda fijo al scrollear */
+  top: 0;
+  overflow-y: auto;
+  padding: 2rem;
+  box-sizing: border-box;
 }
 
-.static-nav a {
-  text-decoration: none;
-  color: #F2F2F2; /* brillo */
-  margin-right: 1rem;
+.site-logo { color: var(--pink); font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; }
+.site-subtitle { font-size: 0.8rem; color: #666; margin-bottom: 2rem; }
+
+.profile-box { 
+  border: 1px solid var(--cyan); 
+  padding: 1rem; 
+  color: var(--cyan); 
+  margin-bottom: 2rem; 
+  font-size: 0.8rem;
+  text-align: center;
 }
 
-.static-nav a:hover {
-  background-color: #6FAC67;
-  color: #1B1C1C;
+.nav-links a { display: inline-block; margin-right: 10px; color: var(--text); text-decoration: none; }
+.nav-links a:hover { color: var(--cyan); }
+
+.separator { border-bottom: 1px dashed var(--border); margin: 1.5rem 0 0.5rem 0; color: var(--pink); }
+
+.article-list { list-style: none; padding: 0; }
+.article-list li { margin-bottom: 0.5rem; }
+.article-list a { text-decoration: none; color: var(--text); transition: 0.2s; }
+.article-list a:hover { color: var(--cyan); padding-left: 5px; }
+
+/* CONTENIDO PRINCIPAL (Lo que se ve en ambos lados) */
+/* En la SPA, este <main> simplemente será un div más dentro del layout de Vue */
+.post-content {
+  padding: 3rem 5rem;
+  max-width: 900px;
 }
 
-/* contenido de la nota */
-main {
-  max-width: 800px;
-  margin: 0 auto;
+.post-header h1 { color: var(--cyan); border-bottom: 1px dashed var(--border); padding-bottom: 1rem; }
+.post-header .meta { color: var(--pink); font-style: italic; margin-bottom: 2rem; }
+
+/* Ajustes para imágenes y texto */
+img { max-width: 100%; height: auto; display: block; border: 1px solid var(--border); margin: 2rem 0; }
+p { line-height: 1.6; margin-bottom: 1.5rem; }
+a { color: var(--cyan); }
+blockquote { border-left: 2px solid var(--pink); margin-left: 0; padding-left: 1rem; color: #888; }
+
+/* MÓVIL */
+@media (max-width: 800px) {
+  body { grid-template-columns: 1fr; }
+  .static-nav { height: auto; position: relative; border-right: none; border-bottom: 1px dashed var(--border); }
+  .post-content { padding: 2rem 1rem; }
 }
-
-a { color: #8AB6BB; } /* cristal */
-img { max-width: 100%; height: auto; border: 1px solid #3C3C3C; }
-blockquote { border-left: 2px solid #6FAC67; margin-left: 1rem; padding-left: 1rem; color: #AAABAC; }
-
-/* esconder la app de vue si falla la carga o estamos en modo texto */
-#octantes:empty { display: none; }
