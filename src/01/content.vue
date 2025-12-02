@@ -5,9 +5,8 @@ import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import Subscribe from '../02/subscribe.vue'
 import Shader from '../03/shader.vue'
-import Background from '../03/background.vue'
 
-const compMap = { 'background': Background }                                                                                          // add vuecomps/fullcomps and import if needed
+const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
