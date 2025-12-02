@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="es">
 
   <head>
@@ -6,10 +7,10 @@
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
 
     <meta charset="UTF-8">
+    
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="alternate" type="application/rss+xml" title="octantes.net rss feed" href="{{webURL}}/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="octantes.net rss feed" href="/feed.xml" />
     
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap">
@@ -17,11 +18,19 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>octantes.net - portal multimedia</title>
-    
     <meta name="description" content="tejiendo hechizos">
     <link rel="canonical" href="https://octantes.github.io/">
 
-    <script type="application/ld+json"> {{articleJson}} </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "octantes.net",
+      "url": "https://octantes.github.io/",
+      "description": "tejiendo hechizos",
+      "author": { "@type": "Person", "name": "kaste" }
+    }
+    </script>
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="octantes.net">

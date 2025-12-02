@@ -459,6 +459,12 @@ async function processPosts() {                                                 
           return match
       })
 
+      const staticNav = `
+      <nav class="static-nav">
+        <a href="/archivo.html">← VOLVER AL ARCHIVO</a>
+        <span>// ${attributes.title || slug}</span>
+      </nav>`
+
       let fullHtml = template
         .replace(/{{title}}/g, attributes.title || slug)
         .replace(/{{description}}/g, attributes.description || '')
@@ -468,6 +474,8 @@ async function processPosts() {                                                 
         .replace(/{{date}}/g, formatted)
         .replace(/{{articleJson}}/g, finalArticleJson)
         .replace(/{{htmlContent}}/g, htmlContent)
+        .replace(/{{webURL}}/g, webURL)
+        .replace('<body>', `<body>${staticNav}`)
 
       await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
       cache[`${postType}/${slug}/index.md`] = finalHash
@@ -506,6 +514,45 @@ async function writeIndex() {                                                   
 
   if (prevIndex !== newIndexStr) { await fs.writeFile(indexPath, newIndexStr); console.log('index.json updated') }
   else { console.log('skipping index.json (unchanged)') }
+
+}
+
+async function writeBasicIndex() {                                               // create neocities style index for plain version 
+  
+  const sortedItems = indexItems.sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
+  
+  const listItems = sortedItems.map(post => {
+    return `<li>
+      <span style="color:#AAABAC">[${post.date}]</span> 
+      <a href="${post.url}">${post.title}</a> 
+      <span style="font-size:0.8em; color:#6FAC67">/ ${post.type}</span>
+    </li>`
+  }).join('\n')
+
+  const basicHtml = `
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>octantes.net - archivo</title>
+    <link rel="stylesheet" href="/assets/neocities.css">
+  </head>
+  <body>
+    <nav class="static-nav">
+      <span style="background:#6FAC67; color:#1B1C1C">OCTANTES.NET // ARCHIVO</span>
+    </nav>
+    <main>
+      <p>version solo texto y html. <a href="/">ir a la version interactiva</a></p>
+      <ul style="list-style-type: square;">
+        ${listItems}
+      </ul>
+    </main>
+  </body>
+  </html>`
+
+  await fs.writeFile(path.join(outputDir, 'archivo.html'), basicHtml)
+  console.log('archivo.html (basic index) generated')
 
 }
 
@@ -618,6 +665,7 @@ async function main() {                                                         
   await cleanOrphans()
   await processPosts()
   await writeIndex()
+  await writeBasicIndex()
   await writeSitemap()
   await writeFeed()
   await finalizeBuild()

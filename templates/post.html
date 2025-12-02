@@ -4,46 +4,34 @@
 
   <head>
 
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
+
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/neocities.css"> <!-- stylesheet for second basic webpage layer -->
+    <link rel="alternate" type="application/rss+xml" title="octantes.net rss feed" href="{{webURL}}/feed.xml" />
 
     <title>{{title}}</title>
-
     <meta name="description" content="{{description}}">
     <link rel="canonical" href="{{canonicalUrl}}">
 
-    <!-- Open Graph -->
-
+    <!-- open graph -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="{{title}}">
     <meta property="og:description" content="{{description}}">
     <meta property="og:url" content="{{canonicalUrl}}">
     <meta property="og:image" content="{{portada}}">
 
-    <!-- Twitter Card -->
-
+    <!-- twitter card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{title}}">
     <meta name="twitter:description" content="{{description}}">
     <meta name="twitter:image" content="{{portada}}">
     <meta name="twitter:creator" content="@{{handle}}">
 
-    <!-- JSON-LD Structured Data -->
-
-    <script type="application/ld+json">
-
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "{{title}}",
-      "description": "{{description}}",
-      "image": "{{portada}}",
-      "url": "{{canonicalUrl}}",
-      "datePublished": "{{date}}",
-      "author": {{authorJson}}
-    }
-
-    </script>
+    <!-- json-ld structured data -->
+    <script type="application/ld+json">{{articleJson}}</script>
 
   </head>
 
