@@ -169,10 +169,10 @@ body {
 }
 
 h1        { margin: 0; }
-p         { margin-bottom: 0; max-width: none;                           }
+p         { margin: 0; max-width: none;                                     }
 img       { border: 1px solid var(--polvo); margin: none;                   }
 ul, ol    { margin-bottom: 1rem; padding-left: 1.2rem;                      }
-li        { margin-bottom: 0.3rem;                                          }
+li        { margin: 0;                                                      }
 hr        { border: 0; border-top: 1px dashed var(--polvo); margin: 2rem 0; }
 strong, b { color: var(--lirio);   font-weight: 700;                        }
 i, em     { color: var(--cristal); font-style: italic;                      }
@@ -292,8 +292,6 @@ blockquote {
   /* BOX    */ padding: 2rem 3rem; padding-right: 35vw; width: 100%; gap: 0;
 
 }
-
-.post-header { margin-bottom: 2rem; }
 
 .post-header h1 {
 
