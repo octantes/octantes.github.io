@@ -564,13 +564,13 @@ async function writeBasicIndex() {                                              
     
     <p>seleccioná una nota del menú izquierdo para comenzar la lectura.</p>
     
-    <div class="separator" style="text-align: left; margin-top: 3rem;">últimas actualizaciones</div>
+    <div class="separator">últimas actualizaciones</div>
 
     <ul class="article-list">
       ${sortedItems.slice(0, 15).map(i => `
         <li>
           <a href="${i.url}">
-            <span style="font-family: monospace; opacity: 0.6; margin-right: 8px;">[${i.date}]</span>
+            <span class="list-span">[${i.date}]</span>
             ${i.title}
           </a>
         </li>
