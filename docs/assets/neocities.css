@@ -173,7 +173,6 @@ body {
 
   /* LAYOUT */ display: flex; flex-direction: column; position: sticky; top: 0; overflow-y: auto;
   /* BOX    */ height: 100vh; padding: 2rem 1.5rem;
-  /* FILL   */ background: var(--carbon);
   /* BORDER */ border-right: 1px solid var(--polvo);
 
 }
@@ -240,16 +239,10 @@ body {
 .nav-links a                  { display: inline-block; border: 1px solid var(--polvo); padding: 2px 6px; color: var(--cristal); }
 .nav-links a:hover            { font-weight: 700; text-decoration: none; border-color: var(--cristal);                          }
 
-.article-list                 { display: flex; flex-direction: column; gap: .5rem; list-style: none; padding: 0; margin: 0;     }
-.article-list a               { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;                 }
-.article-list a:hover         { color: var(--cristal);                                }
-.article-list a::before       { content: ">"; margin-right: 8px; color: var(--polvo); }
-.article-list a:hover::before { color: var(--lirio);                                  }
-
-.post-content p   { margin-top: .5rem; margin-bottom: .5rem; }
-.post-header      { margin-bottom: 1rem;                     }
-.post-content img { border: none; width: 100%;               }
-.post-content a   { 
+.post-content p      { margin-top: .5rem; margin-bottom: .5rem; }
+.post-header         { margin-bottom: 1rem;                     }
+.post-content img    { border: none; width: 100%;               }
+.post-content p, a   { 
 
   /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;
   /* FONT   */ font-family: var(--font-main); text-decoration: underline; text-decoration-color: var(--cristal80); text-underline-offset: 3px; 
@@ -283,6 +276,12 @@ body {
   }
 
 }
+
+.article-list                 { display: flex; flex-direction: column; gap: .5rem; list-style: none; padding: 0; margin: 0;     }
+.article-list a               { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;                 }
+.article-list a:hover         { color: var(--cristal);                                }
+.article-list a::before       { content: ">"; margin-right: 8px; color: var(--polvo); }
+.article-list a:hover::before { color: var(--lirio);                                  }
 
 .post-header h1 { 
 
