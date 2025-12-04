@@ -285,6 +285,13 @@ blockquote {
 .post-content {
 
   /* LAYOUT */ display: flex; flex-direction: column; overflow-y: auto;
+  /* BOX    */ padding: 2rem 3rem; padding-right: 35vw; width: 100%; gap: 0rem;
+
+}
+
+.post-content img {
+
+  /* LAYOUT */ border: none;
   /* BOX    */ padding: 2rem 3rem; padding-right: 35vw; width: 100%; gap: 1.5rem;
 
 }
