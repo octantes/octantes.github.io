@@ -234,12 +234,7 @@ blockquote {
 
 .profile-link:hover .profile-img { border-color: var(--lirio); }
 
-.nav-links {
-
-  /* LAYOUT */ display: flex; flex-direction: row; align-items: flex-start;
-  /* BOX    */ gap: 0.4rem;
-
-}
+.nav-links { display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; }
 
 .nav-links a {
 
@@ -259,13 +254,14 @@ blockquote {
 
 .separator {
 
+  /* BOX    */ padding-bottom: .25rem;
   /* BORDER */ border-bottom: 1px dashed var(--polvo); border-top: none;
   /* FONT   */ font-size: .9rem; font-weight: 700; text-transform: lowercase; letter-spacing: 1px; text-align: left;
   /* FILL   */ color: var(--lirio); 
   
 }
 
-.article-list { list-style: none; padding: 0; margin: 0; }
+.article-list { display: flex; flex-direction: column; gap: .5rem; list-style: none; padding: 0; margin: 0; }
 
 .article-list a {
 
@@ -289,13 +285,14 @@ blockquote {
 .post-content {
 
   /* LAYOUT */ display: flex; flex-direction: column; overflow-y: auto;
-  /* BOX    */ padding: 2rem 3rem; padding-right: 35vw; width: 100%; gap: 0;
+  /* BOX    */ padding: 2rem 3rem; padding-right: 35vw; width: 100%; gap: 1.5rem;
 
 }
 
 .post-header h1 {
 
   /* FONT   */ font-family: 'Inconsolata', monospace; font-variant: small-caps; line-height: 1.1;
+  /* BOX    */ padding-bottom: .25rem; margin-bottom: .25rem;
   /* FILL   */ color: var(--cristal);
   /* BORDER */ border-bottom: 1px dashed var(--polvo);
 }
@@ -315,7 +312,6 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus, tbody tr:focus
 audio[controls]                               { width: 100%; background: var(--carbon); }
 audio::-webkit-media-controls-enclosure       { border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss); background-color: var(--lirio35); }
 audio::-webkit-media-controls-enclosure:hover { background-color: var(--lirio65); }
-
 
 ::selection                { background-color: var(--lirio); color: var(--carbon);    }
 ::-moz-selection           { background-color: var(--lirio); color: var(--carbon);    }
