@@ -16,7 +16,7 @@ onUnmounted(() => { window.removeEventListener('resize', handleResize) })
 function handleResize() { 
 
   if (window.innerWidth <= 1080) { store.isCentered = true  }
-  if (window.innerWidth >= 1080) { store.isCentered = false }
+  if (window.innerWidth >  1080) { store.isCentered = false }
 
 }
 
