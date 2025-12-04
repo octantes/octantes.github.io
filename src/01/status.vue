@@ -39,6 +39,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
     
     <div class="stright">
 
+      <a href="/archivo" title="ver archivo alpha" aria-label="ir al archivo alpha">ARCHIVO</a>
+      <span class="btc divisions">//</span>
       <a href="/feed.xml" target="_blank" title="suscribirse al feed RSS" aria-label="suscribirse a las últimas publicaciones por feed RSS">RSS</a>
       <span class="btc divisions">//</span>
       <span class="btc">BTC: {{ btcPrice }}</span>
