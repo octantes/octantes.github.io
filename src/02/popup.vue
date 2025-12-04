@@ -46,7 +46,7 @@ const store           = useStore()                                              
 
 }
 
-.popup { position: relative; animation: fadeIn var(--animate-mid); transition: all var(--animate-long); }
+.popup { position: relative; animation: fadeIn var(--animate-mid); }
 
 .sigil { 
   
