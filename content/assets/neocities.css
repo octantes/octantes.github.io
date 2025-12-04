@@ -217,7 +217,7 @@ blockquote {
 
   /* LAYOUT */ display: flex; flex-direction: column; align-items: flex-start;
   /* BOX    */ gap: 0.8rem; padding: 0.8rem; padding-top:1.1rem;
-  /* BORDER */ border: 1px solid var(--polvo); box-shadow: inset 0 -6px 0 0 var(--cristal); border-radius: 0;
+  /* BORDER */ border: 1px solid var(--polvo); box-shadow: inset 0 6px 0 0 var(--cristal); border-radius: 0;
   /* FILL   */ background-color: transparent;
   
 }
@@ -254,14 +254,12 @@ blockquote {
 
 .separator {
 
-  /* BOX    */ padding-bottom: .25rem; margin-bottom: 1rem; margin-bottom: 1rem;
+  /* BOX    */ padding-bottom: .25rem; margin-top: 1rem; margin-bottom: 1rem;
   /* BORDER */ border-bottom: 1px dashed var(--polvo); border-top: none;
   /* FONT   */ font-size: .9rem; font-weight: 700; text-transform: lowercase; letter-spacing: 1px; text-align: left;
   /* FILL   */ color: var(--lirio); 
   
 }
-
-.sidebar-content, .separator { margin-top: 0; margin-bottom: 0; }
 
 .article-list { display: flex; flex-direction: column; gap: .5rem; list-style: none; padding: 0; margin: 0; }
 
