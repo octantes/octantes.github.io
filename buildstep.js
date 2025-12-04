@@ -588,6 +588,7 @@ async function writeBasicIndex() {                                              
     <title>octantes.net - archivo</title>
     <link rel="stylesheet" href="/assets/neocities.css">
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
+    <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
   </head>
   <body>
   
