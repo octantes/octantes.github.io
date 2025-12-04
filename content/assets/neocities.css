@@ -271,19 +271,10 @@ blockquote {
   
 }
 
-.article-list { display: flex; flex-direction: column; gap: .5rem; list-style: none; padding: 0; margin: 0; }
-
-.article-list a {
-
-  /* LAYOUT */ display: block; overflow: hidden;
-  /* FONT   */ white-space: nowrap; text-overflow: ellipsis;
-  /* FILL   */ opacity: 0.8;
-
-}
-
-.article-list a:hover { opacity: 1; color: var(--cristal); }
-
-.article-list a::before { content: ">"; margin-right: 8px; color: var(--polvo); }
+.article-list                 { display: flex; flex-direction: column; gap: .5rem; list-style: none; padding: 0; margin: 0; }
+.article-list a               { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.article-list a:hover         { color: var(--cristal); }
+.article-list a::before       { content: ">"; margin-right: 8px; color: var(--polvo); }
 .article-list a:hover::before { color: var(--lirio); }
 
 .cat-header {
