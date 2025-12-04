@@ -290,6 +290,8 @@ blockquote {
 
 }
 
+.post-content p { margin-top: 1rem; margin-bottom: 1rem; }
+
 .post-header { margin-bottom: 1rem; }
 .post-content img { border: none; width: 100%; }
 
