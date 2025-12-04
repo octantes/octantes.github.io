@@ -165,6 +165,7 @@ body {
   /* LAYOUT */ display: grid; min-height: 100vh; padding: 0; margin: 0; grid-template-columns: 260px 1fr;
   /* FONT   */ font-family: 'Inconsolata', monospace; font-size: 13px; line-height: 1.4;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
+  /* IMG    */ background-image: url(/assets/square.gif); background-repeat: repeat-x;
 
 }
 
@@ -248,8 +249,40 @@ body {
 .post-content p   { margin-top: .5rem; margin-bottom: .5rem; }
 .post-header      { margin-bottom: 1rem;                     }
 .post-content img { border: none; width: 100%;               }
+.post-content a   { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;
+  /* FONT   */ font-family: var(--font-main); text-decoration: underline; text-decoration-color: var(--cristal80); text-underline-offset: 3px; 
+  /* MOTION */ transition: text-decoration-color 0.25s ease;
+  /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+  &:hover { 
+    
+    /* FILL   */ background: linear-gradient(250deg, var(--cristal), var(--lirio)); background-clip: text;
+    /* FONT   */ text-decoration: underline; text-decoration-color: var(--lirio);
+    /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  
+  }
+
+}
 
 .S7TEXT           { margin-top: 2rem; display: flex; flex-direction: column; }
+.S7TEXT a         { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;
+  /* FONT   */ font-family: var(--font-main); text-decoration: underline; text-decoration-color: var(--cristal80); text-underline-offset: 3px; 
+  /* MOTION */ transition: text-decoration-color 0.25s ease;
+  /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+  &:hover { 
+    
+    /* FILL   */ background: linear-gradient(250deg, var(--cristal), var(--lirio)); background-clip: text;
+    /* FONT   */ text-decoration: underline; text-decoration-color: var(--lirio);
+    /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  
+  }
+
+}
 
 .post-header h1 { 
 
