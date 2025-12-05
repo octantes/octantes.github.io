@@ -2,15 +2,15 @@
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
       <loc>https://octantes.github.io/</loc>
-      <lastmod>2025-12-05T12:51:53.947Z</lastmod>
+      <lastmod>2025-12-05T13:40:42.561Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/about/</loc>
-      <lastmod>2025-12-05T12:51:53.947Z</lastmod>
+      <lastmod>2025-12-05T13:40:42.561Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/contact/</loc>
-      <lastmod>2025-12-05T12:51:53.947Z</lastmod>
+      <lastmod>2025-12-05T13:40:42.561Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/desarrollo/arch-hud/</loc>
@@ -51,6 +51,10 @@
 <url>
       <loc>https://octantes.github.io/posts/musica/sixminutesolder/</loc>
       <lastmod>Wed Dec 08 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/textos/kena/</loc>
+      <lastmod>Fri Sep 10 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/musica/moodworktapes/</loc>
