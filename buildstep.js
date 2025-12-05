@@ -192,12 +192,12 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
 // ASSET CONVERSION UTILITIES
 
-async function convertImage(inputPath, destPath) {                               // convert input image files to WEBP 
+async function convertImage(inputPath, destPath, width = 1200, quality = 80) {   // convert input image files to WEBP 
 
   try {
 
     const finalOutputPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
-    await sharp(inputPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(finalOutputPath)
+    await sharp(inputPath).resize({ width: width, withoutEnlargement: true }).webp({ quality: quality }).toFile(finalOutputPath)
     return finalOutputPath
 
   } catch(e) { throw new Error(`error processing image ${inputPath}: ${e.message}`) }
@@ -288,8 +288,13 @@ async function copyAssets() {                                                   
       const isImage = /\.(jpe?g|png)$/i.test(asset)
       
       if (isImage) {
+
         console.log(`converting global image ${asset} to WEBP...`)
-        await sharp(assetPath).resize({ width: 1200 }).webp({ quality: 80 }).toFile(destPath.replace(/\.(jpe?g|png)$/i, '.webp'))
+        
+        await convertImage(assetPath, destPath, 1200, 80)
+        const thumbPath = destPath.replace(/\.(jpe?g|png)$/i, '-thumb.png') 
+        await convertImage(assetPath, thumbPath, 400, 60)
+
       } else { await fs.copyFile(assetPath, destPath) }
 
     }
@@ -373,8 +378,10 @@ async function processPosts() {                                                 
 
         if (isImage) {
 
-          console.log(`converting image ${asset.name} to WEBP...`)
-          finalOutputPath = await convertImage(assetPath, destPath)
+          console.log(`converting image ${asset.name} to WEBP (full & thumb)...`)
+          finalOutputPath = await convertImage(assetPath, destPath, 1200, 80)
+          const thumbDestPath = destPath.replace(/\.(jpe?g|png)$/i, '-thumb.png')
+          await convertImage(assetPath, thumbDestPath, 400, 60)
 
         } else if (isVideo) {
 
