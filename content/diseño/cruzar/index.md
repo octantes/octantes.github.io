@@ -17,7 +17,6 @@ handle: kaste
 [!TEXT]
 
 ![embed youtube](https://www.youtube.com/watch?v=KFb_frFm8F8)
-buscando que la pc vuelva a ser una herramienta y no un agujero negro cognitivo
 
 cruzar fue mi *segundo* proyecto de diseño sobre identidades de marca ficticias
 el objetivo era armarme una excusa para animar y practicar varias herramientas
