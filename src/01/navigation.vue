@@ -33,7 +33,7 @@ onMounted(async () => {                                                         
 
     <div class="nav-content">
 
-      <div class="banner" :class="{'bcentered': isCentered}" @click="store.navHome(router)" title="volver al inicio" aria-label="banner octantes.net, hacer click para volver al inicio">
+      <div class="banner" :class="{'bcentered': isCentered}" @click="store.navHome(router)" title="volver al inicio" role="button" aria-label="banner octantes.net, hacer click para volver al inicio">
 
 <pre aria-hidden="true">
  ██████╗  ██████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗███████╗
@@ -73,7 +73,7 @@ onMounted(async () => {                                                         
 
         <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" title="buscar en la tabla de notas" aria-label="caja de búsqueda para notas"/>
 
-        <span class="toggleview" @click="toggleNavMode" :title="navMode === 'table' ? 'cambiar a vista galería' : 'cambiar a vista tabla'" :aria-label="'alternar a vista ' + (navMode === 'table' ? 'galería' : 'tabla')">{{ navMode === 'table' ? 'galería' : 'tabla' }}</span>
+        <span class="toggleview" @click="toggleNavMode" :title="navMode === 'table' ? 'cambiar a vista galería' : 'cambiar a vista tabla'" role="button" :aria-label="'alternar a vista ' + (navMode === 'table' ? 'galería' : 'tabla')">{{ navMode === 'table' ? 'galería' : 'tabla' }}</span>
 
       </div>
 

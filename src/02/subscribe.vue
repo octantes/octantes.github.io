@@ -33,9 +33,9 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
     <div class="form">
 
       <input class="honeypot" type="text"  v-model="subHoney" name="user"  tabindex="-1" autocomplete="off"/>
-      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required :class="{ [subState]: subState !== 'default'}" title="ingresar tu correo para suscribirte" aria-label="campo para ingresar correo electrónico"/>
+      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required @keydown.enter="handleSubscription" :class="{ [subState]: subState !== 'default'}" title="ingresar tu correo para suscribirte" aria-label="campo para ingresar correo electrónico"/>
 
-      <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</div>
+      <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" role="button" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</div>
 
     </div>
 

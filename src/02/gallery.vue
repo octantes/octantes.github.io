@@ -17,7 +17,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     
   <div class="gallery">
     
-    <div v-for="note in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)" :class="{ disabled: processing, active: route.params.slug === note.slug }" :title="'abrir nota: ' + note.title" :aria-label="'abrir el contenido de la nota ' + note.title">
+    <div v-for="note in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)" :class="{ disabled: processing, active: route.params.slug === note.slug }" title="abrir nota" role="button" :aria-label="'abrir la nota ' + note.title" >
     
       <div class="card-cover">
 

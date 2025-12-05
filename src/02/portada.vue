@@ -30,7 +30,7 @@ function openAuthor(author) {                                                   
 
         <div class="authors"> 
           
-          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author)" :title="'ver perfil de ' + author.handle" :aria-label="'ver el perfil de autor @' + author.handle + ' en una pestaña nueva'">
+          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author)" :title="'ver perfil de ' + author.handle" role="button" :aria-label="'ver el perfil de autor @' + author.handle + ' en una pestaña nueva'">
 
             <img class="userpic" :src="author.img" :alt="'foto de perfil de @' + author.handle"/>
             <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
