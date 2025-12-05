@@ -17,15 +17,16 @@ handle: kaste
 [!TEXT]
 
 ![embed youtube](https://www.youtube.com/watch?v=KFb_frFm8F8)
+buscando que la pc vuelva a ser una herramienta y no un agujero negro cognitivo
 
-cruzar fue mi *segundo* proyecto de diseño basado en identidades de marca ficticias
-el objetivo era armarme una excusa para seguir animando y practicando herramientas
+cruzar fue mi *segundo* proyecto de diseño sobre identidades de marca ficticias
+el objetivo era armarme una excusa para animar y practicar varias herramientas
 
-en este caso, el concepto se apoderó completamente del proyecto, creo que para bien
-poner un **datacenter** en el medio de la cordillera es una idea latente en el imaginario
-la parte cripto me parece parte de un mismo objetivo, hacer buen uso de nuestro entorno
-siento que es cuestión de tiempo para que se dé, y ojalá que sea un proyecto *argentino*
+en este caso, el concepto se apoderó totalmente del proyecto, creo que para bien
+poner un **datacenter** en la cordillera es una idea latente en nuestro imaginario
+la pata cripto es parte de un mismo objetivo, hacer buen uso de nuestro entorno
+siento que solo es cuestión de tiempo, y ojalá que sea un proyecto *argentino*
 
-por las limitaciones de la página, es muy posible que los gifs se vean desincronizados
+por las limitaciones de la página, es muy posible que los gifs se desincronicen
 
 proyecto realizado usando figma, photoshop y after effects, entre otras cosas

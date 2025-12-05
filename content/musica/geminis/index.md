@@ -10,7 +10,12 @@ handle: kaste
 
 ![embed de geminis en youtube](https://www.youtube.com/watch?v=ze5ECrM9Wk0)
 
-los primeros tres temas fueron hechos por *emi*, creo que en 2018
-solo les hice ajustes minimos a la estructura, el resto esta como en las demos originales
+los primeros tres temas son de *emi*
 
-el ultimo tema es mio y creo que lo hice en algun momento de 2020
+sentía que tenía una deuda pendiente con él, necesitaba publicarlos
+quería tener un rincón de internet al que ir a buscarlos, **a buscarlo a él**
+
+no toqué casi nada de los temas, ajusté estructuras y les puse un nombre
+el cuarto es mío, lo hice pensando en él y creo que captura algo de su cadencia
+
+espero que les llegue a quienes lo conocieron, ojalá les sirva de algo
