@@ -9,16 +9,16 @@ handle: kaste
 ---
 
 [slate](https://github.com/octantes/trackwithslate) es una webapp local para *crear, organizar y exportar data tabular* en el browser
-no necesita instalación ni tener internet: solo descargá el HTML y abrilo con el navegador
+no necesita instalación ni internet: solo descargá el HTML y abrilo con el navegador
 
-armado para tener una forma local y liviana de gestionar data personal sin dependencias
-ideal para quienes buscan simplicidad y privacidad: no está pensada para uso profesional
-sin embargo, se cubren algunos edge-cases importantes
+armado para tener una forma local y liviana de gestionar data sin dependencias
+ideal para quienes buscan simpleza y privacidad: no pensada para uso profesional
+sin embargo, se cubren algunos edge-cases importantes para asegurar practicidad
 
-toda la información se mantiene en tu máquina, sin cuentas, servidores o sincronización
-la información *queda en tu browser hasta que la exportás* - hacé backups regularmente
+toda la información se mantiene en tu máquina, sin cuentas, servidores o syncs
+la data *queda en tu browser hasta que la exportás* - hacé backups regularmente
 
-cada release es estable, con el objetivo de mantenerlo **simple**: abrilo y empezá a trackear
+cada release es estable, el objetivo es mantenerlo **simple**: abrilo y programá
 
 *importar/exportar*: traé y guardá tu información en CSV, un formato plain text
 *editar registros*: visualizá, modificá y ordená la tabla con bulk-delete y fuzzy-find

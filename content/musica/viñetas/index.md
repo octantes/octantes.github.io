@@ -10,8 +10,6 @@ handle: kaste
 
 ![embed de viñetas en youtube](https://www.youtube.com/watch?v=PzVjHnEJX0w)
 
-les comparto una reflexión
-
 las ideas no nos pertenecen
 son *fruto de un sustrato colectivo*: nuestra época y las referencias que tomamos
 teniendo eso en cuenta, no compartir su resultado es un acto de individualismo

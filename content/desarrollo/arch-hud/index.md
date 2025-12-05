@@ -8,20 +8,20 @@ date: 2025-09-14
 handle: kaste
 ---
 
-[arch-hud](https://github.com/octantes/arch-hud) es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch linux
+[arch-hud](https://github.com/octantes/arch-hud) es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch
 
-las herramientas fueron implementadas pensando en el concepto de un *heads up display*
-buscando que la pc vuelva a ser una herramienta y deje de ser un agujero negro cognitivo
-se implementaron varios parches sobre DWM junto a una estética simple de estilo retro
+las herramientas fueron implementadas pensando en armar un *heads up display*
+buscando que la pc vuelva a ser una herramienta y no un agujero negro cognitivo
+se implementaron varios parches sobre DWM junto a una estética de estilo retro
 sin gaps, transparencia ni compositor por defecto; **sin distracciones innecesarias**
 
-para compilar, entrá en cada dir y ejecutá *sudo make clean install* (script pendiente)
+para compilar, entrá en cada dir y ejecutá *sudo make clean install* o usa build.sh
 
 [dwm](https://dwm.suckless.org/) - tiling windows manager
 [dmenu](https://tools.suckless.org/dmenu/) - menú de scripts dinámico
 [st](https://st.suckless.org/) - emulador de terminal simple
-[surf](https://surf.suckless.org/) - navegador minimalista
-[tabbed](https://tools.suckless.org/tabbed/) - implementa pestañas en la terminal y el browser
-[dunst](https://github.com/dunst-project/dunst) - daemon de notificaciones súper simple
+[surf](https://surf.suckless.org/) - navegador muy minimalista
+[tabbed](https://tools.suckless.org/tabbed/) - ventanas para st y surf
+[dunst](https://github.com/dunst-project/dunst) - daemon de notificaciones
 
-podés sumar el compositor [picom](https://github.com/yshui/picom) si experimentás screen tearing
+podés sumar el compositor [picom](https://github.com/yshui/picom) si experimentás screen tearing o glitches

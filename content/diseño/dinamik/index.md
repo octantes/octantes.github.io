@@ -21,14 +21,13 @@ handle: kaste
 
 ![embed youtube](https://www.youtube.com/watch?v=fi6v9nSxeZQ)
 
-dinamik fue mi *tercer* proyecto de diseño basado en identidades de marca ficticias
+dinamik fue mi *tercer* proyecto de diseño sobre identidades de marca ficticias
 
-en este caso, la idea era armar algo **responsive** que se ajuste al tamaño de la pantalla
-se me ocurrió pensar este branding para que pueda ser revisitado en proyectos futuros
-el concepto final es una empresa que desarrolla software para mejorar la productividad
-la estética bebe de la *óptica*, que sorprendentemente tiene muchísimo atractivo visual
+en este caso, la idea era armar algo **responsive** que se ajuste a la pantalla
+se me ocurrió pensar el branding para que sea revisitado en proyectos futuros
+el resultado es un estudio que arma herramientas que mejoran la productividad
+la estética bebe de la *óptica*, que sorprendentemente tiene mucho atractivo
 
-algunos logotipos no terminaron en el proyecto, pero los agregué en la última imagen
-el proyecto fue realizado usando figma, photoshop y after effects, entre otras cosas
+el proyecto fue realizado usando figma, photoshop y after effects, entre otros
 
 inspirado en el trabajo de [bn digital](https://www.behance.net/bn_digital), que me parece excelente e inalcanzable
