@@ -1,5 +1,5 @@
 ---
-tags: [branding, portfolio]
+tags: [album, instrumental]
 type: musica
 title: mood worktapes
 description: primer disquito, aprendiendo a usar ableton live

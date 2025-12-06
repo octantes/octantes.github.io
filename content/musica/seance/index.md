@@ -1,5 +1,5 @@
 ---
-tags: [branding, portfolio]
+tags: [album, instrumental]
 type: musica
 title: seance
 description: primer disquito con guitarra y visualizer
