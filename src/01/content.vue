@@ -95,6 +95,12 @@ watch(                                                                          
     
     if (store.processing) return
     setProcessing(true)
+
+    if (slug && route.params.type) {                                                                                                  // trigger side from note type
+        store.activeFilter = route.params.type
+        store.isCentered = true
+    }
+
     await nextTick()
     
     if (!slug && !store.notesLoaded.value) { await loadNotesIndex() }
