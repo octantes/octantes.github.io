@@ -153,7 +153,7 @@
   },
   {
     "slug": "pof-softwarevr",
-    "title": "Realidad Virtual - Las Mejores Aplicaciones",
+    "title": "realidad virtual - las mejores aplicaciones",
     "description": "En las conversaciones sobre realidad virtual, el software suele quedar en segundo plano. Repasemos algunos usos interesantes.",
     "type": "textos",
     "tags": [
@@ -172,8 +172,8 @@
   },
   {
     "slug": "poe-futurovr",
-    "title": "Realidad Virtual - Un futuro contemporáneo",
-    "description": "La realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a sumergir la cabeza y descubrirlo.",
+    "title": "realidad virtual - un futuro contemporáneo",
+    "description": "La realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a descubrirlo.",
     "type": "textos",
     "tags": [
       "videojuegos",
@@ -210,8 +210,8 @@
   },
   {
     "slug": "pod-abandonware",
-    "title": "Abandonware - La permanencia del autor",
-    "description": "El abandonware se produce cuando el arte se liga al avance de la tecnología, intensificando las dificultades para conservarlo correctamente.",
+    "title": "abandonware - la permanencia del autor",
+    "description": "El abandonware se produce cuando el arte se ve ligado al avance de la tecnología, intensificando las dificultades para conservarlo correctamente.",
     "type": "textos",
     "tags": [
       "videojuegos",
@@ -229,7 +229,7 @@
   },
   {
     "slug": "poc-propiedades",
-    "title": "Propiedades Intelectuales - ¿Hacen falta nuevas IPs?",
+    "title": "propiedades intelectuales - hacen falta nuevas IPs?",
     "description": "Hoy en día, el interés en propiedades intelectuales tiene menos que ver con las particularidades de los autores y más con el hype.",
     "type": "textos",
     "tags": [
@@ -248,7 +248,7 @@
   },
   {
     "slug": "pob-microtransacciones",
-    "title": "Las Microtransacciones y su futuro",
+    "title": "las microtransacciones y su futuro",
     "description": "Explicamos la función de las microtransacciones dentro de la industria y analizamos el posible futuro de los sistemas de monetización in-game",
     "type": "textos",
     "tags": [
@@ -286,7 +286,7 @@
   },
   {
     "slug": "poa-kena",
-    "title": "Kena - ¿Está bien que la estética lo sea todo?",
+    "title": "kena - está bien que la estética lo sea todo?",
     "description": "En el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?",
     "type": "textos",
     "tags": [
