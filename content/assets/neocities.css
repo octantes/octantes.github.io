@@ -259,6 +259,7 @@ body {
 
 }
 
+.S6TRAD img       { margin-top: 1rem; margin-bottom: .5rem; }
 .S7TEXT           { margin-top: 2rem; display: flex; flex-direction: column; }
 .S7TEXT a         { 
 
