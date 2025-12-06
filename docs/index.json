@@ -285,25 +285,6 @@
     "fullscreen": null
   },
   {
-    "slug": "poa-kena",
-    "title": "Kena - ¿Está bien que la estética lo sea todo?",
-    "description": "En el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?",
-    "type": "textos",
-    "tags": [
-      "videojuegos",
-      "opinión"
-    ],
-    "portada": "https://octantes.github.io/posts/textos/poa-kena/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "10/09/2021",
-    "isoDate": "2021-09-10T00:00:00.000Z",
-    "url": "/posts/textos/poa-kena/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
     "slug": "moodworktapes",
     "title": "mood worktapes",
     "description": "primer disquito, aprendiendo a usar ableton live",
