@@ -4,7 +4,7 @@
     <title>octantes.net</title>
     <link>https://octantes.github.io</link>
     <description>un portal web de contenido multimedia, sin algoritmos ni intermediarios</description>
-    <lastBuildDate>Fri, 05 Dec 2025 13:40:42 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 06 Dec 2025 04:02:49 GMT</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="https://octantes.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
@@ -72,11 +72,51 @@
       <author>kaste@octantes.net (kaste)</author>
     </item>
 <item>
+      <title>Realidad Virtual - Las Mejores Aplicaciones</title>
+      <link>https://octantes.github.io/posts/textos/pof-softwarevr/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/textos/pof-softwarevr/</guid>
+      <pubDate>Thu, 21 Jul 2022 00:00:00 GMT</pubDate>
+      <description>En las conversaciones sobre realidad virtual, el software suele quedar en segundo plano. Repasemos algunos usos interesantes.</description>
+      <author>kaste@octantes.net (kaste)</author>
+    </item>
+<item>
+      <title>Realidad Virtual - Un futuro contemporáneo</title>
+      <link>https://octantes.github.io/posts/textos/poe-futurovr/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/textos/poe-futurovr/</guid>
+      <pubDate>Tue, 10 May 2022 00:00:00 GMT</pubDate>
+      <description>La realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a sumergir la cabeza y descubrirlo.</description>
+      <author>kaste@octantes.net (kaste)</author>
+    </item>
+<item>
       <title>seance</title>
       <link>https://octantes.github.io/posts/musica/seance/</link>
       <guid isPermaLink="true">https://octantes.github.io/posts/musica/seance/</guid>
       <pubDate>Sun, 08 May 2022 00:00:00 GMT</pubDate>
       <description>primer disquito con guitarra y visualizer</description>
+      <author>kaste@octantes.net (kaste)</author>
+    </item>
+<item>
+      <title>Abandonware - La permanencia del autor</title>
+      <link>https://octantes.github.io/posts/textos/pod-abandonware/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/textos/pod-abandonware/</guid>
+      <pubDate>Thu, 31 Mar 2022 00:00:00 GMT</pubDate>
+      <description>El abandonware se produce cuando el arte se liga al avance de la tecnología, intensificando las dificultades para conservarlo correctamente.</description>
+      <author>kaste@octantes.net (kaste)</author>
+    </item>
+<item>
+      <title>Propiedades Intelectuales - ¿Hacen falta nuevas IPs?</title>
+      <link>https://octantes.github.io/posts/textos/poc-propiedades/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/textos/poc-propiedades/</guid>
+      <pubDate>Mon, 07 Feb 2022 00:00:00 GMT</pubDate>
+      <description>Hoy en día, el interés en propiedades intelectuales tiene menos que ver con las particularidades de los autores y más con el hype.</description>
+      <author>kaste@octantes.net (kaste)</author>
+    </item>
+<item>
+      <title>Las Microtransacciones y su futuro</title>
+      <link>https://octantes.github.io/posts/textos/pob-microtransacciones/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/textos/pob-microtransacciones/</guid>
+      <pubDate>Mon, 13 Dec 2021 00:00:00 GMT</pubDate>
+      <description>Explicamos la función de las microtransacciones dentro de la industria y analizamos el posible futuro de los sistemas de monetización in-game</description>
       <author>kaste@octantes.net (kaste)</author>
     </item>
 <item>
@@ -89,8 +129,8 @@
     </item>
 <item>
       <title>Kena - ¿Está bien que la estética lo sea todo?</title>
-      <link>https://octantes.github.io/posts/textos/kena/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/kena/</guid>
+      <link>https://octantes.github.io/posts/textos/poa-kena/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/textos/poa-kena/</guid>
       <pubDate>Fri, 10 Sep 2021 00:00:00 GMT</pubDate>
       <description>En el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?</description>
       <author>kaste@octantes.net (kaste)</author>

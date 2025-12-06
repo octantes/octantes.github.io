@@ -2,15 +2,15 @@
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
       <loc>https://octantes.github.io/</loc>
-      <lastmod>2025-12-05T13:40:42.561Z</lastmod>
+      <lastmod>2025-12-06T04:02:49.578Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/about/</loc>
-      <lastmod>2025-12-05T13:40:42.561Z</lastmod>
+      <lastmod>2025-12-06T04:02:49.578Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/contact/</loc>
-      <lastmod>2025-12-05T13:40:42.561Z</lastmod>
+      <lastmod>2025-12-06T04:02:49.578Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/desarrollo/arch-hud/</loc>
@@ -45,15 +45,35 @@
       <lastmod>Wed Sep 06 2023 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
     </url>
 <url>
+      <loc>https://octantes.github.io/posts/textos/pof-softwarevr/</loc>
+      <lastmod>Thu Jul 21 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/textos/poe-futurovr/</loc>
+      <lastmod>Tue May 10 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+    </url>
+<url>
       <loc>https://octantes.github.io/posts/musica/seance/</loc>
       <lastmod>Sun May 08 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/textos/pod-abandonware/</loc>
+      <lastmod>Thu Mar 31 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/textos/poc-propiedades/</loc>
+      <lastmod>Mon Feb 07 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/textos/pob-microtransacciones/</loc>
+      <lastmod>Mon Dec 13 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/musica/sixminutesolder/</loc>
       <lastmod>Wed Dec 08 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
     </url>
 <url>
-      <loc>https://octantes.github.io/posts/textos/kena/</loc>
+      <loc>https://octantes.github.io/posts/textos/poa-kena/</loc>
       <lastmod>Fri Sep 10 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
     </url>
 <url>

@@ -152,6 +152,44 @@
     "fullscreen": null
   },
   {
+    "slug": "pof-softwarevr",
+    "title": "Realidad Virtual - Las Mejores Aplicaciones",
+    "description": "En las conversaciones sobre realidad virtual, el software suele quedar en segundo plano. Repasemos algunos usos interesantes.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/pof-softwarevr/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "21/07/2022",
+    "isoDate": "2022-07-21T00:00:00.000Z",
+    "url": "/posts/textos/pof-softwarevr/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "poe-futurovr",
+    "title": "Realidad Virtual - Un futuro contemporáneo",
+    "description": "La realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a sumergir la cabeza y descubrirlo.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/poe-futurovr/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "10/05/2022",
+    "isoDate": "2022-05-10T00:00:00.000Z",
+    "url": "/posts/textos/poe-futurovr/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
     "slug": "seance",
     "title": "seance",
     "description": "primer disquito con guitarra y visualizer",
@@ -167,6 +205,63 @@
     "date": "08/05/2022",
     "isoDate": "2022-05-08T00:00:00.000Z",
     "url": "/posts/musica/seance/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "pod-abandonware",
+    "title": "Abandonware - La permanencia del autor",
+    "description": "El abandonware se produce cuando el arte se liga al avance de la tecnología, intensificando las dificultades para conservarlo correctamente.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/pod-abandonware/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "31/03/2022",
+    "isoDate": "2022-03-31T00:00:00.000Z",
+    "url": "/posts/textos/pod-abandonware/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "poc-propiedades",
+    "title": "Propiedades Intelectuales - ¿Hacen falta nuevas IPs?",
+    "description": "Hoy en día, el interés en propiedades intelectuales tiene menos que ver con las particularidades de los autores y más con el hype.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/poc-propiedades/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "07/02/2022",
+    "isoDate": "2022-02-07T00:00:00.000Z",
+    "url": "/posts/textos/poc-propiedades/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "pob-microtransacciones",
+    "title": "Las Microtransacciones y su futuro",
+    "description": "Explicamos la función de las microtransacciones dentro de la industria y analizamos el posible futuro de los sistemas de monetización in-game",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/pob-microtransacciones/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "13/12/2021",
+    "isoDate": "2021-12-13T00:00:00.000Z",
+    "url": "/posts/textos/pob-microtransacciones/",
     "vuecomp": null,
     "fullscreen": null
   },
@@ -190,7 +285,7 @@
     "fullscreen": null
   },
   {
-    "slug": "kena",
+    "slug": "poa-kena",
     "title": "Kena - ¿Está bien que la estética lo sea todo?",
     "description": "En el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?",
     "type": "textos",
@@ -198,13 +293,13 @@
       "videojuegos",
       "opinión"
     ],
-    "portada": "https://octantes.github.io/posts/textos/kena/portada.webp",
+    "portada": "https://octantes.github.io/posts/textos/poa-kena/portada.webp",
     "handle": [
       "kaste"
     ],
     "date": "10/09/2021",
     "isoDate": "2021-09-10T00:00:00.000Z",
-    "url": "/posts/textos/kena/",
+    "url": "/posts/textos/poa-kena/",
     "vuecomp": null,
     "fullscreen": null
   },
