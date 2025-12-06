@@ -7,6 +7,7 @@ portada: portada.png
 date: 2021-09-10
 handle: kaste
 style: trad
+mostrar: no
 ---
 
 *Esta nota fue originalmente escrita para y publicada en [Press Over](https://pressover.news/opinion/kena-esta-bien-que-la-estetica-lo-sea-todo/)*
