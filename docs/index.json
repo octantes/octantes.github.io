@@ -62,8 +62,8 @@
     "description": "la musica de mi hermano, sumando un tema mio al final",
     "type": "musica",
     "tags": [
-      "branding",
-      "portfolio"
+      "album",
+      "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/geminis/portada.webp",
     "handle": [
@@ -81,8 +81,8 @@
     "description": "descripcion corta para seo",
     "type": "musica",
     "tags": [
-      "branding",
-      "portfolio"
+      "album",
+      "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/viñetas/portada.webp",
     "handle": [
@@ -96,7 +96,7 @@
   },
   {
     "slug": "dinamik",
-    "title": "dinamik - branding",
+    "title": "dinamik - studio dev",
     "description": "descripcion corta para seo",
     "type": "diseño",
     "tags": [
@@ -134,7 +134,7 @@
   },
   {
     "slug": "enuna",
-    "title": "en una - branding",
+    "title": "en una - publicación digital",
     "description": "descripcion corta para seo",
     "type": "diseño",
     "tags": [
@@ -195,8 +195,8 @@
     "description": "primer disquito con guitarra y visualizer",
     "type": "musica",
     "tags": [
-      "branding",
-      "portfolio"
+      "album",
+      "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/seance/portada.webp",
     "handle": [
@@ -271,8 +271,8 @@
     "description": "experimentos midi",
     "type": "musica",
     "tags": [
-      "branding",
-      "portfolio"
+      "ep",
+      "visualizer"
     ],
     "portada": "https://octantes.github.io/posts/musica/sixminutesolder/portada.webp",
     "handle": [
@@ -309,8 +309,8 @@
     "description": "primer disquito, aprendiendo a usar ableton live",
     "type": "musica",
     "tags": [
-      "branding",
-      "portfolio"
+      "album",
+      "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/moodworktapes/portada.webp",
     "handle": [
