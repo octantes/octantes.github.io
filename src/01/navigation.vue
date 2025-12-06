@@ -230,9 +230,9 @@ onMounted(async () => {                                                         
 
   .bcentered { font-size: .8vw; }
 
-  .tabs button          { display: none; }
-  .tabs button.neighbor { display: none; }
-  .tabs button.active   { display: flex; }
+  .tabs.compact button.neighbor { display: none; }
+  .tabs button                  { display: none; }
+  .tabs button.active           { display: flex; }
 
 }
 

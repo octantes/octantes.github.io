@@ -77,7 +77,7 @@ onMounted(async () => {                                                         
     
       <p>si querés saber más <i>sobre el proyecto</i> podes leer estos posteos</p> <br>
 
-      <a href="#" @click.prevent="loadReference('textos', 'por qué decidi armar una página')">por qué decidi armar una página en 2025?</a> <br>
+      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué decidi armar una página')">por qué decidi armar una página en 2025?</a> <br>-->
 
     </div>
 
@@ -110,7 +110,7 @@ onMounted(async () => {                                                         
     
       <p>si querés saber más <i>sobre mis diseños</i> podes leer estos posteos</p> <br>
 
-      <a href="#" @click.prevent="loadReference('textos', 'lo que me interesa al diseñar')">lo que me interesa al diseñar</a> <br>
+      <!--<a href="#" @click.prevent="loadReference('textos', 'lo que me interesa al diseñar')">lo que me interesa al diseñar</a> <br>-->
 
     </div>
 
@@ -144,7 +144,7 @@ onMounted(async () => {                                                         
     
       <p>si querés saber más <i>sobre mi desarrollo</i> podes leer estos posteos</p> <br>
 
-      <a href="#" @click.prevent="loadReference('textos', 'mi roadmap de desarrollo')">mi roadmap de desarrollo</a> <br>
+      <!--<a href="#" @click.prevent="loadReference('textos', 'mi roadmap de desarrollo')">mi roadmap de desarrollo</a> <br>-->
 
     </div>
 
@@ -177,7 +177,7 @@ onMounted(async () => {                                                         
     
       <p>si querés saber más <i>sobre mi música</i> podes leer estos posteos</p> <br>
 
-      <a href="#" @click.prevent="loadReference('textos', 'por qué hago música?')">por qué hago música?</a> <br>
+      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué hago música?')">por qué hago música?</a> <br>-->
 
     </div>
 
@@ -210,7 +210,7 @@ onMounted(async () => {                                                         
     
       <p>si querés saber más <i>sobre lo que escribo</i> podes leer estos posteos</p> <br>
 
-      <a href="#" @click.prevent="loadReference('textos', 'por qué y cómo escribo?')">por qué y cómo escribo?</a> <br>
+      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué y cómo escribo?')">por qué y cómo escribo?</a> <br>-->
 
     </div>
 
@@ -243,7 +243,7 @@ onMounted(async () => {                                                         
     
       <p>si querés saber más <i>sobre el proyecto</i> podes leer estos posteos</p> <br>
 
-      <a href="#" @click.prevent="loadReference('textos', 'mi proceso para hacer fichines')">mi proceso para hacer fichines</a> <br>
+      <!--<a href="#" @click.prevent="loadReference('textos', 'mi proceso para hacer fichines')">mi proceso para hacer fichines</a> <br>-->
 
     </div>
 
