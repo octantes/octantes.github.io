@@ -14,6 +14,14 @@ const store           = useStore()                                              
 const { isCentered, processing, searchQuery, activeFilter, navMode } = storeToRefs(store)                                             // imports refs from main store
 const { changeFilter, emptyFilter, tabs, toggleNavMode } = store                                                                      // destructure store refs
 
+function isNeighbor(tabValue) {                                                                                                       // check compact tab neighbors 
+
+  const currentIndex = tabs.findIndex(t => t.value === activeFilter.value)
+  const tabIndex = tabs.findIndex(t => t.value === tabValue)
+  return Math.abs(currentIndex - tabIndex) === 1
+
+}
+
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
   await store.loadNotesIndex()
@@ -50,9 +58,9 @@ onMounted(async () => {                                                         
 
         <button @click="changeFilter(router, -1)" :disabled="processing" title="ver el filtro anterior" aria-label="navegar al filtro de contenido anterior"> < </button>
 
-        <div class="tabs">
+        <div class="tabs" :class="{ 'compact': isCentered }">
           <template v-for="tab in tabs" :key="tab.value">
-            <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }"
+            <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value, neighbor: isNeighbor(tab.value) }"
               :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
             </button>
           </template>
@@ -204,6 +212,9 @@ onMounted(async () => {                                                         
   &:hover { background-color: var(--cristal15); }
 
 }
+
+.tabs.compact button, .navigation:has(.tabs.compact) button { display: none; }
+.tabs.compact button.active, .tabs.compact button.neighbor  { display: flex; }
 
 @media (max-width: 1080px) { .bcentered { font-size: .8vw; } }
 @media (max-width: 800px)  { .bcentered { font-size: .8vw; } }
