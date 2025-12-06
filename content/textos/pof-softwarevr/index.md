@@ -1,7 +1,7 @@
 ---
 tags: [videojuegos, opinión]
 type: textos
-title: Realidad Virtual: Las Mejores Aplicaciones
+title: Realidad Virtual - Las Mejores Aplicaciones
 description: En las conversaciones sobre realidad virtual, el software suele quedar en segundo plano. Repasemos algunos usos interesantes.
 portada: portada.png
 date: 2022-07-21

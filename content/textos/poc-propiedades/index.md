@@ -1,7 +1,7 @@
 ---
 tags: [videojuegos, opinión]
 type: textos
-title: Propiedades Intelectuales: ¿Hacen falta nuevas IPs?
+title: Propiedades Intelectuales - ¿Hacen falta nuevas IPs?
 description: Hoy en día, el interés en propiedades intelectuales tiene menos que ver con las particularidades de los autores y más con el hype.
 portada: portada.png
 date: 2022-02-07
