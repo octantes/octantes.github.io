@@ -15,10 +15,18 @@ const { isCentered, processing, searchQuery, activeFilter, navMode } = storeToRe
 const { changeFilter, emptyFilter, tabs, toggleNavMode } = store                                                                      // destructure store refs
 
 function isNeighbor(tabValue) {                                                                                                       // check compact tab neighbors 
+  
+  const visibleTabs = tabs.filter(t => emptyFilter(t.value))
+  const currentIndex = visibleTabs.findIndex(t => t.value === activeFilter.value)
+  const tabIndex = visibleTabs.findIndex(t => t.value === tabValue)
+  const total = visibleTabs.length
 
-  const currentIndex = tabs.findIndex(t => t.value === activeFilter.value)
-  const tabIndex = tabs.findIndex(t => t.value === tabValue)
-  return Math.abs(currentIndex - tabIndex) === 1
+  if (currentIndex === -1 || tabIndex === -1 || total <= 1) return false
+
+  const prevIndex = (currentIndex - 1 + total) % total
+  const nextIndex = (currentIndex + 1) % total
+
+  return tabIndex === prevIndex || tabIndex === nextIndex
 
 }
 
@@ -223,8 +231,9 @@ onMounted(async () => {                                                         
 
   .bcentered { font-size: .8vw; }
 
-  .tabs button        { display: none; }
-  .tabs button.active { display: flex; }
+  .tabs button          { display: none; }
+  .tabs button.neighbor { display: none; }
+  .tabs button.active   { display: flex; }
 
 }
 
