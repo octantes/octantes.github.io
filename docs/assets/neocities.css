@@ -222,7 +222,7 @@ body                             {
 .post-content                    { 
 
   /* LAYOUT */ display: flex; flex-direction: column; overflow-y: auto;
-  /* BOX    */ padding: 2rem 3rem; padding-right: 35vw; width: 100%;
+  /* BOX    */ padding: 2rem 3rem; padding-right: 40vw; width: 100%;
 
 }
 
