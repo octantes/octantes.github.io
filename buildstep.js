@@ -14,7 +14,7 @@ import sharp from 'sharp'
 // OTHER   |  any other           | direct copy          |  unchanged  | doesnt change original tag
 
 // all files must be under 10MB and most should be under 5MB
-// embeds will be processed in any note type as long as the url is from youtube or spotify
+// embeds will be processed in any note type as long as the url is from youtube or spotify (NEVER use shortened youtu.be url)
 // optimization is handled only for images and audios, preprocess vidos and gifs before uploading
 // for DISEÑO use [!TEXT] to divide from project assets to actual note
 
@@ -23,7 +23,7 @@ import sharp from 'sharp'
 ---
 tags: [a, b, c]
 type: diseño, desarrollo, musica, textos, juegos
-title: titulo de la nota
+title: titulo de la nota (nunca usar ":" en el titulo)
 description: descripcion corta para seo
 portada: portada.png
 date: YYYY-MM-DD

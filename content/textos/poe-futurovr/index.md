@@ -44,7 +44,7 @@ Esta es una forma adecuada de trackear nuestras manos, pero no nos permite usar 
 
 Es relevante destacar que varios cascos integran cámaras hacia el exterior, que nos permiten usar nuestras manos reales, sin controles, para interactuar con el mundo digital. En los últimos meses se han hecho progresos significativos en este campo, pero todavía hay pocos programas que lo incorporen efectivamente.
 
-![Trackeo de manos en el Quest 2](https://youtu.be/K-l-RXxYnzs?si=UwjuFgyAb0CTAQKm)
+![Trackeo de manos en el Quest 2](https://www.youtube.com/watch?v=K-l-RXxYnzs)
 
 ### Interfaces Cerebro-Máquina
 La otra posibilidad que se empieza a gestar es el uso de interfaces que interpretan la actividad cerebral y la utilizan como input. Por ahora, están en un estado muy experimental y las aplicaciones solo permiten concentrarse en un punto muy específico de la pantalla para realizar una acción, pero es interesante verlo en funcionamiento y entender que ya existe.
