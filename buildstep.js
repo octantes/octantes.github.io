@@ -542,7 +542,7 @@ function generateGroupedSidebar() {                                             
 
   })
 
-  const order = ['textos', 'diseño', 'desarrollo', 'musica', 'juegos']
+  const order = ['musica', 'diseño', 'juegos', 'desarrollo', 'textos']
   
   Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
 
