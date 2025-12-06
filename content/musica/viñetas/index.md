@@ -1,5 +1,5 @@
 ---
-tags: [branding, portfolio]
+tags: [album, instrumental]
 type: musica
 title: viñetas
 description: descripcion corta para seo

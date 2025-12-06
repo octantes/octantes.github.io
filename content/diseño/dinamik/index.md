@@ -1,7 +1,7 @@
 ---
 tags: [branding, portfolio]
 type: diseño
-title: dinamik - branding
+title: dinamik - studio dev
 description: descripcion corta para seo
 portada: portada.png
 date: 2024-11-30

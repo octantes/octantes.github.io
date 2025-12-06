@@ -1,7 +1,7 @@
 ---
 tags: [branding, portfolio]
 type: diseño
-title: en una - branding
+title: en una - publicación digital
 description: descripcion corta para seo
 portada: portada.png
 date: 2023-09-06

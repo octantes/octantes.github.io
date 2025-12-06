@@ -1,5 +1,5 @@
 ---
-tags: [branding, portfolio]
+tags: [ep, visualizer]
 type: musica
 title: six minutes older
 description: experimentos midi
