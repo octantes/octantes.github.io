@@ -213,7 +213,7 @@ onMounted(async () => {                                                         
 
 }
 
-.tabs.compact button, .navigation:has(.tabs.compact) button { display: none; }
+.tabs.compact button { display: none; }
 .tabs.compact button.active, .tabs.compact button.neighbor  { display: flex; }
 
 @media (max-width: 1080px) { .bcentered { font-size: .8vw; } }
