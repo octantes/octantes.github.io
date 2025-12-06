@@ -1,7 +1,7 @@
 ---
 tags: [videojuegos, opinión]
 type: textos
-title: Abandonware: La permanencia del autor
+title: Abandonware - La permanencia del autor
 description: El abandonware se produce cuando el arte se liga al avance de la tecnología, intensificando las dificultades para conservarlo correctamente.
 portada: portada.png
 date: 2022-03-31
