@@ -28,6 +28,9 @@ description: descripcion corta para seo
 portada: portada.png
 date: YYYY-MM-DD
 handle: kaste OR [kaste, octantes] if multi-author
+vuecomp: nombre-componente (sin el .vue)
+fullscreen: nombre-componente (sin el .vue)
+mostrar: si/no (si la propiedad no existe se considera como "si")
 ---
 
 FULLSCREEN:   add "fullscreen: componente" to metadata to mount component in fullscreen layout (add imports to fullscreen.vue)
@@ -351,6 +354,7 @@ async function processPosts() {                                                 
     catch { console.warn(`index.md not found in ${typeFolder}, skipping`); continue }
 
     const { attributes, body } = fm(raw)
+    const showNote = attributes.mostrar !== 'no' && attributes.mostrar !== false
     const postType = attributes.type || typeFolder
     const noteOutputDir = path.join(outputDir, 'posts', postType, slug)
     const sidebarLinks = postDirs.map(p => `<li><a href="${webURL}/posts/${p.typeDir}/${p.slug}/">${p.slug.replace(/-/g, ' ')}</a></li>`).join('\n')
@@ -490,20 +494,22 @@ async function processPosts() {                                                 
 
     } else { console.log(`skipping ${slug}/index.md (unchanged)`) }
 
-    indexItems.push({
-      slug,
-      title: attributes.title || slug,
-      description: attributes.description || '',
-      type: postType || 'textos',
-      tags: attributes.tags || [],
-      portada: portadaUrl,
-      handle: handles,
-      date: formatted,
-      isoDate: isoDate,
-      url: `/posts/${postType}/${slug}/`,
-      vuecomp: attributes.vuecomp || null,
-      fullscreen: attributes.fullscreen || null
-    })
+    if (showNote) {
+      indexItems.push({
+        slug,
+        title: attributes.title || slug,
+        description: attributes.description || '',
+        type: postType || 'textos',
+        tags: attributes.tags || [],
+        portada: portadaUrl,
+        handle: handles,
+        date: formatted,
+        isoDate: isoDate,
+        url: `/posts/${postType}/${slug}/`,
+        vuecomp: attributes.vuecomp || null,
+        fullscreen: attributes.fullscreen || null
+      })
+    }
 
   }
 
