@@ -306,7 +306,7 @@ onMounted(async () => {                                                         
   
 }
 
-@media (max-width: 1400px) { .about { font-size: .75vw; } .user-status { font-size: .65vw; } }
-@media (max-width: 1080px) { .about { font-size: 2vw; padding-bottom: 4rem; } .user-status { font-size: 2vw; } }
+@media (max-width: 1405px) { .about { font-size: .75vw; }                     .user-status { font-size: .65vw; } }
+@media (max-width: 1080px) { .about { font-size: 2vw; padding-bottom: 4rem; } .user-status { font-size: 2vw;   } }
 
 </style>

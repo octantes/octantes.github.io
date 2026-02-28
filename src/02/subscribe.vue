@@ -104,7 +104,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 .submit.error   { color: var(--carbon); background-color: var(--arcilla); box-shadow: var(--shadow-border) var(--arcilla); }
 .submit.success { color: var(--carbon); background-color: var(--poma);    box-shadow: var(--shadow-border) var(--poma);    }
 
-@media (max-width: 1405px) { .subscribe { font-size: .75vw  } }
+@media (max-width: 1405px) { .subscribe { font-size: .75vw; } }
 @media (max-width: 1080px) { .subscribe { font-size:   2vw; } }
 
 </style>

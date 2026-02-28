@@ -40,7 +40,7 @@
 
   /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
 
   & img { 
 
@@ -103,5 +103,5 @@
 
 }
 
-@media (max-width: 1405px) { .S6, .S7TEXT { font-size: .75vw  } }
-@media (max-width: 1080px) { .S6, .S7TEXT { font-size:   2vw; } }
+@media (max-width: 1405px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: .75vw; } }
+@media (max-width: 1080px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 2vw;   } }
