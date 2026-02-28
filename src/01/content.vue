@@ -96,10 +96,7 @@ watch(                                                                          
     if (store.processing) return
     setProcessing(true)
 
-    if (slug && route.params.type) {                                                                                                  // trigger side from note type
-        store.activeFilter = route.params.type
-        store.isCentered = true
-    }
+    if (slug && route.params.type) { store.activeFilter = route.params.type }
 
     await nextTick()
     
@@ -243,20 +240,6 @@ watch(                                                                          
 
   &:hover { cursor: pointer; background-color: var(--niebla99); }
 
-}
-
-.sidebutton {
-
-  /* CURSOR */ user-select: none;
-  /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center; justify-content: center;
-  /* BORDER */ border: none; border-radius: 9999px;
-  /* BOX    */ padding: .5rem 1.5rem .5rem 1.5rem;
-  /* FILL   */ background-color: var(--carbon25);
-  /* MOTION */ transition: all var(--animate-fast);
-
-  &:hover  { cursor: pointer; background-color: var(--carbon50); }
-  &:active { transform: var(--scale-min); }
-  
 }
 
 .content { 

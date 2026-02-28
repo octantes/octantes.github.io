@@ -10,23 +10,8 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { isCentered, processing, searchQuery, activeFilter } = storeToRefs(store)                                                      // imports refs from main store
+const { processing, searchQuery, activeFilter } = storeToRefs(store)                                                                  // imports refs from main store
 const { changeFilter, emptyFilter, tabs } = store                                                                                     // destructure store refs
-
-function isNeighbor(tabValue) {                                                                                                       // check compact tab neighbors 
-
-  const visibleTabs = tabs.filter(t => emptyFilter(t.value))
-  const currentIndex = visibleTabs.findIndex(t => t.value === activeFilter.value)
-  const tabIndex = visibleTabs.findIndex(t => t.value === tabValue)
-
-  if (currentIndex === -1 || tabIndex === -1) return false
-
-  const prevIndex = currentIndex - 1
-  const nextIndex = currentIndex + 1
-
-  return tabIndex === prevIndex || tabIndex === nextIndex
-
-}
 
 onMounted(async () => {                                                                                                               // searches notes on mount 
 
@@ -55,9 +40,9 @@ onMounted(async () => {                                                         
 
         <button @click="changeFilter(router, -1)" :disabled="processing" title="ver el filtro anterior" aria-label="navegar al filtro de contenido anterior"> < </button>
 
-        <div class="tabs" :class="{ 'compact': isCentered }">
+        <div class="tabs">
           <template v-for="tab in tabs" :key="tab.value">
-            <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value, neighbor: isNeighbor(tab.value) }"
+            <button v-if="emptyFilter(tab.value)" @click="store.setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }"
               :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
             </button>
           </template>
@@ -83,7 +68,7 @@ onMounted(async () => {                                                         
 
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center; position: relative;
-  /* BOX    */ padding: 0rem; gap: .8rem;
+  /* BOX    */ padding: 0rem; gap: .8rem; min-height: 300px;
   /* FILL   */ background-color: var(--carbon); color: var(--niebla);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
@@ -154,12 +139,8 @@ onMounted(async () => {                                                         
   
 }
 
-.tabs.compact button { display: none; min-width: 6rem; justify-content: center; }
-.tabs.compact button.active, .tabs.compact button.neighbor  { display: flex; }
-
 @media (max-width: 580px) {
 
-  .tabs.compact button.neighbor { display: none; }
   .tabs button                  { display: none; }
   .tabs button.active           { display: flex; }
 
