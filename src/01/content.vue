@@ -3,6 +3,7 @@ import { ref, watch, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
+import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
 import Shader from '../03/shader.vue'
 
@@ -178,13 +179,12 @@ watch(                                                                          
 
         <div class="content" :class="{ 'fs-content': computedFullscreen }">
 
-          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />     <!-- for vuecomp/fullscreen  -->
-          <div v-else :class="computedNoteClass" v-html="noteContent" />                   <!-- for html posts          -->
-
+          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
+          <div v-else :class="computedNoteClass" v-html="noteContent" />                              <!-- for html posts          -->
           <div v-if="currentPost && !computedNoteComp && !computedFullscreen"> <br><hr><br> </div>
+          <Subscribe v-if="currentPost && !computedNoteComp && !computedFullscreen" /> <br><hr><br>   <!-- subscribe to newsletter -->
+          <About v-if="currentPost && !computedNoteComp && !computedFullscreen" />                    <!-- selected theme intro    -->
 
-          <Subscribe v-if="currentPost && !computedNoteComp && !computedFullscreen" />     <!-- subscribe to newsletter -->
-          
         </div>
         
       </div>

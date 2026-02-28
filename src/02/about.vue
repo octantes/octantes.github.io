@@ -31,7 +31,7 @@ onMounted(async () => {                                                         
 
 <template> 
 
-  <div class="side">
+  <div class="about">
 
     <div class="profile-head">
 
@@ -253,13 +253,12 @@ onMounted(async () => {                                                         
 
 <style scoped> 
 
-.side { 
+.about { 
 
-  /* LAYOUT */ display: flex; flex-direction: column; text-align: center; overflow-y: auto;
+  /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
   /* BOX    */ z-index: 1; width: 100%; height: 100%; padding: 3.6rem 3rem 2rem 3rem; gap: 1.25rem; overflow-wrap: break-word;
-  /* FILL   */ background-color: var(--carbon); color: var(--humo);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
-  /* FONT   */ font-size: .72vw; line-height: 1.5; word-break: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
   /* SCROLL */ scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; }
 
 }
