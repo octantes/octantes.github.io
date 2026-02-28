@@ -59,7 +59,6 @@ export const useStore = defineStore('store', () => {
   const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
   const processing                 = ref(false)                                                                                       // disabled component state
   const showPopup                  = ref(true)                                                                                        // enable popup in navigation
-  const navMode                    = ref('gallery')                                                                                   // navigation view style
   const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link
   const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
   const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
@@ -142,13 +141,6 @@ export const useStore = defineStore('store', () => {
     if (processing.value) return
     if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
     else { sortKey.value = key; sortOrder.value = 'asc' }
-
-  }
-
-  function toggleNavMode() {                                                                                                          // toggle navigation view mode 
-  
-    if (processing.value) return
-    navMode.value = navMode.value === 'table' ? 'gallery' : 'table'
 
   }
 
@@ -442,8 +434,8 @@ export const useStore = defineStore('store', () => {
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
-    /* VIEWS VAR */ isCentered, processing, showPopup, navMode, popLink, popString, mailtoDir,
-    /* VIEWS FUN */ setCentered, setProcessing, togglePopup, toggleNavMode,
+    /* VIEWS VAR */ isCentered, processing, showPopup, popLink, popString, mailtoDir,
+    /* VIEWS FUN */ setCentered, setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
     /* NAVIG COM */ noteSortFilter,
