@@ -256,14 +256,14 @@ onMounted(async () => {                                                         
 .about { 
 
   /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
-  /* BOX    */ z-index: 1; width: 100%; height: 100%; padding: 3.6rem 3rem 2rem 3rem; gap: 1.25rem; overflow-wrap: break-word;
+  /* BOX    */ z-index: 1; width: 100%; height: 100%; padding: 0rem 2rem 0rem 2rem; gap: 1.25rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
   /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
   /* SCROLL */ scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; }
 
 }
 
-.profile-head { display: flex; flex-direction: column; position: relative; justify-content: center; gap: 1.5rem; }
+.profile-head { display: flex; flex-direction: column; position: relative; justify-content: center; align-items: center; gap: 1.5rem; }
 
 .profilepic { 
 
@@ -285,7 +285,7 @@ onMounted(async () => {                                                         
 .user-status { 
 
   /* LAYOUT */ display: inline-flex; align-items: center; white-space: nowrap; z-index: 5;
-  /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
+  /* BOX    */ width: 28rem; gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
   /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
   /* FILL   */ background-color: var(--carbon);
   /* FONT   */ font-size: .65vw;
