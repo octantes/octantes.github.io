@@ -285,7 +285,7 @@ onMounted(async () => {                                                         
 .user-status { 
 
   /* LAYOUT */ display: inline-flex; align-items: center; white-space: nowrap; z-index: 5;
-  /* BOX    */ width: 28rem; gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
+  /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
   /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
   /* FILL   */ background-color: var(--carbon);
   /* FONT   */ font-size: .65vw;
@@ -307,7 +307,7 @@ onMounted(async () => {                                                         
   
 }
 
-@media (max-width: 1400px) { .side { font-size: .65vw; } .user-status { font-size: .65vw; } }
-@media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 8rem; height: auto; overflow-y: visible; } .user-status { font-size: 2vw; } }
+@media (max-width: 1400px) { .side { font-size: .75vw; } .user-status { font-size: .65vw; } }
+@media (max-width: 1080px) { .side { font-size: 2vw; padding-bottom: 4rem; } .user-status { font-size: 2vw; } }
 
 </style>
