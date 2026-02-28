@@ -40,7 +40,7 @@ const store           = useStore()                                              
 
 .backdrop { 
 
-  /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0; container-type: inline-size;
+  /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0; container-type: size;
   /* FILL   */ background-color: var(--carbon99); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   /* MOTION */ animation: fadeIn var(--animate-mid);
 
@@ -106,7 +106,22 @@ const store           = useStore()                                              
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@media (max-width: 1080px) {      .popup { scale: 50%;  } }
+@media (max-width: 1080px) {
+
+  @container (max-width: 680px) { .popup { scale: 0.90; } }
+  @container (max-width: 560px) { .popup { scale: 0.80; } }
+  @container (max-width: 480px) { .popup { scale: 0.60; } }
+  @container (max-width: 400px) { .popup { scale: 0.40; } }
+  @container (max-width: 340px) { .popup { scale: 0.30; } }
+
+  @container (max-height: 680px) { .popup { scale: 0.90; } }
+  @container (max-height: 560px) { .popup { scale: 0.80; } }
+  @container (max-height: 480px) { .popup { scale: 0.60; } }
+  @container (max-height: 400px) { .popup { scale: 0.50; } }
+  @container (max-height: 340px) { .popup { scale: 0.50; } }
+
+}
+
 @media (min-width: 1081px) { 
   
   @container (max-width: 680px) { .popup { scale: 0.90; } }
@@ -114,6 +129,12 @@ const store           = useStore()                                              
   @container (max-width: 480px) { .popup { scale: 0.60; } }
   @container (max-width: 400px) { .popup { scale: 0.40; } }
   @container (max-width: 340px) { .popup { scale: 0.30; } }
+
+  @container (max-height: 680px) { .popup { scale: 0.90; } }
+  @container (max-height: 560px) { .popup { scale: 0.80; } }
+  @container (max-height: 480px) { .popup { scale: 0.60; } }
+  @container (max-height: 400px) { .popup { scale: 0.50; } }
+  @container (max-height: 340px) { .popup { scale: 0.50; } }
 
 }
 
