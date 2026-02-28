@@ -7,11 +7,7 @@ const store               = useStore()                                          
 const { computedPortada } = storeToRefs(store)                                                                                        // imports refs from main store
 const data = computed(()  => computedPortada.value)                                                                                   // note data for text content
 
-function openAuthor(author) {                                                                                                         // open author link and track 
-
-  window.open(author.link, '_blank', 'noopener,noreferrer');
-
-}
+function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link and track
 
 </script>
 
@@ -36,8 +32,6 @@ function openAuthor(author) {                                                   
             <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
 
           </div>
-
-          <button @click="store.setCentered()" class="sidebutton" :title="store.isCentered ? 'abrir columna lateral' : 'cerrar columna lateral'" :aria-label="store.isCentered ? 'abrir la columna de información lateral' : 'cerrar la columna de información lateral'">{{ store.isCentered ? '<' : '>' }}</button>
 
         </div>
 
@@ -129,21 +123,5 @@ function openAuthor(author) {                                                   
   /* BOX    */ width: 25px; height: 25px;
 
 }
-
-.sidebutton {
-
-  /* CURSOR */ user-select: none;
-  /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center; justify-content: center;
-  /* BORDER */ border: none; border-radius: 9999px;
-  /* BOX    */ padding: .5rem 1.5rem .5rem 1.5rem;
-  /* FILL   */ background-color: var(--carbon25);
-  /* MOTION */ transition: all var(--animate-fast);
-
-  &:hover  { cursor: pointer; background-color: var(--carbon50); }
-  &:active { transform: var(--scale-min); }
-  
-}
-
-@media (max-width: 1080px) { .sidebutton { display: none; } }
 
 </style>

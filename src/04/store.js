@@ -56,7 +56,6 @@ export const useStore = defineStore('store', () => {
 
   // STATES                                                                                                                           // CHANGE STATES
 
-  const isCentered                 = ref(false)                                                                                       // triple layout (centered content)
   const processing                 = ref(false)                                                                                       // disabled component state
   const showPopup                  = ref(true)                                                                                        // enable popup in navigation
   const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link
@@ -94,7 +93,6 @@ export const useStore = defineStore('store', () => {
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-  function setCentered()                { isCentered.value = !isCentered.value }                                                      // toggle centered state
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
   function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
   function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
@@ -132,7 +130,6 @@ export const useStore = defineStore('store', () => {
     if (processing.value) return
     routerInstance.push({ path: '/' })
     activeFilter.value = 'full'
-    if (window.innerWidth > 1080) { isCentered.value = false }
 
   }
 
@@ -147,8 +144,6 @@ export const useStore = defineStore('store', () => {
   function setActiveFilter(routerInstance, filter) {                                                                                  // apply current table filter 
 
     activeFilter.value = filter
-
-    if (filter !== 'full' && !isCentered.value) { isCentered.value = true }
 
     if (routerInstance && !currentPost.value) {
 
@@ -434,8 +429,8 @@ export const useStore = defineStore('store', () => {
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
-    /* VIEWS VAR */ isCentered, processing, showPopup, popLink, popString, mailtoDir,
-    /* VIEWS FUN */ setCentered, setProcessing, togglePopup,
+    /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
+    /* VIEWS FUN */ setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
     /* NAVIG COM */ noteSortFilter,

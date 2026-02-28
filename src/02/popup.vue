@@ -106,36 +106,16 @@ const store           = useStore()                                              
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@media (max-width: 1080px) {
+@container (max-width: 680px) { .popup { scale: 0.90; } }
+@container (max-width: 560px) { .popup { scale: 0.80; } }
+@container (max-width: 480px) { .popup { scale: 0.60; } }
+@container (max-width: 400px) { .popup { scale: 0.40; } }
+@container (max-width: 340px) { .popup { scale: 0.30; } }
 
-  @container (max-width: 680px) { .popup { scale: 0.90; } }
-  @container (max-width: 560px) { .popup { scale: 0.80; } }
-  @container (max-width: 480px) { .popup { scale: 0.60; } }
-  @container (max-width: 400px) { .popup { scale: 0.40; } }
-  @container (max-width: 340px) { .popup { scale: 0.30; } }
-
-  @container (max-height: 680px) { .popup { scale: 0.90; } }
-  @container (max-height: 560px) { .popup { scale: 0.80; } }
-  @container (max-height: 480px) { .popup { scale: 0.60; } }
-  @container (max-height: 400px) { .popup { scale: 0.50; } }
-  @container (max-height: 340px) { .popup { scale: 0.50; } }
-
-}
-
-@media (min-width: 1081px) { 
-  
-  @container (max-width: 680px) { .popup { scale: 0.90; } }
-  @container (max-width: 560px) { .popup { scale: 0.80; } }
-  @container (max-width: 480px) { .popup { scale: 0.60; } }
-  @container (max-width: 400px) { .popup { scale: 0.40; } }
-  @container (max-width: 340px) { .popup { scale: 0.30; } }
-
-  @container (max-height: 680px) { .popup { scale: 0.90; } }
-  @container (max-height: 560px) { .popup { scale: 0.80; } }
-  @container (max-height: 480px) { .popup { scale: 0.60; } }
-  @container (max-height: 400px) { .popup { scale: 0.50; } }
-  @container (max-height: 340px) { .popup { scale: 0.50; } }
-
-}
+@container (max-height: 680px) { .popup { scale: 0.90; } }
+@container (max-height: 560px) { .popup { scale: 0.80; } }
+@container (max-height: 480px) { .popup { scale: 0.60; } }
+@container (max-height: 400px) { .popup { scale: 0.50; } }
+@container (max-height: 340px) { .popup { scale: 0.50; } }
 
 </style>
