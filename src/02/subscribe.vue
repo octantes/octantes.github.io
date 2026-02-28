@@ -76,7 +76,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   /* BOX    */ padding: .5rem 1rem; min-width: 0;
   /* FILL   */ background-color: transparent; color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--lirio50);
-  /* FONT   */ font-family: var(--font-main); font-style: italic;
+  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: .8vw;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
@@ -94,7 +94,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   /* BOX    */ padding: .5rem 1rem; width: 10rem; max-width: 100%;
   /* FILL   */ background-color: var(--lirio); color: var(--carbon);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* FONT   */ font-family: var(--font-main); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: .8vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:hover { background-color: var(--lirio65); }

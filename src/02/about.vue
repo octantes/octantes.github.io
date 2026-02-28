@@ -276,7 +276,7 @@ onMounted(async () => {                                                         
 .tagline { 
 
   /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
-  /* FONT   */ font-size: clamp(16px, .9vw, 24px); font-style: italic;
+  /* FONT   */ font-size: .8vw; font-style: italic;
   /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
 
 }
@@ -287,7 +287,7 @@ onMounted(async () => {                                                         
   /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
   /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
   /* FILL   */ background-color: var(--carbon);
-  /* FONT   */ font-size: .65vw;
+  /* FONT   */ font-size: .8vw;
   
 }
 

@@ -81,12 +81,12 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
 
 }
 
-.title { font-size: 1.25rem; }
+.title { font-size: 1vw; }
 
 .description { 
 
   /* BOX    */ height: calc(1.25rem * 2);
-  /* FONT   */ font-style: italic; overflow: hidden; line-height: 1.25rem;
+  /* FONT   */ font-style: italic; overflow: hidden; line-height: 1.25rem; font-size: .9vw;
 
 }
 
@@ -94,6 +94,7 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
 
   /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem;
   /* BOX    */ flex-wrap: wrap;
+  /* FONT   */ font-size: .85vw;
 
 }
 
