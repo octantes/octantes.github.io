@@ -181,10 +181,13 @@ watch(                                                                          
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <div v-else :class="computedNoteClass" v-html="noteContent" />                              <!-- for html posts          -->
-          <div v-if="currentPost && !computedNoteComp && !computedFullscreen"> <br><hr><br> </div>    <!-- division                -->
-          <Subscribe v-if="currentPost && !computedNoteComp && !computedFullscreen" />                <!-- subscribe to newsletter -->
-          <div v-if="currentPost && !computedNoteComp && !computedFullscreen"> <br><hr><br> </div>    <!-- division                -->
-          <About v-if="currentPost && !computedNoteComp && !computedFullscreen" />                    <!-- selected theme intro -->
+
+          <template v-if="currentPost && !computedNoteComp && !computedFullscreen">
+            <br><hr><br>
+            <Subscribe />
+            <br><hr><br>
+            <About />
+          </template>
 
         </div>
         
