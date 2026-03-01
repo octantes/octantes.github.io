@@ -77,9 +77,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
     grid-row: span 2;
 
-    & .title { font-size: 1.4rem; }
+    & .title { font-size: 1.1rem; }
     & .date { font-size: 0.85rem; }
-    & .tag { padding: 0.2rem 0.5rem; font-size: 0.75rem; }
 
   }
 
@@ -99,10 +98,9 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     grid-row: span 2;
     border-color: var(--lirio);
 
-    & .title { font-size: 1.4rem; color: var(--cristal); }
+    & .title { font-size: 1.1rem; color: var(--cristal); }
     & .date  { font-size: 0.85rem; }
-    & .tag   { padding: 0.2rem 0.5rem; font-size: 0.75rem; }
-    & img    { transform: scale(1.05); }
+    & .tag   { padding: 0.3rem 0.5rem; font-size: 0.75rem; }
 
   }
 
