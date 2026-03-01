@@ -7,7 +7,7 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { noteSortFilter, processing } = storeToRefs(store)                                                                             // imports refs from main store
+const { noteSortFilter, processing, searchQuery } = storeToRefs(store)                                                                             // imports refs from main store
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
 
@@ -17,7 +17,10 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     
   <div class="gallery">
     
-    <div v-for="note in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)" :class="{ disabled: processing, active: route.params.slug === note.slug }" title="abrir nota" role="button" :aria-label="'abrir la nota ' + note.title" >
+    <div v-for="(note, index) in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
+      :class="{ disabled: processing, active: route.params.slug === note.slug, featured: index === 0 && !searchQuery }" 
+      title="abrir nota" role="button" :aria-label="'abrir la nota ' + note.title" 
+    >
     
       <div class="card-cover">
 
@@ -60,6 +63,15 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* FILL   */ background-color: var(--carbon25);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* MOTION */ transition: all var(--animate-fast);
+
+  &.featured {
+
+    grid-column: span 2;
+    grid-row: span 2;
+
+    & .title { font-size: 1.4rem;}
+
+  }
 
   &:hover {
 
@@ -139,6 +151,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 }
 
 @media (max-width: 1080px) { .gallery { max-height: 25rem; } }
+@media (max-width: 580px) { .notecard.featured { grid-column: span 1; grid-row: span 1; & .title { font-size: 0.9rem; } } }
 
 .gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-eighty); }
 

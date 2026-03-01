@@ -44,9 +44,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   /* BOX    */ width: 100%; gap: 1rem; padding: 1rem;
-  /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);
-  /* BORDER */ box-shadow: var(--shadow-border) var(--carbon25);
-  
+  /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);  
 
   & button {
 
