@@ -154,7 +154,6 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 .description { 
 
-  /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical;
   /* BOX    */ margin: 0.5rem 0; overflow: hidden;
   /* FILL   */ color: var(--humo99);
   /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
