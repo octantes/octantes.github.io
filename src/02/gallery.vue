@@ -147,7 +147,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;
   /* BOX    */ margin: 0; overflow: hidden;
-  /* FILL   */ color: var(--humo50);
+  /* FILL   */ color: var(--humo99);
   /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
 
 }
@@ -165,6 +165,6 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 @media (max-width: 1080px) { .gallery { max-height: 25rem; } }
 @media (max-width: 580px) { .notecard.featured { grid-column: span 1; grid-row: span 1; & .title { font-size: 0.9rem; } } }
 
-.gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-eighty); }
+.gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-half); }
 
 </style>
