@@ -48,7 +48,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 .gallery { 
 
   /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  /* BOX    */ width: 100%; gap: 1rem;
+  /* BOX    */ width: 100%; gap: 1rem; padding-left: 2rem; padding-right: 2rem;
 
 }
 
@@ -140,6 +140,6 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 @media (max-width: 1080px) { .gallery { max-height: 25rem; } }
 
-.gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-half); }
+.gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-eighty); }
 
 </style>

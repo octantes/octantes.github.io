@@ -148,7 +148,9 @@
     --animate-long: 0.80s ease;
 
     --alpha-invisible: 0.00;
+    --alpha-eighty:      0.80;
     --alpha-half:      0.50;
+    --alpha-quart:     0.25;
     --alpha-disabled:  0.25;
 
     --scale-min: scale(0.99);
