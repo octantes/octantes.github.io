@@ -33,6 +33,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
         <span class="date">{{ note.date }}</span>
         <h3 class="title">{{ note.title }}</h3>
+
+        <p v-if="index === 0 && !searchQuery" class="description">{{ note.description }}</p>
         
         <div class="tags">
           <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
@@ -51,7 +53,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 .gallery { 
 
   /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  /* BOX    */ width: 100%; gap: 1rem; padding-left: 2rem; padding-right: 2rem;
+  /* BOX    */ width: 100%; gap: 1rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 2rem;
 
 }
 
@@ -137,6 +139,15 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-clamp: 2; overflow: hidden;
   /* FONT   */ font-size: 0.9rem; margin: 0; font-weight: normal; color: var(--humo); line-height: 1.3;
   /* MOTION */ transition: color var(--animate-fast);
+
+}
+
+.description {
+
+  /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;
+  /* BOX    */ margin: 0; overflow: hidden;
+  /* FILL   */ color: var(--humo50);
+  /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
 
 }
 
