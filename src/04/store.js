@@ -125,11 +125,12 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function navHome(routerInstance) {                                                                                                  // navigates to root and reloads 
+  function navHome(routerInstance) {                                                                                                  // navigates to root and reloads  
 
     if (processing.value) return
     routerInstance.push({ path: '/' })
     activeFilter.value = 'full'
+    document.title = 'octantes.net - portal multimedia'
 
   }
 
