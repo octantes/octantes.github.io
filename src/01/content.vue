@@ -259,7 +259,7 @@ watch(                                                                          
 
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
-  @supports not selector(::-webkit-scrollbar) { .post { scrollbar-width: thin; scrollbar-color: var(--cristal) transparent; } }
+  @supports not selector(::-webkit-scrollbar) { .post { scrollbar-width: auto; scrollbar-color: var(--cristal) transparent; } }
   
 }
 
