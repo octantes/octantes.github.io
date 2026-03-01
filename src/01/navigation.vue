@@ -64,12 +64,10 @@ onMounted(async () => {                                                         
 
 .nav-views { 
 
-  flex-grow: 1; min-height: 0; width: 100%;
-  overflow-y: auto;
-  display: flex; flex-direction: column;
+  /* LAYOUT */ display: flex; flex-direction: column; flex-grow: 1; overflow-y: auto;
+  /* BOX    */ width: 100%; min-height: 0; padding-top: 5px;
+  /* SCROLL */ scrollbar-width: none; -ms-overflow-style: none;
   
-  scrollbar-width: none; 
-  -ms-overflow-style: none;
   &::-webkit-scrollbar { display: none; }
   
 }
