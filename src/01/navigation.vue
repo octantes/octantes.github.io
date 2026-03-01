@@ -29,9 +29,9 @@ onMounted(async () => {                                                         
 
     <div class="nav-content">
 
-      <div class="nav-views"> <Gallery /> </div>
-
       <Navbar/>
+      
+      <div class="nav-views"> <Gallery /> </div>
       
       <Popup v-if="store.showPopup" />
 
