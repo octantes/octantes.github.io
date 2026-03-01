@@ -140,4 +140,6 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 @media (max-width: 1080px) { .gallery { max-height: 25rem; } }
 
+.gallery:has(.notecard.active) .notecard:not(.active) { opacity: var(--alpha-half); }
+
 </style>
