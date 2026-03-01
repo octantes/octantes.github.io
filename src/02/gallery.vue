@@ -48,7 +48,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 .gallery { 
 
   /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  /* BOX    */ width: 100%; padding-bottom: 2rem; padding-top: .5rem; padding-left: 2rem; padding-right: 2rem; gap: 1rem;  
+  /* BOX    */ width: 100%; gap: 1rem;
 
 }
 

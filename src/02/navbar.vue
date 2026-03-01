@@ -15,7 +15,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
 
   <div class="filters"> 
 
-    <button class="logo-btn" @click="navHome(router)" :disabled="processing" title="volver al inicio">X</button>
+    <button class="logo-btn" @click="navHome(router)" :disabled="processing" title="volver al inicio">OCTANTES</button>
 
     <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" title="buscar en la tabla de notas" aria-label="caja de búsqueda para notas"/>
 
@@ -43,7 +43,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
 
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  /* BOX    */ width: 100%; gap: 1rem; padding: 1rem;
+  /* BOX    */ gap: 1rem; padding: 1rem;
   /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);
   /* BORDER */ border-radius: var(--radius-xl); box-shadow: var(--shadow-border) var(--carbon25);
   

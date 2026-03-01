@@ -58,7 +58,7 @@ onMounted(async () => {                                                         
 
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center; overflow: hidden;
   /* BOX    */ width: 100%; height: 100%;
-  /* PAD    */ padding: 2rem 2rem 2rem 2rem; gap: 2rem;
+  /* PAD    */ padding: 2rem 4rem 2rem 4rem; gap: 2rem;
 
 }
 
