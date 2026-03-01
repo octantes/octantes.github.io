@@ -97,7 +97,7 @@ watch(                                                                          
     if (store.processing) return
     setProcessing(true)
 
-    if (slug && route.params.type) { store.activeFilter = route.params.type }
+    if (slug && route.params.type && store.activeFilter !== 'full') { store.activeFilter = route.params.type }
 
     await nextTick()
     
