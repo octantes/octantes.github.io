@@ -49,7 +49,7 @@ onMounted(async () => {                                                         
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center; position: relative;
   /* BOX    */ padding: 0rem; gap: .8rem; min-height: 300px;
   /* FILL   */ background-color: var(--carbon); color: var(--niebla);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
+  /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
 
 }
@@ -58,15 +58,15 @@ onMounted(async () => {                                                         
 
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center; overflow: hidden;
   /* BOX    */ width: 100%; height: 100%;
-  /* PAD    */ gap: 2rem;
 
 }
 
 .nav-views { 
 
   /* LAYOUT */ display: flex; flex-direction: column; flex-grow: 1; overflow-y: auto;
-  /* BOX    */ width: 100%; min-height: 0; padding-top: 5px;
+  /* BOX    */ width: 100%; min-height: 0; padding-top: 2rem;
   /* SCROLL */ scrollbar-width: none; -ms-overflow-style: none;
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-top: none;
   
   &::-webkit-scrollbar { display: none; }
   
