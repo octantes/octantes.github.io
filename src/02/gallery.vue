@@ -41,7 +41,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
         <span class="date">{{ note.date }}</span>
         <h3 class="title">{{ note.title }}</h3>
 
-        <p v-if="route.params.slug === note.slug && !searchQuery" class="description">{{ note.description }}</p>
+        <p v-if="(index === 0 || route.params.slug === note.slug) && !searchQuery" class="description">{{ note.description }}</p>
         
         <div class="tags">
           <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
@@ -64,7 +64,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.notecard {
+.notecard { 
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; flex-direction: column;
@@ -73,12 +73,13 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* MOTION */ transition: all var(--animate-fast);
 
-  &.featured { 
+  &.featured {
 
-    grid-column: span 2;
-    
-    & .title { font-size: 1.1rem; }
-    & .date  { font-size: 0.8rem; }
+    grid-row: span 2;
+
+    & .title { font-size: 1.4rem; }
+    & .date { font-size: 0.85rem; }
+    & .tag { padding: 0.2rem 0.5rem; font-size: 0.75rem; }
 
   }
 
@@ -109,7 +110,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.card-cover {
+.card-cover { 
 
   /* LAYOUT */ position: relative;
   /* BOX    */ width: 100%; padding-top: 56.25%; overflow: hidden;
@@ -127,7 +128,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.card-placeholder {
+.card-placeholder { 
 
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0;
   /* BOX    */ width: 100%; height: 100%;
@@ -136,7 +137,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.card-info {
+.card-info { 
 
   /* LAYOUT */ display: flex; flex-direction: column;  flex-grow: 1;
   /* BOX    */ padding: 0.8rem; gap: 0.5rem;
@@ -145,7 +146,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 .date { font-size: 0.7rem; font-family: var(--font-mono); color: var(--humo50); }
 
-.title {
+.title { 
 
   /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-clamp: 2; overflow: hidden;
   /* FONT   */ font-size: 0.9rem; margin: 0; font-weight: normal; color: var(--humo); line-height: 1.3;
@@ -153,9 +154,9 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.description {
+.description { 
 
-  /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;
+  /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical;
   /* BOX    */ margin: 0.5rem 0; overflow: hidden;
   /* FILL   */ color: var(--humo99);
   /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
@@ -173,7 +174,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 }
 
 @media (max-width: 1080px) { .gallery { max-height: 25rem; } }
-@media (max-width: 580px) { .notecard.featured { grid-column: span 1; grid-row: span 1; & .title { font-size: 0.9rem; } } }
+@media (max-width: 580px) { .notecard.featured, .notecard.active { grid-column: span 1; grid-row: span 1; & .title { font-size: 0.9rem; } } }
 
 .gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-half); }
 
