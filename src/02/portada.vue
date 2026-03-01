@@ -56,7 +56,7 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
 
   /* BOX    */ width: 100%;
   /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%);
-  /* BORDER */ border-radius: var(--radius-ss);
+  /* BORDER */ border-radius: var(--radius-ss); 
   /* MOTION */ transition: all var(--animate-fast);
 
   &:hover { filter: brightness(95%); }
