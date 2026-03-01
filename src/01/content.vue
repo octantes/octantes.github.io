@@ -113,6 +113,7 @@ watch(                                                                          
         await shaderRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
+        document.title = 'octantes.net - portal multimedia'
         break
       
       // first load without note, INTRO only on first page load
@@ -122,6 +123,7 @@ watch(                                                                          
         lastSlug = null
         setCurrentPost(null)
         noteContent.value = ''
+        document.title = 'octantes.net - portal multimedia'
         await shaderRef.value?.runQueue('intro')
         break
       

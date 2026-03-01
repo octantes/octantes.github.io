@@ -18,9 +18,16 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   <div class="gallery">
     
     <div v-for="(note, index) in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
-      :class="{ disabled: processing, active: route.params.slug === note.slug, featured: index === 0 && !searchQuery }" 
-      title="abrir nota" role="button" :aria-label="'abrir la nota ' + note.title" 
-    >
+
+      :class="{ 
+
+        disabled: processing, 
+        active: route.params.slug === note.slug && !searchQuery, 
+        featured: index === 0 && route.params.slug !== note.slug && !searchQuery
+
+      }"
+
+      title="abrir nota" role="button" :aria-label="'abrir la nota ' + note.title" >
     
       <div class="card-cover">
 
@@ -34,7 +41,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
         <span class="date">{{ note.date }}</span>
         <h3 class="title">{{ note.title }}</h3>
 
-        <p v-if="index === 0 && !searchQuery" class="description">{{ note.description }}</p>
+        <p v-if="route.params.slug === note.slug && !searchQuery" class="description">{{ note.description }}</p>
         
         <div class="tags">
           <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
@@ -66,17 +73,16 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
   /* MOTION */ transition: all var(--animate-fast);
 
-  &.featured {
+  &.featured { 
 
-    grid-column: span 2; grid-row: span 2;
-
-    & .title { font-size: 1.4rem; }
-    & .date { font-size: 0.85rem; }
-    & .tag { padding: 0.2rem 0.5rem; font-size: 0.75rem; }
+    grid-column: span 2;
+    
+    & .title { font-size: 1.1rem; }
+    & .date  { font-size: 0.8rem; }
 
   }
 
-  &:hover {
+  &:hover { 
 
     transform: translateY(-2px);
     border-color: var(--lirio);
@@ -86,14 +92,18 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   }
 
-  &.active {
+  &.active { 
 
+    grid-column: span 2;
+    grid-row: span 2;
     border-color: var(--lirio);
 
-    & .title { color: var(--cristal); }
-    & img { transform: scale(1.05); }
+    & .title { font-size: 1.4rem; color: var(--cristal); }
+    & .date  { font-size: 0.85rem; }
+    & .tag   { padding: 0.2rem 0.5rem; font-size: 0.75rem; }
+    & img    { transform: scale(1.05); }
 
-  } 
+  }
 
   &.disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
 
@@ -146,7 +156,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 .description {
 
   /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;
-  /* BOX    */ margin: 0; overflow: hidden;
+  /* BOX    */ margin: 0.5rem 0; overflow: hidden;
   /* FILL   */ color: var(--humo99);
   /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
 
