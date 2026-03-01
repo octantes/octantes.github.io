@@ -68,10 +68,11 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   &.featured {
 
-    grid-column: span 2;
-    grid-row: span 2;
+    grid-column: span 2; grid-row: span 2;
 
-    & .title { font-size: 1.4rem;}
+    & .title { font-size: 1.4rem; }
+    & .date { font-size: 0.85rem; }
+    & .tag { padding: 0.2rem 0.5rem; font-size: 0.75rem; }
 
   }
 
