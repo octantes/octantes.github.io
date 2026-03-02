@@ -258,13 +258,13 @@ onMounted(async () => {                                                         
   /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 0rem 2rem 0rem 2rem; gap: 1.25rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
 
 }
 
-.profile-head { display: flex; flex-direction: column; position: relative; justify-content: center; align-items: center; gap: 1.5rem; }
+.profile-head   { display: flex; flex-direction: column; position: relative; justify-content: center; align-items: center; gap: 1.5rem; }
 
-.profilepic { 
+.profilepic     { 
 
   /* LAYOUT */ border-radius: 50%;
   /* BOX    */ width: 5rem; height: 5rem;
@@ -273,25 +273,24 @@ onMounted(async () => {                                                         
 
 }
 
-.tagline { 
+.tagline        { 
 
   /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
-  /* FONT   */ font-size: .8vw; font-style: italic;
+  /* FONT   */ font-style: italic;
   /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
 
 }
 
-.user-status { 
+.user-status    { 
 
   /* LAYOUT */ display: inline-flex; align-items: center; white-space: nowrap; z-index: 5;
   /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
   /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
   /* FILL   */ background-color: var(--carbon);
-  /* FONT   */ font-size: .8vw;
   
 }
 
-.status-emoji {
+.status-emoji   {
 
   /* LAYOUT */ text-align: center;
   /* FONT   */ line-height: 1;
@@ -306,7 +305,8 @@ onMounted(async () => {                                                         
   
 }
 
-@media (max-width: 1405px) { .about { font-size: .75vw; }                     .user-status { font-size: .65vw; } }
-@media (max-width: 1080px) { .about { font-size: 2vw; padding-bottom: 4rem; } .user-status { font-size: 2vw;   } }
+@media (max-width: 1080px) { .about { padding-bottom: 4rem; } }
+
+@container post-viewer (min-width: 0px) { .about, .tagline, .user-status { font-size: clamp(0.65rem, 2.25cqw, 1.35rem); } }
 
 </style>

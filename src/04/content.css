@@ -103,32 +103,5 @@
 
 }
 
-/*
-@media (max-width: 1800px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .9rem;   } }
-@media (max-width: 1650px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .8rem;   } }
-@media (max-width: 1500px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .7rem;   } }
-
-@media (max-width: 1400px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .9rem;  } }
-@media (max-width: 1250px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .8rem;  } }
-@media (max-width: 1120px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .7rem;  } }
-
-@media (max-width: 1080px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.35rem; } }
-@media (max-width:  920px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.25rem; } }
-@media (max-width:  850px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.15rem; } }
-@media (max-width:  780px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.05rem; } }
-@media (max-width:  720px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.00rem; } }
-@media (max-width:  685px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.95rem; } }
-@media (max-width:  650px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.90rem; } }
-@media (max-width:  625px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.85rem; } }
-@media (max-width:  600px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.80rem; } }
-@media (max-width:  580px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.75rem; } }
-@media (max-width:  540px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.70rem; } }
-@media (max-width:  510px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.65rem; } }
-*/
-
-@container post-viewer (min-width: 0px) {
-  .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD {
-    /* 1.8cqw significa 1.8% del ancho del visor de la nota */
-    font-size: clamp(0.75rem, 1.8cqw, 1.2rem);
-  }
-}
+@container post-viewer (min-width: 0px) { .S6, .S7TEXT { font-size: clamp(0.65rem, 2.25cqw, 1.35rem); } }
+@container post-viewer (min-width: 0px) { .S6TRAD, .S7TEXT-TRAD { font-size: 1rem; } }
