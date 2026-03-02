@@ -103,6 +103,7 @@
 
 }
 
+/*
 @media (max-width: 1800px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .9rem;   } }
 @media (max-width: 1650px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .8rem;   } }
 @media (max-width: 1500px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .7rem;   } }
@@ -123,3 +124,11 @@
 @media (max-width:  580px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.75rem; } }
 @media (max-width:  540px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.70rem; } }
 @media (max-width:  510px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.65rem; } }
+*/
+
+@container post-viewer (min-width: 0px) {
+  .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD {
+    /* 1.8cqw significa 1.8% del ancho del visor de la nota */
+    font-size: clamp(0.75rem, 1.8cqw, 1.2rem);
+  }
+}
