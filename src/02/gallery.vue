@@ -141,7 +141,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.date { font-size: 0.7rem; font-family: var(--font-mono); color: var(--humo50); }
+.date { font-size: 0.7rem; font-family: var(--font-mono); color: var(--humo99); }
 
 .title { 
 
@@ -154,7 +154,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 .description { 
 
   /* BOX    */ margin: 0.5rem 0; overflow: hidden;
-  /* FILL   */ color: var(--humo99);
+  /* FILL   */ color: var(--humo);
   /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
 
 }
