@@ -5,7 +5,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
   
   & img { 
 
@@ -22,7 +22,7 @@
   /* LAYOUT */ text-align: left;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
   
   & img { 
 
@@ -40,7 +40,7 @@
 
   /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
 
   & img { 
 
@@ -64,7 +64,7 @@
   /* LAYOUT */ text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
 
   & img { 
 
@@ -81,7 +81,7 @@
   /* LAYOUT */ text-align: left;
   /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: .8vw; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
 
   & img { 
 
@@ -103,5 +103,23 @@
 
 }
 
-@media (max-width: 1405px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: .75vw; } }
-@media (max-width: 1080px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 2vw;   } }
+@media (max-width: 1800px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .9rem;   } }
+@media (max-width: 1650px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .8rem;   } }
+@media (max-width: 1500px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .7rem;   } }
+
+@media (max-width: 1400px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .9rem;  } }
+@media (max-width: 1250px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .8rem;  } }
+@media (max-width: 1120px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size:  .7rem;  } }
+
+@media (max-width: 1080px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.35rem; } }
+@media (max-width:  920px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.25rem; } }
+@media (max-width:  850px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.15rem; } }
+@media (max-width:  780px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.05rem; } }
+@media (max-width:  720px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 1.00rem; } }
+@media (max-width:  685px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.95rem; } }
+@media (max-width:  650px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.90rem; } }
+@media (max-width:  625px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.85rem; } }
+@media (max-width:  600px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.80rem; } }
+@media (max-width:  580px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.75rem; } }
+@media (max-width:  540px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.70rem; } }
+@media (max-width:  510px) { .S6, .S6TRAD, .S7, .S7TEXT, .S7TEXT-TRAD { font-size: 0.65rem; } }
