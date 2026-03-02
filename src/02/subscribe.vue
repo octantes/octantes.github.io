@@ -49,7 +49,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 
   /* LAYOUT */ display: flex; flex-direction: column; 
   /* BOX    */ padding: 1rem; gap: 1rem;
-  /* FONT   */ font-size: 0.8vw;
+  /* FONT   */ font-size: 1rem;
   
 }
 
@@ -76,7 +76,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   /* BOX    */ padding: .5rem 1rem; min-width: 0;
   /* FILL   */ background-color: transparent; color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--lirio50);
-  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: .8vw;
+  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: 1rem;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
@@ -94,7 +94,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   /* BOX    */ padding: .5rem 1rem; width: 10rem; max-width: 100%;
   /* FILL   */ background-color: var(--lirio); color: var(--carbon);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: .8vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:hover { background-color: var(--lirio65); }
@@ -104,7 +104,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 .submit.error   { color: var(--carbon); background-color: var(--arcilla); box-shadow: var(--shadow-border) var(--arcilla); }
 .submit.success { color: var(--carbon); background-color: var(--poma);    box-shadow: var(--shadow-border) var(--poma);    }
 
-@media (max-width: 1405px) { .subscribe { font-size: .75vw; } }
-@media (max-width: 1080px) { .subscribe { font-size:   2vw; } }
+@media (max-width: 1405px) { .subscribe { font-size: .65rem; } }
+@media (max-width: 1080px) { .subscribe { font-size:   1rem; } }
 
 </style>
