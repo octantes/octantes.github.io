@@ -11,7 +11,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 </script>
 
 <template> 
-  
+
   <div class="pagina">
 
     <div class="layout" :class="{ fullscreen: computedFullscreen }" >
@@ -22,7 +22,6 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
         <Navigation class="navigation" :disabled="store.processing" />
 
       </template>
-
       
       <RouterView v-slot="{ Component }" >
         
