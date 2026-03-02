@@ -127,6 +127,6 @@ onUnmounted(() => { store.stopStatusUpdates() })
 @keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
 
 @media (max-width: 590px) { .stcenter { display: none; }       .btc { display: none; }           }
-@media (max-width: 312px) { .stleft   { display: none; } .statusbar { justify-content: center; } }
+@media (max-width: 432px) { .stleft   { display: none; } .statusbar { justify-content: center; } }
 
 </style>

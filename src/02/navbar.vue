@@ -100,4 +100,6 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
 
 }
 
+@media (max-width: 432px) { .logo-btn { display: none; } }
+
 </style>

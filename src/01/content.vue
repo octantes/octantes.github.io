@@ -261,6 +261,8 @@ watch(                                                                          
 
 @media (max-width: 1080px) { 
 
+  .notedisplay { min-height: 60rem; }
+  
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
   @supports not selector(::-webkit-scrollbar) { .post { scrollbar-width: auto; scrollbar-color: var(--cristal) transparent; } }
