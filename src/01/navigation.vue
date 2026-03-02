@@ -79,4 +79,6 @@ onMounted(async () => {                                                         
 
 }
 
+@media (max-width: 1080px) { .navigation { min-height: 80rem; } }
+
 </style>
