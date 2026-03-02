@@ -214,6 +214,9 @@ watch(                                                                          
   /* FILL   */ background-color: var(--carbon);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
 
+  container-type: inline-size;
+  container-name: post-viewer;
+
   &::after {
     
     /* LAYOUT */ position: sticky; display: block; bottom: 0;
@@ -223,7 +226,6 @@ watch(                                                                          
   }
 
   &.fs-mode { background: none; overflow: hidden; &::after { display: none } }
-
 
 }
 
