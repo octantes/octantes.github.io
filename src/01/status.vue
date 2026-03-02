@@ -62,7 +62,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
   /* BOX    */ min-width: 0; width: 100%; padding: .5rem 1rem; gap: 1.5rem; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
-  /* FONT   */ font-size: .8vw;
+  /* FONT   */ font-size: 1rem;
   
 }
 
