@@ -118,4 +118,6 @@ const store           = useStore()                                              
 @container (max-height: 400px) { .popup { scale: 0.50; } }
 @container (max-height: 340px) { .popup { scale: 0.50; } }
 
+@media (max-width: 432px)      { .popup { scale: .35;  } }
+
 </style>

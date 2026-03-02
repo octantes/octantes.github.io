@@ -125,4 +125,6 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
 
 }
 
+@media (max-width: 432px) { .description { display: none; } }
+
 </style>

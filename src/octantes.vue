@@ -66,7 +66,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 @media (max-width: 1080px) { 
 
-  .pagina { max-width: 100%; }
+  .pagina { max-width: 100%; max-height: auto; }
 
   .layout            { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; padding-bottom: 0; } }
 
