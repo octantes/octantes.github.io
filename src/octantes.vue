@@ -49,7 +49,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 .layout { 
 
-  /* LAYOUT */ display: grid; grid-template-columns: 5fr 3fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
+  /* LAYOUT */ display: grid; grid-template-columns: 4fr 4fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
   /* BOX    */ width: 100%; min-height: 0; padding: 1rem; gap: 1rem;
 
   &.fullscreen { display: flex;  flex-direction: column; overflow-y: hidden; width: 100%; height: 100%; gap: 0; }
@@ -68,13 +68,13 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
   .pagina { max-width: 100%; max-height: auto; }
 
-  .layout            { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; padding-bottom: 0; } }
+  .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; padding-bottom: 0; } }
 
   .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
   .portada { order: 1; } .navigation { order: 2; } .articulos { order: 3; }
-
-  .footer            { padding: 1rem; }
-  .content           { height: 40rem; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
+  
+  .footer  { padding: 1rem; }
+  .content { height: 40rem; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
 
 }
 
