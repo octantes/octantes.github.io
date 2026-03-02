@@ -1,13 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const TIER_CONFIGS = {
-
-    high: { maxCols: 50, maxRows: 50, minCores: 8, minMemory: 8 },
-    medium: { maxCols: 40, maxRows: 40, minCores: 4, minMemory: 4 },
-    low: { maxCols: 30, maxRows: 30, minCores: 2, minMemory: 2 }
-    
-}
+const GRAIN_TARGET = 55
 
 const canvasRef    = ref(null)                                          // dom << canvas >> ref
 const containerRef = ref(null)                                          // container div ref
@@ -147,7 +141,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
 
 }
 
-function drawFrame(deltaTime) {                                     // draw shader
+function drawFrame(deltaTime) {                                         // draw shader 
 
   if (!context) return
   const total = rows * cols
@@ -287,14 +281,6 @@ function resetMasks() {                                                 // reset
 
 function initContext() {                                                // prepare context 
 
-  // cols + rows based on cpu
-  const cores = navigator.hardwareConcurrency || 2;
-  const memory = navigator.deviceMemory || 8;
-  
-  if (cores >= TIER_CONFIGS.high.minCores && memory >= TIER_CONFIGS.high.minMemory) { maxCols = TIER_CONFIGS.high.maxCols; maxRows = TIER_CONFIGS.high.maxRows }
-  else if (cores >= TIER_CONFIGS.medium.minCores && memory >= TIER_CONFIGS.medium.minMemory) { maxCols = TIER_CONFIGS.medium.maxCols; maxRows = TIER_CONFIGS.medium.maxRows }
-  else { maxCols = TIER_CONFIGS.low.maxCols; maxRows = TIER_CONFIGS.low.maxRows }
-
   // container div size
   if (!canvasRef.value || !containerRef.value) return
   const rect = containerRef.value.getBoundingClientRect()
@@ -318,7 +304,7 @@ function resetContext() {                                               // updat
 
   initContext()
 
-  fontSize = Math.floor(Math.max(12, Math.floor(width / 70)) * 0.75)
+  fontSize = Math.floor(width / GRAIN_TARGET)
 
   initGrid()
 
@@ -327,25 +313,17 @@ function resetContext() {                                               // updat
 function initGrid() {                                                   // create grid + animate rain 
 
   // set size
-  let tempCols = Math.ceil(width / fontSize)
-  let tempRows = Math.ceil(height / fontSize)
+  cols = Math.ceil(width / fontSize)
+  rows = Math.ceil(height / fontSize)
 
-  // dynamic font size for large screen
-  if (tempCols > maxCols || tempRows > maxRows) {
-    const scaleX = width / maxCols
-    const scaleY = height / maxRows
-    fontSize = Math.floor(Math.min(scaleX, scaleY))
-    tempCols = Math.ceil(width / fontSize)
-    tempRows = Math.ceil(height / fontSize)
-  }
+  maxCols = cols
+  maxRows = rows
 
   context.font = `${fontSize}px monospace`
   context.textBaseline = 'top'
   context.textAlign = 'left'
 
   // set final sizes
-  cols = tempCols
-  rows = tempRows
   const total = cols * rows
 
   initMasks()

@@ -59,7 +59,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 .gallery { 
 
-  /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); grid-auto-flow: dense;
   /* BOX    */ width: 100%; gap: 1rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 2rem;
 
 }

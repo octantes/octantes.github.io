@@ -24,8 +24,8 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
     <div class="tabs"> 
 
       <template v-for="tab in tabs" :key="tab.value">
-        <button v-if="activeFilter === tab.value && emptyFilter(tab.value)" @click="setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }"
-          :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
+        <button v-if="activeFilter === tab.value && emptyFilter(tab.value)" @click="activeFilter === tab.value ? setActiveFilter(router, 'completo') : setActiveFilter(router, tab.value)"
+          :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
         </button>
       </template>
       
