@@ -307,6 +307,6 @@ onMounted(async () => {                                                         
 
 @media (max-width: 1080px) { .about { padding-bottom: 4rem; } }
 
-@container post-viewer (min-width: 0px) { .about, .tagline, .user-status { font-size: clamp(0.65rem, 2.25cqw, 1.35rem); } }
+@container post-viewer (min-width: 0px) { .about, .tagline, .user-status { font-size: clamp(0.50rem, 2.25cqw, 1.35rem); } }
 
 </style>
