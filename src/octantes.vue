@@ -68,13 +68,14 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
   .layout            { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; padding-bottom: 0; } }
 
-  .navigation, .portada, .articulos { overflow-y: visible; min-height: auto; height: auto; }
-
+  .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
   .portada { order: 1; } .navigation { order: 2; } .articulos { order: 3; }
 
   .footer            { padding: 1rem; }
-  .content           { height: 40rem; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; }}
+  .content           { height: 40rem; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
 
 }
+
+@media (max-width: 1400px) { .layout { grid-template-columns: 4fr 4fr; } }
 
 </style>

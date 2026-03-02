@@ -93,7 +93,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
 
 }
 
-@media (max-width: 580px) {
+@media (max-width: 1600px) {
 
   .tabs button        { display: none; }
   .tabs button.active { display: flex; }
