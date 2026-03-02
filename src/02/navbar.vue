@@ -15,7 +15,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
 
   <div class="filters"> 
 
-    <button class="logo-btn" @click="navHome(router)" :disabled="processing" title="volver al inicio">OCTANTES</button>
+    <button class="logo-xx" @click="navHome(router)" :disabled="processing" title="volver al inicio">X</button>
 
     <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" title="buscar en la tabla de notas" aria-label="caja de búsqueda para notas"/>
 
@@ -53,36 +53,31 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
     /* FILL   */ background-color: transparent; color: var(--carbon80);
     /* BORDER */ border: none; border-radius: var(--radius-ss);
     /* FONT   */ font-family: var(--font-main);
-    /* MOTION */ transition: all var(--animate-fast);
+    /* MOTION */ transition: all var(--animate-faster);
     
-    &:hover { /* FILL */ background-color: var(--carbon15); color: var(--carbon); }
-    &:disabled { /* FILL */ cursor: not-allowed; opacity: var(--alpha-disabled); }
-    &.active { /* FILL */ background-color: var(--carbon25); color: var(--carbon); /* BORDER */ box-shadow: var(--shadow-border) var(--carbon25); }
+    &:focus    { box-shadow: none; }
+    &:active   { transform: var(--scale-low); }
+    &:hover    { background-color: var(--carbon15); color: var(--carbon); }
+    &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
+
+    &.active   { background-color: var(--carbon25); color: var(--carbon); }
     
   }
 
 }
 
-.logo-btn { 
-
-  /* FONT   */ font-family: var(--font-grotesk) !important; font-weight: bold; 
-  /* BORDER */ box-shadow: var(--shadow-border) var(--carbon25); 
-
-}
-
-.searchbox { 
+.searchbox {
 
   /* CURSOR */ cursor: text;
   /* LAYOUT */ text-align: center;
-  /* BOX    */ width: 75%; padding: 0.5rem 1rem;
-  /* FILL   */ background-color: transparent; color: var(--carbon);
-  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon15);
-  /* FONT   */ font-family: var(--font-main); font-style: italic;
+  /* BOX */ width: 75%; padding: 0.5rem 1rem;
+  /* FILL */ background-color: var(--carbon10); color: var(--carbon);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon10);
+  /* FONT */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
-  &::placeholder { color: var(--carbon50); }
-
-  &:focus { /* FILL */ background-color: var(--carbon10); color: var(--carbon); /* BORDER */ outline: none; box-shadow: var(--shadow-border) var(--carbon50); }
+  &::placeholder { color: var(--carbon99); }
+  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon50); }
 
 }
 

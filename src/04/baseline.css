@@ -143,9 +143,10 @@
     --radius-ss: 05px;
     --radius-xs: 03px;
 
-    --animate-fast: 0.25s ease;
-    --animate-mid:  0.50s ease;
-    --animate-long: 0.80s ease;
+    --animate-faster: 0.10s ease;
+    --animate-fast:   0.25s ease;
+    --animate-mid:    0.50s ease;
+    --animate-long:   0.80s ease;
 
     --alpha-invisible: 0.00;
     --alpha-eighty:      0.80;
