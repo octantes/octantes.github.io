@@ -103,5 +103,5 @@
 
 }
 
-@container post-viewer (min-width: 0px) { .S6, .S7TEXT { font-size: clamp(0.65rem, 2.25cqw, 1.35rem); } }
+@container post-viewer (min-width: 0px) { .S6, .S7TEXT { font-size: clamp(0.50rem, 2.25cqw, 1.35rem); } }
 @container post-viewer (min-width: 0px) { .S6TRAD, .S7TEXT-TRAD { font-size: 1rem; } }
