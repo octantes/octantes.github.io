@@ -49,7 +49,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 .layout { 
 
-  /* LAYOUT */ display: grid; grid-template-columns: 4.5fr 3.5fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
+  /* LAYOUT */ display: grid; grid-template-columns: 4fr 4fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
   /* BOX    */ width: 100%; min-height: 0; padding: 1rem; gap: 1rem;
 
   &.fullscreen { display: flex;  flex-direction: column; overflow-y: hidden; width: 100%; height: 100%; gap: 0; }
@@ -78,6 +78,6 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 }
 
-@media (max-width: 1400px) { .layout { grid-template-columns: 4.5fr 3.5fr; } }
+@media (max-width: 1400px) { .layout { grid-template-columns: 4fr 4fr; } }
 
 </style>

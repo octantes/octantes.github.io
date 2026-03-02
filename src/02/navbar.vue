@@ -24,7 +24,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
     <div class="tabs"> 
 
       <template v-for="tab in tabs" :key="tab.value">
-        <button v-if="emptyFilter(tab.value)" @click="setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }"
+        <button v-if="activeFilter === tab.value && emptyFilter(tab.value)" @click="setActiveFilter(router, tab.value)" :class="{ active: activeFilter === tab.value }"
           :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
         </button>
       </template>
@@ -91,12 +91,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
   /* LAYOUT */ display: flex; flex-shrink: 0;
   /* BOX    */ gap: 1rem; overflow: hidden;
 
-}
-
-@media (max-width: 1600px) {
-
-  .tabs button        { display: none; }
-  .tabs button.active { display: flex; }
+  & button.active { display: flex; width: 8rem; justify-content: center; }
 
 }
 
