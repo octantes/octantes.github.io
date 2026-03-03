@@ -718,7 +718,15 @@ function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts 
 
 defineExpose({ runQueue })
 onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
-onBeforeUnmount(() => { cancelAnimationFrame(animationID); window.removeEventListener('resize', resetContext) })
+
+onBeforeUnmount(() => { 
+
+  cancelAnimationFrame(animationID)
+  window.removeEventListener('resize', resetContext)
+  if (animateGerm.lastRatio !== undefined) animateGerm.lastRatio = 0
+  if (animateGermInv.frontierQueue !== undefined) animateGermInv.frontierQueue = null
+
+})
 
 </script>
 
