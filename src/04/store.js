@@ -248,7 +248,7 @@ export const useStore = defineStore('store', () => {
 
     try {
 
-      const fetchPath = post.url || `${base.value}/posts/${post.type || 'textos'}/${slug}/`
+      const fetchPath = post.url || `${base}/posts/${post.type || 'textos'}/${slug}/`
       const res = await fetch(fetchPath)
 
       if (!res.ok) throw new Error(`HTTP error ${res.status}`)
