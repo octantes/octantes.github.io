@@ -145,8 +145,6 @@ function drawFrame(deltaTime) {                                         // draw 
 
   if (!context) return
 
-  if (mode === 'hidden') { if (taskPromise && (typeof taskPromise.finish === 'function' && taskPromise.finish())) { const r = taskResolve; taskPromise = null; taskResolve = null; if (r) r() }; return }
-
   const total = rows * cols
   const frameFactor = (deltaTime / 16.666)
 
