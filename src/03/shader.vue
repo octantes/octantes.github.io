@@ -144,6 +144,9 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
 function drawFrame(deltaTime) {                                         // draw shader 
 
   if (!context) return
+
+  if (mode === 'hidden') { if (taskPromise && (typeof taskPromise.finish === 'function' && taskPromise.finish())) { const r = taskResolve; taskPromise = null; taskResolve = null; if (r) r() }; return }
+
   const total = rows * cols
   const frameFactor = (deltaTime / 16.666)
 
@@ -304,7 +307,8 @@ function resetContext() {                                               // updat
 
   initContext()
 
-  fontSize = Math.floor(width / GRAIN_TARGET)
+  let calcSize = Math.floor(width / GRAIN_TARGET)
+  fontSize = Math.max(10, Math.min(calcSize, 24))
 
   initGrid()
 
