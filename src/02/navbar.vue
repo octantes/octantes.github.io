@@ -15,7 +15,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
 
   <div class="filters"> 
 
-    <button class="logo-xx" @click="navHome(router)" :disabled="processing" title="volver al inicio">X</button>
+    <button class="logo-xx" @click="navHome(router)" :disabled="processing" title="volver al inicio">OCTANTES</button>
 
     <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" title="buscar en la tabla de notas" aria-label="caja de búsqueda para notas"/>
 
@@ -43,7 +43,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
 
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  /* BOX    */ width: 100%; gap: 1rem; padding: 1rem;
+  /* BOX    */ width: 100%; gap: 1rem; padding: 1rem; 
   /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);  
 
   & button {
@@ -56,11 +56,11 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
     /* MOTION */ transition: all var(--animate-faster);
     
     &:focus    { box-shadow: none; }
-    &:active   { transform: var(--scale-low); }
+    &:active   { transform: var(--scale-min); }
     &:hover    { background-color: var(--carbon15); color: var(--carbon); }
     &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
 
-    &.active   { background-color: var(--carbon25); color: var(--carbon); }
+    &.active   { background-color: var(--carbon25); color: var(--carbon); box-shadow: var(--shadow-border) var(--carbon10); }
     
   }
 
@@ -71,13 +71,13 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
   /* CURSOR */ cursor: text;
   /* LAYOUT */ text-align: center;
   /* BOX */ width: 75%; padding: 0.5rem 1rem;
-  /* FILL */ background-color: var(--carbon10); color: var(--carbon);
-  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon10);
+  /* FILL */ background-color: var(--carbon05); color: var(--carbon);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon25);
   /* FONT */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
   &::placeholder { color: var(--carbon99); }
-  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon50); }
+  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon50); background-color: var(--carbon15); }
 
 }
 
@@ -89,6 +89,8 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
   & button.active { display: flex; width: 8rem; justify-content: center; }
 
 }
+
+.logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; }  
 
 @media (max-width: 432px) { .logo-btn { display: none; } }
 
