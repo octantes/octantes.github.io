@@ -18,6 +18,8 @@ sin embargo, se cubren algunos edge-cases importantes para asegurar practicidad
 toda la información se mantiene en tu máquina, sin cuentas, servidores o syncs
 la data *queda en tu browser hasta que la exportás* - hacé backups regularmente
 
+![screenshot](screenshot.png)
+
 cada release es estable, el objetivo es mantenerlo **simple**: abrilo y programá
 
 *importar/exportar*: traé y guardá tu información en CSV, un formato plain text
