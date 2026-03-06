@@ -1,5 +1,24 @@
 [
   {
+    "slug": "browsewithscroll",
+    "title": "browsewithscroll",
+    "description": "herramienta para previsualizar fuentes y multimedia con scroll directamente en el navegador",
+    "type": "desarrollo",
+    "tags": [
+      "herramientas",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/desarrollo/browsewithscroll/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "05/03/2026",
+    "isoDate": "2026-03-05T00:00:00.000Z",
+    "url": "/posts/desarrollo/browsewithscroll/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
     "slug": "arch-hud",
     "title": "arch-hud",
     "description": "pack de herramientas suckless para convertir arch linux en un heads up display",

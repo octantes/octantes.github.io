@@ -2,15 +2,19 @@
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
       <loc>https://octantes.github.io/</loc>
-      <lastmod>2026-03-06T07:11:23.874Z</lastmod>
+      <lastmod>2026-03-06T07:55:59.556Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/about/</loc>
-      <lastmod>2026-03-06T07:11:23.874Z</lastmod>
+      <lastmod>2026-03-06T07:55:59.556Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/contact/</loc>
-      <lastmod>2026-03-06T07:11:23.874Z</lastmod>
+      <lastmod>2026-03-06T07:55:59.556Z</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/posts/desarrollo/browsewithscroll/</loc>
+      <lastmod>Thu Mar 05 2026 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/posts/desarrollo/arch-hud/</loc>

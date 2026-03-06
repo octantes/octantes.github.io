@@ -4,10 +4,18 @@
     <title>octantes.ar</title>
     <link>https://octantes.github.io</link>
     <description>un portal web de contenido multimedia, sin algoritmos ni intermediarios</description>
-    <lastBuildDate>Fri, 06 Mar 2026 07:11:23 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 06 Mar 2026 07:55:59 GMT</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="https://octantes.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+      <title>browsewithscroll</title>
+      <link>https://octantes.github.io/posts/desarrollo/browsewithscroll/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/desarrollo/browsewithscroll/</guid>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
+      <description>herramienta para previsualizar fuentes y multimedia con scroll directamente en el navegador</description>
+      <author>kaste@octantes.ar (kaste)</author>
+    </item>
+<item>
       <title>arch-hud</title>
       <link>https://octantes.github.io/posts/desarrollo/arch-hud/</link>
       <guid isPermaLink="true">https://octantes.github.io/posts/desarrollo/arch-hud/</guid>
