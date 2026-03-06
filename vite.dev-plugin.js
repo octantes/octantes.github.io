@@ -120,7 +120,7 @@ async function renderNote(type, slug) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${attributes.title || slug} - octantes.net</title>
+  <title>${attributes.title || slug} - octantes.ar</title>
   <link rel="stylesheet" href="/src/04/baseline.css">
   <style>
     body { background: #1B1C1C; color: #D8DADE; padding: 2rem; font-family: 'Outfit', sans-serif; }

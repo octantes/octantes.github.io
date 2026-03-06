@@ -1,0 +1,3178 @@
+|| componente: baseline.css -------------------------------------
+
+:root { 
+
+    --font-main:    'Outfit',        sans-serif;
+    --font-mono:    'Inconsolata',   monospace;
+    --font-grotesk: 'Space Grotesk', sans-serif;
+
+    --carbon05:  #1B1C1C05;
+    --carbon10:  #1B1C1C10;
+    --carbon15:  #1B1C1C15;
+    --carbon25:  #1B1C1C25;
+    --carbon35:  #1B1C1C35;
+    --carbon50:  #1B1C1C50;
+    --carbon65:  #1B1C1C65;
+    --carbon80:  #1B1C1C80;
+    --carbon90:  #1B1C1C90;
+    --carbon99:  #1B1C1C99;
+
+    --carbon:    #1B1C1C;
+
+    --ceniza05:  #2B2C2C05;
+    --ceniza10:  #2B2C2C10;
+    --ceniza15:  #2B2C2C15;
+    --ceniza25:  #2B2C2C25;
+    --ceniza35:  #2B2C2C35;
+    --ceniza50:  #2B2C2C50;
+    --ceniza65:  #2B2C2C65;
+    --ceniza80:  #2B2C2C80;
+    --ceniza90:  #2B2C2C90;
+    --ceniza99:  #2B2C2C99;
+
+    --ceniza:    #2B2C2C;
+
+    --polvo05:   #3C3C3C05;
+    --polvo10:   #3C3C3C10;
+    --polvo15:   #3C3C3C15;
+    --polvo25:   #3C3C3C25;
+    --polvo35:   #3C3C3C35;
+    --polvo50:   #3C3C3C50;
+    --polvo65:   #3C3C3C65;
+    --polvo80:   #3C3C3C80;
+    --polvo90:   #3C3C3C90;
+    --polvo99:   #3C3C3C99;
+
+    --polvo:     #3C3C3C;
+
+    --humo05:    #AAABAC05;
+    --humo10:    #AAABAC10;
+    --humo15:    #AAABAC15;
+    --humo25:    #AAABAC25;
+    --humo35:    #AAABAC35;
+    --humo50:    #AAABAC50;
+    --humo65:    #AAABAC65;
+    --humo80:    #AAABAC80;
+    --humo90:    #AAABAC90;
+    --humo99:    #AAABAC99;
+
+    --humo:      #AAABAC;
+
+    --niebla05:  #D8DADE05;
+    --niebla10:  #D8DADE10;
+    --niebla15:  #D8DADE15;
+    --niebla25:  #D8DADE25;
+    --niebla35:  #D8DADE35;
+    --niebla50:  #D8DADE50;
+    --niebla65:  #D8DADE65;
+    --niebla80:  #D8DADE80;
+    --niebla90:  #D8DADE90;
+    --niebla99:  #D8DADE99;
+
+    --niebla:    #D8DADE;
+
+    --brillo05:  #F2F2F205;
+    --brillo10:  #F2F2F210;
+    --brillo15:  #F2F2F215;
+    --brillo25:  #F2F2F225;
+    --brillo35:  #F2F2F235;
+    --brillo50:  #F2F2F250;
+    --brillo65:  #F2F2F265;
+    --brillo80:  #F2F2F280;
+    --brillo90:  #F2F2F290;
+    --brillo99:  #F2F2F299;
+
+    --brillo:    #F2F2F2;
+
+    --lirio05:   #986C9805;
+    --lirio10:   #986C9810;
+    --lirio15:   #986C9815;
+    --lirio25:   #986C9825;
+    --lirio35:   #986C9835;
+    --lirio50:   #986C9850;
+    --lirio65:   #986C9865;
+    --lirio80:   #986C9880;
+    --lirio90:   #986C9890;
+    --lirio99:   #986C9899;
+
+    --lirio:     #986C98;
+    
+    --cristal05: #8AB6BB05;
+    --cristal10: #8AB6BB10;
+    --cristal15: #8AB6BB15;
+    --cristal25: #8AB6BB25;
+    --cristal35: #8AB6BB35;
+    --cristal50: #8AB6BB50;
+    --cristal65: #8AB6BB65;
+    --cristal80: #8AB6BB80;
+    --cristal90: #8AB6BB90;
+    --cristal99: #8AB6BB99;
+
+    --cristal:   #8AB6BB;
+
+    --arcilla05: #85494905;
+    --arcilla10: #85494910;
+    --arcilla15: #85494915;
+    --arcilla25: #85494925;
+    --arcilla35: #85494935;
+    --arcilla50: #85494950;
+    --arcilla65: #85494965;
+    --arcilla80: #85494980;
+    --arcilla90: #85494990;
+    --arcilla99: #85494999;
+
+    --arcilla:   #854949;
+
+    --poma05:    #6FAC6705;
+    --poma10:    #6FAC6710;
+    --poma15:    #6FAC6715;
+    --poma25:    #6FAC6725;
+    --poma35:    #6FAC6735;
+    --poma50:    #6FAC6750;
+    --poma65:    #6FAC6765;
+    --poma80:    #6FAC6780;
+    --poma90:    #6FAC6790;
+    --poma99:    #6FAC6799;
+
+    --poma:      #6FAC67;
+
+    --shadow-border: inset 0 0 0 1px;
+    --small-outline: 1px solid;
+
+    --radius-xl: 12px;
+    --radius-ll: 10px;
+    --radius-mm: 08px;
+    --radius-ss: 05px;
+    --radius-xs: 03px;
+
+    --animate-faster: 0.10s ease;
+    --animate-fast:   0.25s ease;
+    --animate-mid:    0.50s ease;
+    --animate-long:   0.80s ease;
+
+    --alpha-invisible: 0.00;
+    --alpha-eighty:      0.80;
+    --alpha-half:      0.50;
+    --alpha-quart:     0.25;
+    --alpha-disabled:  0.25;
+
+    --scale-min: scale(0.99);
+    --scale-low: scale(0.95);
+
+}
+
+html, body, #octantes { 
+
+  /* LAYOUT */ box-sizing: border-box;
+  /* BOX    */ width: 100%; height: 100%; margin: 0; padding: 0;
+  /* FILL   */ background-color: var(--carbon);
+
+}
+
+#octantes > .root { 
+
+  /* LAYOUT */ display: flex; flex-direction: column;
+  /* BOX    */ width: 100%; height: 100%;
+  
+}
+
+:root:has(#octantes > .root) .static-nav, :root:has(#octantes > .root) .post-header { display: none !important; }
+.post .static-nav, .post .post-header { display: none !important; }
+
+*, *::before, *::after { box-sizing: inherit; }
+
+
+body, i, strong        { font-family: var(--font-main);         }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-grotesk);      }
+code, pre              { font-family: var(--font-mono);         }
+strong, b              { color: var(--lirio); font-weight: 500; }
+ul, ol                 { display: block;                        }
+li                     { list-style-position: inside;           }
+
+hr                     { width: 100%; margin: 1rem 0; border: none; border-top: 1px dashed var(--humo25); flex-shrink: 0; }
+i, em                  { color: var(--cristal); margin-right: 0.15rem; font-style: italic; font-weight: 500 }
+
+a { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;
+  /* FONT   */ font-family: var(--font-main); text-decoration: underline; text-decoration-color: var(--cristal80); text-underline-offset: 3px; 
+  /* MOTION */ transition: text-decoration-color 0.25s ease;
+  /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+  &:hover { 
+    
+    /* FILL   */ background: linear-gradient(250deg, var(--cristal), var(--lirio)); background-clip: text;
+    /* FONT   */ text-decoration: underline; text-decoration-color: var(--lirio);
+    /* WEBKIT */ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  
+  }
+
+}
+
+a:focus, button:focus, input:focus, textarea:focus, select:focus, tbody tr:focus-within { outline: none; box-shadow: inset 0 0 0 250px var(--lirio80), 0 0 0 2px var(--carbon99); transition: all var(--animate-fast); }
+
+::selection                { background-color: var(--lirio); color: var(--carbon);    }
+::-moz-selection           { background-color: var(--lirio); color: var(--carbon);    }
+::-webkit-scrollbar        { background-color: transparent; width: 4px; height: 4px;  }
+::-webkit-scrollbar-thumb  { background-color: var(--lirio); border-radius: 0;        }
+::-webkit-scrollbar-track  { background: transparent; border-radius: 0;               }
+::-webkit-scrollbar-button { display: none; width: 0; height: 0;                      }
+::-webkit-scrollbar-corner { background-color: transparent;                           }
+
+@supports not selector(::-webkit-scrollbar) { *, *::before, *::after { scrollbar-width: none; scrollbar-color: var(--lirio) transparent; } }
+
+audio[controls] { 
+
+  /* BOX    */ width: 100%;
+  /* FILL   */ background: var(--carbon);
+
+}
+
+audio::-webkit-media-controls-enclosure { 
+
+  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+  /* FILL   */ background-color: var(--lirio35);
+
+}
+
+audio::-webkit-media-controls-enclosure:hover { 
+
+  /* FILL   */ background-color: var(--lirio65);
+
+}
+
+.figlet { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0; user-select: none;
+  /* BOX    */ width: 100%; height: 100%; overflow: hidden;
+  /* FONT   */ font-size: .8vw; line-height: 1.24;
+
+  &.clickable { cursor: pointer; }
+
+  & pre {
+  
+    /* LAYOUT */ flex-shrink: 0;
+    /* BOX    */ margin-bottom: .25rem; margin-top: .8rem; overflow: visible;
+    /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); color: var(--lirio);
+    /* FONT   */ font-family: monospace;
+    /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
+  
+  }
+
+}
+
+---
+
+|| componente: router.js -------------------------------------
+
+import { createRouter, createWebHistory } from 'vue-router'
+import Content from '../01/content.vue'
+
+const routes = [
+
+  { path: '/:type/:slug',   component: Content, props: route => ({ slug: route.params.slug, type: route.params.type }) }, // sends slug to content as prop
+  { path: '/:filterType',   component: Content, props: route => ({ filterType: route.params.filterType })              },
+  { path: '/',              component: Content,                                                                        },
+  { path: '/:catchAll(.*)', component: Content, props: { slug: '404' }                                                 }  // keep at the end
+
+]
+
+const router = createRouter({ history: createWebHistory(import.meta.env.BASE_URL), routes })
+
+export default router
+
+---
+
+|| componente: store.js -------------------------------------
+
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+
+export const useStore = defineStore('store', () => {
+
+  const tabs                       = [                                                                                                // names for filters 
+
+    { label: 'completo',   value: 'full'       },
+    { label: 'diseño',     value: 'diseño'     },
+    { label: 'desarrollo', value: 'desarrollo' },
+    { label: 'música',     value: 'musica'     },
+    { label: 'textos',     value: 'textos'     },
+    { label: 'juegos',     value: 'juegos'     },
+
+  ]
+
+  const authorsMap = {                                                                                                                // author profile pic and link 
+
+    swim:     { img: '/assets/swim.webp',  link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
+    kaste:    { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+    octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
+
+  }
+
+  const statusMap  = {                                                                                                                // status lines with emojis 
+
+    frenzy:   { emoji: '❤️‍🔥', message: 'in a frenzy!'       },
+    dominion: { emoji: '🪡', message: 'dominando el mundo' },
+    stuck:    { emoji: '🌀', message: 'stuck in a loop'    },
+    default:  { emoji: '🪡', message: 'dominando el mundo' },
+
+  }
+
+  const error404   =                                                                                                                  // div for content miss 
+`
+<div class="figlet">
+  <pre aria-hidden="true">
+██╗  ██╗ ██████╗ ██╗  ██╗
+██║  ██║██╔═████╗██║  ██║
+███████║██║██╔██║███████║
+╚════██║████╔╝██║╚════██║
+     ██║╚██████╔╝     ██║
+     ╚═╝ ╚═════╝      ╚═╝
+  </pre>
+</div>
+`
+
+  // CONTENT                                                                                                                          // LOAD DATA
+
+  const notesIndex                 = ref([])                                                                                          // note index array
+  const currentPost                = ref(null)                                                                                        // current loaded post ref
+  const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
+  const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
+  const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
+
+
+  // STATES                                                                                                                           // CHANGE STATES
+
+  const processing                 = ref(false)                                                                                       // disabled component state
+  const showPopup                  = ref(true)                                                                                        // enable popup in navigation
+  const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link
+  const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
+  const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
+  const userStatus                 = ref(statusMap['frenzy'])                                                                         // current user status var
+
+  // SUBS                                                                                                                             // SUBSCRIPTION HANDLING
+
+  const subEmail                   = ref('')                                                                                          // email
+  const subHoney                   = ref('')                                                                                          // bot honeypot
+  const subMessage                 = ref('dejá tu mail acá...')                                                                       // status message
+  const subState                   = ref('default')                                                                                   // status states
+  const emailRegex                 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/                                                                     // email regex
+  const lsCounter                  = 3                                                                                                // localstorage counter
+  const subResetTime               = 3000                                                                                             // submit reset timer
+  
+  // STATUS                                                                                                                           // BOTTOM BAR
+
+  let   timeInterval = null                                                                                                           // time update interval
+  let   btcInterval  = null                                                                                                           // btc update interval
+  const btcPrice     = ref('---')                                                                                                     // btc price fetch result
+  const currentTime  = ref('--:--')                                                                                                   // current time fetch result
+  const barContent   = ref('/ '.repeat(300))                                                                                          // progress bar animation content
+
+  // NAVIGATION                                                                                                                       // NOTE TABLE
+
+  const activeFilter               = ref('full')                                                                                      // active tab filter name
+  const sortKey                    = ref('isoDate')                                                                                   // current sort column
+  const sortOrder                  = ref('desc')                                                                                      // current sort order
+  const searchQuery                = ref('')                                                                                          // searchbox current search
+
+
+
+  // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
+  function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
+  function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
+  function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
+
+  function fetchTime() {                                                                                                              // fetch and update current time  
+
+    const now = new Date()
+
+    currentTime.value = now.toLocaleTimeString('es-AR', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+
+  }
+
+  function startStatusUpdates() {                                                                                                     // start bar data updates 
+
+    fetchBTC()  ; btcInterval  = setInterval(fetchBTC,  60000)
+    fetchTime() ; timeInterval = setInterval(fetchTime, 15000)
+    
+  }
+
+  function stopStatusUpdates() {                                                                                                      // stop bar data updates 
+
+    clearInterval(timeInterval)
+    clearInterval(btcInterval)
+
+  }
+
+  function navHome(routerInstance) {                                                                                                  // navigates to root and reloads  
+
+    if (processing.value) return
+    routerInstance.push({ path: '/' })
+    activeFilter.value = 'full'
+    document.title = 'octantes.net - portal multimedia'
+
+  }
+
+  function navSort(key) {                                                                                                             // change sort order 
+
+    if (processing.value) return
+    if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
+    else { sortKey.value = key; sortOrder.value = 'asc' }
+
+  }
+
+  function setActiveFilter(routerInstance, filter) {                                                                                  // apply current table filter 
+
+    activeFilter.value = filter
+
+    if (routerInstance && !currentPost.value) {
+
+      const isNote = routerInstance.currentRoute.value.params.slug
+      if (isNote) return
+
+      let path = (filter === 'full') ? `/` : `/${filter}`
+      if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
+
+    }
+
+  }
+
+  function changeFilter(routerInstance, direction) {                                                                                  // advance or reduce filters 
+
+    if (processing.value) return
+    
+    const currentTabValue = activeFilter.value
+    const currentTabIndex = tabs.findIndex(tab => tab.value === currentTabValue)
+    const numTabs = tabs.length
+
+    for (let i = 1; i <= numTabs; i++) {
+
+      let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
+      const nextTabValue = tabs[nextIndex].value
+
+      if (emptyFilter(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
+
+    }
+
+  }
+
+  function emptyFilter(type) {                                                                                                        // check if the filter is empty 
+
+    if (type === 'full') return true
+    const actualType = type
+    
+    return notesIndex.value.some(note => note.type === actualType)
+
+  }
+
+  function resetSub() {                                                                                                               // reset sub message and value 
+
+    subMessage.value = 'dejá tu mail acá...'
+    subState.value = 'default'
+
+  }
+
+  function updateSub(state, text, clearInput = false) {                                                                               // update sub message and value 
+
+    subState.value   = state
+    subMessage.value = text
+
+    if (clearInput) subEmail.value = ''
+    if (state !== 'default') { setTimeout(resetSub, subResetTime) }
+
+  }
+
+  function emitSub(e) {                                                                                                               // check and emit umami event 
+
+    if (subState.value !== 'default') return
+    
+    const email = subEmail.value
+    const submissionsKey = 'subscription_count'
+    const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10)
+    
+    if (subHoney.value)              { updateSub('success', 'mail registrado!',             true); return }
+    if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!',       true); return }
+    if (currentCount >= lsCounter)         { updateSub('error',   'no podés registrar más mails', true); return }
+
+    if (window.umami && typeof window.umami.track === 'function') {
+
+        window.umami.track('suscripcion', { email: email })
+        localStorage.setItem(submissionsKey, currentCount + 1)
+
+        updateSub('success', `gracias por sumarte!`, true)
+        
+    } else { updateSub('error', 'falló el registro', true) }
+    
+  }
+
+  function setUserStatus(key) {                                                                                                       // set emoji and status phrase 
+
+    const status = statusMap[key] || statusMap['default']
+    userStatus.value = status
+
+  }
+
+  
+  // ASYNCS -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  async function fetchPost(slug) {                                                                                                    // fetch post html 
+
+    if (!slug) { setCurrentPost(null); return { html: '', error: null } }
+    if (!notesLoaded.value) { await loadNotesIndex() }
+
+    const metadataSlug = notesIndex.value.find(p => p.slug === slug)
+    setCurrentPost(metadataSlug || { type: 'textos', slug })
+    const post = currentPost.value
+
+    try {
+
+      const fetchPath = post.url || `${base}/posts/${post.type || 'textos'}/${slug}/`
+      const res = await fetch(fetchPath)
+
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+
+      const rawText = await res.text()
+
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(rawText, 'text/html')
+      const staticNav = doc.querySelector('.static-nav')
+
+      if (staticNav) staticNav.remove()
+
+      const html = doc.body.innerHTML
+
+      if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
+
+      return { html, error: null }
+
+    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: error404, error: e } }
+    
+  }
+
+  async function loadNotesIndex() {                                                                                                   // fetch full note index 
+
+    if (notesLoaded.value) return notesIndex.value
+
+    try {
+
+      const response = await fetch('/index.json')
+      if (!response.ok) throw new Error('no se encontró el index.json')
+      notesIndex.value = await response.json()
+      notesLoaded.value = true
+
+    } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
+
+    return notesIndex.value
+
+  }
+
+  async function fetchBTC() {                                                                                                         // fetch and update btc price 
+
+    try {
+
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+      if (!response.ok) throw new Error('la respuesta de la api falló')
+      const data = await response.json()
+      const price = data.bitcoin.usd
+      const formattedPrice = Math.floor((price / 1000) * 10) / 10
+      btcPrice.value = `${formattedPrice}K`
+
+    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
+
+  }
+
+
+  // COMPUTEDS ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  const computedNoteComp  = computed(() => {                                                                                          // compute vuecomp if it exists 
+
+    if (currentPost.value) {
+      const customVuecomp = currentPost.value.vuecomp
+      if (customVuecomp) { return customVuecomp } 
+    }
+
+    return null
+
+  })
+
+  const computedFullscreen = computed(() => {                                                                                         // return fullscreen component if exists 
+    
+    if (currentPost.value && currentPost.value.fullscreen) { return currentPost.value.fullscreen } return null
+
+  })
+
+  const computedNoteClass = computed(() => {                                                                                          // compute class for html post 
+
+    if (currentPost.value) {
+      const typeKey = currentPost.value.type
+      return classMap[typeKey] || 'S6' 
+    }
+
+    return 'S6' 
+
+  })
+
+  const computedPortada   = computed(() => {                                                                                          // compute data for portada 
+
+    const metadata = currentPost.value || {}
+    let rawHandle = metadata.handle || 'kaste'
+    const handles = Array.isArray(rawHandle) ? rawHandle : [rawHandle]
+    
+    const postAuthors = handles.map(h => { 
+
+      const handleName = String(h).replace(/^@/, '')
+      const authorInfo = authorsMap[handleName] || authorsMap['kaste']
+      
+      return {
+
+        handle: handleName,
+        img: authorInfo.img,
+        link: authorInfo.link,
+        full: h === handles[0], 
+        date: h === handles[0] ? metadata.date || '2026' : null,
+
+      }
+
+    })
+
+    return { 
+
+      title: metadata.title || 'bienvenido a octantes.net!',
+      description: metadata.description || 'toca un posteo de la tabla para cargarlo; tambien podes filtrar segun el tipo de contenido que queres encontrar en la pagina',
+      authors: postAuthors,
+      portada: metadata.portada || '',
+
+    }
+    
+  })
+
+  const loadLatestPost    = computed(() => {                                                                                          // compute latest post 
+
+    if (notesIndex.value.length === 0) return { title: 'cargando...', url: '' }
+    const latest = notesIndex.value[0]
+    const cleanUrl = latest.url.replace(/^\/posts/, '') 
+
+    return { title: latest.title, url: cleanUrl }
+
+  })
+
+  const noteSortFilter    = computed(() => {                                                                                          // compute table filter 
+
+    if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
+    const filterType = activeFilter.value
+    let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
+    const query = searchQuery.value.toLowerCase().trim()
+
+    if (query) { 
+
+      filtered = filtered.filter(note =>
+        note.title.toLowerCase().includes(query) ||
+        note.description.toLowerCase().includes(query) ||
+        note.tags.some(tag => tag.toLowerCase().includes(query)) ||
+        note.date.includes(query)
+      )
+
+    }
+
+    return [...filtered].sort((a, b) => { 
+
+      let valA, valB
+
+      switch (sortKey.value) {
+
+        case 'title': valA = a.title.toLowerCase()          ; valB = b.title.toLowerCase()          ; break
+        case 'tags':  valA = a.tags[0]?.toLowerCase() || '' ; valB = b.tags[0]?.toLowerCase() || '' ; break
+        default:      valA = new Date(a.isoDate)            ; valB = new Date(b.isoDate)            ; break
+
+      }
+
+      let comparison = 0
+      if (valA > valB)      comparison =  1
+      else if (valA < valB) comparison = -1
+
+      return sortOrder.value === 'asc' ? comparison : -comparison
+
+    })
+
+  })
+
+
+  // RETURN -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  return { 
+
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, statusMap, userStatus,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, resetSub, updateSub, emitSub, setUserStatus,
+    /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
+    /* STATS VAR */ btcPrice, currentTime, barContent,
+    /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
+    /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
+    /* VIEWS FUN */ setProcessing, togglePopup,
+    /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
+    /* NAVIG COM */ noteSortFilter,
+
+  }
+
+})
+
+---
+
+|| componente: content.css -------------------------------------
+
+/* TEXTOS */
+
+.S6 { 
+
+  /* LAYOUT */ text-align: center;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+  
+  & img { 
+
+    /* LAYOUT */ display: block; 
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+.S6TRAD { 
+
+  /* LAYOUT */ text-align: left;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+  
+  & img { 
+
+    /* LAYOUT */ display: block; 
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+/* DISEÑO */
+
+.S7 { 
+
+  /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+
+  }
+
+  & video { 
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+.S7TEXT { 
+
+  /* LAYOUT */ text-align: center;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+  
+}
+
+.S7TEXT-TRAD { 
+
+  /* LAYOUT */ text-align: left;
+  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+
+  & img { 
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+  
+}
+
+/* EMBEDS */  
+
+.YTVideo { 
+
+  /* LAYOUT */ position: relative; 
+  /* BOX    */ width: 100%; height: 100%; aspect-ratio: 16 / 9;
+  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+}
+
+@container post-viewer (min-width: 0px) { .S6, .S7TEXT { font-size: clamp(0.50rem, 2.25cqw, 1.35rem); } }
+@container post-viewer (min-width: 0px) { .S6TRAD, .S7TEXT-TRAD { font-size: 1rem; } }
+
+---
+
+|| componente: p5js.vue -------------------------------------
+
+
+
+---
+
+|| componente: shader.vue -------------------------------------
+
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+const GRAIN_TARGET = 55
+
+const canvasRef    = ref(null)                                          // dom << canvas >> ref
+const containerRef = ref(null)                                          // container div ref
+const COLOR_BACKGR = '#1B1C1C'                                          // solid background color
+const COLOR_BORDER = '#AAABAC'                                          // solid frontier color
+const COLOR_PORTAL = '#986C98'                                          // solid portal color
+const COLOR_RAIN   = '#8AB6BB'                                          // solid rain color
+const charRangeStart    = 33                                            // unicode starting character
+const charRangeCount    = 126 - charRangeStart + 1                      // max possible characters
+const germFramesMax     = 160                                           // intro total frames counter
+const outroFramesMax    = 32                                            // outro animation max frames
+const directFramesExtra = 42                                            // direct animation extra frames
+
+let lastTime   = 0                                                      // last frame time for delta
+let charIndex  = 0                                                      // character buffer index
+let charTable  = null                                                   // precomputed unicode char values
+let charBuffer = []                                                     // buffer for precomputed char values
+let mode = 'hidden'                                                     // current animation mode
+let animationID = null                                                  // next requested frame id
+let taskPromise = null                                                  // promise handling for drawloop
+let taskResolve = null                                                  // resolve handling for drawloop
+let context = null                                                      // canvas 2D context init
+let fontSize = 16                                                       // font base pixel size
+let height = 0                                                          // canvas px height
+let width = 0                                                           // canvas px width
+let dpr = 1                                                             // device px ratio
+let cols = 0                                                            // char grid columns
+let rows = 0                                                            // char grid rows
+let maxCols = 40                                                        // max char grid columns
+let maxRows = 60                                                        // max char grid rows
+
+let portalTime   = 0                                                    // portal delta speed calculation
+let portalCodes  = null                                                 // portal cell int char codes
+let portalChars  = null                                                 // portal characters
+let portalSine   = null                                                 // portal trigo cache sine
+let portalCosine = null                                                 // portal trigo cache cosine
+let rainHeads    = []                                                   // first rain char position
+let rainBuffer   = []                                                   // rain column chars positions
+let rainColumn   = null                                                 // full rain column position array
+let rainColors   = null                                                 // alpha color cache
+let rainChance   = 0.005                                                // column reset chance
+let rainLength   = 25                                                   // rain trail char length
+let rainSpeed    = 0.7                                                  // rain trail fall speed
+
+let germFrame     = 0                                                   // frame counter for intro & direct
+let swipeFrame    = 0                                                   // swipe animation line counter
+let swipePhase    = 0                                                   // swipe animation direction
+let swipeSine     = null                                                // swipe trigo cache cosine
+let swipeCosine   = null                                                // swipe trigo cache cosine
+let outroRadius   = 0                                                   // current outro animation radius
+let outroCenter   = { x: 0, y: 0 }                                      // outro animation center position
+let outroAuto     = false                                               // swipe outro autotrigger
+let outroCells    = null                                                // guarda indices dentro del circulo
+let outroFrontier = null                                                // guarda indices del limite del circulo
+
+let logicMask  = null                                                   // binary active cell mask
+let visualMask = null                                                   // buffer mask for basemask
+let expandA    = null                                                   // dilation buffer for expandMask
+let expandB    = null                                                   // dilation buffer for expandMask
+let indexToX   = null                                                   // maps linear index to x coord
+let indexToY   = null                                                   // maps linear index to y coord
+let textGroups = null                                                   // map for text drawing
+
+let noiseMap        = null                                              // static noise map for distortion
+let neighborsMap    = null                                              // stores each cell neighbors
+let frontierMap     = null                                              // mask for cells in borders
+let frontierCurrent = null                                              // buffer for last frontier indexes
+let frontierNext    = null                                              // buffer for next frontier indexes
+
+// MAIN RENDER
+
+function cellRender(x, y, headPos, colBuf, resultMask) {                // cell style definitions by mode 
+
+  const idx = y * cols + x
+  const portalCh = portalChars[idx]
+  const matrixCh = colBuf[y]
+  const revealed = !!resultMask[idx]
+  const frontier = !!frontierMap[idx]
+  const dist = headPos - y
+
+  let drawCh = portalCh
+  let color = COLOR_PORTAL
+  let isTransparent = false
+
+  const isRain = (dist >= 0 && dist <= rainLength)
+  const isRainHead = !!matrixCh
+
+  switch (mode) {
+
+    case 'intro': {
+      if (frontier) color = COLOR_BORDER
+      if (!revealed) { drawCh = null; isTransparent = true }
+      if (isRain && revealed) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'static': {
+      if (isRain) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      else { drawCh = portalCh; color = COLOR_PORTAL }
+      break
+    }
+
+    case 'outro': {
+      const isInsideCircle = outroCells[idx] && !outroFrontier[idx]
+      isTransparent = isInsideCircle
+      if (isInsideCircle) { drawCh = null } else if (outroFrontier[idx]) { color = COLOR_BORDER; drawCh = portalCh }
+      if (isRain && !isInsideCircle) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'direct': {
+      if (frontier) { drawCh = portalCh; color = COLOR_BORDER }
+      else if (!revealed) { drawCh = null; isTransparent = true }
+      else { drawCh = portalCh; color = COLOR_PORTAL }
+      if (isRain && (revealed || frontier)) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'transition': {
+      if (!revealed) { if (frontier) { drawCh = portalCh; color = COLOR_BORDER } else { drawCh = null; isTransparent = true } }
+      else { drawCh = portalCh; if (frontier) color = COLOR_BORDER }
+      if (isRain && revealed) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+    case 'hidden': { drawCh = null; isTransparent = true; break }
+    
+    default: { 
+      if (frontier) color = COLOR_BORDER;
+      if (isRain) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
+      break
+    }
+
+  }
+  
+  return [drawCh, color, isTransparent]
+
+}
+
+function drawFrame(deltaTime) {                                         // draw shader 
+
+  if (!context) return
+
+  const total = rows * cols
+  const frameFactor = (deltaTime / 16.666)
+
+  if (mode !== 'hidden') {
+
+    animatePortal(frameFactor)
+    animateRain(frameFactor)
+
+    switch (mode) {
+
+      case 'intro':       { animateGerm(total); break }
+      case 'static':      { secureCopy(visualMask, logicMask); break }
+      case 'outro':       { animateCircle(frameFactor); break }
+      case 'direct':      { animateGermInv(total); break }
+      case 'transition':  { animateSwipe(frameFactor); break }
+
+    }
+
+  } else { visualMask.fill(0) }
+
+  const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(germFrame / germFramesMax, 0, 1) : 1) * outroFramesMax))
+  let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
+  computeFrontier(resultMask)
+  
+  if (!textGroups) textGroups = new Map()
+  textGroups.clear()
+
+  context.clearRect(0, 0, width, height)
+  context.fillStyle = COLOR_BACKGR
+  context.fillRect(0, 0, width, height)
+
+  context.globalCompositeOperation = 'destination-out'
+  context.fillStyle = '#000'
+  context.beginPath()
+  
+  const isTransparentPath = []
+
+  for (let y = 0; y < rows; y++) {
+
+    const py = y * fontSize
+
+    for (let x = 0; x < cols; x++) {
+
+      const headPos = rainColumn[x]
+      const colBuf = rainBuffer[x]
+      const [drawCh, color, isTransparent] = cellRender(x, y, headPos, colBuf, resultMask)
+      
+      if (isTransparent) { isTransparentPath.push({ x, py }) }
+      
+      if (drawCh != null) {
+        let group = textGroups.get(color)
+        if (!group) { group = []; textGroups.set(color, group) }
+        group.push({ drawCh, x, py })
+      }
+
+    }
+  }
+  
+  for (const { x, py } of isTransparentPath) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
+  context.fill()
+
+  context.globalCompositeOperation = 'source-over'
+
+  for (const [color, chars] of textGroups) {
+    context.fillStyle = color
+    for (const { drawCh, x, py } of chars) { context.fillText(drawCh, x * fontSize, py) }
+  }
+  
+  const frameAdvancement = 1 * frameFactor
+
+  switch (mode) {
+
+    case 'intro':         germFrame += frameAdvancement; if (germFrame >= germFramesMax) { germFrame = germFramesMax; mode = 'static' } break
+    case 'direct':        germFrame += frameAdvancement; const directLimit = germFramesMax + directFramesExtra; if (germFrame >= directLimit) { germFrame = directLimit; mode = 'hidden' } break
+    case 'transition':    animateSwipe(frameFactor); break
+
+    default: break
+
+  }
+
+  if (taskPromise) {
+    try {
+      if (mode === 'hidden' || mode === 'static' || (typeof taskPromise.finish === 'function' && taskPromise.finish())) {
+        const r = taskResolve
+        taskPromise = null
+        taskResolve = null
+        if (r) r()
+      }
+    } catch (err) { taskPromise = null; taskResolve = null }
+  }
+
+}
+
+// INIT
+
+function initMasks() {                                                  // initialize all arrays 
+
+  const total = cols * rows
+
+  if (!noiseMap         || noiseMap.length          !== total) noiseMap          = new Float32Array(total)
+  if (!frontierCurrent  || frontierCurrent.length   !== total) frontierCurrent   = new Uint32Array(total)
+  if (!frontierNext     || frontierNext.length      !== total) frontierNext      = new Uint32Array(total)
+  if (!indexToX         || indexToX.length          !== total) indexToX          = new Int16Array(total)
+  if (!indexToY         || indexToY.length          !== total) indexToY          = new Int16Array(total)
+  if (!portalCodes      || portalCodes.length       !== total) portalCodes       = new Int16Array(total)
+  if (!logicMask        || logicMask.length         !== total) logicMask         = new Uint8Array(total)
+  if (!visualMask       || visualMask.length        !== total) visualMask        = new Uint8Array(total)
+  if (!expandA          || expandA.length           !== total) expandA           = new Uint8Array(total)
+  if (!expandB          || expandB.length           !== total) expandB           = new Uint8Array(total)
+  if (!outroCells       || outroCells.length        !== total) outroCells        = new Uint8Array(total)
+  if (!outroFrontier    || outroFrontier.length     !== total) outroFrontier     = new Uint8Array(total)
+  if (!frontierMap      || frontierMap.length       !== total) frontierMap       = new Uint8Array(total)
+  if (!portalChars      || portalChars.length       !== total) portalChars       = new Array(total)
+  if (!neighborsMap     || neighborsMap.length      !== total) neighborsMap      = new Array(total)
+  if (!rainColumn       || rainColumn.length        !== cols)  rainColumn        = new Int16Array(cols)
+  if (!portalCosine     || portalCosine.length      !== cols)  portalCosine      = new Float32Array(cols)
+  if (!portalSine       || portalSine.length        !== rows)  portalSine        = new Float32Array(rows)
+  if (!swipeSine        || swipeSine.length         !== rows)  swipeSine         = new Float32Array(rows)
+  if (!swipeCosine      || swipeCosine.length       !== rows)  swipeCosine       = new Float32Array(rows)
+
+}
+
+function resetMasks() {                                                 // reset only state masks 
+
+  const total = cols * rows
+
+  if (!logicMask      || logicMask.length      !== total) logicMask      = new Uint8Array(total)
+  if (!visualMask     || visualMask.length     !== total) visualMask     = new Uint8Array(total)
+  if (!outroCells     || outroCells.length     !== total) outroCells     = new Uint8Array(total)
+  if (!outroFrontier  || outroFrontier.length  !== total) outroFrontier  = new Uint8Array(total)
+  if (!frontierMap    || frontierMap.length    !== total) frontierMap    = new Uint8Array(total)
+  if (!portalChars    || portalChars.length    !== total) portalChars    = new Array(total)
+
+}
+
+function initContext() {                                                // prepare context 
+
+  // container div size
+  if (!canvasRef.value || !containerRef.value) return
+  const rect = containerRef.value.getBoundingClientRect()
+  width = Math.floor(rect.width)
+  height = Math.floor(rect.height)
+
+  // resolution by pixel density
+  dpr = window.devicePixelRatio || 1
+  canvasRef.value.width = Math.floor(width * dpr)
+  canvasRef.value.height = Math.floor(height * dpr)
+  canvasRef.value.style.width = width + 'px'
+  canvasRef.value.style.height = height + 'px'
+
+  // transform to normals
+  context = canvasRef.value.getContext('2d')
+  context.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+}
+
+function resetContext() {                                               // update context 
+
+  initContext()
+
+  let calcSize = Math.floor(width / GRAIN_TARGET)
+  fontSize = Math.max(10, Math.min(calcSize, 24))
+
+  initGrid()
+
+}
+
+function initGrid() {                                                   // create grid + animate rain 
+
+  // set size
+  cols = Math.ceil(width / fontSize)
+  rows = Math.ceil(height / fontSize)
+
+  maxCols = cols
+  maxRows = rows
+
+  context.font = `${fontSize}px monospace`
+  context.textBaseline = 'top'
+  context.textAlign = 'left'
+
+  // set final sizes
+  const total = cols * rows
+
+  initMasks()
+
+  const cx = cols / 2
+  const cy = rows / 2
+  
+  const t0 = 100
+  
+  // portal trig animation
+  for (let y = 0, i = 0; y < rows; y++) { for (let x = 0; x < cols; x++, i++) { indexToX[i] = x; indexToY[i] = y } }
+  for (let x = 0; x < cols; x++) portalCosine[x] = Math.cos((x - cx) / 8 + t0 * 0.001)
+  for (let y = 0; y < rows; y++) portalSine[y] = Math.sin((y - cy) / 8 + t0 * 0.001)
+
+  // set rain
+  rainHeads = new Array(cols)
+  rainBuffer = new Array(cols)
+  for (let c = 0; c < cols; c++) {
+    rainHeads[c] = -Math.random() * rows * 10
+    rainBuffer[c] = new Array(rows).fill(null)
+  }
+
+  // precompute all chars
+  if (!charTable) {
+    charTable = new Array(charRangeCount)
+    for (let i = 0; i < charRangeCount; i++) {
+      charTable[i] = String.fromCharCode(charRangeStart + i)
+    }
+  }
+
+  buildChars()
+  
+  // build swipe waves
+  for (let y = 0; y < rows; y++) {
+    swipeSine[y] = Math.sin(y * 0.25)
+    swipeCosine[y] = Math.cos(y * 0.25)
+  }
+  
+  // buildneighbors
+  neighborsMap = new Array(total).fill(null)
+  for (let idx = 0; idx < total; idx++) {
+    const x = indexToX[idx]
+    const y = indexToY[idx]
+    const neighbors = []
+    if (x > 0) neighbors.push(idx - 1)
+    if (x < cols - 1) neighbors.push(idx + 1)
+    if (y > 0) neighbors.push(idx - cols)
+    if (y < rows - 1) neighbors.push(idx + cols)
+    neighborsMap[idx] = neighbors
+  }
+
+  // set alpha cache
+  rainColors = new Array(rainLength + 1)
+  for (let i = 0; i <= rainLength; i++) {
+    const alpha = 1 - i / Math.max(1, rainLength)
+    const a = Math.pow(Math.max(0, alpha), 1.2)
+    rainColors[i] = `rgba(126,189,196,${a.toFixed(3)})`
+  }
+
+  // set noisemap
+  for (let y = 0; y < rows; y++) {
+    const ny = y / Math.max(1, rows)
+    for (let x = 0; x < cols; x++) {
+      const nx = x / Math.max(1, cols)
+      const noise = Math.sin(nx * 12 + ny * 12) + Math.cos(nx * 7 - ny * 9)
+      const n = clampValue(noise * 0.5 + 0.5, 0, 1)
+      noiseMap[y * cols + x] = n
+    }
+  }
+
+}
+
+// HELPERS
+
+function clampValue(value, min = 0, max = 1) {                          // constrain value between max and min 
+  
+  return Math.min(max, Math.max(min, value))
+
+}
+
+function secureCopy(destination, source) {                              // prevent overwrite on UINT8 array copy 
+
+  if (!source) return null
+  if (!destination || destination.length !== source.length) {
+    destination = new Uint8Array(source.length)
+  }
+  
+  destination.set(source)
+  return destination
+
+}
+
+// BUILDERS
+
+function computeFrontier(mask) {                                        // frontier from cells touching inactive 
+
+  if (!mask) { frontierMap && frontierMap.fill(0); return }
+  frontierMap.fill(0)
+  
+  for (let y = 0; y < rows; y++) {
+    const yOff = y * cols
+    for (let x = 0; x < cols; x++) {
+      const i = yOff + x
+      if (!mask[i]) continue
+      if (x > 0        && !mask[i - 1])    { frontierMap[i] = 1; continue }
+      if (y > 0        && !mask[i - cols]) { frontierMap[i] = 1; continue }
+      if (x < cols - 1 && !mask[i + 1])    { frontierMap[i] = 1; continue }
+      if (y < rows - 1 && !mask[i + cols]) { frontierMap[i] = 1; continue }
+    }
+  }
+
+}
+
+function buildChars() {                                                 // init char buffer 
+
+  charBuffer = new Array(charRangeCount)
+
+  for (let i = 0; i < charRangeCount; i++) {
+    charBuffer[i] = charTable[i]
+  }
+
+  charIndex = 0
+  
+}
+
+// ANIMATIONS
+
+function animatePortal(frameFactor) {                                          // render next portal frame
+
+  const portalAdvance = 0.0125 * frameFactor
+  portalTime += portalAdvance
+
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const idx = y * cols + x
+      const v = portalCosine[x] + portalSine[y] + portalTime
+      const rawCode = v * 16 | 0
+      portalCodes[idx] = ((rawCode % charRangeCount) + charRangeCount) % charRangeCount
+      portalChars[idx] = charTable[portalCodes[idx]]
+    }
+  }
+
+}
+
+function animateRain(frameFactor) {                                     // render next rain frame 
+
+  let localCharIndex = charIndex
+  const charCount = charRangeCount
+  const fallSpeed = rainSpeed * frameFactor
+
+  for (let c = 0; c < cols; c++) {
+    const rowPos = Math.floor(rainHeads[c] + fallSpeed)
+    rainHeads[c] += fallSpeed
+    rainColumn[c] = Math.floor(rainHeads[c])
+    if (rowPos >= 0 && rowPos < rows) { rainBuffer[c][rowPos] = charBuffer[localCharIndex]; localCharIndex = (localCharIndex + 1) % charCount }
+    if (rainHeads[c] > rows + rainLength && Math.random() < rainChance) { rainHeads[c] = -Math.random() * rows }
+  }
+
+  charIndex = localCharIndex
+
+}
+
+function animateCircle(frameFactor) {                                   // render next circle frame 
+  
+  outroRadius += 1 * frameFactor
+
+  const rCurr = outroRadius
+  const cX = outroCenter.x
+  const cY = outroCenter.y
+
+  outroCells.fill(0); 
+
+  for (let y = 0; y < rows; y++) {
+
+    const yOff = y * cols
+    const dY = y - cY
+    const dY2 = dY * dY
+
+    for (let x = 0; x < cols; x++) {
+
+      const idx = yOff + x
+      const dX = x - cX
+      const dist2 = dX * dX + dY2
+      const n = noiseMap[idx] * 5
+      const radiusNoise2 = (rCurr + n) * (rCurr + n)
+
+      if (dist2 <= radiusNoise2) outroCells[idx] = 1
+
+    }
+
+  }
+
+  for (let i = 0; i < rows * cols; i++) outroFrontier[i] = 0
+
+  for (let y = 0; y < rows; y++) {
+
+    const yOff = y * cols
+
+    for (let x = 0; x < cols; x++) {
+
+      const idx = yOff + x
+      
+      if (!outroCells[idx]) continue
+      if (
+
+        (x > 0 && !outroCells[idx - 1]) || (x < cols - 1 && !outroCells[idx + 1]) || 
+        (y > 0 && !outroCells[idx - cols]) || (y < rows - 1 && !outroCells[idx + cols]) 
+
+      ) outroFrontier[idx] = 1
+
+    }
+  }
+
+  for (let i = 0; i < rows * cols; i++) logicMask[i] = outroCells[i] ? 0 : 1
+
+}
+
+function animateGerm(total) {                                           // render next germ frame 
+
+  const oldRatio = animateGerm.lastRatio || 0
+  const newRatio = clampValue(germFrame / germFramesMax, 0, 1)
+
+  for (let i = 0; i < total; i++) { const n = noiseMap[i]; if (n >= oldRatio && n < newRatio) logicMask[i] = 1 }
+  animateGerm.lastRatio = newRatio
+
+}
+
+function animateGermInv(total) {                                        // render next inverted germ frame 
+  
+  const ratio = clampValue(germFrame / germFramesMax, 0, 1)
+  
+  for (let i = 0; i < total; i++) { if (logicMask[i] === 1 && noiseMap[i] < ratio) logicMask[i] = 0 }
+
+  if (ratio >= 1) {
+
+    if (!animateGermInv.frontierQueue) animateGermInv.frontierQueue = []
+    const q = animateGermInv.frontierQueue
+
+    for (let y = 0; y < rows; y++) {
+      const yOff = y * cols
+      for (let x = 0; x < cols; x++) {
+        const i = yOff + x
+        if (logicMask[i] !== 1) continue
+        if (
+          (x > 0        && logicMask[i - 1]    === 0) ||
+          (x < cols - 1 && logicMask[i + 1]    === 0) ||
+          (y > 0        && logicMask[i - cols] === 0) ||
+          (y < rows - 1 && logicMask[i + cols] === 0)
+        ) { if (!q.includes(i)) q.push(i) }
+      }
+    }
+
+    if (q.length > 0) {
+      const perFrame = Math.max(1, Math.floor(total / germFramesMax))
+      let count = 0
+      for (let k = 0; k < q.length && count < perFrame; k++) {
+        const idx = q[k]
+        if (logicMask[idx] === 1) { logicMask[idx] = 0; count++ }
+      }
+      animateGermInv.frontierQueue = q.filter(i => logicMask[i] === 1)
+    }
+  }
+}
+
+function animateSwipe(frameFactor) {                                    // render next swipe frame 
+
+  const line = Math.floor(swipeFrame)
+  visualMask.fill(0)
+
+  if (swipePhase === 0) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeSine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xLimit = Math.min(line + noiseOffset, cols - 1)
+      for (let x = 0; x <= xLimit; x++) visualMask[y * cols + x] = 1
+    }
+  } else if (swipePhase === 1) {
+    for (let y = 0; y < rows; y++) {
+      const wave = swipeCosine[y]
+      const noiseOffset = Math.floor(wave * 2)
+      const xStart = Math.max(line - noiseOffset, 0)
+      for (let x = xStart; x < cols; x++) visualMask[y * cols + x] = 1
+    }
+  }
+
+  swipeFrame += 1.0 * frameFactor
+
+  if (swipeFrame >= cols) {
+
+    if (swipePhase === 0) {
+
+      logicMask.set(visualMask)
+      if (outroAuto) { swipePhase = 1; swipeFrame = 0 } else { mode = 'static' }
+
+    } else if (swipePhase === 1) {
+
+      logicMask.fill(0)
+      visualMask.fill(0)
+      swipeFrame = cols
+      swipePhase = 1
+      mode = 'hidden'
+
+    }
+
+  }
+
+}
+
+function expandMask(source, steps) {                                    // render next mask frame with buffer 
+
+  const total = cols * rows
+  let a = expandA, b = expandB
+  a.set(source)
+  
+  let frontier = frontierCurrent
+  let nextFrontier = frontierNext
+  let frontierLen = 0
+  let nextLen = 0
+
+  for (let i = 0; i < total; i++) { if (a[i]) frontier[frontierLen++] = i }
+
+  for (let s = 0; s < steps; s++) {
+
+    b.set(a)
+    nextLen = 0
+
+    for (let f = 0; f < frontierLen; f++) {
+      const idx = frontier[f]
+      const neighbors = neighborsMap[idx]
+      for (let n of neighbors) { if (!b[n]) { b[n] = 1; nextFrontier[nextLen++] = n } }
+    }
+
+    if (nextLen === 0) break
+
+    [frontier, nextFrontier] = [nextFrontier, frontier]
+    frontierLen = nextLen
+    const tmp = a
+    a = b
+    b = tmp
+
+  }
+
+  expandA.set(a);
+  return expandA;
+}
+
+// TASKS
+
+const TASKS = {                                                         // run and check 
+
+  intro:    { impl: runIntro,  finish: checkIntro   },
+  static:   { impl: runStatic, finish: checkStatic  },
+  outro:    { impl: runOutro,  finish: checkOutro   },
+  direct:   { impl: runDirect, finish: checkDirect  },
+  hidden:   { impl: runHidden, finish: checkHidden  },
+
+  'transition-full':  { impl: runTransitionFull,  finish: checkTransitionFull  },
+  'transition-intro': { impl: runTransitionIntro, finish: checkTransitionIntro },
+  'transition-outro': { impl: runTransitionOutro, finish: checkTransitionOutro },
+
+}
+
+function runQueue(name) {                                               // run queue 
+  const task = TASKS[name]
+  if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
+  return new Promise((resolve, reject) => {
+    try { task.impl() } catch (err) { return reject(err) }
+    taskPromise = task
+    taskResolve = resolve
+  })
+}
+
+function runIntro()             { mode = 'intro'; germFrame = 0; }
+function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
+function runDirect()            { mode = 'direct'; germFrame = 0; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
+function runTransitionFull()    { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = true }
+function runTransitionIntro()   { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = false }
+function runTransitionOutro()   { mode = 'transition'; resetMasks(); secureCopy(visualMask, logicMask); swipeFrame = 0; swipePhase = 1; outroAuto = false }
+function runStatic()            { mode = 'static'; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
+function runHidden()            { mode = 'hidden' }
+
+function checkIntro()           { return mode === 'intro' && germFrame >= germFramesMax * 0.65 }
+function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
+function checkDirect()          { return mode === 'direct' && germFrame >= germFramesMax + directFramesExtra }
+function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
+function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
+function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
+function checkStatic()          { return true }
+function checkHidden()          { return true }
+
+function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(deltaTime); animationID = requestAnimationFrame(mainLoop) }
+
+defineExpose({ runQueue })
+onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
+
+onBeforeUnmount(() => { 
+
+  cancelAnimationFrame(animationID)
+  window.removeEventListener('resize', resetContext)
+  if (animateGerm.lastRatio !== undefined) animateGerm.lastRatio = 0
+  if (animateGermInv.frontierQueue !== undefined) animateGermInv.frontierQueue = null
+
+})
+
+</script>
+
+<template> <div ref="containerRef" class="container"> <canvas ref="canvasRef"> </canvas> </div> </template>
+<style> .container { overflow: hidden; width: 100%; height: 100%; } canvas { display: block; width: 100%; height: 100%; } </style>
+
+---
+
+|| componente: status.vue -------------------------------------
+
+<script setup> 
+import { computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const router     = useRouter()                                                                                                        // handles note open route
+const store      = useStore()                                                                                                         // setup store usage
+const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
+
+const { btcPrice, currentTime, barContent } = storeToRefs(store)                                                                      // imports refs from main store
+
+function openLatest() { if (latestPost.value.url) { router.push(latestPost.value.url) } }                                             // opens latest post
+
+onMounted(() => { store.loadNotesIndex(); store.startStatusUpdates() })
+onUnmounted(() => { store.stopStatusUpdates() })
+
+</script>
+
+<template> 
+
+  <div class="statusbar">
+
+    <div class="stleft">
+
+      <a href="#" @click.prevent="openLatest" title="abrir la última nota publicada" aria-label="abrir la última nota publicada, que es: {{ latestPost.title }}">{{ latestPost.title }}</a>
+      <span class="divisions">//</span>
+      <a :href="'mailto:' + store.mailtoDir" target="_blank" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
+
+    </div>
+
+    <div class="stcenter">
+
+      <div class="progress-bar">
+        <div class="progress-track">{{ barContent }}</div>
+      </div>
+      
+    </div>
+    
+    <div class="stright">
+
+      <a href="/archivo" title="ver archivo en formato web 1.0" aria-label="ir al archivo en formato web 1.0">ARCHIVO</a>
+      <span class="btc divisions">//</span>
+      <a href="/feed.xml" target="_blank" title="suscribirse al feed RSS" aria-label="suscribirse a las últimas publicaciones por feed RSS">RSS</a>
+      <span class="btc divisions">//</span>
+      <span class="btc">BTC: {{ btcPrice }}</span>
+      <span class="btc divisions">//</span>
+      <span>{{ currentTime }}</span>
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.statusbar { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; justify-content: space-between; align-items: center;
+  /* BOX    */ min-width: 0; width: 100%; padding: .5rem 1rem; gap: 1.5rem; overflow: hidden;
+  /* FILL   */ background-color: var(--carbon); color: var(--humo);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
+  /* FONT   */ font-size: 1rem;
+  
+}
+
+.stcenter { 
+
+  /* LAYOUT */ flex-grow: 1; flex-basis: 0;
+  /* BOX    */ min-width: 0; padding: 0.25rem 0;
+
+}
+
+.stleft { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 1; align-items: center;
+  /* BOX    */ min-width: 0; height: 2rem; gap: 1rem; overflow: hidden;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ white-space: nowrap;
+
+  & a {
+
+    /* BOX    */ min-width: 0; overflow: hidden;
+    /* FONT   */ text-overflow: ellipsis; white-space: nowrap;
+
+  }
+
+}
+
+.stright { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 0; align-items: center;
+  /* BOX    */ min-width: 0; height: 2rem; gap: 1rem; overflow: hidden;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ white-space: nowrap;
+
+  & a {
+
+    /* BOX    */ min-width: 0; overflow: hidden;
+    /* FONT   */ text-overflow: ellipsis; white-space: nowrap;
+
+  }
+
+}
+
+.divisions { color: var(--humo50); }
+
+.progress-bar { 
+
+  /* CURSOR */ user-select: none;
+  /* BOX    */ width: 100%; overflow: hidden;
+  /* FILL   */ background-color: var(--carbon); color: var(--humo50);
+  /* BORDER */ border-radius: var(--radius-ss);
+  /* FONT   */ font-family: var(--font-mono); line-height: 1.5; white-space: nowrap;
+  
+}
+
+.progress-track { 
+  
+  /* LAYOUT */ display: inline-block;
+  /* MOTION */ animation: scroll-progress 4s linear infinite;
+
+}
+
+@keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
+
+@media (max-width: 590px) { .stcenter { display: none; }       .btc { display: none; }           }
+@media (max-width: 432px) { .stleft   { display: none; } .statusbar { justify-content: center; } }
+
+</style>
+
+---
+
+|| componente: content.vue -------------------------------------
+
+<script setup> 
+import { ref, watch, nextTick, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+import About from '../02/about.vue'
+import Subscribe from '../02/subscribe.vue'
+import Shader from '../03/shader.vue'
+
+const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
+
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+
+const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
+
+const shaderRef   = ref(null)                                                                                                         // shader variable for animations
+const noteContent = ref('')                                                                                                           // basic note html for insert
+
+let noteLoaded = false                                                                                                                // note loaded bool flag for shader
+let firstLoad  = true                                                                                                                 // first load bool flag for shader
+let lastSlug   = null                                                                                                                 // previous slug flag for shader
+
+const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
+
+  if (computedFullscreen.value) { return compMap[computedFullscreen.value] || null }
+  if (computedNoteComp.value) { return compMap[computedNoteComp.value] || null }
+  return null
+
+})
+
+async function forceShaderResize() {                                                                                                  // forces shader resize 
+
+  await nextTick()
+  window.dispatchEvent(new Event('resize'))
+  await new Promise(resolve => requestAnimationFrame(resolve))
+
+}
+
+async function handleLoadNote(slug) {                                                                                                 // custom html load behavior 
+  
+  const postElement = document.querySelector('.post')
+  const { html, error } = await fetchPost(slug)
+
+  noteContent.value = html
+  if (postElement) { postElement.scrollTop = 0 }
+  await nextTick()
+
+  const contentElement = document.querySelector('.content')
+
+  if (contentElement && !error) { 
+    
+    const mediaLoadPromises = []
+    const mediaElements = contentElement.querySelectorAll('img, video, iframe')
+    
+    mediaElements.forEach(el => {
+      
+      if ((el.tagName === 'IMG' && !el.complete) || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
+          
+        mediaLoadPromises.push(new Promise(resolve => {
+          
+          if (el.tagName === 'IMG' || el.tagName === 'IFRAME') {
+            el.addEventListener('load', resolve, { once: true })
+            el.addEventListener('error', resolve, { once: true })
+            if (el.complete || el.readyState === 'complete') { resolve() }
+          }
+          
+          else if (el.tagName === 'VIDEO') {
+            el.addEventListener('loadedmetadata', resolve, { once: true })
+            el.addEventListener('error', resolve, { once: true })
+            if (el.readyState >= 3) { resolve() }
+          }
+          
+        }))
+        
+      }
+    })
+    
+    await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
+    if (!computedFullscreen.value && window.innerWidth <= 1080) { const scrollEl = document.querySelector('.scroll-into')
+    if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
+    
+  }
+
+}
+
+watch(computedFullscreen, async () => { await forceShaderResize() })                                                                  // watches for shader resize 
+
+watch(                                                                                                                                // trigger notes and animations 
+  
+  () => route.params.slug,
+  
+  async slug => {
+    
+    if (store.processing) return
+    setProcessing(true)
+
+    if (slug && route.params.type && store.activeFilter !== 'full') { store.activeFilter = route.params.type }
+
+    await nextTick()
+    
+    if (!slug && !store.notesLoaded.value) { await loadNotesIndex() }
+
+    switch (true) {
+
+      // back to home with note loaded, TRANSITION on note unload
+      case !slug && noteLoaded:
+
+        noteLoaded = false
+        lastSlug = null
+        await shaderRef.value?.runQueue('transition-intro')
+        setCurrentPost(null)
+        noteContent.value = ''
+        document.title = 'octantes.net - portal multimedia'
+        break
+      
+      // first load without note, INTRO only on first page load
+      case !slug && firstLoad:
+        noteLoaded = false
+        firstLoad = false
+        lastSlug = null
+        setCurrentPost(null)
+        noteContent.value = ''
+        document.title = 'octantes.net - portal multimedia'
+        await shaderRef.value?.runQueue('intro')
+        break
+      
+      // first note load, OUTRO only on first note load
+      case slug && !noteLoaded && !firstLoad:
+        noteLoaded = true
+        firstLoad = false
+        lastSlug = slug
+        await handleLoadNote(slug)
+        await shaderRef.value?.runQueue('outro')
+        break
+      
+      // first load from url, DIRECT when loading from url
+      case slug && !noteLoaded && firstLoad:
+        noteLoaded = true
+        firstLoad = false
+        lastSlug = slug
+        await shaderRef.value?.runQueue('static')
+        await handleLoadNote(slug)
+        await new Promise(resolve => setTimeout(resolve, 500))
+        await shaderRef.value?.runQueue('direct')
+        break
+      
+      // loaded note change, TRANSITION when switching note
+      case slug && noteLoaded && lastSlug !== slug:
+        noteLoaded = true
+        firstLoad = false
+        lastSlug = slug
+        await shaderRef.value?.runQueue('transition-intro')
+        await handleLoadNote(slug)
+        await shaderRef.value?.runQueue('transition-outro')
+        break
+      
+    }
+
+    setProcessing(false)
+            
+  }, { immediate: true }
+
+)
+
+</script>
+
+<template> 
+
+  <div class="notedisplay">
+    
+    <div class="container scroll-into" >
+
+      <Shader class="shader" ref="shaderRef"/>
+
+      <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" title="salir de la vista en pantalla completa" aria-label="cerrar el contenido en pantalla completa">X</button>
+
+      <div class="post" :class="{ 'fs-mode': computedFullscreen }">
+
+        <div class="content" :class="{ 'fs-content': computedFullscreen }">
+
+          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
+          <div v-else :class="computedNoteClass" v-html="noteContent" />                              <!-- for html posts          -->
+
+          <template v-if="currentPost && !computedNoteComp && !computedFullscreen">
+            <br><hr><br>
+            <Subscribe />
+            <br><hr><br>
+            <About />
+          </template>
+
+        </div>
+        
+      </div>
+      
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.notedisplay { display: flex; flex-direction: column; height: 100%; gap: 1rem; }
+
+.container { position: relative; }
+
+.post { 
+
+  /* LAYOUT */ position: relative;
+  /* BOX    */ height: 100%; width: 100%; overflow-x: hidden; overflow-y: auto;
+  /* FILL   */ background-color: var(--carbon);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
+
+  container-type: inline-size;
+  container-name: post-viewer;
+
+  &::after {
+    
+    /* LAYOUT */ position: sticky; display: block; bottom: 0;
+    /* BOX    */ height: 3rem; margin-top: -1rem;
+    /* FONT   */ content: '';
+    
+  }
+
+  &.fs-mode { background: none; overflow: hidden; &::after { display: none } }
+
+}
+
+.shader { 
+  
+  /* CURSOR */ pointer-events: none;
+  /* LAYOUT */ position: absolute; top: 0; left: 0;
+  /* BOX    */ width: 100%; height: 100%; z-index: 10;
+  
+}
+
+.fs-close {
+  
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ position: absolute; top: 1rem; right: 2rem; z-index: 20;
+  /* BORDER */ border: none; border-radius: 9999px;
+  /* BOX    */ padding: .8rem 1rem .8rem 1rem;
+  /* FILL   */ background-color: var(--niebla50); color: var(--carbon);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { cursor: pointer; background-color: var(--niebla99); }
+
+}
+
+.content { 
+
+  /* LAYOUT */ position: relative; top: 0; left: 0;
+  /* BOX    */ width: 100%;
+
+  &.fs-content { height: 100%; }
+
+}
+
+@media (max-width: 1080px) { 
+
+  .notedisplay { min-height: 60rem; }
+  
+  .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
+
+  @supports not selector(::-webkit-scrollbar) { .post { scrollbar-width: none; scrollbar-color: var(--cristal) transparent; } }
+  
+}
+
+</style>
+
+---
+
+|| componente: navigation.vue -------------------------------------
+
+<script setup> 
+import { onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from '../04/store.js'
+import Navbar from '../02/navbar.vue'
+import Gallery from '../02/gallery.vue'
+import Popup from '../02/popup.vue'
+
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+
+onMounted(async () => {                                                                                                               // searches notes on mount 
+
+  await store.loadNotesIndex()
+
+  const urlFilter = route.params.filterType
+  const initialFilter = urlFilter || 'full'
+  
+  if (initialFilter !== store.activeFilter.value) { store.setActiveFilter(router, initialFilter) }
+
+})
+
+</script>
+
+<template> 
+  
+  <div class="navigation">
+
+    <div class="nav-content">
+
+      <Navbar/>
+      
+      <div class="nav-views"> <Gallery /> </div>
+      
+      <Popup v-if="store.showPopup" />
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.navigation { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; position: relative;
+  /* BOX    */ padding: 0rem; gap: .8rem; min-height: 300px;
+  /* FILL   */ background-color: var(--carbon); color: var(--niebla);
+  /* BORDER */ border-radius: var(--radius-ss);
+  /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
+
+}
+
+.nav-content {
+
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  /* BOX    */ width: 100%; height: 100%;
+
+}
+
+.nav-views { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; flex-grow: 1; overflow-y: auto;
+  /* BOX    */ width: 100%; min-height: 0; padding-top: 2rem;
+  /* SCROLL */ scrollbar-width: none; -ms-overflow-style: none;
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-top: none;
+  
+  &::-webkit-scrollbar { display: none; }
+  
+}
+
+@media (max-width: 580px) {
+
+  .tabs button                  { display: none; }
+  .tabs button.active           { display: flex; }
+
+}
+
+@media (max-width: 1080px) { .navigation { min-height: 40rem; } }
+
+</style>
+
+---
+
+|| componente: octantes.vue -------------------------------------
+
+<script setup> 
+import { useStore } from './04/store.js'
+import { storeToRefs } from 'pinia'
+import Navigation from './01/navigation.vue'
+import Status from './01/status.vue'
+import Portada from './02/portada.vue'
+
+const store = useStore()
+const { computedPortada, computedFullscreen } = storeToRefs(store)
+
+</script>
+
+<template> 
+
+  <div class="pagina">
+
+    <div class="layout" :class="{ fullscreen: computedFullscreen }" >
+
+      <template v-if="!computedFullscreen">
+
+        <Portada class="portada" :metadata="computedPortada" />
+        <Navigation class="navigation" :disabled="store.processing" />
+
+      </template>
+      
+      <RouterView v-slot="{ Component }" >
+        
+        <component class="articulos" :is="Component" @updateProcessing="store.setProcessing" />
+        
+      </RouterView>
+
+
+    </div>
+
+    <div class="footer">
+
+        <Status />
+        
+    </div>
+
+  </div>
+
+</template>
+
+<style> 
+
+.pagina { display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; max-width: 1600px; max-height: 2000px; margin: 0 auto; }
+
+.layout { 
+
+  /* LAYOUT */ display: grid; grid-template-columns: 4fr 4fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
+  /* BOX    */ width: 100%; min-height: 0; padding: 1rem; gap: 1rem;
+
+  &.fullscreen { display: flex;  flex-direction: column; overflow-y: hidden; width: 100%; height: 100%; gap: 0; }
+
+}
+
+.layout.fullscreen .articulos { width: 100%; height: 100%; padding: 0; border: none; }
+
+.navigation { grid-column: 1; overflow-y: auto; min-height: 0; grid-row: 1 / span 2; }
+.portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1;          }
+.articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2;          }
+
+.footer     { padding: 0rem 1rem 1rem 1rem; flex-shrink: 0; }
+
+@media (max-width: 1080px) { 
+
+  .pagina { max-width: 100%; max-height: auto; }
+
+  .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; padding-bottom: 0; } }
+
+  .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
+  .portada { order: 1; } .navigation { order: 2; } .articulos { order: 3; }
+  
+  .footer  { padding: 1rem; }
+  .content { height: 40rem; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
+
+}
+
+@media (max-width: 1400px) { .layout { grid-template-columns: 4fr 4fr; } }
+
+</style>
+
+---
+
+|| componente: subscribe.vue -------------------------------------
+
+<script setup> 
+import { computed } from 'vue'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const store = useStore()                                                                                                              // initializes global store
+
+const { subEmail, subHoney, subMessage, subState } = storeToRefs(store)                                                               // imports refs from main store
+
+const submitButtonText = computed(() => {                                                                                             // switch for message and button 
+
+  switch (subState.value) {
+
+    case 'success': return '✓'
+    case 'error':   return '✘'
+
+    default:        return 'suscribirme'
+
+  }
+
+})
+
+function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }                                                         // validate and emit subscription
+
+</script>
+
+<template> 
+
+  <div class="subscribe">
+
+    <div class="cta">querés enterarte cuando subo algo nuevo? sumate a la lista de mails!</div>
+
+    <div class="form">
+
+      <input class="honeypot" type="text"  v-model="subHoney" name="user"  tabindex="-1" autocomplete="off"/>
+      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required @keydown.enter="handleSubscription" :class="{ [subState]: subState !== 'default'}" title="ingresar tu correo para suscribirte" aria-label="campo para ingresar correo electrónico"/>
+
+      <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" role="button" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</div>
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.subscribe { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; 
+  /* BOX    */ padding: 1rem; gap: 1rem;
+  /* FONT   */ font-size: 1rem;
+  
+}
+
+.cta { 
+
+  /* LAYOUT */ text-align: center;
+  /* FONT   */ font-style: italic;
+  /* FILL   */ color: var(--humo);
+
+}
+
+.form { 
+  
+  /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem; justify-content: center;
+  /* BOX    */ padding-top: 1rem; padding-bottom: 1rem; padding-left: 4rem; padding-right: 4rem; width: 100%;
+  /* FILL   */ color: var(--humo);
+
+}
+
+.textbox { 
+
+  /* CURSOR */ cursor: text;
+  /* LAYOUT */ text-align: center; flex: 1 1 auto;
+  /* BOX    */ padding: .5rem 1rem; min-width: 0;
+  /* FILL   */ background-color: transparent; color: var(--humo);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--lirio50);
+  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: 1rem;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
+
+}
+
+.textbox.error   { color: var(--arcilla); box-shadow: var(--shadow-border) var(--arcilla); }
+.textbox.success { color: var(--poma);    box-shadow: var(--shadow-border) var(--poma);    }
+.honeypot        { display: none !important; }
+
+.submit { 
+
+  /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex: 0 1 auto;
+  /* BOX    */ padding: .5rem 1rem; width: 10rem; max-width: 100%;
+  /* FILL   */ background-color: var(--lirio); color: var(--carbon);
+  /* BORDER */ border: none; border-radius: var(--radius-ss);
+  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { background-color: var(--lirio65); }
+
+}
+
+.submit.error   { color: var(--carbon); background-color: var(--arcilla); box-shadow: var(--shadow-border) var(--arcilla); }
+.submit.success { color: var(--carbon); background-color: var(--poma);    box-shadow: var(--shadow-border) var(--poma);    }
+
+@media (max-width: 1405px) { .subscribe { font-size: .65rem; } }
+@media (max-width: 1080px) { .subscribe { font-size:   1rem; } }
+
+</style>
+
+---
+
+|| componente: gallery.vue -------------------------------------
+
+<script setup> 
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+
+const { noteSortFilter, processing, searchQuery } = storeToRefs(store)                                                                             // imports refs from main store
+
+function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
+
+</script>
+
+<template> 
+    
+  <div class="gallery">
+    
+    <div v-for="(note, index) in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
+
+      :class="{ 
+
+        disabled: processing, 
+        expanded: (route.params.slug === note.slug || (!route.params.slug && index === 0)) && !searchQuery, 
+        active: route.params.slug === note.slug && !searchQuery
+
+      }"
+
+      title="abrir nota" role="button" :aria-label="'abrir la nota ' + note.title" >
+    
+      <div class="card-cover">
+
+        <img v-if="note.portada" :src="note.portada.replace('.webp', '-thumb.webp')" loading="lazy" :alt="'portada de la nota: ' + note.title" />
+        <div v-else class="card-placeholder">/</div>
+        
+      </div>
+
+      <div class="card-info">
+
+        <span class="date">{{ note.date }}</span>
+        <h3 class="title">{{ note.title }}</h3>
+
+        <p v-if="(route.params.slug === note.slug || (!route.params.slug && index === 0)) && !searchQuery" class="description">{{ note.description }}</p>
+        
+        <div class="tags">
+          <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.gallery { 
+
+  /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); grid-auto-flow: dense;
+  /* BOX    */ width: 100%; gap: 1rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 2rem;
+
+}
+
+.notecard { 
+
+  /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ display: flex; flex-direction: column;
+  /* BOX    */ height: 100%;
+  /* FILL   */ background-color: var(--carbon25);
+  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &.expanded {
+
+    grid-column: span 2; grid-row: span 2;
+
+    & .title    { font-size: 1.1rem; }
+    & .date    { font-size: 0.85rem; }
+    & .description { display: block; }
+
+  }
+
+  &:hover { 
+
+    transform: translateY(-2px);
+    border-color: var(--lirio);
+
+    & .title { color: var(--cristal); }
+    & img { transform: scale(1.05); }
+
+  }
+
+  &.active { 
+
+    border-color: var(--lirio);
+
+    & .title { color: var(--cristal); }
+    & .date  { font-size: 0.85rem; }
+    & .tag   { padding: 0.3rem 0.5rem; font-size: 0.75rem; }
+
+  }
+
+  &.disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
+
+}
+
+.card-cover { 
+
+  /* LAYOUT */ position: relative;
+  /* BOX    */ width: 100%; padding-top: 56.25%; overflow: hidden;
+  /* FILL   */ background-color: var(--carbon); 
+  /* BORDER */ border-bottom: var(--small-outline) var(--humo10); border-top-left-radius: var(--radius-ss); border-top-right-radius: var(--radius-ss);
+  
+  
+  & img {
+
+    /* LAYOUT */ position: absolute; top: 0; left: 0;
+    /* BOX    */ width: 100%; height: 100%; object-fit: cover;
+    /* MOTION */ transition: all var(--animate-mid);
+
+  }
+
+}
+
+.card-placeholder { 
+
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0;
+  /* BOX    */ width: 100%; height: 100%;
+  /* FILL   */ color: var(--humo25);
+  /* FONT   */ font-size: 2rem;
+
+}
+
+.card-info { 
+
+  /* LAYOUT */ display: flex; flex-direction: column;  flex-grow: 1;
+  /* BOX    */ padding: 0.8rem; gap: 0.5rem;
+
+}
+
+.date { font-size: 0.7rem; font-family: var(--font-mono); color: var(--humo99); }
+
+.title { 
+
+  /* LAYOUT */ display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-clamp: 2; overflow: hidden;
+  /* FONT   */ font-size: 0.9rem; margin: 0; font-weight: normal; color: var(--humo); line-height: 1.3;
+  /* MOTION */ transition: color var(--animate-fast);
+
+}
+
+.description { 
+
+  /* BOX    */ margin: 0.5rem 0; overflow: hidden;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
+
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: auto; }
+
+.tag { 
+
+  /* BOX    */ padding: 0.1rem 0.3rem; border-radius: 2px;
+  /* FILL   */ background-color: var(--humo10); color: var(--lirio);
+  /* FONT   */ font-size: 0.6rem;
+
+}
+
+@media (max-width: 1080px) { .gallery { max-height: 25rem; } }
+@media (max-width: 580px) { .notecard.expanded { grid-column: span 1; grid-row: span 1; & .title { font-size: 0.9rem; }; & .description { display: none } } }
+
+/* .gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-half); } */
+
+</style>
+
+---
+
+|| componente: about.vue -------------------------------------
+
+<script setup> 
+import { ref, onMounted } from 'vue'
+import { useStore } from '../04/store.js'
+import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import authorpic from '../../content/assets/kaste.jpg'
+
+const router          = useRouter()                                                                                                   // handles note open route
+const store           = useStore()                                                                                                    // initializes global store
+
+const { activeFilter, processing, userStatus } = storeToRefs(store)                                                                   // imports refs from main store
+
+const currentTagline  = ref('')                                                                                                       // current tagline phrase
+const taglines        = [                                                                                                             // random taglines 
+  'tejiendo hechizos',
+  'abriendo ventanas a universos alternativos',
+  'desplegando portales',
+  'investigando dualidades'
+]
+
+function loadReference(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
+
+onMounted(async () => {                                                                                                               // set random tagline
+
+  const randomIndex = Math.floor(Math.random() * taglines.length)
+  currentTagline.value = taglines[randomIndex]
+
+})
+
+</script>
+
+<template> 
+
+  <div class="about">
+
+    <div class="profile-head">
+
+      <img class="profilepic" :src="authorpic" alt="foto de perfil" title="foto de perfil"/>
+
+      <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
+
+      <div class="user-status">
+        
+        <span class="status-emoji" aria-hidden="true">{{ userStatus.emoji }}</span>
+        <span class="status-message">{{ userStatus.message }}</span>
+        
+      </div>
+
+    </div>
+    
+    <div v-if="activeFilter === 'full'"> 
+
+      <p>
+
+        buenas! soy <i>kaste</i> y lo que estás viendo es mi base de operaciones     <br>
+
+        <br>
+
+        armé <b>octantes</b> para centralizar toda mi producción fuera de las redes  <br>
+        recuperando los fundamentos, sin algoritmos, reglas o intermediarios         <br>
+        vas a encontrar proyectos de todo tipo, vos elegís lo que querés ver         <br>
+        desde música, textos y diseño hasta videojuegos y software propio            <br>
+
+        <br>
+
+        la página me permite adaptar el formato al contenido que voy creando         <br>
+        y pensar mis proyectos se vuelve más fácil con outputs definidos             <br>
+
+        <br>
+
+        usá las pestañas superiores de la tabla para filtrar por sección             <br>
+        cuando un posteo te llame la atención, clickealo para cargarlo acá           <br>
+
+      </p>
+
+      <br><hr><br>
+    
+      <p>si querés saber más <i>sobre el proyecto</i> podes leer estos posteos</p> <br>
+
+      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué decidi armar una página')">por qué decidi armar una página en 2025?</a> <br>-->
+
+    </div>
+
+    <div v-if="activeFilter === 'diseño'"> 
+
+      <p>
+
+        estás viendo la sección de <i>diseño</i>, acá viven mis proyectos multimedia <br>
+
+        <br>
+
+        disfruto mucho armar <b>identidades</b> y pensar assets que las acompañen    <br>
+        algunos de estos trabajos son solo de práctica, excusas para aprender        <br>
+        otros son encargos reales, puestos a prueba en distintos entornos            <br>
+        mi foco es la multimedialidad, lograr una fusión interesante de medios       <br>
+
+        <br>
+
+        vas a encontrar trabajos de branding, diseño web y piezas editoriales        <br>
+        desde interfaces hasta logotipos, fanzines, stickers y otros objetos         <br>
+
+        <br>
+
+        si te interesa algún proyecto, clickealo para ver el desglose completo       <br>
+        vas a encontrar la galería, el proceso, las herramientas e influencias       <br>
+
+      </p>
+
+      <br><hr><br>
+    
+      <p>si querés saber más <i>sobre mis diseños</i> podes leer estos posteos</p> <br>
+
+      <!--<a href="#" @click.prevent="loadReference('textos', 'lo que me interesa al diseñar')">lo que me interesa al diseñar</a> <br>-->
+
+    </div>
+
+    <div v-if="activeFilter === 'desarrollo'"> 
+
+      <p>
+
+        estás viendo la sección de <i>desarrollo</i>, acá armo mis herramientas    <br>
+
+        <br>
+
+        desde que aprendí a <b>programar</b>, se me abrieron muchas posibilidades  <br>
+        ahora cuando no encuentro algo que necesito, puedo armarlo de cero         <br>
+        también me permite implementar diseños propios en entornos reales          <br>
+        esta sección muestra la parte que ya es pública de esos desarrollos        <br>
+
+
+        <br>
+
+        vas a encontrar software, experimentos gráficos y otras utilidades         <br>
+        desde herramientas de producción y productividad hasta shaders             <br>
+
+        <br>
+
+        si te interesa algún proyecto, clickealo para ver el desglose completo     <br>
+        vas a encontrar el repositorio, el proceso, las herramientas e imágenes    <br>
+
+      </p>
+
+      <br><hr><br>
+    
+      <p>si querés saber más <i>sobre mi desarrollo</i> podes leer estos posteos</p> <br>
+
+      <!--<a href="#" @click.prevent="loadReference('textos', 'mi roadmap de desarrollo')">mi roadmap de desarrollo</a> <br>-->
+
+    </div>
+
+    <div v-if="activeFilter === 'musica'"> 
+
+      <p>
+
+        estás viendo la sección de <i>música</i>, acá es donde tejo hechizos          <br>
+
+        <br>
+
+        desde el primer tema que hice, <b>producir</b> se volvió una necesidad total  <br>
+        cuando no entro seguido en ese estado de trance, pierdo la templanza          <br>
+        armar canciones en el sentido tradicional no es mi principal interés          <br>
+        me llama mucho más crear paisajes que transmitan una emoción                  <br>
+
+        <br>
+
+        vas a ver álbumes, acompañados por experimentos audiovisuales                 <br>
+        desde proyectos terminados hasta descartes y demos sin mezclar                <br>
+
+        <br>
+
+        si te interesa escuchar algo, clickealo para ver el video en youtube          <br>
+        también vas a encontrar el disco en spotify y otras plataformas               <br>
+
+      </p>
+
+      <br><hr><br>
+    
+      <p>si querés saber más <i>sobre mi música</i> podes leer estos posteos</p> <br>
+
+      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué hago música?')">por qué hago música?</a> <br>-->
+
+    </div>
+
+    <div v-if="activeFilter === 'textos'"> 
+
+      <p>
+
+        estás viendo la sección de <i>textos</i>, acá desarrollo mis intereses        <br>
+
+        <br>
+
+        para mí, <b>escribir</b> siempre fue la mejor forma de ordenar las ideas      <br>
+        en ese proceso aparecen borradores que acá traduzco a artículos               <br>
+        la idea es conectar los puntos entre distintos desarrollos de la página       <br>
+        para aportar un marco teórico a la práctica y disparar nuevos procesos        <br>
+
+        <br>
+
+        vas a encontrar bitácoras, reflexiones y análisis de cosas variadas           <br>
+        escritas en formato de blog personal, sin demasiada formalidad                <br>
+
+        <br>
+
+        si querés leer algunos de mis pensamientos, clickeá un posteo                 <br>
+        a lo largo de distintas notas se van desarrollando las temáticas              <br>
+
+      </p>
+
+      <br><hr><br>
+    
+      <p>si querés saber más <i>sobre lo que escribo</i> podes leer estos posteos</p> <br>
+
+      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué y cómo escribo?')">por qué y cómo escribo?</a> <br>-->
+
+    </div>
+
+    <div v-if="activeFilter === 'juegos'"> 
+
+      <p>
+
+        estás viendo la sección de <i>videojuegos</i>, mi principal laboratorio       <br>
+
+        <br>
+
+        diseñar <b>fichines</b> siempre ha sido mi endgame, el objetivo final         <br>
+        participé en gamejams y armé prototipos para practicar un poco                <br>
+        pero siempre quise desarrollar cosas jugables desde el navegador              <br>
+        porque la web es de los pocos lugares donde aún hay límites técnicos          <br>
+
+        <br>
+
+        vas a encontrar juegos centrados en lo mecánico y otros en lo narrativo       <br>
+        lo que más me interesa es pensar el juego como sistema y ver qué sale         <br>
+
+        <br>
+
+        si querés probar algún prototipo, simplemente cargalo desde la tabla          <br>
+        la mayoría corren en el navegador y otros pueden ser descargables             <br>
+
+      </p>
+
+      <br><hr><br>
+    
+      <p>si querés saber más <i>sobre el proyecto</i> podes leer estos posteos</p> <br>
+
+      <!--<a href="#" @click.prevent="loadReference('textos', 'mi proceso para hacer fichines')">mi proceso para hacer fichines</a> <br>-->
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.about { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
+  /* BOX    */ z-index: 1; width: 100%; padding: 0rem 2rem 0rem 2rem; gap: 1.25rem; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+
+}
+
+.profile-head   { display: flex; flex-direction: column; position: relative; justify-content: center; align-items: center; gap: 1.5rem; }
+
+.profilepic     { 
+
+  /* LAYOUT */ border-radius: 50%;
+  /* BOX    */ width: 5rem; height: 5rem;
+  /* FONT   */ align-self: center;
+  /* BORDER */ border: var(--small-outline) var(--humo25);
+
+}
+
+.tagline        { 
+
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio));
+  /* FONT   */ font-style: italic;
+  /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
+
+}
+
+.user-status    { 
+
+  /* LAYOUT */ display: inline-flex; align-items: center; white-space: nowrap; z-index: 5;
+  /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
+  /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
+  /* FILL   */ background-color: var(--carbon);
+  
+}
+
+.status-emoji   {
+
+  /* LAYOUT */ text-align: center;
+  /* FONT   */ line-height: 1;
+  /* FILL   */ color: var(--lirio);
+
+}
+
+.status-message {
+
+  /* FONT   */ font-family: var(--font-mono); font-weight: bold; line-height: 1;
+  /* FILL   */ color: var(--humo);
+  
+}
+
+@media (max-width: 1080px) { .about { padding-bottom: 4rem; } }
+
+@container post-viewer (min-width: 0px) { .about, .tagline, .user-status { font-size: clamp(0.50rem, 2.25cqw, 1.35rem); } }
+
+</style>
+
+---
+
+|| componente: navbar.vue -------------------------------------
+
+<script setup> 
+import { useRouter } from 'vue-router'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const router = useRouter()
+const store = useStore()
+
+const { processing, searchQuery, activeFilter } = storeToRefs(store)
+const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
+
+</script>
+
+<template> 
+
+  <div class="filters"> 
+
+    <button class="logo-xx" @click="navHome(router)" :disabled="processing" title="volver al inicio">OCTANTES</button>
+
+    <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" title="buscar en la tabla de notas" aria-label="caja de búsqueda para notas"/>
+
+    <button @click="changeFilter(router, -1)" :disabled="processing" title="ver el filtro anterior" aria-label="navegar al filtro de contenido anterior"> < </button>
+
+    <div class="tabs"> 
+
+      <template v-for="tab in tabs" :key="tab.value">
+        <button v-if="activeFilter === tab.value && emptyFilter(tab.value)" @click="activeFilter === tab.value ? setActiveFilter(router, 'full') : setActiveFilter(router, tab.value)"
+          :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
+        </button>
+      </template>
+      
+    </div>
+
+    <button @click="changeFilter(router, +1)" :disabled="processing" title="ver el filtro siguiente" aria-label="navegar al filtro de contenido siguiente"> > </button>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.filters { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  /* BOX    */ width: 100%; gap: 1rem; padding: 1rem; 
+  /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);  
+
+  & button {
+
+    /* CURSOR */ cursor: pointer;
+    /* BOX    */ padding: 0.5rem 1rem;
+    /* FILL   */ background-color: transparent; color: var(--carbon80);
+    /* BORDER */ border: none; border-radius: var(--radius-ss);
+    /* FONT   */ font-family: var(--font-main);
+    /* MOTION */ transition: all var(--animate-faster);
+    
+    &:focus    { box-shadow: none; }
+    &:active   { transform: var(--scale-min); }
+    &:hover    { background-color: var(--carbon15); color: var(--carbon); }
+    &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
+
+    &.active   { background-color: var(--carbon25); color: var(--carbon); box-shadow: var(--shadow-border) var(--carbon10); }
+    
+  }
+
+}
+
+.searchbox {
+
+  /* CURSOR */ cursor: text;
+  /* LAYOUT */ text-align: center;
+  /* BOX */ width: 75%; padding: 0.5rem 1rem;
+  /* FILL */ background-color: var(--carbon05); color: var(--carbon);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon25);
+  /* FONT */ font-family: var(--font-main); font-style: italic;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &::placeholder { color: var(--carbon99); }
+  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon50); background-color: var(--carbon15); }
+
+}
+
+.tabs { 
+
+  /* LAYOUT */ display: flex; flex-shrink: 0;
+  /* BOX    */ gap: 1rem; overflow: hidden;
+
+  & button.active { display: flex; width: 8rem; justify-content: center; }
+
+}
+
+.logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; }  
+
+@media (max-width: 432px) { .logo-btn { display: none; } }
+
+</style>
+
+---
+
+|| componente: popup.vue -------------------------------------
+
+<script setup> 
+import { useStore } from '../04/store.js'
+import sigil from '../../content/assets/sigil.png'
+
+const store           = useStore()                                                                                                    // initializes global store
+
+</script>
+
+<template> 
+
+  <div class="backdrop" @click="store.togglePopup">
+
+    <div class="popup">
+
+      <img  class="sigil" :src="sigil" alt="sigilo" />
+      
+      <button class="closebutton" @click.stop="store.togglePopup" title="cerrar notificacion" aria-label="cerrar la notificación popup">✘</button>
+
+      <div class="postbox">
+        
+        <div class="poptext">
+
+          <span v-html="store.popString"></span>
+          
+        </div>
+        
+        <a :href="store.popLink" class="ghostlink" target="_blank" @click="store.togglePopup" :title="'ir al enlace'" :aria-label="'abrir enlace de la notificación'"></a>
+
+      </div>
+
+      <div class="underbox"/>
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.backdrop { 
+
+  /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0; container-type: size;
+  /* FILL   */ background-color: var(--carbon99); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  /* MOTION */ animation: fadeIn var(--animate-mid);
+
+}
+
+.popup { position: relative; animation: fadeIn var(--animate-mid); }
+
+.sigil { 
+  
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: block; position: absolute; z-index: 20;
+  /* BOX    */ width: 5rem; top: -1.5rem; left: -1.5rem;
+  /* IMAGE  */ image-rendering: -moz-crisp-edges; image-rendering: pixelated; transform: translateZ(0); backface-visibility: hidden; pointer-events: none;
+
+}
+
+.postbox { 
+
+  /* LAYOUT */ position: relative; display: flex; align-items: center; justify-content: center; z-index: 2;
+  /* BOX    */ width: 480px; height: 480px;
+  /* FILL   */ background-color: var(--niebla);
+  /* SHAPE  */ clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%); filter: drop-shadow(0 0 1px var(--ceniza));
+  /* IMAGE  */ background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, var(--humo25) 2px, var(--humo25) 4px);
+
+  &:hover { box-shadow: inset 0rem 0rem 5rem var(--ceniza); }
+  &::after { content: ""; position: absolute; inset: 0; background-color: var(--arcilla); opacity: 0; transition: opacity var(--animate-fast); pointer-events: none; }
+  &:hover::after { opacity: 0.25; }
+  
+}
+
+.ghostlink { position: absolute; inset: 0; z-index: 10; cursor: pointer; }
+
+.poptext { 
+
+  /* LAYOUT */ text-align: center; line-height: 1.5;
+  /* FONT   */ font-family: var(--font-mono); font-weight: bold; font-size: 1.5rem;
+  /* FILL   */ color: var(--carbon);
+  /* BORDER */ text-shadow: .5px .5px 0px var(--arcilla80);
+  
+}
+
+.underbox { 
+  
+  /* LAYOUT */ position: absolute; z-index: 1;
+  /* BOX    */ width: 480px; height: 480px; inset: 0; scale: 96%;
+  /* BORDER */ border: .35rem solid var(--ceniza); box-shadow: inset 0 0 0 1rem var(--arcilla), inset 0 0 0 calc(1rem + .35rem) var(--ceniza);
+
+}
+
+.closebutton { 
+
+  /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ user-select: none; display: block; position: absolute; z-index: 20;
+  /* BOX    */ top: -1rem; right: -1rem; width: 2.8rem; height: 2.8rem;
+  /* FILL   */ color: var(--ceniza); background: var(--arcilla);
+  /* FONT   */ font-size: 1.5rem; font-weight: bold;
+  /* BORDER */ border: none; box-shadow: 0 0 0 .25rem var(--ceniza), inset 0rem 0rem .8rem var(--ceniza);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { color: var(--ceniza); background: var(--humo); }
+  
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@container (max-width: 680px) { .popup { scale: 0.90; } }
+@container (max-width: 560px) { .popup { scale: 0.80; } }
+@container (max-width: 480px) { .popup { scale: 0.60; } }
+@container (max-width: 400px) { .popup { scale: 0.40; } }
+@container (max-width: 340px) { .popup { scale: 0.30; } }
+
+@container (max-height: 680px) { .popup { scale: 0.90; } }
+@container (max-height: 560px) { .popup { scale: 0.80; } }
+@container (max-height: 480px) { .popup { scale: 0.60; } }
+@container (max-height: 400px) { .popup { scale: 0.50; } }
+@container (max-height: 340px) { .popup { scale: 0.50; } }
+
+@media (max-width: 432px)      { .popup { scale: .35;  } }
+
+</style>
+
+---
+
+|| componente: portada.vue -------------------------------------
+
+<script setup> 
+import { computed } from 'vue'
+import { useStore } from '../04/store.js'
+import { storeToRefs } from 'pinia'
+
+const store               = useStore()                                                                                                // initializes global store
+const { computedPortada } = storeToRefs(store)                                                                                        // imports refs from main store
+const data = computed(()  => computedPortada.value)                                                                                   // note data for text content
+
+function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link and track
+
+</script>
+
+<template> 
+
+  <div class="card">
+
+    <div class="text">
+
+      <div class="info">
+          
+        <div class="title">{{ data.title }}</div>
+        <div class="description">{{ data.description }}</div>
+
+        <hr />
+
+        <div class="authors"> 
+          
+          <div v-for="author in data.authors" :key="author.handle" class="profile" :class="{ 'profile-full': author.full }" @click="openAuthor(author)" :title="'ver perfil de ' + author.handle" role="button" :aria-label="'ver el perfil de autor @' + author.handle + ' en una pestaña nueva'">
+
+            <img class="userpic" :src="author.img" :alt="'foto de perfil de @' + author.handle"/>
+            <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</template>
+
+<style scoped> 
+
+.card { 
+
+  /* LAYOUT */ display: flex; flex-direction: row; align-items: stretch;
+  /* BOX    */ width: 100%;
+
+}
+
+.text { 
+
+  /* BOX    */ width: 100%;
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%);
+  /* BORDER */ border-radius: var(--radius-ss); 
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { filter: brightness(95%); }
+
+}
+
+.info { 
+
+  /* LAYOUT */ display: flex; flex-direction: column; justify-content: center;
+  /* FONT   */ font-family: var(--font-mono);
+  /* BOX    */ width: 100%; height: 100%; padding: 1.5rem; gap: 1rem;
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover { transform: var(--scale-min); }
+
+  & hr { 
+
+    /* BORDER */ border: none; border-top: var(--small-outline) var(--carbon);
+    /* BOX    */ margin: 0;
+
+  }
+
+}
+
+.title { font-size: 1.2rem; }
+
+.description { 
+
+  /* BOX    */ height: calc(1.25rem * 2);
+  /* FONT   */ font-style: italic; overflow: hidden; line-height: 1.25rem; font-size: 1rem;
+
+}
+
+.authors {
+
+  /* LAYOUT */ display: flex; flex-direction: row; gap: 1rem;
+  /* BOX    */ flex-wrap: wrap;
+  /* FONT   */ font-size: 1rem;
+
+}
+
+.profile { 
+
+  /* CURSOR */ user-select: none;
+  /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center;
+  /* BORDER */ border-radius: 9999px;
+  /* BOX    */ padding: .5rem 1rem .5rem .6rem; gap: .65rem;
+  /* FILL   */ background-color: var(--carbon25);
+  /* MOTION */ transition: all var(--animate-fast);
+
+  &:hover  { cursor: pointer; background-color: var(--carbon50); }
+  &:active { transform: var(--scale-min); }
+  
+}
+
+.profile-full {
+
+  /* LAYOUT */ flex-grow: 1; justify-content: flex-start;
+
+}
+
+.userpic { 
+
+  /* LAYOUT */ border-radius: 50%;
+  /* BOX    */ width: 25px; height: 25px;
+
+}
+
+@media (max-width: 432px) { .description { display: none; } }
+
+</style>
+
+---
+
+|| componente: main.js -------------------------------------
+
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import router from './04/router.js'
+import App from './octantes.vue'
+import './04/baseline.css'
+import './04/content.css'
+
+const pinia = createPinia()
+const app = createApp(App)
+
+app.use(router)
+app.use(pinia)
+
+app.mount('#octantes')
+
+---
+

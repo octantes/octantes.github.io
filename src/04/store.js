@@ -128,9 +128,10 @@ export const useStore = defineStore('store', () => {
   function navHome(routerInstance) {                                                                                                  // navigates to root and reloads  
 
     if (processing.value) return
+    searchQuery.value = ''
     routerInstance.push({ path: '/' })
     activeFilter.value = 'full'
-    document.title = 'octantes.net - portal multimedia'
+    document.title = 'octantes.ar - portal multimedia'
 
   }
 
@@ -360,7 +361,7 @@ export const useStore = defineStore('store', () => {
 
     return { 
 
-      title: metadata.title || 'bienvenido a octantes.net!',
+      title: metadata.title || 'bienvenido a octantes.ar!',
       description: metadata.description || 'toca un posteo de la tabla para cargarlo; tambien podes filtrar segun el tipo de contenido que queres encontrar en la pagina',
       authors: postAuthors,
       portada: metadata.portada || '',

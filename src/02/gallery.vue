@@ -7,7 +7,7 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { noteSortFilter, processing, searchQuery } = storeToRefs(store)                                                                             // imports refs from main store
+const { noteSortFilter, processing, searchQuery } = storeToRefs(store)                                                                // imports refs from main store
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
 
@@ -44,7 +44,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
         <p v-if="(route.params.slug === note.slug || (!route.params.slug && index === 0)) && !searchQuery" class="description">{{ note.description }}</p>
         
         <div class="tags">
-          <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
+          <span v-for="tag in note.tags.slice(0,3)" :key="tag" class="tag" @click.stop="store.setSearchQuery(tag)">{{ tag }}</span>
         </div>
 
       </div>
