@@ -441,7 +441,7 @@ async function processPosts() {                                                 
       "headline": attributes.title || slug,
       "image": portadaUrl || `${webURL}/assets/portada.webp`,
       "author": { "@type": "Person", "name": primaryHandle, "url": primaryHandle ? `https://x.com/${primaryHandle}` : `${webURL}/about` },
-      "publisher": { "@type": "Organization", "name": "octantes.net", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
+      "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
       "datePublished": isoDate,
       "dateModified": isoDate,
       "description": attributes.description || 'descripción corta de la nota',
@@ -576,7 +576,7 @@ async function writeBasicIndex() {                                              
   `
     <header class="post-header">
       <h1>abriendo portales a universos alternativos</h1>
-      <div class="meta">archivo plano // octantes.net</div>
+      <div class="meta">archivo plano // octantes.ar</div>
     </header>
     
     <p>seleccioná una nota del menú izquierdo para comenzar la lectura.</p>
@@ -602,7 +602,7 @@ async function writeBasicIndex() {                                              
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>octantes.net - archivo</title>
+    <title>octantes.ar - archivo</title>
     <link rel="stylesheet" href="/assets/neocities.css">
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
     <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
@@ -714,7 +714,7 @@ async function writeFeed() {                                                    
   const feedPath = path.join(outputDir, 'feed.xml')
   
   const now = new Date().toUTCString()
-  const feedTitle = 'octantes.net'
+  const feedTitle = 'octantes.ar'
   const feedUrl = `${webURL}/feed.xml`
   const feedDescription = 'un portal web de contenido multimedia, sin algoritmos ni intermediarios'
 
@@ -734,7 +734,7 @@ async function writeFeed() {                                                    
       <guid isPermaLink="true">${postUrl}</guid>
       <pubDate>${postDate}</pubDate>
       <description>${escapedDescription}</description>
-      <author>kaste@octantes.net (kaste)</author>
+      <author>kaste@octantes.ar (kaste)</author>
     </item>`
   }).join('\n')
 
