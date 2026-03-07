@@ -10,7 +10,7 @@
   & img { 
 
     /* LAYOUT */ display: block; 
-    /* BOX    */ max-width: 100%; height: auto;
+    /* BOX    */ max-width: 100%; height: auto; margin: 0rem auto;
     /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
 
   }
