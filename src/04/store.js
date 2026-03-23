@@ -143,21 +143,25 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function setActiveFilter(routerInstance, filter) {                                                                                  // apply current table filter 
-
+  function setActiveFilter(routerInstance, filter) {                                                                                  // set active note filter
+    
     activeFilter.value = filter
 
     if (routerInstance && !currentPost.value) {
 
-      const isNote = routerInstance.currentRoute.value.params.slug
-      if (isNote) return
+      const currentRoute = routerInstance.currentRoute.value
+      const isNote = currentRoute.params.slug
+      const isPortfolio = currentRoute.path === '/portfolio'
+      
+      if (isNote || isPortfolio) return // block redirect
 
       let path = (filter === 'full') ? `/` : `/${filter}`
-      if (routerInstance.currentRoute.value.path !== path) { routerInstance.push({ path: path }) }
+      if (currentRoute.path !== path) { routerInstance.push({ path: path }) }
 
     }
 
   }
+
 
   function changeFilter(routerInstance, direction) {                                                                                  // advance or reduce filters 
 
