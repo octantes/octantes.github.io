@@ -13,6 +13,7 @@ const prevSelectedIdx   = ref(-1)
 const rayAngles         = ref([])
 
 watch([currentProject, windowWidth, portfolioProjects], () => {
+
   const length = portfolioProjects.value.length
   if (length === 0) return
   const selectedIdx = currentProject.value ? portfolioProjects.value.findIndex(p => p.slug === currentProject.value.slug) : -1
@@ -26,9 +27,7 @@ watch([currentProject, windowWidth, portfolioProjects], () => {
     const step = 360 / nodeAmount
     for (let i = 0; i < length; i++) { newAngles.push((arrowAngle + (i + 1) * step) % 360) }
 
-  }
-
-  else {
+  } else {
 
     const step = 270 / nodeAmount
     let downSlots = []
@@ -45,29 +44,40 @@ watch([currentProject, windowWidth, portfolioProjects], () => {
   if (rayAngles.value.length === length) {
 
     const anchorIdx = selectedIdx !== -1 ? selectedIdx : prevSelectedIdx.value
-    let wheelDirection = 0
-    if (anchorIdx !== -1) {
-      let prevTarget = rayAngles.value[anchorIdx]
-      let nextTarget = newAngles[anchorIdx]
-      
-      let targetDiff = (nextTarget - prevTarget) % 360
-      if (targetDiff > 180) targetDiff -= 360
-      else if (targetDiff <= -180) targetDiff += 360
-      
-      wheelDirection = targetDiff >= 0 ? 1 : -1
-    }
-    
     const updated = []
 
-    for (let i = 0; i < length; i++) {
-      let prev = rayAngles.value[i]
-      let next = newAngles[i]
-      let diff = (next - prev) % 360
-      if (diff > 180) diff -= 360
-      else if (diff <= -180) diff += 360
-      if (wheelDirection > 0 && diff < 0) diff += 360
-      else if (wheelDirection < 0 && diff > 0) diff -= 360
-      updated.push(prev + diff)
+    if (anchorIdx !== -1) {
+
+      let prevAnchor = rayAngles.value[anchorIdx]
+      let nextAnchor = newAngles[anchorIdx]
+      
+      let anchorDiff = (nextAnchor - prevAnchor) % 360
+      if (anchorDiff > 180) anchorDiff -= 360
+      else if (anchorDiff <= -180) anchorDiff += 360
+
+      for (let i = 0; i < length; i++) {
+        let prev = rayAngles.value[i]
+        let next = newAngles[i]
+        let diff = (next - prev) % 360
+        
+        let relativeDiff = (diff - anchorDiff) % 360
+        if (relativeDiff > 180) relativeDiff -= 360
+        else if (relativeDiff <= -180) relativeDiff += 360
+
+        updated.push(prev + anchorDiff + relativeDiff)
+      }
+
+    } else {
+
+      for (let i = 0; i < length; i++) {
+        let prev = rayAngles.value[i]
+        let next = newAngles[i]
+        let diff = (next - prev) % 360
+        if (diff > 180) diff -= 360
+        else if (diff <= -180) diff += 360
+        updated.push(prev + diff)
+      }
+
     }
 
     rayAngles.value = updated
@@ -81,19 +91,22 @@ watch([currentProject, windowWidth, portfolioProjects], () => {
 const rayAngleOffset = computed(() => 0)
 
 function handleRayClick(proj) {
-  if (currentProject.value && currentProject.value.slug === proj.slug) {
-    router.push(`/${proj.type}/${proj.slug}`)
-  } else {
-    currentProject.value = proj
-  }
+  if (currentProject.value && currentProject.value.slug === proj.slug) { router.push(`/${proj.type}/${proj.slug}`) }
+  else { currentProject.value = proj }
 }
 
-function openAuthor()        { window.open('https://x.com/octantes', '_blank', 'noopener,noreferrer') }
-function closePortfolio()    { router.push('/') }
-function updateWidth()       { windowWidth.value = window.innerWidth }
+function openAuthor()     { window.open('https://x.com/octantes', '_blank', 'noopener,noreferrer') }
+function closePortfolio() { router.push('/') }
 
-onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex(); window.addEventListener('resize', updateWidth) })
-onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
+let resizeTimer = null
+
+function updateWidth() {
+  if (resizeTimer) clearTimeout(resizeTimer)
+  resizeTimer = setTimeout(() => { windowWidth.value = window.innerWidth }, 150)
+}
+
+onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex(); window.addEventListener('resize', updateWidth, { passive: true }) })
+onUnmounted(() => { if (resizeTimer) clearTimeout(resizeTimer);  window.removeEventListener('resize', updateWidth) })
 
 </script>
 
@@ -114,7 +127,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 
       </div>
 
-      <img class="avatar" @click="openAuthor" role="button" title="abrir perfil de twitter" aria-label="abrir perfil de twitter de kaste" :src="authorpic" alt="avatar kaste" />
+      <img class="avatar" tabindex="0" @click="openAuthor" @keydown.enter="openAuthor" role="button" title="abrir perfil de twitter" aria-label="abrir perfil de twitter de kaste" :src="authorpic" alt="avatar kaste" />
 
     </div>
 
@@ -134,9 +147,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 
         <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
           <p class="desc">{{ proj.description || 'sin descripción' }}</p>
-          <div class="tags">
-            <span v-for="tag in proj.tags.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span>
-          </div>
+          <div class="tags"> <span v-for="tag in proj.tags.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
         </div>
 
       </div>
@@ -166,7 +177,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   /* BOX    */ padding: .8rem 1rem .8rem 1rem;
   /* FILL   */ background-color: var(--niebla50); color: var(--carbon);
   /* BORDER */ border: none; border-radius: 9999px;
-  /* MOTION */ transition: all var(--animate-fast);
+  /* MOTION */ transition: background-color var(--animate-fast);
 
   &:hover { background-color: var(--niebla99); }
 
@@ -191,7 +202,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   /* BOX    */ width: 20rem; margin-right: 2rem; padding: 1.5rem;
   /* FILL   */ background-color: var(--carbon); opacity: 0;
   /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
-  /* MOTION */ transform: translateX(2rem); transition: all var(--animate-mid);
+  /* MOTION */ transform: translateX(2rem); transition: transform var(--animate-mid), opacity var(--animate-mid);
 
   &::after { 
 
@@ -217,7 +228,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   /* BOX    */ width: 15rem; height: 15rem; flex-shrink: 0; object-fit: cover;
   /* FILL   */ background-color: var(--carbon);
   /* FILL   */ filter: grayscale(100%) contrast(1.2); opacity: 0.8;
-  /* MOTION */ transition: all var(--animate-mid);
+  /* MOTION */ transition: filter var(--animate-mid), opacity var(--animate-mid);
   /* BORDER */ border-radius: 50%; box-shadow: inset 0 0 0 4px var(--lirio);
 
 }
@@ -226,7 +237,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 
   /* LAYOUT */ position: absolute; left: 50%; top: 50%; z-index: 5; pointer-events: none;
   /* BOX    */ width: 25rem; height: 3rem; margin-top: -1.5rem; padding-left: 11rem; transform-origin: left center;
-  /* MOTION */ transform: rotate(180deg); transition: all var(--animate-mid); display: flex; align-items: center;
+  /* MOTION */ transform: rotate(180deg); transition: transform var(--animate-mid), opacity var(--animate-mid); display: flex; align-items: center;
 
   & .ray-text { 
 
@@ -250,7 +261,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ position: absolute; left: 0; top: -1.5rem; display: flex; align-items: center; justify-content: flex-start;
   /* BOX    */ width: 35rem; height: 3rem; padding-left: 9rem; transform-origin: left center;
-  /* MOTION */ transition: all var(--animate-mid);
+  /* MOTION */ transition: transform var(--animate-mid);
 
 }
 
@@ -270,7 +281,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   /* FILL   */ color: var(--humo80); background-color: var(--carbon);
   /* BORDER */ border-radius: 9999px;
   /* FONT   */ font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap;
-  /* MOTION */ transition: all var(--animate-fast);
+  /* MOTION */ transition: color var(--animate-fast), background-color var(--animate-fast), border-color var(--animate-fast);
 
 }
 
@@ -307,33 +318,33 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   /* FONT   */ text-shadow: 1px 1px 2px var(--carbon);
   /* MOTION */ animation: spawnData var(--animate-fast) forwards;
 
-}
+  & .desc {
 
-.ray-data .desc {
+    /* BOX    */ margin: 0;
+    /* FONT   */ font-family: var(--font-mono); color: var(--humo); font-size: 0.85rem; line-height: 1.5;
 
-  /* BOX    */ margin: 0;
-  /* FONT   */ font-family: var(--font-mono); color: var(--humo); font-size: 0.85rem; line-height: 1.5; 
+  }
 
-}
+  & .tag {
 
-.ray-data .tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    /* BOX    */ padding: 0; 
+    /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem; color: var(--humo50);
 
-.ray-data .tag {
+  }
 
-  /* BOX    */ padding: 0; 
-  /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem; color: var(--humo50);
+  & .tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
 }
 
 .ray-diseño { 
 
   & .ray-text { border: 1px solid var(--lirio80); }
-  & .portal-line, & .portal-trigger { background-color: var(--lirio); }
 
+  & .portal-line,    & .portal-trigger    { background-color: var(--lirio); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
   &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--lirio); border-color: var(--lirio); box-shadow: none; }
-  
-  &:hover .ray-portal .portal-line { width: 4rem; }
+
+  &:hover .ray-portal .portal-line        { width: 4rem; }
   
   & .tag { color: var(--cristal); }
 
@@ -342,21 +353,18 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 .ray-desarrollo { 
 
   & .ray-text { border: 1px solid var(--cristal80); }
-  & .portal-line, & .portal-trigger { background-color: var(--cristal); }
 
+  & .portal-line,    & .portal-trigger    { background-color: var(--cristal); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
   &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--cristal); border-color: var(--cristal); box-shadow: none; }
-  
+
   &:hover .ray-portal .portal-line { width: 4rem; }
   
   & .tag { color: var(--lirio); }
 
 }
 
-@keyframes spawnData { 
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
-}
+@keyframes spawnData { 0% { opacity: 0; } 100% { opacity: 1; } }
 
 @media (max-width: 1080px) { 
 
@@ -369,7 +377,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   .prompt-arrow                    { padding-left: 8rem; transform: rotate(270deg);                                                }
   .avatar                          { width: 10rem; height: 10rem;                                                                  }
   .ray-box                         { padding-left: 6rem; width: 25rem;                                                             }
-  .ray-data                        { left: 10.5rem; width: 14rem;                                                                  }
+  .ray-data                        { width: 16rem;                                                                                 }
 
 }
 
