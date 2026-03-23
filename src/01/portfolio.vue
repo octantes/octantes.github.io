@@ -80,8 +80,14 @@ watch([currentProject, windowWidth, portfolioProjects], () => {
 
 const rayAngleOffset = computed(() => 0)
 
-function selectProject(note) { currentProject.value = note }
-function openProject(note)   { router.push(`/${note.type}/${note.slug}`) }
+function handleRayClick(proj) {
+  if (currentProject.value && currentProject.value.slug === proj.slug) {
+    router.push(`/${proj.type}/${proj.slug}`)
+  } else {
+    currentProject.value = proj
+  }
+}
+
 function openAuthor()        { window.open('https://x.com/octantes', '_blank', 'noopener,noreferrer') }
 function closePortfolio()    { router.push('/') }
 function updateWidth()       { windowWidth.value = window.innerWidth }
@@ -94,13 +100,6 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 <template> 
 
   <div class="portfolio">
-    
-    <div class="portfolio-bg">
-      <transition name="fade-bg">
-        <img v-if="currentProject && currentProject.portada" :src="currentProject.portada" :key="currentProject.slug" alt="" />
-      </transition>
-      <div class="bg-overlay"></div>
-    </div>
 
     <button class="close-btn" @click="closePortfolio" title="volver al inicio" aria-label="cerrar el portfolio">X</button>
       
@@ -123,17 +122,21 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 
     <div class="rays-container" :style="{ transform: `rotate(${rayAngleOffset}deg)` }">
       
-      <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="selectProject(proj)" role="button" :title="'seleccionar proyecto ' + proj.title">
+      <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="'seleccionar proyecto ' + proj.title">
         
         <div class="ray-line"></div>
         <span class="ray-text">{{ proj.title }}</span>
+
+        <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="'abrir nota de ' + proj.title">
+          <div class="portal-line"></div>
+          <div class="portal-trigger">▶</div>
+        </div>
 
         <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
           <p class="desc">{{ proj.description || 'sin descripción' }}</p>
           <div class="tags">
             <span v-for="tag in proj.tags.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span>
           </div>
-          <button class="open-link" @click.stop="openProject(proj)">[ VER_PROYECTO ]</button>
         </div>
 
       </div>
@@ -152,28 +155,7 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   /* LAYOUT */ position: relative; display: flex; align-items: center; justify-content: center;
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
-
-}
-
-.portfolio-bg {
-
-  /* LAYOUT */ position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  /* FILL   */ background-color: var(--carbon);
-
-}
-
-.portfolio-bg img {
-
-  /* BOX    */ width: 100%; height: 100%; object-fit: cover;
-  /* FILL   */ filter: grayscale(100%) contrast(1.2); opacity: 0.15;
-
-}
-
-.bg-overlay {
-
-  /* LAYOUT */ position: absolute; inset: 0;
-  /* FILL   */ background: linear-gradient(90deg, var(--carbon) 0%, transparent 50%, var(--carbon) 100%);
+  /* BORDER */ border: none; border-radius: 0;
 
 }
 
@@ -266,8 +248,8 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 .ray-box { 
 
   /* CURSOR */ cursor: pointer;
-  /* LAYOUT */ position: absolute; left: 0; top: -1.5rem; display: flex; align-items: center;
-  /* BOX    */ width: 25rem; height: 3rem; padding-left: 9rem; transform-origin: left center;
+  /* LAYOUT */ position: absolute; left: 0; top: -1.5rem; display: flex; align-items: center; justify-content: flex-start;
+  /* BOX    */ width: 35rem; height: 3rem; padding-left: 9rem; transform-origin: left center;
   /* MOTION */ transition: all var(--animate-mid);
 
 }
@@ -292,12 +274,38 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 
 }
 
+.ray-portal {
+
+  /* LAYOUT */ position: relative; display: flex; align-items: center; z-index: 1; pointer-events: none;
+  /* MOTION */ animation: spawnData var(--animate-fast) forwards;
+
+}
+
+.portal-line {
+
+  /* LAYOUT */ position: relative; z-index: 1; flex-shrink: 0;
+  /* BOX    */ width: 1.5rem; height: 1px;
+  /* MOTION */ transition: width var(--animate-fast);
+
+}
+
+.portal-trigger {
+
+  /* LAYOUT */ position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  /* BOX    */ width: 1.5rem; height: 1.5rem; padding-left: 1px; padding-top: 1px;
+  /* FILL   */ color: var(--carbon);
+  /* BORDER */ border-radius: 50%;
+  /* FONT   */ font-family: var(--font-mono); font-size: 0.8rem;  
+  /* MOTION */ transition: transform var(--animate-fast), box-shadow var(--animate-fast);
+
+}
+
 .ray-data {
 
-  /* LAYOUT */ position: absolute; left: 12rem; top: 2.2rem; display: flex; flex-direction: column; z-index: 1; pointer-events: auto;
-  /* BOX    */ width: 18rem; gap: 0.5rem;
+  /* LAYOUT */ position: absolute; top: 2.5rem; display: flex; flex-direction: column; z-index: 1; pointer-events: none;
+  /* BOX    */ width: 18rem; gap: 0.5rem; padding: .5rem;
   /* FONT   */ text-shadow: 1px 1px 2px var(--carbon);
-  /* MOTION */ animation: slideData var(--animate-mid) forwards;
+  /* MOTION */ animation: spawnData var(--animate-fast) forwards;
 
 }
 
@@ -308,63 +316,50 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
 
 }
 
-.ray-data .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ray-data .tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
 .ray-data .tag {
 
   /* BOX    */ padding: 0; 
-  /* FILL   */ color: var(--humo50);
-  /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem;
-
-}
-
-.ray-data .tag::before { content: '#'; color: var(--humo25); }
-
-.open-link {
-
-  /* CURSOR */ cursor: pointer;
-  /* LAYOUT */ display: flex;
-  /* BOX    */ width: fit-content; padding: 0; margin-top: 0.2rem;
-  /* FILL   */ background: none; color: var(--humo);
-  /* BORDER */ border: none; box-shadow: none;
-  /* FONT   */ font-family: var(--font-mono); font-size: 0.85rem; 
-  /* MOTION */ transition: color var(--animate-fast);
-
-  &:hover { color: var(--niebla); text-decoration: underline; }
+  /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem; color: var(--humo50);
 
 }
 
 .ray-diseño { 
 
   & .ray-text { border: 1px solid var(--lirio80); }
+  & .portal-line, & .portal-trigger { background-color: var(--lirio); }
 
-  &:hover .ray-line, .ray-diseño.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
-  &:hover .ray-text, .ray-diseño.selected .ray-text { color: var(--carbon); background-color: var(--lirio); border-color: var(--lirio); box-shadow: none; }
+  &:hover .ray-line, &.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
+  &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--lirio); border-color: var(--lirio); box-shadow: none; }
+  
+  &:hover .ray-portal .portal-line { width: 4rem; }
+  
+  & .tag { color: var(--cristal); }
 
 }
 
 .ray-desarrollo { 
 
   & .ray-text { border: 1px solid var(--cristal80); }
+  & .portal-line, & .portal-trigger { background-color: var(--cristal); }
 
-  &:hover .ray-line, .ray-desarrollo.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
-  &:hover .ray-text, .ray-desarrollo.selected .ray-text { color: var(--carbon); background-color: var(--cristal); border-color: var(--cristal); box-shadow: none; }
+  &:hover .ray-line, &.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
+  &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--cristal); border-color: var(--cristal); box-shadow: none; }
+  
+  &:hover .ray-portal .portal-line { width: 4rem; }
+  
+  & .tag { color: var(--lirio); }
 
 }
 
-.fade-bg-enter-active, .fade-bg-leave-active { transition: opacity var(--animate-long); position: absolute; }
-.fade-bg-enter-from, .fade-bg-leave-to { opacity: 0; }
-
-@keyframes slideData { 
-
-  000% { opacity: 0; transform: translateY(-1rem);  }
-  100% { opacity: 1; transform: translateY(0); }
-
+@keyframes spawnData { 
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 @media (max-width: 1080px) { 
 
-  .bg-overlay                      { background: linear-gradient(0deg, var(--carbon) 0%, transparent 50%, var(--carbon) 100%); }
   .hover-box                       { flex-direction: column;                                                                       }
   .message-box                     { right: auto; bottom: 100%; margin-right: 0; margin-bottom: 2rem; transform: translateY(2rem); }
   .message-box::after              { right: 50%; top: auto; bottom: -7px; transform: translateX(50%) rotate(135deg);               }
@@ -373,8 +368,8 @@ onUnmounted(() => { window.removeEventListener('resize', updateWidth) })
   .hover-box:hover ~ .prompt-arrow { opacity: 0; transform: rotate(270deg) translateX(1rem);                                       }
   .prompt-arrow                    { padding-left: 8rem; transform: rotate(270deg);                                                }
   .avatar                          { width: 10rem; height: 10rem;                                                                  }
-  .ray-box                         { padding-left: 6rem; width: 15rem;                                                             }
-  .ray-data                        { left: 9rem; width: 14rem;                                                                     }
+  .ray-box                         { padding-left: 6rem; width: 25rem;                                                             }
+  .ray-data                        { left: 10.5rem; width: 14rem;                                                                  }
 
 }
 
