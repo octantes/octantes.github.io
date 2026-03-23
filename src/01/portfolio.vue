@@ -11,79 +11,85 @@ const portfolioProjects = computed(() => { return store.notesIndex.filter(n => n
 const currentProject    = ref(null)
 const prevSelectedIdx   = ref(-1)
 const rayAngles         = ref([])
+const absIndices        = ref([])
 
 watch([currentProject, windowWidth, portfolioProjects], () => {
 
   const length = portfolioProjects.value.length
   if (length === 0) return
   const selectedIdx = currentProject.value ? portfolioProjects.value.findIndex(p => p.slug === currentProject.value.slug) : -1
-  const isMobile = windowWidth.value <= 1080
-  const arrowAngle = isMobile ? 270 : 180
-  const nodeAmount = length + 1
-  let newAngles = []
+  
+  const topBound = -70
+  const bottomBound = 70
+  
+  const virtualCenter = Math.floor(length / 2)
+  const activeIdx = selectedIdx !== -1 ? selectedIdx : virtualCenter
+  
+  let slots = new Array(length).fill(0)
   
   if (selectedIdx === -1) {
 
-    const step = 360 / nodeAmount
-    for (let i = 0; i < length; i++) { newAngles.push((arrowAngle + (i + 1) * step) % 360) }
+    const step = (bottomBound - topBound) / (length - 1 || 1)
+    for (let i = 0; i < length; i++) {
+      let angle = topBound + i * step
+      let sIdx = (i - virtualCenter + length) % length
+      slots[sIdx] = angle < 0 ? angle + 360 : angle
+    }
 
   } else {
 
-    const step = 270 / nodeAmount
-    let downSlots = []
-    let currentAngle = arrowAngle - step
-    while (currentAngle > 90 - 0.1) { downSlots.unshift(currentAngle); currentAngle -= step }
+    const gapUp = -15
+    const gapDown = 45
+
+    const spanUp = gapUp - topBound
+    const spanDown = bottomBound - gapDown
+    const totalSpan = spanUp + spanDown
+
+    const unselectedCount = length - 1
+    const step = unselectedCount > 1 ? totalSpan / (unselectedCount - 1) : 0
+
     let upSlots = []
-    currentAngle = arrowAngle + step
-    while (currentAngle < 360 - 0.1) { upSlots.push(currentAngle); currentAngle += step }
-    let slots = [0, ...downSlots, ...upSlots].slice(0, length)
-    for (let i = 0; i < length; i++) { const slotIdx = (i - selectedIdx + length) % length; newAngles.push(slots[slotIdx]) }
+    let downSlots = []
+
+    for (let i = 0; i < unselectedCount; i++) {
+      const x = i * step
+      if (x <= spanUp + 0.001) { upSlots.push(topBound + x) } 
+      else { downSlots.push(gapDown + (x - spanUp)) }
+    }
+
+    slots[0] = 0
+    for (let i = 0; i < downSlots.length; i++) { slots[i + 1] = downSlots[i] }
+    for (let i = 0; i < upSlots.length; i++)   { slots[i + 1 + downSlots.length] = upSlots[i] + 360 }
 
   }
 
-  if (rayAngles.value.length === length) {
+  if (absIndices.value.length !== length) {
 
-    const anchorIdx = selectedIdx !== -1 ? selectedIdx : prevSelectedIdx.value
-    const updated = []
+    absIndices.value = new Array(length).fill(0).map((_, i) => i - activeIdx)
 
-    if (anchorIdx !== -1) {
+  } else {
 
-      let prevAnchor = rayAngles.value[anchorIdx]
-      let nextAnchor = newAngles[anchorIdx]
-      
-      let anchorDiff = (nextAnchor - prevAnchor) % 360
-      if (anchorDiff > 180) anchorDiff -= 360
-      else if (anchorDiff <= -180) anchorDiff += 360
+    let prevAbsIndex = absIndices.value[activeIdx]
+    let currentAngle = rayAngles.value[activeIdx]
+    let baseSlotAngle = slots[0]
 
-      for (let i = 0; i < length; i++) {
-        let prev = rayAngles.value[i]
-        let next = newAngles[i]
-        let diff = (next - prev) % 360
-        
-        let relativeDiff = (diff - anchorDiff) % 360
-        if (relativeDiff > 180) relativeDiff -= 360
-        else if (relativeDiff <= -180) relativeDiff += 360
+    let targetLap = Math.round((currentAngle - baseSlotAngle) / 360)
+    let targetAbsIndex = targetLap * length
 
-        updated.push(prev + anchorDiff + relativeDiff)
-      }
+    let shift = prevAbsIndex - targetAbsIndex
+    for (let i = 0; i < length; i++) { absIndices.value[i] -= shift }
 
-    } else {
+  }
 
-      for (let i = 0; i < length; i++) {
-        let prev = rayAngles.value[i]
-        let next = newAngles[i]
-        let diff = (next - prev) % 360
-        if (diff > 180) diff -= 360
-        else if (diff <= -180) diff += 360
-        updated.push(prev + diff)
-      }
+  let newAngles = []
+  for (let i = 0; i < length; i++) { 
+    const absIndex = absIndices.value[i]
+    const slotIdx = ((absIndex % length) + length) % length
+    const lap = Math.floor(absIndex / length)
+    newAngles.push(slots[slotIdx] + lap * 360) 
+  }
 
-    }
-
-    rayAngles.value = updated
-
-  } else { rayAngles.value = newAngles }
-
+  rayAngles.value = newAngles
   prevSelectedIdx.value = selectedIdx
 
 }, { immediate: true })
