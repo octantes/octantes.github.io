@@ -1,11 +1,13 @@
 <script setup> 
 import { useStore } from './04/store.js'
 import { storeToRefs } from 'pinia'
+import { useRoute } from 'vue-router'
 import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'
 import Portada from './02/portada.vue'
 
 const store = useStore()
+const route = useRoute()
 const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 </script>
@@ -14,9 +16,9 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
   <div class="pagina">
 
-    <div class="layout" :class="{ fullscreen: computedFullscreen }" >
+    <div class="layout" :class="{ fullscreen: computedFullscreen || route.path === '/portfolio' }" >
 
-      <template v-if="!computedFullscreen">
+      <template v-if="!computedFullscreen && route.path !== '/portfolio'">
 
         <Portada class="portada" :metadata="computedPortada" />
         <Navigation class="navigation" :disabled="store.processing" />
