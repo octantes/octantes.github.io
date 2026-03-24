@@ -1,5 +1,5 @@
 <script setup> 
-import { ref, watch, nextTick, computed } from 'vue'
+import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
@@ -12,6 +12,9 @@ const compMap = { }                                                             
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
+const isMobile        = ref(false)                                                                                                    // mobile state
+
+function checkViewport() { isMobile.value = window.innerWidth <= 1080 }                                                               // detect mobile
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
@@ -165,6 +168,9 @@ watch(                                                                          
 
 )
 
+onMounted(()   => { checkViewport(); window.addEventListener('resize', checkViewport) })
+onUnmounted(() => { window.removeEventListener('resize', checkViewport) })
+
 </script>
 
 <template> 
@@ -173,7 +179,7 @@ watch(                                                                          
     
     <div class="container scroll-into" >
 
-      <Shader class="shader" ref="shaderRef"/>
+      <Shader v-if="!isMobile" class="shader" ref="shaderRef"/>
 
       <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" title="salir de la vista en pantalla completa" aria-label="cerrar el contenido en pantalla completa">X</button>
 
@@ -261,8 +267,8 @@ watch(                                                                          
 
 @media (max-width: 1080px) { 
 
-  .notedisplay { min-height: 60rem; }
-  
+  .notedisplay { height: auto; min-height: auto; }
+
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
   @supports not selector(::-webkit-scrollbar) { .post { scrollbar-width: none; scrollbar-color: var(--cristal) transparent; } }
