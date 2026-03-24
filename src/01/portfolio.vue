@@ -305,6 +305,18 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 @keyframes spawnData { 0% { opacity: 0; } 100% { opacity: 1; } }
 
-@media (max-width: 1080px) { .profile-group { transform: scale(calc(100vw / 1080px)); } .rays-wrapper { transform: scale(calc(100vw / 1080px)); mask-image: none;} }
+@media (max-width: 1080px) { 
+
+  .portfolio      { flex-direction: column; justify-content: flex-start; overflow-y: auto; padding-top: 5rem !important; scrollbar-width: none; -ms-overflow-style: none; }
+  .profile-group  { flex-direction: column-reverse; margin-bottom: 1.5rem; gap: 1.5rem;                                                                                   }
+  .message-box    { position: relative; right: auto; bottom: auto; margin: 0; text-align: left; width: 100%; max-width: 25rem;                                            }
+  .avatar         { width: 10rem; height: 10rem;                                                                                                                          }
+  .rays-wrapper   { position: relative; mask-image: none; -webkit-mask-image: none; width: 400px; height: auto;                                                           }
+  .rays-container { position: relative; left: auto; top: auto; display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; width: 100%;                    }
+  .ray-box        { position: relative; left: auto; top: auto; padding-left: 0; width: 100%; max-width: 22rem; height: auto; transform: none !important; flex-wrap: wrap; }
+  .ray-data       { position: relative; top: auto; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                 }
+  .ray-line       { display: none;                                                                                                                                        }
+
+}
 
 </style>
