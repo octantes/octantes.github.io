@@ -114,6 +114,10 @@ onUnmounted(() => { store.stopStatusUpdates() })
   /* FILL   */ background-color: var(--carbon); color: var(--humo50);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); line-height: 1.5; white-space: nowrap;
+
+  /* MASK   */
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
   
 }
 
