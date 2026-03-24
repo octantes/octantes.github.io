@@ -169,7 +169,6 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-@media (max-width: 1080px) { .gallery { max-height: 25rem; } }
 @media (max-width: 580px) { .notecard.expanded { grid-column: span 1; grid-row: span 1; & .title { font-size: 0.9rem; }; & .description { display: none } } }
 
 /* .gallery:has(.notecard.active) .notecard:not(.active):not(:hover) { opacity: var(--alpha-half); } */

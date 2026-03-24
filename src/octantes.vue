@@ -75,7 +75,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
   .portada { order: 1; } .navigation { order: 2; } .articulos { order: 3; }
   
   .footer  { padding: 1rem; }
-  .content { height: 40rem; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
+  .content { height: auto; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
 
 }
 
