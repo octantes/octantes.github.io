@@ -1,118 +1,83 @@
 <script setup> 
-import { computed, onMounted, ref, watch, onUnmounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import authorpic from '../../content/assets/kaste.jpg'
 
 const router            = useRouter()
 const store             = useStore()
-const windowWidth       = ref(typeof window !== 'undefined' ? window.innerWidth : 1080)
-const portfolioProjects = computed(() => { return store.notesIndex.filter(n => n.type === 'diseño' || n.type === 'desarrollo').slice(0, 8) })
+const portfolioProjects = computed(() => store.notesIndex.filter(n => n.type === 'diseño' || n.type === 'desarrollo').slice(0, 8))
 const currentProject    = ref(null)
 const prevSelectedIdx   = ref(-1)
 const rayAngles         = ref([])
 const absIndices        = ref([])
 
-watch([currentProject, windowWidth, portfolioProjects], () => {
+const bounds = { top: -70, bottom: 70, gapUp: -15, gapDown: 45 }
+
+function getSlots(length, hasSelection) { 
+
+  const slots = new Array(length).fill(0)
+  const virtualCenter = Math.floor(length / 2)
+
+  if (!hasSelection) {
+    const step = (bounds.bottom - bounds.top) / (length - 1 || 1)
+    for (let i = 0; i < length; i++) { let angle = bounds.top + i * step; slots[(i - virtualCenter + length) % length] = angle < 0 ? angle + 360 : angle }
+    return slots
+  }
+
+  const spanUp = bounds.gapUp - bounds.top
+  const spanDown = bounds.bottom - bounds.gapDown
+  const step = (length - 1) > 1 ? (spanUp + spanDown) / (length - 2) : 0
+
+  let upSlots = []
+  let downSlots = []
+
+  for (let i = 0; i < length - 1; i++) {
+    const x = i * step
+    if (x <= spanUp + 0.001) upSlots.push(bounds.top + x)
+    else downSlots.push(bounds.gapDown + (x - spanUp))
+  }
+
+  slots[0] = 0
+  for (let i = 0; i < downSlots.length; i++) slots[i + 1] = downSlots[i]
+  for (let i = 0; i < upSlots.length; i++)   slots[i + 1 + downSlots.length] = upSlots[i] + 360
+
+  return slots
+
+}
+
+watch([currentProject, portfolioProjects], () => { 
 
   const length = portfolioProjects.value.length
   if (length === 0) return
+
   const selectedIdx = currentProject.value ? portfolioProjects.value.findIndex(p => p.slug === currentProject.value.slug) : -1
-  
-  const topBound = -70
-  const bottomBound = 70
-  
-  const virtualCenter = Math.floor(length / 2)
-  const activeIdx = selectedIdx !== -1 ? selectedIdx : virtualCenter
-  
-  let slots = new Array(length).fill(0)
-  
-  if (selectedIdx === -1) {
-
-    const step = (bottomBound - topBound) / (length - 1 || 1)
-    for (let i = 0; i < length; i++) {
-      let angle = topBound + i * step
-      let sIdx = (i - virtualCenter + length) % length
-      slots[sIdx] = angle < 0 ? angle + 360 : angle
-    }
-
-  } else {
-
-    const gapUp = -15
-    const gapDown = 45
-
-    const spanUp = gapUp - topBound
-    const spanDown = bottomBound - gapDown
-    const totalSpan = spanUp + spanDown
-
-    const unselectedCount = length - 1
-    const step = unselectedCount > 1 ? totalSpan / (unselectedCount - 1) : 0
-
-    let upSlots = []
-    let downSlots = []
-
-    for (let i = 0; i < unselectedCount; i++) {
-      const x = i * step
-      if (x <= spanUp + 0.001) { upSlots.push(topBound + x) } 
-      else { downSlots.push(gapDown + (x - spanUp)) }
-    }
-
-    slots[0] = 0
-    for (let i = 0; i < downSlots.length; i++) { slots[i + 1] = downSlots[i] }
-    for (let i = 0; i < upSlots.length; i++)   { slots[i + 1 + downSlots.length] = upSlots[i] + 360 }
-
-  }
+  const activeIdx = selectedIdx !== -1 ? selectedIdx : Math.floor(length / 2)
+  const slots = getSlots(length, selectedIdx !== -1)
 
   if (absIndices.value.length !== length) {
-
-    absIndices.value = new Array(length).fill(0).map((_, i) => i - activeIdx)
-
+    absIndices.value = Array.from({ length }, (_, i) => i - activeIdx)
   } else {
-
-    let prevAbsIndex = absIndices.value[activeIdx]
-    let currentAngle = rayAngles.value[activeIdx]
-    let baseSlotAngle = slots[0]
-
-    let targetLap = Math.round((currentAngle - baseSlotAngle) / 360)
-    let targetAbsIndex = targetLap * length
-
-    let shift = prevAbsIndex - targetAbsIndex
-    for (let i = 0; i < length; i++) { absIndices.value[i] -= shift }
-
+    const targetLap = Math.round((rayAngles.value[activeIdx] - slots[0]) / 360)
+    const shift = absIndices.value[activeIdx] - (targetLap * length)
+    for (let i = 0; i < length; i++) absIndices.value[i] -= shift
   }
 
-  let newAngles = []
-  for (let i = 0; i < length; i++) { 
+  rayAngles.value = Array.from({ length }, (_, i) => {
     const absIndex = absIndices.value[i]
     const slotIdx = ((absIndex % length) + length) % length
-    const lap = Math.floor(absIndex / length)
-    newAngles.push(slots[slotIdx] + lap * 360) 
-  }
+    return slots[slotIdx] + Math.floor(absIndex / length) * 360
+  })
 
-  rayAngles.value = newAngles
   prevSelectedIdx.value = selectedIdx
 
 }, { immediate: true })
 
-const rayAngleOffset = computed(() => 0)
+function handleRayClick(proj) { if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj  }
+function openAuthor()         { window.open('https://x.com/octantes', '_blank', 'noopener,noreferrer') }
+function closePortfolio()     { router.push('/') }
 
-function handleRayClick(proj) {
-  if (currentProject.value && currentProject.value.slug === proj.slug) { router.push(`/${proj.type}/${proj.slug}`) }
-  else { currentProject.value = proj }
-}
-
-function openAuthor()     { window.open('https://x.com/octantes', '_blank', 'noopener,noreferrer') }
-function closePortfolio() { router.push('/') }
-
-let resizeTimer = null
-
-function updateWidth() {
-  if (resizeTimer) clearTimeout(resizeTimer)
-  resizeTimer = setTimeout(() => { windowWidth.value = window.innerWidth }, 150)
-}
-
-onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex(); window.addEventListener('resize', updateWidth, { passive: true }) })
-onUnmounted(() => { if (resizeTimer) clearTimeout(resizeTimer);  window.removeEventListener('resize', updateWidth) })
+onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 </script>
 
@@ -139,7 +104,7 @@ onUnmounted(() => { if (resizeTimer) clearTimeout(resizeTimer);  window.removeEv
 
     <div class="prompt-arrow"> <span class="ray-text">&lt;</span> </div>
 
-    <div class="rays-container" :style="{ transform: `rotate(${rayAngleOffset}deg)` }">
+    <div class="rays-container">
       
       <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="'seleccionar proyecto ' + proj.title">
         
@@ -320,7 +285,7 @@ onUnmounted(() => { if (resizeTimer) clearTimeout(resizeTimer);  window.removeEv
 .ray-data {
 
   /* LAYOUT */ position: absolute; top: 2.5rem; display: flex; flex-direction: column; z-index: 1; pointer-events: none;
-  /* BOX    */ width: 18rem; gap: 0.5rem; padding: .5rem;
+  /* BOX    */ width: 22rem; gap: 0.5rem; padding: .5rem;
   /* FONT   */ text-shadow: 1px 1px 2px var(--carbon);
   /* MOTION */ animation: spawnData var(--animate-fast) forwards;
 
