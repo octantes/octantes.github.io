@@ -26,6 +26,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
       <a href="#" @click.prevent="openLatest" title="abrir la última nota publicada" aria-label="abrir la última nota publicada, que es: {{ latestPost.title }}">{{ latestPost.title }}</a>
       <span class="divisions">//</span>
       <a :href="'mailto:' + store.mailtoDir" target="_blank" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
+      <span class="divisions">//</span>
+      <a href="/portfolio" title="ver portfolio dinamico" aria-label="ir al portfolio dinamico">portfolio</a>
 
     </div>
 
