@@ -34,7 +34,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
     </div>
 
-    <div class="footer">
+    <div class="footer" v-if="route.path !== '/portfolio'">
 
         <Status />
         
@@ -57,7 +57,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 }
 
-.layout.fullscreen .articulos { width: 100%; height: 100%; padding: 0; border: none; }
+.layout.fullscreen .articulos { width: 100%; height: 100%; border: none; }
 
 .navigation { grid-column: 1; overflow-y: auto; min-height: 0; grid-row: 1 / span 2; }
 .portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1;          }
@@ -69,7 +69,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
   .pagina { max-width: 100%; max-height: auto; }
 
-  .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; padding-bottom: 0; } }
+  .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; } }
 
   .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
   .portada { order: 1; } .navigation { order: 2; } .articulos { order: 3; }

@@ -85,22 +85,22 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   <div class="portfolio">
 
-    <button class="close-btn" @click="closePortfolio" title="volver al inicio" aria-label="cerrar el portfolio">X</button>
+    <button class="close-btn" @click="closePortfolio" title="volver al inicio" aria-label="cerrar el portfolio">✘</button>
       
     <div class="profile-group"> 
 
       <div class="message-box">
 
-        <h2>kaste</h2>
+        <h2>Facundo Gerbino</h2>
 
-        <p class="subtitle">diseñador y desarrollador multimedia</p>
+        <p class="subtitle">Multimedia developer & designer</p>
 
         <div class="stack">
 
-          <span>figma</span>
-          <span>vue.js</span>
-          <span>rust</span>
-          <span>tauri</span>
+          <span>Figma</span>
+          <span>Vue.js</span>
+          <span>Rust</span>
+          <span>Tauri</span>
 
         </div>
 
@@ -143,8 +143,6 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 <style scoped> 
 
-.footer {display:none !important;}
-
 .portfolio { 
 
   /* CURSOR */ user-select: none;
@@ -157,14 +155,15 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 .close-btn { 
 
-  /* CURSOR */ cursor: pointer;
-  /* LAYOUT */ position: absolute; top: 1rem; right: 2rem; z-index: 50;
-  /* BOX    */ padding: .8rem 1rem .8rem 1rem;
-  /* FILL   */ background-color: var(--niebla50); color: var(--carbon);
-  /* BORDER */ border: none; border-radius: 9999px;
-  /* MOTION */ transition: background-color var(--animate-fast);
+  /* CURSOR */ cursor: pointer; user-select: none;
+  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50;
+  /* FILL   */ background: transparent; color: var(--humo99);
+  /* BORDER */ border: none; box-shadow: none;
+  /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
+  /* FX     */ mix-blend-mode: difference;
+  /* MOTION */ transition: color var(--animate-fast);
 
-  &:hover { background-color: var(--niebla99); }
+  &:hover { color: var(--lirio); }
 
 }
 
@@ -179,7 +178,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   & p  { font-size: 0.95rem; line-height: 1.5; color: var(--humo); }
   & h2 { color: var(--lirio); margin: 0 0 0.5rem 0; font-size: 1.5rem; }
 
-  & .subtitle { font-family: var(--font-mono); font-style: italic; font-size: 0.9rem; color: var(--humo50); margin: 0; }
+  & .subtitle { font-family: var(--font-mono); font-style: italic; font-size: 0.9rem; color: var(--humo99); margin: 0; }
 
 }
 
@@ -248,7 +247,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   /* LAYOUT */ position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: center;
   /* BOX    */ padding: 0.3rem 0.8rem; height: 1.5rem;
-  /* FILL   */ color: var(--humo80); background-color: var(--carbon);
+  /* FILL   */ color: var(--humo);
   /* BORDER */ border-radius: 9999px;
   /* FONT   */ font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap;
   /* MOTION */ transition: color var(--animate-fast), background-color var(--animate-fast), border-color var(--animate-fast);
@@ -308,7 +307,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 .ray-diseño { 
 
-  & .ray-text { border: 1px solid var(--lirio80); }
+  & .ray-text { border: 1px solid var(--lirio99); }
 
   & .portal-line,    & .portal-trigger    { background-color: var(--lirio); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
@@ -322,7 +321,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 .ray-desarrollo { 
 
-  & .ray-text { border: 1px solid var(--cristal80); }
+  & .ray-text { border: 1px solid var(--cristal99); }
 
   & .portal-line,    & .portal-trigger    { background-color: var(--cristal); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
@@ -338,16 +337,18 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 @media (max-width: 1000px) { 
 
-  .portfolio      { flex-direction: column; justify-content: flex-start; overflow-y: auto; padding-top: 5rem !important; scrollbar-width: none; -ms-overflow-style: none; }
-  .profile-group  { flex-direction: column-reverse; margin-bottom: 1.5rem; gap: 1.5rem;                                                                                   }
-  .message-box    { position: relative; right: auto; bottom: auto; margin: 0; text-align: left; width: 100%; max-width: 25rem;                                            }
-  .avatar         { width: 10rem; height: 10rem;                                                                                                                          }
-  .rays-wrapper   { position: relative; mask-image: none; -webkit-mask-image: none; width: 400px; height: auto;                                                           }
-  .rays-container { position: relative; left: auto; top: auto; display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; width: 100%;                    }
-  .ray-box        { position: relative; left: auto; top: auto; padding-left: 0; width: 100%; max-width: 22rem; height: auto; transform: none !important; flex-wrap: wrap; }
-  .ray-data       { position: relative; top: auto; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                 }
-  .ray-line       { display: none;                                                                                                                                        }
-  .stack          { justify-content: flex-start;                                                                                                                          }
+  .fullscreen     { padding-bottom: 1rem !important;}
+
+  .portfolio      { flex-direction: column; justify-content: flex-start; overflow-y: auto; padding-top: 5rem !important; scrollbar-width: none; -ms-overflow-style: none;    }
+  .profile-group  { flex-direction: column-reverse; margin-bottom: 1.5rem; gap: 2rem;                                                                                        }
+  .message-box    { position: relative; right: auto; bottom: auto; margin: 0; text-align: left; width: 100%; max-width: 25rem;                                               }
+  .avatar         { width: 10rem; height: 10rem;                                                                                                                             }
+  .rays-wrapper   { position: relative; mask-image: none; -webkit-mask-image: none; width: 400px; height: 100%; display: flex; flex-direction: column; margin-bottom: 4rem;  }
+  .rays-container { position: relative; left: auto; top: auto; display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; width: 100%; height: 100%;         }
+  .ray-box        { position: relative; left: auto; top: auto; padding-left: 0; width: 100%; max-width: 22rem; height: auto; transform: none !important; flex-wrap: wrap;    }
+  .ray-data       { position: relative; top: auto; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                    }
+  .ray-line       { display: none;                                                                                                                                           }
+  .stack          { justify-content: flex-start;                                                                                                                             }
 
 }
 
