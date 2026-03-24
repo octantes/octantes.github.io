@@ -305,15 +305,6 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 @keyframes spawnData { 0% { opacity: 0; } 100% { opacity: 1; } }
 
-@media (max-width: 1080px) { 
-
-  .profile-group                   { flex-direction: column;                                                                       }
-  .message-box                     { right: auto; bottom: 100%; margin-right: 0; margin-bottom: 2rem; text-align: center;          }
-  .avatar                          { width: 10rem; height: 10rem;                                                                  }
-  .rays-wrapper                    { mask-image: none; -webkit-mask-image: none;                                                   }
-  .ray-box                         { padding-left: 6rem; width: 25rem;                                                             }
-  .ray-data                        { width: 16rem;                                                                                 }
-
-}
+@media (max-width: 1080px) { .profile-group { transform: scale(calc(100vw / 1080px)); } .rays-wrapper { transform: scale(calc(100vw / 1080px)); mask-image: none;} }
 
 </style>
