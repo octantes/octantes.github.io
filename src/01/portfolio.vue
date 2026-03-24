@@ -6,7 +6,7 @@ import authorpic from '../../content/assets/kaste.jpg'
 
 const router            = useRouter()
 const store             = useStore()
-const portfolioProjects = computed(() => store.notesIndex.filter(n => n.type === 'diseño' || n.type === 'desarrollo').slice(0, 8))
+const portfolioProjects = computed(() => store.notesIndex.filter(n => n.type === 'diseño' || n.type === 'desarrollo'))
 const currentProject    = ref(null)
 const prevSelectedIdx   = ref(-1)
 const rayAngles         = ref([])
@@ -87,7 +87,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
     <button class="close-btn" @click="closePortfolio" title="volver al inicio" aria-label="cerrar el portfolio">X</button>
       
-    <div class="hover-box"> 
+    <div class="profile-group"> 
 
       <div class="message-box">
 
@@ -102,27 +102,29 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
     </div>
 
-    <div class="prompt-arrow"> <span class="ray-text">&lt;</span> </div>
+    <div class="rays-wrapper">
 
-    <div class="rays-container">
-      
-      <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="'seleccionar proyecto ' + proj.title">
+      <div class="rays-container">
         
-        <div class="ray-line"></div>
-        <span class="ray-text">{{ proj.title }}</span>
+        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="'seleccionar proyecto ' + proj.title">
+          
+          <div class="ray-line"></div>
+          <span class="ray-text">{{ proj.title }}</span>
 
-        <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="'abrir nota de ' + proj.title">
-          <div class="portal-line"></div>
-          <div class="portal-trigger">▶</div>
-        </div>
+          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="'abrir nota de ' + proj.title">
+            <div class="portal-line"></div>
+            <div class="portal-trigger">▶</div>
+          </div>
 
-        <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
-          <p class="desc">{{ proj.description || 'sin descripción' }}</p>
-          <div class="tags"> <span v-for="tag in proj.tags.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
+          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
+            <p class="desc">{{ proj.description || 'sin descripción' }}</p>
+            <div class="tags"> <span v-for="tag in proj.tags.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
+          </div>
+
         </div>
 
       </div>
-
+      
     </div>
 
   </div>
@@ -154,36 +156,13 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 }
 
-.hover-box { 
-
-  /* LAYOUT */ position: relative; display: flex; align-items: center; z-index: 20;
-  /* MOTION */ transition: transform var(--animate-mid);
-
-  &:hover { transform: translateX(11.5rem); }
-  &:hover .avatar { filter: grayscale(0%) contrast(1); opacity: 1; }
-  &:hover .message-box { opacity: 1; pointer-events: auto; transform: translateX(0); }
-  &:hover ~ .prompt-arrow { opacity: 0; transform: rotate(180deg) translateX(1rem); }
-  &:hover ~ .rays-container { opacity: 0; pointer-events: none; transform: translateX(2rem); }
-
-}
+.profile-group { position: relative; display: flex; align-items: center; z-index: 20; }
 
 .message-box { 
 
   /* LAYOUT */ position: absolute; right: 100%; z-index: 1; pointer-events: none;
-  /* BOX    */ width: 20rem; margin-right: 2rem; padding: 1.5rem;
-  /* FILL   */ background-color: var(--carbon); opacity: 0;
-  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
-  /* MOTION */ transform: translateX(2rem); transition: transform var(--animate-mid), opacity var(--animate-mid);
-
-  &::after { 
-
-    /* LAYOUT */ content: ''; position: absolute; right: -7px; top: 50%; z-index: 1;
-    /* BOX    */ width: 12px; height: 12px;
-    /* FILL   */ background-color: var(--carbon);
-    /* BORDER */ border-right: var(--small-outline) var(--humo25); border-top: var(--small-outline) var(--humo25);
-    /* MOTION */ transform: translateY(-50%) rotate(45deg);
-
-  }
+  /* BOX    */ width: 20rem; margin-right: 2rem;
+  /* FONT   */ text-align: right;
 
   & p  { font-size: 0.95rem; line-height: 1.5; color: var(--humo); }
   & h2 { color: var(--lirio); margin: 0 0 0.5rem 0; font-size: 1.5rem; }
@@ -198,41 +177,30 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* LAYOUT */ position: relative; z-index: 2; overflow: hidden;
   /* BOX    */ width: 15rem; height: 15rem; flex-shrink: 0; object-fit: cover;
   /* FILL   */ background-color: var(--carbon);
-  /* FILL   */ filter: grayscale(100%) contrast(1.2); opacity: 0.8;
-  /* MOTION */ transition: filter var(--animate-mid), opacity var(--animate-mid);
   /* BORDER */ border-radius: 50%; box-shadow: inset 0 0 0 4px var(--lirio);
 
 }
 
-.prompt-arrow { 
+.rays-wrapper { 
 
-  /* LAYOUT */ position: absolute; left: 50%; top: 50%; z-index: 5; pointer-events: none;
-  /* BOX    */ width: 25rem; height: 3rem; margin-top: -1.5rem; padding-left: 11rem; transform-origin: left center;
-  /* MOTION */ transform: rotate(180deg); transition: transform var(--animate-mid), opacity var(--animate-mid); display: flex; align-items: center;
-
-  & .ray-text { 
-
-    /* BOX    */ background: transparent; border: none; box-shadow: none; padding: 0;
-    /* FILL   */ color: var(--humo50); font-family: var(--font-mono); font-size: 1.2rem;
-
-  }
+  /* LAYOUT */ position: absolute; inset: 0; z-index: 10; pointer-events: none;
+  /* FX     */ mask-image: radial-gradient(ellipse 25rem 20rem at calc(50% - 12rem) 50%, transparent 0%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 75%, black 100%); -webkit-mask-image: radial-gradient(ellipse 25rem 20rem at calc(50% - 12rem) 50%, transparent 0%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 75%, black 100%);
 
 }
 
 .rays-container { 
 
-  /* LAYOUT */ position: absolute; left: 50%; top: 50%; z-index: 10;
+  /* LAYOUT */ position: absolute; left: 50%; top: 50%;
   /* BOX    */ width: 0; height: 0;
-  /* MOTION */ transition: opacity var(--animate-mid), transform var(--animate-mid);
 
 }
 
 .ray-box { 
 
-  /* CURSOR */ cursor: pointer;
+  /* CURSOR */ cursor: pointer; pointer-events: auto;
   /* LAYOUT */ position: absolute; left: 0; top: -1.5rem; display: flex; align-items: center; justify-content: flex-start;
   /* BOX    */ width: 35rem; height: 3rem; padding-left: 9rem; transform-origin: left center;
-  /* MOTION */ transition: transform var(--animate-mid);
+  /* MOTION */ transition: transform var(--animate-mid); will-change: transform;
 
 }
 
@@ -339,14 +307,10 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 @media (max-width: 1080px) { 
 
-  .hover-box                       { flex-direction: column;                                                                       }
-  .message-box                     { right: auto; bottom: 100%; margin-right: 0; margin-bottom: 2rem; transform: translateY(2rem); }
-  .message-box::after              { right: 50%; top: auto; bottom: -7px; transform: translateX(50%) rotate(135deg);               }
-  .hover-box:hover                 { transform: translateY(8rem);                                                                  }
-  .hover-box:hover   .message-box  { transform: translateY(0);                                                                     }
-  .hover-box:hover ~ .prompt-arrow { opacity: 0; transform: rotate(270deg) translateX(1rem);                                       }
-  .prompt-arrow                    { padding-left: 8rem; transform: rotate(270deg);                                                }
+  .profile-group                   { flex-direction: column;                                                                       }
+  .message-box                     { right: auto; bottom: 100%; margin-right: 0; margin-bottom: 2rem; text-align: center;          }
   .avatar                          { width: 10rem; height: 10rem;                                                                  }
+  .rays-wrapper                    { mask-image: none; -webkit-mask-image: none;                                                   }
   .ray-box                         { padding-left: 6rem; width: 25rem;                                                             }
   .ray-data                        { width: 16rem;                                                                                 }
 
