@@ -74,8 +74,8 @@ watch([currentProject, portfolioProjects], () => {
 }, { immediate: true })
 
 function handleRayClick(proj) { if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj  }
-function openAuthor()         { window.open('https://x.com/octantes', '_blank', 'noopener,noreferrer') }
-function closePortfolio()     { router.push('/') }
+function downloadCV()         { window.open('/assets/curriculum.pdf', '_blank')                                                                            }
+function closePortfolio()     { router.push('/')                                                                                                           }
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
@@ -92,14 +92,24 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
       <div class="message-box">
 
         <h2>kaste</h2>
+
         <p class="subtitle">diseñador y desarrollador multimedia</p>
-        <br>
+
+        <div class="stack">
+
+          <span>figma</span>
+          <span>vue.js</span>
+          <span>rust</span>
+          <span>tauri</span>
+
+        </div>
+
         <p>construyendo interfaces de alta fidelidad, sistemas de diseño y portales interactivos; el foco está en la multimedialidad y la autonomía técnica.</p>
 
       </div>
 
-      <img class="avatar" tabindex="0" @click="openAuthor" @keydown.enter="openAuthor" role="button" title="abrir perfil de twitter" aria-label="abrir perfil de twitter de kaste" :src="authorpic" alt="avatar kaste" />
-
+      <img class="avatar" tabindex="0" @click="downloadCV" @keydown.enter="downloadCV" role="button" title="descargar curriculum vitae" aria-label="descargar el curriculum vitae de kaste en pdf" :src="authorpic" alt="avatar kaste" />
+    
     </div>
 
     <div class="rays-wrapper">
@@ -168,6 +178,22 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   & h2 { color: var(--lirio); margin: 0 0 0.5rem 0; font-size: 1.5rem; }
 
   & .subtitle { font-family: var(--font-mono); font-style: italic; font-size: 0.9rem; color: var(--humo50); margin: 0; }
+
+}
+
+.stack { 
+
+  /* LAYOUT */ display: flex; flex-wrap: wrap; justify-content: flex-end;
+  /* BOX    */ margin-top: 1rem; gap: 0.5rem;
+
+  & span {
+
+    /* BOX    */ padding: 0.2rem 0.5rem;
+    /* FILL   */ background-color: var(--carbon25); color: var(--cristal);
+    /* BORDER */ border: 1px solid var(--cristal50); border-radius: var(--radius-ss);
+    /* FONT   */ font-family: var(--font-mono); font-size: 0.75rem;
+
+  }
 
 }
 
@@ -305,7 +331,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 @keyframes spawnData { 0% { opacity: 0; } 100% { opacity: 1; } }
 
-@media (max-width: 1080px) { 
+@media (max-width: 1000px) { 
 
   .portfolio      { flex-direction: column; justify-content: flex-start; overflow-y: auto; padding-top: 5rem !important; scrollbar-width: none; -ms-overflow-style: none; }
   .profile-group  { flex-direction: column-reverse; margin-bottom: 1.5rem; gap: 1.5rem;                                                                                   }
@@ -316,6 +342,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   .ray-box        { position: relative; left: auto; top: auto; padding-left: 0; width: 100%; max-width: 22rem; height: auto; transform: none !important; flex-wrap: wrap; }
   .ray-data       { position: relative; top: auto; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                 }
   .ray-line       { display: none;                                                                                                                                        }
+  .stack          { justify-content: flex-start;                                                                                                                          }
 
 }
 
