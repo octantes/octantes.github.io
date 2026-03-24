@@ -143,13 +143,15 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 <style scoped> 
 
+.footer {display:none !important;}
+
 .portfolio { 
 
   /* CURSOR */ user-select: none;
   /* LAYOUT */ position: relative; display: flex; align-items: center; justify-content: center;
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
-  /* FILL   */ background-color: var(--carbon); color: var(--humo);
-  /* BORDER */ border: none; border-radius: 0;
+  /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 100%); color: var(--humo);
+  /* BORDER */ border: none; border-radius: var(--radius-ss);
 
 }
 
@@ -203,7 +205,10 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* LAYOUT */ position: relative; z-index: 2; overflow: hidden;
   /* BOX    */ width: 15rem; height: 15rem; flex-shrink: 0; object-fit: cover;
   /* FILL   */ background-color: var(--carbon);
-  /* BORDER */ border-radius: 50%; box-shadow: inset 0 0 0 4px var(--lirio);
+  /* BORDER */ border-radius: 50%; border: 2px solid var(--humo25);
+  /* MOTION */ transition: transform var(--animate-fast);
+
+  &:hover { transform: scale(.95); }
 
 }
 
