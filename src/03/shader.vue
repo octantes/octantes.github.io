@@ -20,6 +20,7 @@ let charIndex  = 0                                                      // chara
 let charTable  = null                                                   // precomputed unicode char values
 let charBuffer = []                                                     // buffer for precomputed char values
 let mode = 'hidden'                                                     // current animation mode
+let initRafId = null                                                    // save requested frame id
 let animationID = null                                                  // next requested frame id
 let taskPromise = null                                                  // promise handling for drawloop
 let taskResolve = null                                                  // resolve handling for drawloop
@@ -719,7 +720,8 @@ function checkHidden()          { return true }
 function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(deltaTime); animationID = requestAnimationFrame(mainLoop) }
 
 defineExpose({ runQueue })
-onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
+
+onMounted(() => { initRafId = requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
 
 onBeforeUnmount(() => { 
 

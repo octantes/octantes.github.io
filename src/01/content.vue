@@ -9,10 +9,11 @@ import Shader from '../03/shader.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 
-const router          = useRouter()                                                                                                   // handles note open route
-const route           = useRoute()                                                                                                    // sets the current url route
-const store           = useStore()                                                                                                    // initializes global store
-const isMobile        = ref(false)                                                                                                    // mobile state
+const router  = useRouter()                                                                                                           // handles note open route
+const route   = useRoute()                                                                                                            // sets the current url route
+const store   = useStore()                                                                                                            // initializes global store
+
+const isMobile = ref(typeof window !== 'undefined' ? window.innerWidth <= 1080 : false)                                               // mobile state
 
 function checkViewport() { isMobile.value = window.innerWidth <= 1080 }                                                               // detect mobile
 
@@ -22,9 +23,10 @@ const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store      
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const noteContent = ref('')                                                                                                           // basic note html for insert
 
-let noteLoaded = false                                                                                                                // note loaded bool flag for shader
-let firstLoad  = true                                                                                                                 // first load bool flag for shader
-let lastSlug   = null                                                                                                                 // previous slug flag for shader
+let noteLoaded  = false                                                                                                               // note loaded bool flag for shader
+let firstLoad   = true                                                                                                                // first load bool flag for shader
+let lastSlug    = null                                                                                                                // previous slug flag for shader
+let resizeTimer = null
 
 const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
 
@@ -89,7 +91,21 @@ async function handleLoadNote(slug) {                                           
 
 }
 
+function handleResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkViewport, 150) }
+
 watch(computedFullscreen, async () => { await forceShaderResize() })                                                                  // watches for shader resize 
+
+watch(isMobile, async (newVal, oldVal) => {                                                                                           // watches for shader state 
+  if (oldVal === true && newVal === false) {
+    await nextTick()
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    if (shaderRef.value && shaderRef.value.runQueue) {
+      if (route.params.slug) { shaderRef.value.runQueue('hidden') }
+      else { shaderRef.value.runQueue('static') }
+    }
+  }
+})
 
 watch(                                                                                                                                // trigger notes and animations 
   
@@ -168,8 +184,8 @@ watch(                                                                          
 
 )
 
-onMounted(()   => { checkViewport(); window.addEventListener('resize', checkViewport) })
-onUnmounted(() => { window.removeEventListener('resize', checkViewport) })
+onMounted(()   => { checkViewport(); window.addEventListener('resize', handleResize) })
+onUnmounted(() => { window.removeEventListener('resize', handleResize); clearTimeout(resizeTimer)})
 
 </script>
 
