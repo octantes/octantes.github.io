@@ -9,11 +9,10 @@ import Shader from '../03/shader.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 
-const router  = useRouter()                                                                                                           // handles note open route
-const route   = useRoute()                                                                                                            // sets the current url route
-const store   = useStore()                                                                                                            // initializes global store
-
-const isMobile = ref(typeof window !== 'undefined' ? window.innerWidth <= 1080 : false)                                               // mobile state
+const router          = useRouter()                                                                                                   // handles note open route
+const route           = useRoute()                                                                                                    // sets the current url route
+const store           = useStore()                                                                                                    // initializes global store
+const isMobile        = ref(false)                                                                                                    // mobile state
 
 function checkViewport() { isMobile.value = window.innerWidth <= 1080 }                                                               // detect mobile
 
@@ -23,10 +22,9 @@ const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store      
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const noteContent = ref('')                                                                                                           // basic note html for insert
 
-let noteLoaded  = false                                                                                                               // note loaded bool flag for shader
-let firstLoad   = true                                                                                                                // first load bool flag for shader
-let lastSlug    = null                                                                                                                // previous slug flag for shader
-let resizeTimer = null
+let noteLoaded = false                                                                                                                // note loaded bool flag for shader
+let firstLoad  = true                                                                                                                 // first load bool flag for shader
+let lastSlug   = null                                                                                                                 // previous slug flag for shader
 
 const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
 
@@ -91,21 +89,19 @@ async function handleLoadNote(slug) {                                           
 
 }
 
-function handleResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkViewport, 150) }
+watch(isMobile, (newVal) => { 
+
+  if (!shaderRef.value || !shaderRef.value.runQueue) return
+  if (newVal) {
+    shaderRef.value.runQueue('hidden')
+  } else {
+    if (route.params.slug) { shaderRef.value.runQueue('hidden') }
+    else { shaderRef.value.runQueue('static') }
+  }
+
+})
 
 watch(computedFullscreen, async () => { await forceShaderResize() })                                                                  // watches for shader resize 
-
-watch(isMobile, async (newVal, oldVal) => {                                                                                           // watches for shader state 
-  if (oldVal === true && newVal === false) {
-    await nextTick()
-    await new Promise(resolve => requestAnimationFrame(resolve))
-    await new Promise(resolve => requestAnimationFrame(resolve))
-    if (shaderRef.value && shaderRef.value.runQueue) {
-      if (route.params.slug) { shaderRef.value.runQueue('hidden') }
-      else { shaderRef.value.runQueue('static') }
-    }
-  }
-})
 
 watch(                                                                                                                                // trigger notes and animations 
   
@@ -129,7 +125,7 @@ watch(                                                                          
 
         noteLoaded = false
         lastSlug = null
-        await shaderRef.value?.runQueue('transition-intro')
+        if (!isMobile.value) await shaderRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
         document.title = 'octantes.ar - portal multimedia'
@@ -143,7 +139,7 @@ watch(                                                                          
         setCurrentPost(null)
         noteContent.value = ''
         document.title = 'octantes.ar - portal multimedia'
-        await shaderRef.value?.runQueue('intro')
+        if (!isMobile.value) await shaderRef.value?.runQueue('intro')
         break
       
       // first note load, OUTRO only on first note load
@@ -152,7 +148,7 @@ watch(                                                                          
         firstLoad = false
         lastSlug = slug
         await handleLoadNote(slug)
-        await shaderRef.value?.runQueue('outro')
+        if (!isMobile.value) await shaderRef.value?.runQueue('outro')
         break
       
       // first load from url, DIRECT when loading from url
@@ -160,10 +156,10 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        await shaderRef.value?.runQueue('static')
+        if (!isMobile.value) await shaderRef.value?.runQueue('static')
         await handleLoadNote(slug)
         await new Promise(resolve => setTimeout(resolve, 500))
-        await shaderRef.value?.runQueue('direct')
+        if (!isMobile.value) await shaderRef.value?.runQueue('direct')
         break
       
       // loaded note change, TRANSITION when switching note
@@ -171,9 +167,9 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        await shaderRef.value?.runQueue('transition-intro')
+        if (!isMobile.value) await shaderRef.value?.runQueue('transition-intro')
         await handleLoadNote(slug)
-        await shaderRef.value?.runQueue('transition-outro')
+        if (!isMobile.value) await shaderRef.value?.runQueue('transition-outro')
         break
       
     }
@@ -184,8 +180,8 @@ watch(                                                                          
 
 )
 
-onMounted(()   => { checkViewport(); window.addEventListener('resize', handleResize) })
-onUnmounted(() => { window.removeEventListener('resize', handleResize); clearTimeout(resizeTimer)})
+onMounted(()   => { checkViewport(); window.addEventListener('resize', checkViewport) })
+onUnmounted(() => { window.removeEventListener('resize', checkViewport) })
 
 </script>
 
@@ -195,7 +191,7 @@ onUnmounted(() => { window.removeEventListener('resize', handleResize); clearTim
     
     <div class="container scroll-into" >
 
-      <Shader v-if="!isMobile" class="shader" ref="shaderRef"/>
+      <Shader class="shader" ref="shaderRef"/>
 
       <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" title="salir de la vista en pantalla completa" aria-label="cerrar el contenido en pantalla completa">X</button>
 

@@ -20,7 +20,6 @@ let charIndex  = 0                                                      // chara
 let charTable  = null                                                   // precomputed unicode char values
 let charBuffer = []                                                     // buffer for precomputed char values
 let mode = 'hidden'                                                     // current animation mode
-let initRafId = null                                                    // save requested frame id
 let animationID = null                                                  // next requested frame id
 let taskPromise = null                                                  // promise handling for drawloop
 let taskResolve = null                                                  // resolve handling for drawloop
@@ -148,7 +147,7 @@ function drawFrame(deltaTime) {                                         // draw 
 
   const total = rows * cols
   const frameFactor = (deltaTime / 16.666)
-
+  
   if (mode !== 'hidden') {
 
     animatePortal(frameFactor)
@@ -165,6 +164,8 @@ function drawFrame(deltaTime) {                                         // draw 
     }
 
   } else { visualMask.fill(0) }
+
+  if (mode === 'hidden') return
 
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(germFrame / germFramesMax, 0, 1) : 1) * outroFramesMax))
   let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
@@ -720,8 +721,7 @@ function checkHidden()          { return true }
 function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(deltaTime); animationID = requestAnimationFrame(mainLoop) }
 
 defineExpose({ runQueue })
-
-onMounted(() => { initRafId = requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
+onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
 
 onBeforeUnmount(() => { 
 
