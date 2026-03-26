@@ -145,25 +145,27 @@ function drawFrame(deltaTime) {                                         // draw 
 
   if (!context) return
 
+  if (mode === 'hidden') {
+    context.clearRect(0, 0, width, height)
+    if (taskPromise) { const r = taskResolve; taskPromise = null; taskResolve = null; if (r) r() }
+    return
+  }
+
   const total = rows * cols
   const frameFactor = (deltaTime / 16.666)
 
-  if (mode !== 'hidden') {
+  animatePortal(frameFactor)
+  animateRain(frameFactor)
 
-    animatePortal(frameFactor)
-    animateRain(frameFactor)
+  switch (mode) {
 
-    switch (mode) {
+    case 'intro':       { animateGerm(total); break }
+    case 'static':      { visualMask = secureCopy(visualMask, logicMask); break }
+    case 'outro':       { animateCircle(frameFactor); break }
+    case 'direct':      { animateGermInv(total); break }
+    case 'transition':  { animateSwipe(frameFactor); break }
 
-      case 'intro':       { animateGerm(total); break }
-      case 'static':      { secureCopy(visualMask, logicMask); break }
-      case 'outro':       { animateCircle(frameFactor); break }
-      case 'direct':      { animateGermInv(total); break }
-      case 'transition':  { animateSwipe(frameFactor); break }
-
-    }
-
-  } else { visualMask.fill(0) }
+  }
 
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(germFrame / germFramesMax, 0, 1) : 1) * outroFramesMax))
   let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
@@ -561,8 +563,9 @@ function animateGermInv(total) {                                        // rende
 
   if (ratio >= 1) {
 
-    if (!animateGermInv.frontierQueue) animateGermInv.frontierQueue = []
+    if (!animateGermInv.frontierQueue) { animateGermInv.frontierQueue = []; animateGermInv.frontierSet = new Set() }
     const q = animateGermInv.frontierQueue
+    const qSet = animateGermInv.frontierSet
 
     for (let y = 0; y < rows; y++) {
       const yOff = y * cols
@@ -574,7 +577,7 @@ function animateGermInv(total) {                                        // rende
           (x < cols - 1 && logicMask[i + 1]    === 0) ||
           (y > 0        && logicMask[i - cols] === 0) ||
           (y < rows - 1 && logicMask[i + cols] === 0)
-        ) { if (!q.includes(i)) q.push(i) }
+        ) { if (!qSet.has(i)) { qSet.add(i); q.push(i) } }
       }
     }
 
@@ -585,7 +588,9 @@ function animateGermInv(total) {                                        // rende
         const idx = q[k]
         if (logicMask[idx] === 1) { logicMask[idx] = 0; count++ }
       }
-      animateGermInv.frontierQueue = q.filter(i => logicMask[i] === 1)
+      const newQ = q.filter(i => logicMask[i] === 1)
+      animateGermInv.frontierQueue = newQ
+      animateGermInv.frontierSet = new Set(newQ)
     }
   }
 }
@@ -688,13 +693,17 @@ const TASKS = {                                                         // run a
 
 }
 
-function runQueue(name) {                                               // run queue 
+function startLoop() { if (animationID !== null) return; lastTime = 0; animationID = requestAnimationFrame(mainLoop) }
+
+function runQueue(name) {                                               // run queue
   const task = TASKS[name]
   if (!task) return Promise.reject(new Error(`Unknown shader task "${name}"`))
+  if (taskResolve) { const r = taskResolve; taskPromise = null; taskResolve = null; r() }
   return new Promise((resolve, reject) => {
     try { task.impl() } catch (err) { return reject(err) }
     taskPromise = task
     taskResolve = resolve
+    startLoop()
   })
 }
 
@@ -716,10 +725,10 @@ function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' 
 function checkStatic()          { return true }
 function checkHidden()          { return true }
 
-function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; drawFrame(deltaTime); animationID = requestAnimationFrame(mainLoop) }
+function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; const prevMode = mode; drawFrame(deltaTime); if (mode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else if (prevMode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else { animationID = null } }
 
 defineExpose({ runQueue })
-onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext); animationID = requestAnimationFrame(mainLoop) }) })
+onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext) }) })
 
 onBeforeUnmount(() => { 
 
@@ -727,6 +736,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', resetContext)
   if (animateGerm.lastRatio !== undefined) animateGerm.lastRatio = 0
   if (animateGermInv.frontierQueue !== undefined) animateGermInv.frontierQueue = null
+  if (animateGermInv.frontierSet !== undefined) animateGermInv.frontierSet = null
 
 })
 
