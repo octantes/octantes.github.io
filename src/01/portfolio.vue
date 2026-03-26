@@ -93,7 +93,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
         <h2>Facundo Gerbino</h2>
 
-        <p class="subtitle">Multimedia developer & designer</p>
+        <p class="subtitle">Frontend Engineer & Designer</p>
 
         <div class="stack">
 
