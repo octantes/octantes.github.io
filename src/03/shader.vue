@@ -147,7 +147,7 @@ function drawFrame(deltaTime) {                                         // draw 
 
   const total = rows * cols
   const frameFactor = (deltaTime / 16.666)
-  
+
   if (mode !== 'hidden') {
 
     animatePortal(frameFactor)
@@ -164,8 +164,6 @@ function drawFrame(deltaTime) {                                         // draw 
     }
 
   } else { visualMask.fill(0) }
-
-  if (mode === 'hidden') return
 
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(germFrame / germFramesMax, 0, 1) : 1) * outroFramesMax))
   let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
