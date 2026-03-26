@@ -14,7 +14,11 @@ const route           = useRoute()                                              
 const store           = useStore()                                                                                                    // initializes global store
 const isMobile        = ref(false)                                                                                                    // mobile state
 
+let resizeTimer = null                                                                                                                // save resize timer
+
 function checkViewport() { isMobile.value = window.innerWidth <= 1080 }                                                               // detect mobile
+
+function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkViewport, 150) }                                       // use resize timer
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
@@ -180,8 +184,8 @@ watch(                                                                          
 
 )
 
-onMounted(()   => { checkViewport(); window.addEventListener('resize', checkViewport) })
-onUnmounted(() => { window.removeEventListener('resize', checkViewport) })
+onMounted(()   => { checkViewport(); window.addEventListener('resize', onResize) })
+onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout(resizeTimer) })
 
 </script>
 
