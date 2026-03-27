@@ -2,7 +2,7 @@
 tags: [branding, portfolio]
 type: diseño
 title: cruzar - cordillera cripto
-description: proyecto de branding y motion graphics para datacenters sobre la cordillera
+description: proyecto de branding y motion graphics para un servicio de datacenters sobre la cordillera
 portada: portada.png
 date: 2024-09-19
 handle: kaste
