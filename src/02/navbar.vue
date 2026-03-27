@@ -7,7 +7,7 @@ const router = useRouter()
 const store = useStore()
 
 const { processing, searchQuery, activeFilter } = storeToRefs(store)
-const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
+const { changeFilter, hasNotes, tabs, navHome, setActiveFilter } = store
 
 </script>
 
@@ -24,7 +24,7 @@ const { changeFilter, emptyFilter, tabs, navHome, setActiveFilter } = store
     <div class="tabs"> 
 
       <template v-for="tab in tabs" :key="tab.value">
-        <button v-if="activeFilter === tab.value && emptyFilter(tab.value)" @click="activeFilter === tab.value ? setActiveFilter(router, 'full') : setActiveFilter(router, tab.value)"
+        <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="activeFilter === tab.value ? setActiveFilter(router, 'full') : setActiveFilter(router, tab.value)"
           :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
         </button>
       </template>
