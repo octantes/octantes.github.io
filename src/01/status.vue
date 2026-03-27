@@ -23,7 +23,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
     <div class="stleft">
 
-      <a href="#" @click.prevent="openLatest" title="abrir la última nota publicada" aria-label="abrir la última nota publicada, que es: {{ latestPost.title }}">{{ latestPost.title }}</a>
+      <a href="#" @click.prevent="openLatest" title="abrir la última nota publicada" aria-label="abrir la última nota publicada">{{ latestPost.title }}</a>
       <span class="divisions">//</span>
       <a :href="'mailto:' + store.mailtoDir" target="_blank" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
       <span class="divisions">//</span>

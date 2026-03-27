@@ -17,7 +17,7 @@ onMounted(async () => {                                                         
   const urlFilter = route.params.filterType
   const initialFilter = urlFilter || 'full'
   
-  if (initialFilter !== store.activeFilter.value) { store.setActiveFilter(router, initialFilter) }
+  if (initialFilter !== store.activeFilter) { store.setActiveFilter(router, initialFilter) }
 
 })
 
