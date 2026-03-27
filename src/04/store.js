@@ -173,7 +173,7 @@ export const useStore = defineStore('store', () => {
 
     for (let i = 1; i <= numTabs; i++) {
 
-      let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
+      let nextIndex = ((currentTabIndex + direction * i) % numTabs + numTabs) % numTabs
       const nextTabValue = tabs[nextIndex].value
 
       if (hasNotes(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
