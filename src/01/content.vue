@@ -159,7 +159,7 @@ watch(                                                                          
         lastSlug = slug
         await handleLoadNote(slug)
         if (!isMobile.value) await shaderRef.value?.runQueue('outro')
-        if (!isMobile.value) shaderRef.value?.runQueue('hidden')
+        if (!isMobile.value) await shaderRef.value?.runQueue('hidden')
         break
       
       // first load from url, DIRECT when loading from url
