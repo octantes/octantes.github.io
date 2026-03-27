@@ -128,9 +128,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
       break
     }
 
-    case 'hidden': { drawCh = null; isTransparent = true; break }
-    
-    default: { 
+    default: {
       if (frontier) color = COLOR_BORDER;
       if (isRain) { color = rainColors[dist]; if (isRainHead) drawCh = matrixCh }
       break
@@ -161,19 +159,25 @@ function drawFrame(deltaTime) {                                         // draw 
   switch (mode) {
 
     case 'intro':       { animateGerm(total); break }
-    case 'static':      { visualMask = secureCopy(visualMask, logicMask); break }
+    case 'static':      { break }
     case 'outro':       { animateCircle(frameFactor); break }
     case 'direct':      { animateGermInv(total); break }
     case 'transition':  { animateSwipe(frameFactor); break }
 
   }
 
+  if (mode === 'hidden') {
+    context.clearRect(0, 0, width, height)
+    if (taskPromise) { const r = taskResolve; taskPromise = null; taskResolve = null; if (r) r() }
+    return
+  }
+
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(germFrame / germFramesMax, 0, 1) : 1) * outroFramesMax))
-  let resultMask = (mode === 'direct' || mode === 'static') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
-  computeFrontier(resultMask)
+  let resultMask = (mode === 'direct' || mode === 'static' || mode === 'outro') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
+  if (mode !== 'outro') computeFrontier(resultMask)
   
   if (!textGroups) textGroups = new Map()
-  textGroups.clear()
+  for (const arr of textGroups.values()) arr.length = 0
 
   context.clearRect(0, 0, width, height)
   context.fillStyle = COLOR_BACKGR
@@ -195,25 +199,26 @@ function drawFrame(deltaTime) {                                         // draw 
       const colBuf = rainBuffer[x]
       const [drawCh, color, isTransparent] = cellRender(x, y, headPos, colBuf, resultMask)
       
-      if (isTransparent) { isTransparentPath.push({ x, py }) }
-      
+      if (isTransparent) { isTransparentPath.push(x, py) }
+
       if (drawCh != null) {
         let group = textGroups.get(color)
         if (!group) { group = []; textGroups.set(color, group) }
-        group.push({ drawCh, x, py })
+        group.push(drawCh, x, py)
       }
 
     }
   }
   
-  for (const { x, py } of isTransparentPath) { context.rect(x * fontSize, py, fontSize + 1, fontSize + 1) }
+  for (let i = 0; i < isTransparentPath.length; i += 2) { context.rect(isTransparentPath[i] * fontSize, isTransparentPath[i + 1], fontSize + 1, fontSize + 1) }
   context.fill()
 
   context.globalCompositeOperation = 'source-over'
 
   for (const [color, chars] of textGroups) {
+    if (!chars.length) continue
     context.fillStyle = color
-    for (const { drawCh, x, py } of chars) { context.fillText(drawCh, x * fontSize, py) }
+    for (let i = 0; i < chars.length; i += 3) { context.fillText(chars[i], chars[i + 1] * fontSize, chars[i + 2]) }
   }
   
   const frameAdvancement = 1 * frameFactor
@@ -721,8 +726,8 @@ function runHidden()            { mode = 'hidden' }
 function checkIntro()           { return mode === 'intro' && germFrame >= germFramesMax * 0.65 }
 function checkOutro()           { return mode === 'outro' && outroRadius >= Math.hypot(cols, rows) }
 function checkDirect()          { return mode === 'direct' && germFrame >= germFramesMax + directFramesExtra }
-function checkTransitionIntro() { return mode === 'static' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
-function checkTransitionOutro() { return mode === 'hidden' || (mode === 'transition' && swipePhase === 1 && swipeFrame >= cols) }
+function checkTransitionIntro() { return mode === 'static' }
+function checkTransitionOutro() { return mode === 'hidden' }
 function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' }
 function checkStatic()          { return true }
 function checkHidden()          { return true }
