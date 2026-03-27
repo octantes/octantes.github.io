@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: viñetas
-description: descripcion corta para seo
+description: disco de instrumentales con visualizer experimental
 portada: portada.png
 date: 2024-12-22
 handle: kaste

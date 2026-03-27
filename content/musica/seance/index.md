@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: seance
-description: primer disquito con guitarra y visualizer
+description: primer disco con la guitarra conectada y un visualizer experimental
 portada: portada.png
 date: 2022-05-08
 handle: kaste

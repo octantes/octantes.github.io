@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: mood worktapes
-description: primer disquito, aprendiendo a usar ableton live
+description: mi primer disquito, aprendiendo a usar ableton live
 portada: portada.png
 date: 2019-04-11
 handle: kaste
