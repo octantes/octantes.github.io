@@ -185,9 +185,7 @@ export const useStore = defineStore('store', () => {
   function hasNotes(type) {                                                                                                        // check if filter has notes
 
     if (type === 'full') return true
-    const actualType = type
-    
-    return notesIndex.value.some(note => note.type === actualType)
+    return notesIndex.value.some(note => note.type === type)
 
   }
 
@@ -214,7 +212,7 @@ export const useStore = defineStore('store', () => {
     
     const email = subEmail.value
     const submissionsKey = 'subscription_count'
-    const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10)
+    const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10) || 0
     
     if (subHoney.value)              { updateSub('success', 'mail registrado!',             true); return }
     if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!',       true); return }
