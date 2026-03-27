@@ -64,7 +64,7 @@ async function handleLoadNote(slug) {                                           
     
     mediaElements.forEach(el => {
       
-      if ((el.tagName === 'IMG' && !el.complete) || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
+      if ((el.tagName === 'IMG' && !el.complete && el.loading !== 'lazy') || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
           
         mediaLoadPromises.push(new Promise(resolve => {
           
@@ -89,7 +89,7 @@ async function handleLoadNote(slug) {                                           
       }
     })
     
-    await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 3000)) ])
+    await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 1000)) ])
     if (!computedFullscreen.value && isMobile.value) { const scrollEl = document.querySelector('.scroll-into')
     if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
     
