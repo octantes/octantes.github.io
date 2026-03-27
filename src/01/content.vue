@@ -64,7 +64,7 @@ async function handleLoadNote(slug) {                                           
     
     mediaElements.forEach(el => {
       
-      if ((el.tagName === 'IMG' && !el.complete && el.loading !== 'lazy') || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
+      if ((el.tagName === 'IMG' && !el.complete && (el.loading !== 'lazy' || el.getBoundingClientRect().top < window.innerHeight)) || (el.tagName === 'VIDEO' && el.readyState < 3) || (el.tagName === 'IFRAME')) {
           
         mediaLoadPromises.push(new Promise(resolve => {
           
