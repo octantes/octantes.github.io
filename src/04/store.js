@@ -182,7 +182,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function hasNotes(type) {                                                                                                        // check if the filter is empty 
+  function hasNotes(type) {                                                                                                        // check if filter has notes
 
     if (type === 'full') return true
     const actualType = type
