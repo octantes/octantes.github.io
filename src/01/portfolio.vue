@@ -128,7 +128,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
             <p class="desc">{{ proj.description || 'sin descripción' }}</p>
-            <div class="tags"> <span v-for="tag in proj.tags.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
+            <div class="tags"> <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
           </div>
 
         </div>
