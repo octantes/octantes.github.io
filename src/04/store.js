@@ -58,8 +58,8 @@ export const useStore = defineStore('store', () => {
   // STATES                                                                                                                           // CHANGE STATES
 
   const processing                 = ref(false)                                                                                       // disabled component state
-  const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link
-  const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                          // enable popup in navigation
+  const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link https://www.youtube.com/watch?v=eOnO8ECvJl0 ORBITAS LINK
+  const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
   const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
   const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
   const userStatus                 = ref(statusMap['frenzy'])                                                                         // current user status var
