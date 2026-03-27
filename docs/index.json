@@ -78,7 +78,7 @@
   {
     "slug": "geminis",
     "title": "geminis",
-    "description": "la musica de mi hermano, sumando un tema mio al final",
+    "description": "la musica de mi hermano, junto a un tema propio al final",
     "type": "musica",
     "tags": [
       "album",
@@ -97,7 +97,7 @@
   {
     "slug": "viñetas",
     "title": "viñetas",
-    "description": "descripcion corta para seo",
+    "description": "disco de instrumentales con visualizer experimental",
     "type": "musica",
     "tags": [
       "album",
@@ -211,7 +211,7 @@
   {
     "slug": "seance",
     "title": "seance",
-    "description": "primer disquito con guitarra y visualizer",
+    "description": "primer disco con la guitarra conectada y un visualizer experimental",
     "type": "musica",
     "tags": [
       "album",
@@ -287,7 +287,7 @@
   {
     "slug": "sixminutesolder",
     "title": "six minutes older",
-    "description": "experimentos midi",
+    "description": "seis experimentos midi de un minuto",
     "type": "musica",
     "tags": [
       "ep",
@@ -325,7 +325,7 @@
   {
     "slug": "moodworktapes",
     "title": "mood worktapes",
-    "description": "primer disquito, aprendiendo a usar ableton live",
+    "description": "mi primer disquito, aprendiendo a usar ableton live",
     "type": "musica",
     "tags": [
       "album",
