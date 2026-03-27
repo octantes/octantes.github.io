@@ -2,7 +2,7 @@
 tags: [ep, visualizer]
 type: musica
 title: six minutes older
-description: experimentos midi
+description: seis experimentos midi de un minuto
 portada: portada.png
 date: 2021-12-08
 handle: kaste

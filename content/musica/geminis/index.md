@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: geminis
-description: la musica de mi hermano, sumando un tema mio al final
+description: la musica de mi hermano, junto a un tema propio al final
 portada: portada.png
 date: 2025-06-06
 handle: kaste
