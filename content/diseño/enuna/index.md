@@ -2,7 +2,7 @@
 tags: [branding, portfolio]
 type: diseño
 title: en una - publicación digital
-description: descripcion corta para seo
+description: proyecto de branding y motion graphics para revista digital de música
 portada: portada.png
 date: 2023-09-06
 handle: kaste

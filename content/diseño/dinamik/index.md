@@ -2,7 +2,7 @@
 tags: [branding, portfolio]
 type: diseño
 title: dinamik - studio dev
-description: descripcion corta para seo
+description: proyecto de branding y motion graphics para empresa de desarrollo de software de productividad
 portada: portada.png
 date: 2024-11-30
 handle: kaste
