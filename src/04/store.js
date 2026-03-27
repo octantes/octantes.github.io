@@ -394,7 +394,7 @@ export const useStore = defineStore('store', () => {
       filtered = filtered.filter(note =>
         note.title.toLowerCase().includes(query) ||
         note.description.toLowerCase().includes(query) ||
-        note.tags.some(tag => tag.toLowerCase().includes(query)) ||
+        note.tags?.some(tag => tag.toLowerCase().includes(query)) ||
         note.date.includes(query)
       )
 
@@ -407,7 +407,7 @@ export const useStore = defineStore('store', () => {
       switch (sortKey.value) {
 
         case 'title': valA = a.title.toLowerCase()          ; valB = b.title.toLowerCase()          ; break
-        case 'tags':  valA = a.tags[0]?.toLowerCase() || '' ; valB = b.tags[0]?.toLowerCase() || '' ; break
+        case 'tags':  valA = a.tags?.[0]?.toLowerCase() || '' ; valB = b.tags?.[0]?.toLowerCase() || '' ; break
         default:      valA = new Date(a.isoDate)            ; valB = new Date(b.isoDate)            ; break
 
       }
