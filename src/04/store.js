@@ -50,6 +50,7 @@ export const useStore = defineStore('store', () => {
   const notesIndex                 = ref([])                                                                                          // note index array
   const currentPost                = ref(null)                                                                                        // current loaded post ref
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
+  let   notesLoadingPromise        = null                                                                                               // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
 
@@ -113,6 +114,7 @@ export const useStore = defineStore('store', () => {
 
   function startStatusUpdates() {                                                                                                     // start bar data updates 
 
+    clearInterval(btcInterval)  ; clearInterval(timeInterval)
     fetchBTC()  ; btcInterval  = setInterval(fetchBTC,  60000)
     fetchTime() ; timeInterval = setInterval(fetchTime, 15000)
     
@@ -274,20 +276,26 @@ export const useStore = defineStore('store', () => {
     
   }
 
-  async function loadNotesIndex() {                                                                                                   // fetch full note index 
+  async function loadNotesIndex() {                                                                                                   // fetch full note index
 
     if (notesLoaded.value) return notesIndex.value
+    if (notesLoadingPromise) return notesLoadingPromise
 
-    try {
+    notesLoadingPromise = (async () => {
+      try {
 
-      const response = await fetch('/index.json')
-      if (!response.ok) throw new Error('no se encontró el index.json')
-      notesIndex.value = await response.json()
-      notesLoaded.value = true
+        const response = await fetch('/index.json')
+        if (!response.ok) throw new Error('no se encontró el index.json')
+        notesIndex.value = await response.json()
+        notesLoaded.value = true
 
-    } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
+      } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
+      finally { notesLoadingPromise = null }
 
-    return notesIndex.value
+      return notesIndex.value
+    })()
+
+    return notesLoadingPromise
 
   }
 
