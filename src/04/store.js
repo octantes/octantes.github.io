@@ -58,8 +58,8 @@ export const useStore = defineStore('store', () => {
   // STATES                                                                                                                           // CHANGE STATES
 
   const processing                 = ref(false)                                                                                       // disabled component state
-  const showPopup                  = ref(true)                                                                                        // enable popup in navigation
   const popLink                    = ref('https://youtu.be/PzVjHnEJX0w?si=F3bNR3MhVZ-7k71x')                                          // popup go link
+  const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                          // enable popup in navigation
   const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
   const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
   const userStatus                 = ref(statusMap['frenzy'])                                                                         // current user status var
@@ -70,6 +70,7 @@ export const useStore = defineStore('store', () => {
   const subHoney                   = ref('')                                                                                          // bot honeypot
   const subMessage                 = ref('dejá tu mail acá...')                                                                       // status message
   const subState                   = ref('default')                                                                                   // status states
+  const subDone                    = ref((parseInt(localStorage.getItem('subscription_count') || '0', 10) || 0) > 0)                  // user already subscribed
   const emailRegex                 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/                                                                     // email regex
   const lsCounter                  = 3                                                                                                // localstorage counter
   const subResetTime               = 3000                                                                                             // submit reset timer
@@ -95,7 +96,7 @@ export const useStore = defineStore('store', () => {
 
 
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
-  function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
+  function togglePopup()                { showPopup.value = !showPopup.value; if (!showPopup.value) localStorage.setItem('popup_seen', popLink.value) } // toggle popup for notifications
   function setSearchQuery(query)        { searchQuery.value = query }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
 
@@ -224,6 +225,7 @@ export const useStore = defineStore('store', () => {
 
         window.umami.track('suscripcion', { email: email })
         localStorage.setItem(submissionsKey, currentCount + 1)
+        subDone.value = true
 
         updateSub('success', `gracias por sumarte!`, true)
         
@@ -436,7 +438,7 @@ export const useStore = defineStore('store', () => {
 
   return { 
 
-    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, statusMap, userStatus,
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, subDone, statusMap, userStatus,
     /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, resetSub, updateSub, emitSub, setUserStatus,
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,

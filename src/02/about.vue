@@ -1,12 +1,14 @@
 <script setup> 
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import authorpic from '../../content/assets/kaste.jpg'
 
 const store           = useStore()                                                                                                    // initializes global store
 
-const { activeFilter, userStatus } = storeToRefs(store)                                                                              // imports refs from main store
+const { activeFilter, userStatus, currentPost } = storeToRefs(store)                                                                              // imports refs from main store
+
+const displayFilter = computed(() => currentPost.value?.type || activeFilter.value)                                                            // show note type when reading, else active filter
 
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [                                                                                                             // random taglines 
@@ -44,7 +46,7 @@ onMounted(async () => {                                                         
 
     </div>
     
-    <div v-if="activeFilter === 'full'"> 
+    <div v-if="displayFilter === 'full'">
 
       <p>
 
@@ -77,7 +79,7 @@ onMounted(async () => {                                                         
 
     </div>
 
-    <div v-if="activeFilter === 'diseño'"> 
+    <div v-if="displayFilter === 'diseño'"> 
 
       <p>
 
@@ -110,7 +112,7 @@ onMounted(async () => {                                                         
 
     </div>
 
-    <div v-if="activeFilter === 'desarrollo'"> 
+    <div v-if="displayFilter === 'desarrollo'"> 
 
       <p>
 
@@ -144,7 +146,7 @@ onMounted(async () => {                                                         
 
     </div>
 
-    <div v-if="activeFilter === 'musica'"> 
+    <div v-if="displayFilter === 'musica'"> 
 
       <p>
 
@@ -177,7 +179,7 @@ onMounted(async () => {                                                         
 
     </div>
 
-    <div v-if="activeFilter === 'textos'"> 
+    <div v-if="displayFilter === 'textos'"> 
 
       <p>
 
@@ -210,7 +212,7 @@ onMounted(async () => {                                                         
 
     </div>
 
-    <div v-if="activeFilter === 'juegos'"> 
+    <div v-if="displayFilter === 'juegos'"> 
 
       <p>
 
