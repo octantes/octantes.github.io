@@ -1,309 +1,5 @@
 [
   {
-    "slug": "pof-softwarevr",
-    "title": "realidad virtual - las mejores aplicaciones",
-    "description": "En las conversaciones sobre realidad virtual, el software suele quedar en segundo plano. Repasemos algunos usos interesantes.",
-    "type": "textos",
-    "tags": [
-      "videojuegos",
-      "opinión"
-    ],
-    "portada": "https://octantes.github.io/posts/textos/pof-softwarevr/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:11.879Z",
-    "url": "/posts/textos/pof-softwarevr/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "poe-futurovr",
-    "title": "realidad virtual - un futuro contemporáneo",
-    "description": "La realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a descubrirlo.",
-    "type": "textos",
-    "tags": [
-      "videojuegos",
-      "opinión"
-    ],
-    "portada": "https://octantes.github.io/posts/textos/poe-futurovr/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:11.229Z",
-    "url": "/posts/textos/poe-futurovr/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "pod-abandonware",
-    "title": "abandonware - la permanencia del autor",
-    "description": "El abandonware se produce cuando el arte se ve ligado al avance de la tecnología, intensificando las dificultades para conservarlo correctamente.",
-    "type": "textos",
-    "tags": [
-      "videojuegos",
-      "opinión"
-    ],
-    "portada": "https://octantes.github.io/posts/textos/pod-abandonware/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:10.903Z",
-    "url": "/posts/textos/pod-abandonware/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "poc-propiedades",
-    "title": "propiedades intelectuales - hacen falta nuevas IPs?",
-    "description": "Hoy en día, el interés en propiedades intelectuales tiene menos que ver con las particularidades de los autores y más con el hype.",
-    "type": "textos",
-    "tags": [
-      "videojuegos",
-      "opinión"
-    ],
-    "portada": "https://octantes.github.io/posts/textos/poc-propiedades/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:10.352Z",
-    "url": "/posts/textos/poc-propiedades/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "pob-microtransacciones",
-    "title": "las microtransacciones y su futuro",
-    "description": "Explicamos la función de las microtransacciones dentro de la industria y analizamos el posible futuro de los sistemas de monetización in-game",
-    "type": "textos",
-    "tags": [
-      "videojuegos",
-      "opinión"
-    ],
-    "portada": "https://octantes.github.io/posts/textos/pob-microtransacciones/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:09.690Z",
-    "url": "/posts/textos/pob-microtransacciones/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "poa-kena",
-    "title": "kena - está bien que la estética lo sea todo?",
-    "description": "En el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?",
-    "type": "textos",
-    "tags": [
-      "videojuegos",
-      "opinión"
-    ],
-    "portada": "https://octantes.github.io/posts/textos/poa-kena/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:09.289Z",
-    "url": "/posts/textos/poa-kena/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "viñetas",
-    "title": "viñetas",
-    "description": "descripcion corta para seo",
-    "type": "musica",
-    "tags": [
-      "album",
-      "instrumental"
-    ],
-    "portada": "https://octantes.github.io/posts/musica/viñetas/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:08.823Z",
-    "url": "/posts/musica/viñetas/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "sixminutesolder",
-    "title": "six minutes older",
-    "description": "experimentos midi",
-    "type": "musica",
-    "tags": [
-      "ep",
-      "visualizer"
-    ],
-    "portada": "https://octantes.github.io/posts/musica/sixminutesolder/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:08.731Z",
-    "url": "/posts/musica/sixminutesolder/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "seance",
-    "title": "seance",
-    "description": "primer disquito con guitarra y visualizer",
-    "type": "musica",
-    "tags": [
-      "album",
-      "instrumental"
-    ],
-    "portada": "https://octantes.github.io/posts/musica/seance/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:08.588Z",
-    "url": "/posts/musica/seance/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "moodworktapes",
-    "title": "mood worktapes",
-    "description": "primer disquito, aprendiendo a usar ableton live",
-    "type": "musica",
-    "tags": [
-      "album",
-      "instrumental"
-    ],
-    "portada": "https://octantes.github.io/posts/musica/moodworktapes/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:08.521Z",
-    "url": "/posts/musica/moodworktapes/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "geminis",
-    "title": "geminis",
-    "description": "la musica de mi hermano, sumando un tema mio al final",
-    "type": "musica",
-    "tags": [
-      "album",
-      "instrumental"
-    ],
-    "portada": "https://octantes.github.io/posts/musica/geminis/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:08.393Z",
-    "url": "/posts/musica/geminis/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "enuna",
-    "title": "en una - publicación digital",
-    "description": "descripcion corta para seo",
-    "type": "diseño",
-    "tags": [
-      "branding",
-      "portfolio"
-    ],
-    "portada": "https://octantes.github.io/posts/diseño/enuna/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:08.271Z",
-    "url": "/posts/diseño/enuna/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "dinamik",
-    "title": "dinamik - studio dev",
-    "description": "descripcion corta para seo",
-    "type": "diseño",
-    "tags": [
-      "branding",
-      "portfolio"
-    ],
-    "portada": "https://octantes.github.io/posts/diseño/dinamik/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:07.886Z",
-    "url": "/posts/diseño/dinamik/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "cruzar",
-    "title": "cruzar - cordillera cripto",
-    "description": "descripcion corta para seo",
-    "type": "diseño",
-    "tags": [
-      "branding",
-      "portfolio"
-    ],
-    "portada": "https://octantes.github.io/posts/diseño/cruzar/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:07.637Z",
-    "url": "/posts/diseño/cruzar/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "trackwithslate",
-    "title": "trackwithslate",
-    "description": "herramienta simple para editar y organizar información tabular CSV directamente en el navegador",
-    "type": "desarrollo",
-    "tags": [
-      "herramientas",
-      "portfolio"
-    ],
-    "portada": "https://octantes.github.io/posts/desarrollo/trackwithslate/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:07.440Z",
-    "url": "/posts/desarrollo/trackwithslate/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
-    "slug": "shadewithseal",
-    "title": "shadewithseal",
-    "description": "playground para programar y grabar fragment shaders GLSL directamente en el navegador",
-    "type": "desarrollo",
-    "tags": [
-      "herramientas",
-      "portfolio"
-    ],
-    "portada": "https://octantes.github.io/posts/desarrollo/shadewithseal/portada.webp",
-    "handle": [
-      "kaste"
-    ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:07.266Z",
-    "url": "/posts/desarrollo/shadewithseal/",
-    "vuecomp": null,
-    "fullscreen": null
-  },
-  {
     "slug": "browsewithscroll",
     "title": "browsewithscroll",
     "description": "herramienta para previsualizar fuentes y multimedia con scroll directamente en el navegador",
@@ -316,8 +12,8 @@
     "handle": [
       "kaste"
     ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:07.062Z",
+    "date": "05/03/2026",
+    "isoDate": "2026-03-05T00:00:00.000Z",
     "url": "/posts/desarrollo/browsewithscroll/",
     "vuecomp": null,
     "fullscreen": null
@@ -335,9 +31,313 @@
     "handle": [
       "kaste"
     ],
-    "date": "27/03/2026",
-    "isoDate": "2026-03-27T07:07:06.957Z",
+    "date": "14/09/2025",
+    "isoDate": "2025-09-14T00:00:00.000Z",
     "url": "/posts/desarrollo/arch-hud/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "shadewithseal",
+    "title": "shadewithseal",
+    "description": "playground para programar y grabar fragment shaders GLSL directamente en el navegador",
+    "type": "desarrollo",
+    "tags": [
+      "herramientas",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/desarrollo/shadewithseal/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "03/07/2025",
+    "isoDate": "2025-07-03T00:00:00.000Z",
+    "url": "/posts/desarrollo/shadewithseal/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "trackwithslate",
+    "title": "trackwithslate",
+    "description": "herramienta simple para editar y organizar información tabular CSV directamente en el navegador",
+    "type": "desarrollo",
+    "tags": [
+      "herramientas",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/desarrollo/trackwithslate/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "23/06/2025",
+    "isoDate": "2025-06-23T00:00:00.000Z",
+    "url": "/posts/desarrollo/trackwithslate/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "geminis",
+    "title": "geminis",
+    "description": "la musica de mi hermano, sumando un tema mio al final",
+    "type": "musica",
+    "tags": [
+      "album",
+      "instrumental"
+    ],
+    "portada": "https://octantes.github.io/posts/musica/geminis/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "06/06/2025",
+    "isoDate": "2025-06-06T00:00:00.000Z",
+    "url": "/posts/musica/geminis/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "viñetas",
+    "title": "viñetas",
+    "description": "descripcion corta para seo",
+    "type": "musica",
+    "tags": [
+      "album",
+      "instrumental"
+    ],
+    "portada": "https://octantes.github.io/posts/musica/viñetas/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "22/12/2024",
+    "isoDate": "2024-12-22T00:00:00.000Z",
+    "url": "/posts/musica/viñetas/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "dinamik",
+    "title": "dinamik - studio dev",
+    "description": "descripcion corta para seo",
+    "type": "diseño",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/diseño/dinamik/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "30/11/2024",
+    "isoDate": "2024-11-30T00:00:00.000Z",
+    "url": "/posts/diseño/dinamik/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "cruzar",
+    "title": "cruzar - cordillera cripto",
+    "description": "descripcion corta para seo",
+    "type": "diseño",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/diseño/cruzar/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "19/09/2024",
+    "isoDate": "2024-09-19T00:00:00.000Z",
+    "url": "/posts/diseño/cruzar/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "enuna",
+    "title": "en una - publicación digital",
+    "description": "descripcion corta para seo",
+    "type": "diseño",
+    "tags": [
+      "branding",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/diseño/enuna/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "06/09/2023",
+    "isoDate": "2023-09-06T00:00:00.000Z",
+    "url": "/posts/diseño/enuna/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "pof-softwarevr",
+    "title": "realidad virtual - las mejores aplicaciones",
+    "description": "En las conversaciones sobre realidad virtual, el software suele quedar en segundo plano. Repasemos algunos usos interesantes.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/pof-softwarevr/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "21/07/2022",
+    "isoDate": "2022-07-21T00:00:00.000Z",
+    "url": "/posts/textos/pof-softwarevr/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "poe-futurovr",
+    "title": "realidad virtual - un futuro contemporáneo",
+    "description": "La realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a descubrirlo.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/poe-futurovr/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "10/05/2022",
+    "isoDate": "2022-05-10T00:00:00.000Z",
+    "url": "/posts/textos/poe-futurovr/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "seance",
+    "title": "seance",
+    "description": "primer disquito con guitarra y visualizer",
+    "type": "musica",
+    "tags": [
+      "album",
+      "instrumental"
+    ],
+    "portada": "https://octantes.github.io/posts/musica/seance/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "08/05/2022",
+    "isoDate": "2022-05-08T00:00:00.000Z",
+    "url": "/posts/musica/seance/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "pod-abandonware",
+    "title": "abandonware - la permanencia del autor",
+    "description": "El abandonware se produce cuando el arte se ve ligado al avance de la tecnología, intensificando las dificultades para conservarlo correctamente.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/pod-abandonware/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "31/03/2022",
+    "isoDate": "2022-03-31T00:00:00.000Z",
+    "url": "/posts/textos/pod-abandonware/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "poc-propiedades",
+    "title": "propiedades intelectuales - hacen falta nuevas IPs?",
+    "description": "Hoy en día, el interés en propiedades intelectuales tiene menos que ver con las particularidades de los autores y más con el hype.",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/poc-propiedades/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "07/02/2022",
+    "isoDate": "2022-02-07T00:00:00.000Z",
+    "url": "/posts/textos/poc-propiedades/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "pob-microtransacciones",
+    "title": "las microtransacciones y su futuro",
+    "description": "Explicamos la función de las microtransacciones dentro de la industria y analizamos el posible futuro de los sistemas de monetización in-game",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/pob-microtransacciones/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "13/12/2021",
+    "isoDate": "2021-12-13T00:00:00.000Z",
+    "url": "/posts/textos/pob-microtransacciones/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "sixminutesolder",
+    "title": "six minutes older",
+    "description": "experimentos midi",
+    "type": "musica",
+    "tags": [
+      "ep",
+      "visualizer"
+    ],
+    "portada": "https://octantes.github.io/posts/musica/sixminutesolder/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "08/12/2021",
+    "isoDate": "2021-12-08T00:00:00.000Z",
+    "url": "/posts/musica/sixminutesolder/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "poa-kena",
+    "title": "kena - está bien que la estética lo sea todo?",
+    "description": "En el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?",
+    "type": "textos",
+    "tags": [
+      "videojuegos",
+      "opinión"
+    ],
+    "portada": "https://octantes.github.io/posts/textos/poa-kena/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "10/09/2021",
+    "isoDate": "2021-09-10T00:00:00.000Z",
+    "url": "/posts/textos/poa-kena/",
+    "vuecomp": null,
+    "fullscreen": null
+  },
+  {
+    "slug": "moodworktapes",
+    "title": "mood worktapes",
+    "description": "primer disquito, aprendiendo a usar ableton live",
+    "type": "musica",
+    "tags": [
+      "album",
+      "instrumental"
+    ],
+    "portada": "https://octantes.github.io/posts/musica/moodworktapes/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "11/04/2019",
+    "isoDate": "2019-04-11T00:00:00.000Z",
+    "url": "/posts/musica/moodworktapes/",
     "vuecomp": null,
     "fullscreen": null
   }
