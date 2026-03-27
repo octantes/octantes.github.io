@@ -81,7 +81,7 @@ async function scanContentDir() {
               description: attributes.description || '',
               type: attributes.type || tdir.name,
               tags: attributes.tags || [],
-              portada: attributes.portada || '',
+              portada: attributes.portada ? `/content/${tdir.name}/${pdir.name}/${attributes.portada}` : '',
               handle: handles,
               date: formatted,
               isoDate: attributes.date || dateObj.toISOString(),

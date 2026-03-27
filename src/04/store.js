@@ -299,7 +299,7 @@ export const useStore = defineStore('store', () => {
       if (!response.ok) throw new Error('la respuesta de la api falló')
       const data = await response.json()
       const price = data.bitcoin.usd
-      const formattedPrice = Math.floor((price / 1000) * 10) / 10
+      const formattedPrice = Math.round((price / 1000) * 10) / 10
       btcPrice.value = `${formattedPrice}K`
 
     } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
