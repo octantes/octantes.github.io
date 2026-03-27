@@ -95,7 +95,7 @@ export const useStore = defineStore('store', () => {
 
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
   function togglePopup()                { showPopup.value = !showPopup.value }                                                        // toggle popup for notifications
-  function setSearchQuery(query)        { searchQuery.value = query; currentPage.value = 1 }                                          // apply note search query to table
+  function setSearchQuery(query)        { searchQuery.value = query }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
 
   function fetchTime() {                                                                                                              // fetch and update current time  

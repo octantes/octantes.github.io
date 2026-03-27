@@ -63,7 +63,8 @@ let expandA    = null                                                   // dilat
 let expandB    = null                                                   // dilation buffer for expandMask
 let indexToX   = null                                                   // maps linear index to x coord
 let indexToY   = null                                                   // maps linear index to y coord
-let textGroups = null                                                   // map for text drawing
+let textGroups        = null                                            // map for text drawing
+let isTransparentPath = []                                              // reusable buffer for transparent cells
 
 let noiseMap        = null                                              // static noise map for distortion
 let neighborsMap    = null                                              // stores each cell neighbors
@@ -182,7 +183,7 @@ function drawFrame(deltaTime) {                                         // draw 
   context.fillStyle = '#000'
   context.beginPath()
   
-  const isTransparentPath = []
+  isTransparentPath.length = 0
 
   for (let y = 0; y < rows; y++) {
 
@@ -221,7 +222,6 @@ function drawFrame(deltaTime) {                                         // draw 
 
     case 'intro':         germFrame += frameAdvancement; if (germFrame >= germFramesMax) { germFrame = germFramesMax; mode = 'static' } break
     case 'direct':        germFrame += frameAdvancement; const directLimit = germFramesMax + directFramesExtra; if (germFrame >= directLimit) { germFrame = directLimit; mode = 'hidden' } break
-    case 'transition':    animateSwipe(frameFactor); break
 
     default: break
 
@@ -490,8 +490,10 @@ function animateRain(frameFactor) {                                     // rende
 
 }
 
-function animateCircle(frameFactor) {                                   // render next circle frame 
-  
+function animateCircle(frameFactor) {                                   // render next circle frame
+
+  const maxRadius = Math.hypot(cols, rows) + 10
+  if (outroRadius >= maxRadius) return
   outroRadius += 1 * frameFactor
 
   const rCurr = outroRadius
