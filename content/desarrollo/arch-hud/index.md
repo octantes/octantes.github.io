@@ -8,7 +8,9 @@ date: 2025-09-14
 handle: kaste
 ---
 
-[arch-hud](https://github.com/octantes/arch-hud) es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch
+*You can find this project in english in my [Github](https://github.com/octantes/arch-hud)*
+
+arch-hud es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch
 
 las herramientas fueron implementadas pensando en armar un *heads up display*
 buscando que la pc vuelva a ser una herramienta y no un agujero negro cognitivo
