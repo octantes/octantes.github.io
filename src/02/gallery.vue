@@ -7,7 +7,7 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { noteSortFilter, processing, searchQuery } = storeToRefs(store)                                                                // imports refs from main store
+const { noteSortFilter, processing, searchQuery, notesLoaded } = storeToRefs(store)                                                                // imports refs from main store
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
 
@@ -16,7 +16,9 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 <template> 
     
   <div class="gallery">
-    
+
+    <div v-if="notesLoaded && noteSortFilter.length === 0" class="empty-state">no hay notas que coincidan</div>
+
     <div v-for="(note, index) in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
 
       :class="{ 
@@ -57,10 +59,19 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 <style scoped> 
 
-.gallery { 
+.gallery {
 
   /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); grid-auto-flow: dense;
   /* BOX    */ width: 100%; gap: 1rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 2rem;
+
+}
+
+.empty-state {
+
+  /* LAYOUT */ grid-column: 1 / -1; text-align: center;
+  /* BOX    */ padding: 2rem;
+  /* FILL   */ color: var(--humo50);
+  /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 1rem;
 
 }
 

@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 
 const store = useStore()                                                                                                              // initializes global store
 
-const { subEmail, subHoney, subMessage, subState } = storeToRefs(store)                                                               // imports refs from main store
+const { subEmail, subHoney, subMessage, subState, subDone } = storeToRefs(store)                                                               // imports refs from main store
 
 const submitButtonText = computed(() => {                                                                                             // switch for message and button 
 
@@ -28,6 +28,12 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 
   <div class="subscribe">
 
+    <template v-if="subDone">
+      <div class="cta">ya estás en la lista, gracias por sumarte!</div>
+    </template>
+
+    <template v-else>
+
     <div class="cta">querés enterarte cuando subo algo nuevo? sumate a la lista de mails!</div>
 
     <div class="form">
@@ -38,6 +44,8 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
       <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" role="button" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</div>
 
     </div>
+
+    </template>
 
   </div>
 
