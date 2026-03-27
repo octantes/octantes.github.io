@@ -424,10 +424,9 @@ async function processPosts() {                                                 
     } catch(e) { console.error(`error processing assets for ${slug}:`, e) }
 
     const finalHash = hash.digest('hex')
-    const dateMatch = attributes.date && String(attributes.date).match(/^(\d{4})-(\d{2})-(\d{2})$/)
-    const [year, month, day] = dateMatch ? [dateMatch[1], dateMatch[2], dateMatch[3]] : [new Date().getFullYear(), String(new Date().getMonth()+1).padStart(2,'0'), String(new Date().getDate()).padStart(2,'0')]
-    const formatted = `${day}/${month}/${year}`
-    const isoDate = dateMatch ? attributes.date : new Date().toISOString()
+    const dateObj = attributes.date ? new Date(attributes.date) : new Date()
+    const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
+    const isoDate = attributes.date || dateObj.toISOString()
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
     const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const canonicalUrl = `${webURL}/${postType}/${slug}/`
