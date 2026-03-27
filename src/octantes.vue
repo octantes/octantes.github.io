@@ -8,7 +8,7 @@ import Portada from './02/portada.vue'
 
 const store = useStore()
 const route = useRoute()
-const { computedPortada, computedFullscreen } = storeToRefs(store)
+const { computedFullscreen } = storeToRefs(store)
 
 </script>
 
@@ -20,7 +20,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
       <template v-if="!computedFullscreen && route.path !== '/portfolio'">
 
-        <Portada class="portada" :metadata="computedPortada" />
+        <Portada class="portada" />
         <Navigation class="navigation" :disabled="store.processing" />
 
       </template>
@@ -67,7 +67,7 @@ const { computedPortada, computedFullscreen } = storeToRefs(store)
 
 @media (max-width: 1080px) { 
 
-  .pagina { max-width: 100%; max-height: auto; }
+  .pagina { max-width: 100%; }
 
   .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; } }
 

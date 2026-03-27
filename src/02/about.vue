@@ -1,14 +1,12 @@
 <script setup> 
 import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import authorpic from '../../content/assets/kaste.jpg'
 
-const router          = useRouter()                                                                                                   // handles note open route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { activeFilter, processing, userStatus } = storeToRefs(store)                                                                   // imports refs from main store
+const { activeFilter, userStatus } = storeToRefs(store)                                                                              // imports refs from main store
 
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [                                                                                                             // random taglines 
@@ -17,8 +15,6 @@ const taglines        = [                                                       
   'desplegando portales',
   'investigando dualidades'
 ]
-
-function loadReference(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }
 
 onMounted(async () => {                                                                                                               // set random tagline
 
