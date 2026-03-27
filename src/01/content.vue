@@ -116,11 +116,13 @@ watch(                                                                          
     if (store.processing) return
     setProcessing(true)
 
+    try {
+
     if (slug && route.params.type && store.activeFilter !== 'full') { store.activeFilter = route.params.type }
 
     await nextTick()
     
-    if (!slug && !store.notesLoaded.value) { await loadNotesIndex() }
+    if (!slug && !store.notesLoaded) { await loadNotesIndex() }
 
     switch (true) {
 
@@ -153,6 +155,7 @@ watch(                                                                          
         lastSlug = slug
         await handleLoadNote(slug)
         if (!isMobile.value) await shaderRef.value?.runQueue('outro')
+        if (!isMobile.value) shaderRef.value?.runQueue('hidden')
         break
       
       // first load from url, DIRECT when loading from url
@@ -178,8 +181,8 @@ watch(                                                                          
       
     }
 
-    setProcessing(false)
-            
+    } finally { setProcessing(false) }
+
   }, { immediate: true }
 
 )
