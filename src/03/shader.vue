@@ -618,7 +618,7 @@ function animateSwipe(frameFactor) {                                    // rende
     }
   }
 
-  swipeFrame += 1.0 * frameFactor
+  swipeFrame += 2.0 * frameFactor
 
   if (swipeFrame >= cols) {
 

@@ -176,13 +176,13 @@ export const useStore = defineStore('store', () => {
       let nextIndex = (currentTabIndex + direction * i % numTabs + numTabs) % numTabs
       const nextTabValue = tabs[nextIndex].value
 
-      if (emptyFilter(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
+      if (hasNotes(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
 
     }
 
   }
 
-  function emptyFilter(type) {                                                                                                        // check if the filter is empty 
+  function hasNotes(type) {                                                                                                        // check if the filter is empty 
 
     if (type === 'full') return true
     const actualType = type
@@ -438,7 +438,7 @@ export const useStore = defineStore('store', () => {
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
-    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, emptyFilter,
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, hasNotes,
     /* NAVIG COM */ noteSortFilter,
 
   }
