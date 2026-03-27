@@ -86,6 +86,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   <div class="portfolio">
 
     <button class="close-btn" @click="closePortfolio" title="volver al inicio" aria-label="cerrar el portfolio">✘</button>
+    <div class="github"> <a href="https://github.com/octantes" target="_blank" rel="noopener noreferrer">Github</a> </div>
       
     <div class="profile-group"> 
 
@@ -157,6 +158,20 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   /* CURSOR */ cursor: pointer; user-select: none;
   /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50;
+  /* FILL   */ background: transparent; color: var(--humo99);
+  /* BORDER */ border: none; box-shadow: none;
+  /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
+  /* FX     */ mix-blend-mode: difference;
+  /* MOTION */ transition: color var(--animate-fast);
+
+  &:hover { color: var(--lirio); }
+
+}
+
+.github { 
+
+  /* CURSOR */ cursor: pointer; user-select: none;
+  /* LAYOUT */ position: absolute; top: 1.5rem; left: 2rem; z-index: 50;
   /* FILL   */ background: transparent; color: var(--humo99);
   /* BORDER */ border: none; box-shadow: none;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;

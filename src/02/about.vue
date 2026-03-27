@@ -6,9 +6,9 @@ import authorpic from '../../content/assets/kaste.jpg'
 
 const store           = useStore()                                                                                                    // initializes global store
 
-const { activeFilter, userStatus, currentPost } = storeToRefs(store)                                                                              // imports refs from main store
+const { activeFilter, userStatus, currentPost } = storeToRefs(store)                                                                  // imports refs from main store
 
-const displayFilter = computed(() => currentPost.value?.type || activeFilter.value)                                                            // show note type when reading, else active filter
+const displayFilter = computed(() => currentPost.value?.type || activeFilter.value)                                                   // show note type when reading, else active filter
 
 const currentTagline  = ref('')                                                                                                       // current tagline phrase
 const taglines        = [                                                                                                             // random taglines 
