@@ -339,7 +339,7 @@ async function cleanOrphans() {                                                 
     }
   } catch {}
 
-  for (const key of Object.keys(cache)) { const slug = key.split('/')[0]; const isPostActive = postDirs.some(p => p.slug === slug); if (!isPostActive) delete cache[key] }
+  for (const key of Object.keys(cache)) { const isPostActive = postDirs.some(p => key.startsWith(`${p.typeDir}/${p.slug}/`)); if (!isPostActive) delete cache[key] }
 
 }
 
