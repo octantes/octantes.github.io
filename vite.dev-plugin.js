@@ -7,7 +7,8 @@ const md = new MarkdownIt()
 
 const contentDir = './content'
 
-function renderMarkdown(body, attributes, type) {
+function renderMarkdown(body, attributes, type) { 
+
   const isTrad = attributes.style === 'trad'
   
   switch (type) {
@@ -30,9 +31,11 @@ function renderMarkdown(body, attributes, type) {
       return md.render(body)
     }
   }
+
 }
 
-function processAssets(html, type, slug) {
+function processAssets(html, type, slug) { 
+
   return html.replace(/<(img|video|audio)\s+([^>]+?)>/gi, (match, tag, attrs) => {
     const srcMatch = attrs.match(/src="([^"]+)"/)
     if (!srcMatch) return match
@@ -43,10 +46,11 @@ function processAssets(html, type, slug) {
   })
 }
 
-async function scanContentDir() {
+async function scanContentDir() { 
+
   const indexItems = []
   
-  try {
+  try { 
     const typeDirs = await readdir(contentDir, { withFileTypes: true })
     
     for (const tdir of typeDirs) {
@@ -91,14 +95,14 @@ async function scanContentDir() {
         }
       }
     }
-  } catch (e) {
-    console.error('error scanning content dir:', e.message)
-  }
+  } catch (e) { console.error('error scanning content dir:', e.message) }
   
   return indexItems.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate))
+
 }
 
-async function renderNote(type, slug) {
+async function renderNote(type, slug) { 
+  
   const mdPath = path.join(contentDir, type, slug, 'index.md')
   
   try {
@@ -151,13 +155,16 @@ async function renderNote(type, slug) {
   <a href="/" style="color:#8AB6BB;">← Volver</a>
 </body></html>`
   }
+
 }
 
 function devPlugin() {
+
   return {
     name: 'vite-dev-content',
-    configureServer(server) {
-      server.middlewares.use(async (req, res, next) => {
+    configureServer(server) { 
+      server.middlewares.use(async (req, res, next) => { 
+
         const url = req.url.split('?')[0]
         
         if (url === '/index.json') {
@@ -173,6 +180,7 @@ function devPlugin() {
         }
         
         const match = url.match(/^\/posts\/([^\/]+)\/([^\/]+)\/?$/)
+
         if (match) {
           const [, type, slug] = match
           try {
@@ -187,9 +195,11 @@ function devPlugin() {
         }
         
         next()
+
       })
     }
   }
+
 }
 
 export default devPlugin
