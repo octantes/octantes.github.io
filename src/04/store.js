@@ -147,8 +147,9 @@ export const useStore = defineStore('store', () => {
   }
 
   function setActiveFilter(routerInstance, filter) {                                                                                  // set active note filter
-    
+
     activeFilter.value = filter
+    searchQuery.value  = ''
 
     if (routerInstance && !currentPost.value) {
 
@@ -218,8 +219,8 @@ export const useStore = defineStore('store', () => {
     const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10) || 0
     
     if (subHoney.value)              { updateSub('success', 'mail registrado!',             true); return }
-    if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!',       true); return }
-    if (currentCount >= lsCounter)         { updateSub('error',   'no podés registrar más mails', true); return }
+    if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!',       false); return }
+    if (currentCount >= lsCounter)         { updateSub('error',   'no podés registrar más mails', false); return }
 
     if (window.umami && typeof window.umami.track === 'function') {
 

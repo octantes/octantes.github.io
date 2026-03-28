@@ -10,7 +10,7 @@ handle: kaste
 
 *You can find this project in english in my [Github](https://github.com/octantes/shadewithseal)*
 
-seal es una herramienta local para *crear, guardar y grabar frag shaders* glsl
+seal es una herramienta local para **crear, guardar y grabar frag shaders** glsl
 no necesita instalación ni internet: solo descargá el HTML y abrilo con el navegador
 
 armado para artistas técnicos que quieran un playground liviano para prototipar

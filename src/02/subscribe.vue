@@ -34,16 +34,16 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 
     <template v-else>
 
-    <div class="cta">querés enterarte cuando subo algo nuevo? sumate a la lista de mails!</div>
+    <div class="cta" :class="{ [subState]: subState !== 'default' }">{{ subState !== 'default' ? subMessage : 'querés enterarte cuando subo algo nuevo? sumate a la lista de mails!' }}</div>
 
-    <div class="form">
+    <form class="form" @submit.prevent="handleSubscription">
 
-      <input class="honeypot" type="text"  v-model="subHoney" name="user"  tabindex="-1" autocomplete="off"/>
-      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required @keydown.enter="handleSubscription" :class="{ [subState]: subState !== 'default'}" title="ingresar tu correo para suscribirte" aria-label="campo para ingresar correo electrónico"/>
+      <input class="honeypot" type="text"  v-model="subHoney" name="user"  tabindex="-1" autocomplete="off" aria-hidden="true"/>
+      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required :class="{ [subState]: subState !== 'default'}" title="ingresar tu correo para suscribirte" aria-label="campo para ingresar correo electrónico"/>
 
-      <div class="submit" :class="{ [subState]: subState !== 'default' }" @click="handleSubscription" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" role="button" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</div>
+      <button type="submit" class="submit" :class="{ [subState]: subState !== 'default' }" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</button>
 
-    </div>
+    </form>
 
     </template>
 
@@ -61,11 +61,15 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   
 }
 
-.cta { 
+.cta {
 
   /* LAYOUT */ text-align: center;
   /* FONT   */ font-style: italic;
   /* FILL   */ color: var(--humo);
+  /* MOTION */ transition: color var(--animate-fast);
+
+  &.error   { color: var(--arcilla); }
+  &.success { color: var(--poma);    }
 
 }
 

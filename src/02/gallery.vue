@@ -17,7 +17,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     
   <div class="gallery">
 
-    <div v-if="notesLoaded && noteSortFilter.length === 0" class="empty-state">no hay notas que coincidan</div>
+    <div v-if="notesLoaded && noteSortFilter.length === 0" class="empty-state">no hay notas que coincidan{{ searchQuery ? `: "${searchQuery}"` : '' }}</div>
 
     <div v-for="(note, index) in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
 
@@ -29,7 +29,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
       }"
 
-      title="abrir nota" role="button" :aria-label="'abrir la nota ' + note.title" >
+      title="abrir nota" role="button" tabindex="0" :aria-label="'abrir la nota ' + note.title"
+      @keydown.enter.prevent="noteOpen(note.type, note.slug)" @keydown.space.prevent="noteOpen(note.type, note.slug)" >
     
       <div class="card-cover">
 
@@ -46,7 +47,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
         <p v-if="(route.params.slug === note.slug || (!route.params.slug && index === 0)) && !searchQuery" class="description">{{ note.description }}</p>
         
         <div class="tags">
-          <span v-for="tag in note.tags?.slice(0,3)" :key="tag" class="tag" @click.stop="store.setSearchQuery(tag)">{{ tag }}</span>
+          <span v-for="tag in note.tags?.slice(0,3)" :key="tag" class="tag" role="button" tabindex="0" @click.stop="store.setSearchQuery(tag)" @keydown.enter.stop.prevent="store.setSearchQuery(tag)">{{ tag }}</span>
         </div>
 
       </div>
@@ -104,7 +105,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   }
 
-  &.active { 
+  &.active {
 
     border-color: var(--lirio);
 
@@ -113,6 +114,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     & .tag   { padding: 0.3rem 0.5rem; font-size: 0.75rem; }
 
   }
+
+  &:focus { box-shadow: none; border-color: var(--cristal); outline: none; }
 
   &.disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
 
@@ -172,11 +175,15 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: auto; }
 
-.tag { 
+.tag {
 
+  /* CURSOR */ cursor: pointer;
   /* BOX    */ padding: 0.1rem 0.3rem; border-radius: 2px;
   /* FILL   */ background-color: var(--humo10); color: var(--lirio);
   /* FONT   */ font-size: 0.6rem;
+  /* MOTION */ transition: background-color var(--animate-fast);
+
+  &:hover { background-color: var(--lirio25); }
 
 }
 

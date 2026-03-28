@@ -54,8 +54,6 @@ const { changeFilter, hasNotes, tabs, navHome, setActiveFilter } = store
     /* BORDER */ border: none; border-radius: var(--radius-ss);
     /* FONT   */ font-family: var(--font-main);
     /* MOTION */ transition: all var(--animate-faster);
-    
-    &:focus    { box-shadow: none; }
     &:active   { transform: var(--scale-min); }
     &:hover    { background-color: var(--carbon15); color: var(--carbon); }
     &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
