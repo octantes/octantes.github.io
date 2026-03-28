@@ -71,7 +71,7 @@ export const useStore = defineStore('store', () => {
   const subMessage                 = ref('dejá tu mail acá...')                                                                       // status message
   const subState                   = ref('default')                                                                                   // status states
   const subDone                    = ref((parseInt(localStorage.getItem('subscription_count') || '0', 10) || 0) > 0)                  // user already subscribed
-  const emailRegex                 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/                                                                     // email regex
+  const emailRegex                 = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/                                             // email regex
   const lsCounter                  = 3                                                                                                // localstorage counter
   const subResetTime               = 3000                                                                                             // submit reset timer
   
@@ -79,7 +79,7 @@ export const useStore = defineStore('store', () => {
 
   let   timeInterval = null                                                                                                           // time update interval
   let   btcInterval  = null                                                                                                           // btc update interval
-  const btcPrice     = ref('---')                                                                                                     // btc price fetch result
+  const btcPrice     = ref(null)                                                                                                      // btc price fetch result
   const currentTime  = ref('--:--')                                                                                                   // current time fetch result
   const barContent   = ref('/ '.repeat(300))                                                                                          // progress bar animation content
 
@@ -229,8 +229,8 @@ export const useStore = defineStore('store', () => {
         subDone.value = true
 
         updateSub('success', `gracias por sumarte!`, true)
-        
-    } else { updateSub('error', 'falló el registro', true) }
+
+    } else { updateSub('error', 'prevenido por adblocker', true) }
     
   }
 
@@ -292,7 +292,7 @@ export const useStore = defineStore('store', () => {
         notesIndex.value = await response.json()
         notesLoaded.value = true
 
-      } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = [] }
+      } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = []; notesLoaded.value = true }
       finally { notesLoadingPromise = null }
 
       return notesIndex.value
@@ -309,11 +309,12 @@ export const useStore = defineStore('store', () => {
       const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
       if (!response.ok) throw new Error('la respuesta de la api falló')
       const data = await response.json()
-      const price = data.bitcoin.usd
+      const price = data?.bitcoin?.usd
+      if (typeof price !== 'number' || !isFinite(price)) { btcPrice.value = null; return }
       const formattedPrice = Math.round((price / 1000) * 10) / 10
       btcPrice.value = `${formattedPrice}K`
 
-    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = 'error' }
+    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = null }
 
   }
 

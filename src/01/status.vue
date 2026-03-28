@@ -45,8 +45,10 @@ onUnmounted(() => { store.stopStatusUpdates() })
       <span class="btc divisions">//</span>
       <a href="/feed.xml" target="_blank" title="suscribirse al feed RSS" aria-label="suscribirse a las últimas publicaciones por feed RSS">RSS</a>
       <span class="btc divisions">//</span>
-      <span class="btc">BTC: {{ btcPrice }}</span>
-      <span class="btc divisions">//</span>
+      <template v-if="btcPrice !== null">
+        <span class="btc">BTC: {{ btcPrice }}</span>
+        <span class="btc divisions">//</span>
+      </template>
       <span>{{ currentTime }}</span>
 
     </div>

@@ -337,7 +337,7 @@ async function cleanOrphans() {                                                 
 
       }
     }
-  } catch {}
+  } catch (e) { console.warn('error limpiando carpetas huérfanas:', e) }
 
   for (const key of Object.keys(cache)) { const isPostActive = postDirs.some(p => key.startsWith(`${p.typeDir}/${p.slug}/`)); if (!isPostActive) delete cache[key] }
 
@@ -528,7 +528,7 @@ async function writeIndex() {                                                   
   const newIndexStr = JSON.stringify(indexItems, null, 2)
   
   let prevIndex = '[]'
-  try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch {}
+  try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch (e) { if (e.code !== 'ENOENT') console.warn('error leyendo index.json previo:', e) }
 
   if (prevIndex !== newIndexStr) { await fs.writeFile(indexPath, newIndexStr); console.log('index.json updated') }
   else { console.log('skipping index.json (unchanged)') }
@@ -753,7 +753,7 @@ async function writeFeed() {                                                    
   </rss>`
 
   let prevFeed = ''
-  try { prevFeed = await fs.readFile(feedPath, 'utf-8') } catch {}
+  try { prevFeed = await fs.readFile(feedPath, 'utf-8') } catch (e) { if (e.code !== 'ENOENT') console.warn('error leyendo feed.xml previo:', e) }
 
   if (prevFeed !== feedXml) { await fs.writeFile(feedPath, feedXml); console.log('feed.xml updated') }
   else { console.log('skipping feed.xml (unchanged)') }
