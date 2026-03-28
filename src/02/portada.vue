@@ -31,11 +31,11 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
           <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
         </div>
 
-        <button class="toggle" @click="expanded = !expanded"
-          :title="expanded ? 'cerrar descripción' : 'ver descripción'"
-          :aria-label="expanded ? 'cerrar descripción' : 'ver descripción'">{{ expanded ? '↑' : '↓' }}</button>
-
       </div>
+
+      <button class="toggle" @click="expanded = !expanded"
+        :title="expanded ? 'cerrar descripción' : 'ver descripción'"
+        :aria-label="expanded ? 'cerrar descripción' : 'ver descripción'">{{ expanded ? '↑' : '↓' }}</button>
 
     </div>
 
@@ -165,7 +165,7 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center;
-  /* BOX    */ padding: .532rem .8rem; align-self: center; flex-shrink: 0;
+  /* BOX    */ padding: 0; align-self: stretch; aspect-ratio: 1; overflow: hidden; flex: none;
   /* FILL   */ background-color: var(--carbon25); color: var(--carbon80);
   /* BORDER */ border: none; border-radius: 9999px;
   /* FONT   */ font-family: var(--font-main); font-weight: normal;
