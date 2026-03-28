@@ -10,7 +10,7 @@ handle: kaste
 
 *You can find this project in english in my [Github](https://github.com/octantes/browsewithscroll)*
 
-scroll es una herramienta local para *previsualizar colecciones de fuentes y multimedia*
+scroll es una herramienta local para **previsualizar colecciones de fuentes y multimedia**
 no necesita instalación ni internet: solo cloná el repo y ejecutá el script "launch.sh"
 
 armado para diseñadores y creadores que necesiten una forma rápida de buscar recursos
