@@ -90,6 +90,4 @@ const { changeFilter, hasNotes, tabs, navHome, setActiveFilter } = store
 
 .logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; }  
 
-@media (max-width: 432px) { .logo-btn { display: none; } }
-
 </style>
