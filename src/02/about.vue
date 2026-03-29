@@ -239,7 +239,7 @@ onMounted(async () => {                                                         
 
       <br><hr><br>
     
-      <p>si querés saber más <i>sobre el proyecto</i> podes leer estos posteos</p> <br>
+      <p>si querés saber más <i>sobre los juegos</i> podes leer estos posteos</p> <br>
 
       <!--<a href="#" @click.prevent="loadReference('textos', 'mi proceso para hacer fichines')">mi proceso para hacer fichines</a> <br>-->
 
