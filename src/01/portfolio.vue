@@ -74,7 +74,7 @@ watch([currentProject, portfolioProjects], () => {
 }, { immediate: true })
 
 function handleRayClick(proj) { if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj  }
-function downloadCV()         { window.open('/assets/curriculum.pdf', '_blank')                                                                            }
+function downloadCV()         { window.open('/assets/curriculum.pdf', '_blank', 'noopener,noreferrer')                                                        }
 function closePortfolio()     { router.push('/')                                                                                                           }
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
