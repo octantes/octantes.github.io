@@ -121,8 +121,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
 .description {
 
-  /* BOX    */ display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-clamp: 2; overflow: hidden;
-  /* FONT   */ font-style: italic; line-height: 1.25rem; font-size: 1rem; text-overflow: ellipsis;
+  /* FONT   */ font-style: italic; line-height: 1.25rem; font-size: 1rem;
 
 }
 
