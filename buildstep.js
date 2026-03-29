@@ -675,9 +675,7 @@ async function updateSidebars() {                                               
 async function writeSitemap() {                                                  // create sitemap and robots.txt 
 
   const staticPages = [
-    { url: '/', lastmod: new Date().toISOString() },
-    { url: '/about/', lastmod: new Date().toISOString() },
-    { url: '/contact/', lastmod: new Date().toISOString() }
+    { url: '/', lastmod: new Date().toISOString() }
   ]
 
   const postPages = indexItems.map( post => ({ url:post.url,lastmod:post.isoDate }) )
@@ -727,9 +725,15 @@ async function writeFeed() {                                                    
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&apos;');
+    const escapedTitle = post.title
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
 
     return `<item>
-      <title>${post.title}</title>
+      <title>${escapedTitle}</title>
       <link>${postUrl}</link>
       <guid isPermaLink="true">${postUrl}</guid>
       <pubDate>${postDate}</pubDate>
