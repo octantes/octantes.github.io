@@ -708,9 +708,14 @@ function runQueue(name) {                                               // run q
   if (taskResolve) { const r = taskResolve; taskPromise = null; taskResolve = null; r() }
   return new Promise((resolve, reject) => {
     try { task.impl() } catch (err) { return reject(err) }
+    let timeoutId = null
+    const wrappedResolve = () => { clearTimeout(timeoutId); resolve() }
     taskPromise = task
-    taskResolve = resolve
+    taskResolve = wrappedResolve
     startLoop()
+    timeoutId = setTimeout(() => {
+      if (taskResolve === wrappedResolve) { taskPromise = null; taskResolve = null; resolve() }
+    }, 5000)
   })
 }
 
@@ -737,8 +742,9 @@ function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts 
 defineExpose({ runQueue })
 onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext) }) })
 
-onBeforeUnmount(() => { 
+onBeforeUnmount(() => {
 
+  if (taskResolve) { const r = taskResolve; taskPromise = null; taskResolve = null; r() }
   cancelAnimationFrame(animationID)
   window.removeEventListener('resize', resetContext)
   if (animateGerm.lastRatio !== undefined) animateGerm.lastRatio = 0
