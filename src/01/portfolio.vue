@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
-import authorpic from '../../content/assets/kaste.jpg'
+const authorpic = '/assets/kaste.webp'
 
 const router            = useRouter()
 const store             = useStore()

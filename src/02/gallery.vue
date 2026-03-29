@@ -25,8 +25,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
       :class="{ 
 
         disabled: processing, 
-        expanded: (route.params.slug === note.slug || (!route.params.slug && index === 0)) && !searchQuery, 
-        active: route.params.slug === note.slug && !searchQuery
+        expanded: route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery),
+        active: route.params.slug === note.slug
 
       }"
 
