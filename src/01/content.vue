@@ -121,7 +121,7 @@ watch(                                                                          
 
     try {
 
-    if (slug && route.params.type && store.activeFilter !== 'full') { setActiveFilter(router, route.params.type) }
+    if (slug && route.params.type && store.activeFilter !== route.params.type) { setActiveFilter(router, route.params.type) }
 
     await nextTick()
     
