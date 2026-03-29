@@ -21,9 +21,11 @@ function checkViewport() { isMobile.value = window.innerWidth <= 1080 }         
 function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkViewport, 150) }                                       // use resize timer
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, setActiveFilter } = store                                          // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
+const postRef     = ref(null)                                                                                                         // ref for post scroll container
+const contentRef  = ref(null)                                                                                                         // ref for content element
 const noteContent = ref('')                                                                                                           // basic note html for insert
 
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
@@ -46,16 +48,15 @@ async function forceShaderResize() {                                            
 
 }
 
-async function handleLoadNote(slug) {                                                                                                 // custom html load behavior 
-  
-  const postElement = document.querySelector('.post')
+async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
+
   const { html, error } = await fetchPost(slug)
 
   noteContent.value = html
-  if (postElement) { postElement.scrollTop = 0 }
+  if (postRef.value) { postRef.value.scrollTop = 0 }
   await nextTick()
 
-  const contentElement = document.querySelector('.content')
+  const contentElement = contentRef.value
 
   if (contentElement && !error) { 
     
@@ -120,7 +121,7 @@ watch(                                                                          
 
     try {
 
-    if (slug && route.params.type && store.activeFilter !== 'full') { store.activeFilter = route.params.type }
+    if (slug && route.params.type && store.activeFilter !== 'full') { setActiveFilter(router, route.params.type) }
 
     await nextTick()
     
@@ -204,9 +205,9 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
       <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" title="salir de la vista en pantalla completa" aria-label="cerrar el contenido en pantalla completa">X</button>
 
-      <div class="post" :class="{ 'fs-mode': computedFullscreen }">
+      <div class="post" ref="postRef" :class="{ 'fs-mode': computedFullscreen }">
 
-        <div class="content" :class="{ 'fs-content': computedFullscreen }">
+        <div class="content" ref="contentRef" :class="{ 'fs-content': computedFullscreen }">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <div v-else :class="computedNoteClass" v-html="noteContent" />                              <!-- for html posts          -->

@@ -45,7 +45,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
         <span class="date">{{ note.date }}</span>
         <h3 class="title">{{ note.title }}</h3>
 
-        <p v-if="(route.params.slug === note.slug || (!route.params.slug && index === 0)) && !searchQuery" class="description">{{ note.description }}</p>
+        <p v-if="route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery)" class="description">{{ note.description }}</p>
         
         <div class="tags">
           <span v-for="tag in note.tags?.slice(0,3)" :key="tag" class="tag" role="button" tabindex="0" @click.stop="store.setSearchQuery(tag)" @keydown.enter.stop.prevent="store.setSearchQuery(tag)">{{ tag }}</span>

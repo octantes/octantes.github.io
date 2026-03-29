@@ -1,16 +1,12 @@
 <script setup> 
 import { computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
-const router     = useRouter()                                                                                                        // handles note open route
 const store      = useStore()                                                                                                         // setup store usage
 const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
 
 const { btcPrice, currentTime, barContent } = storeToRefs(store)                                                                      // imports refs from main store
-
-function openLatest() { if (latestPost.value.url) { router.push(latestPost.value.url) } }                                             // opens latest post
 
 onMounted(() => { store.loadNotesIndex(); store.startStatusUpdates() })
 onUnmounted(() => { store.stopStatusUpdates() })
@@ -23,9 +19,9 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
     <div class="stleft">
 
-      <a href="#" @click.prevent="openLatest" title="abrir la última nota publicada" aria-label="abrir la última nota publicada">{{ latestPost.title }}</a>
+      <RouterLink :to="latestPost.url || '/'" title="abrir la última nota publicada" aria-label="abrir la última nota publicada">{{ latestPost.title }}</RouterLink>
       <span class="divisions">//</span>
-      <a :href="'mailto:' + store.mailtoDir" target="_blank" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
+      <a :href="'mailto:' + store.mailtoDir" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
       <span class="divisions">//</span>
       <a href="/portfolio" title="ver portfolio dinamico" aria-label="ir al portfolio dinamico">portfolio</a>
 
