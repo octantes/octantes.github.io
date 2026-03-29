@@ -239,7 +239,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 .post { 
 
   /* LAYOUT */ position: relative;
-  /* BOX    */ height: 100%; width: 100%; overflow-x: hidden; overflow-y: auto;
+  /* BOX    */ height: 100%; width: 100%; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
   /* FILL   */ background-color: var(--carbon);
   /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
 
@@ -254,6 +254,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
     
   }
 
+  &::-webkit-scrollbar { display: none; }
   &.fs-mode { background: none; overflow: hidden; &::after { display: none } }
 
 }

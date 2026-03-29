@@ -6,8 +6,10 @@ import { storeToRefs } from 'pinia'
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
 const expanded            = ref(false)                                                                                                // description deploy state
+const emit                = defineEmits(['update:expanded'])                                                                          // emit expanded state to parent
 
 function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link
+function toggle() { expanded.value = !expanded.value; emit('update:expanded', expanded.value) }                                      // toggle and notify parent
 
 </script>
 
@@ -33,7 +35,7 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
 
       </div>
 
-      <button class="toggle" @click="expanded = !expanded"
+      <button class="toggle" @click="toggle"
         :title="expanded ? 'cerrar descripción' : 'ver descripción'"
         :aria-label="expanded ? 'cerrar descripción' : 'ver descripción'">{{ expanded ? '↑' : '↓' }}</button>
 
@@ -74,6 +76,7 @@ function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noref
   /* MOTION */ transition: all var(--animate-fast);
 
   &:not(.expanded):hover { filter: brightness(95%); }
+  &.expanded { margin-bottom: 1rem; border-radius: var(--radius-ss); }
 
 }
 

@@ -79,6 +79,6 @@ onMounted(async () => {                                                         
 
 }
 
-@media (max-width: 1080px) { .navigation { min-height: 40rem; } }
+@media (max-width: 1080px) { .navigation { min-height: 40rem; overflow: hidden; } }
 
 </style>
