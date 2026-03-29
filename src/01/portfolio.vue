@@ -74,7 +74,7 @@ watch([currentProject, portfolioProjects], () => {
 }, { immediate: true })
 
 function handleRayClick(proj) { if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj  }
-function downloadCV()         { window.open('/assets/curriculum.pdf', '_blank', 'noopener,noreferrer')                                                        }
+function openCV()             { window.open('/assets/curriculum.pdf', '_blank')                                                                               }
 function closePortfolio()     { router.push('/')                                                                                                           }
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
@@ -109,7 +109,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
       </div>
 
-      <img class="avatar" tabindex="0" @click="downloadCV" @keydown.enter="downloadCV" role="button" title="descargar curriculum vitae" aria-label="descargar el curriculum vitae de kaste en pdf" :src="authorpic" alt="avatar kaste" />
+      <img class="avatar" tabindex="0" @click="openCV" @keydown.enter="openCV" role="button" title="descargar curriculum vitae" aria-label="descargar el curriculum vitae de kaste en pdf" :src="authorpic" alt="avatar kaste" />
     
     </div>
 

@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia'
 const store      = useStore()                                                                                                         // setup store usage
 const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
 
-const { btcPrice, currentTime, barContent } = storeToRefs(store)                                                                      // imports refs from main store
+const { btcPrice, currentTime, barContent, processing } = storeToRefs(store)                                                                      // imports refs from main store
 
 onMounted(() => { store.loadNotesIndex(); store.startStatusUpdates() })
 onUnmounted(() => { store.stopStatusUpdates() })
@@ -15,7 +15,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
 <template> 
 
-  <div class="statusbar">
+  <div class="statusbar" :class="{ disabled: processing }">
 
     <div class="stleft">
 
@@ -129,6 +129,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
 }
 
 @keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
+
+.statusbar.disabled { pointer-events: none; opacity: var(--alpha-disabled); }
 
 @media (max-width: 590px) { .stcenter { display: none; }       .btc { display: none; }           }
 @media (max-width: 432px) { .stleft   { display: none; } .statusbar { justify-content: center; } }
