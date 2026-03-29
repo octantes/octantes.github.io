@@ -168,11 +168,11 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 }
 
-.github { 
+.github {
 
   /* CURSOR */ cursor: pointer; user-select: none;
   /* LAYOUT */ position: absolute; top: 1.5rem; left: 2rem; z-index: 50;
-  /* FILL   */ background: transparent; color: var(--humo99);
+  /* FILL   */ background: transparent; color: var(--humo99); opacity: 0.5;
   /* BORDER */ border: none; box-shadow: none;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
   /* FX     */ mix-blend-mode: difference;
