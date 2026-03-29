@@ -287,7 +287,7 @@ export const useStore = defineStore('store', () => {
     notesLoadingPromise = (async () => {
       try {
 
-        const response = await fetch('/index.json')
+        const response = await fetch(`${base}/index.json`)
         if (!response.ok) throw new Error('no se encontró el index.json')
         notesIndex.value = await response.json()
         notesLoaded.value = true

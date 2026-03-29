@@ -78,13 +78,6 @@ watch(() => route.params.filterType, (newFilterType) => {                       
   
 }
 
-@media (max-width: 580px) {
-
-  .tabs button                  { display: none; }
-  .tabs button.active           { display: flex; }
-
-}
-
 @media (max-width: 1080px) { .navigation { min-height: 40rem; overflow: hidden; } }
 
 </style>
