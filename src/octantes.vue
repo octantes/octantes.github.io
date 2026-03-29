@@ -1,4 +1,5 @@
 <script setup> 
+import { ref } from 'vue'
 import { useStore } from './04/store.js'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
@@ -9,6 +10,7 @@ import Portada from './02/portada.vue'
 const store = useStore()
 const route = useRoute()
 const { computedFullscreen } = storeToRefs(store)
+const portadaExpanded = ref(false)
 
 </script>
 
@@ -20,14 +22,14 @@ const { computedFullscreen } = storeToRefs(store)
 
       <template v-if="!computedFullscreen && route.path !== '/portfolio'">
 
-        <Portada class="portada" />
+        <Portada class="portada" @update:expanded="portadaExpanded = $event" />
         <Navigation class="navigation" :disabled="store.processing" />
 
       </template>
       
       <RouterView v-slot="{ Component }" >
         
-        <component class="articulos" :is="Component" @updateProcessing="store.setProcessing" />
+        <component class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" :is="Component" @updateProcessing="store.setProcessing" />
         
       </RouterView>
 
@@ -51,7 +53,7 @@ const { computedFullscreen } = storeToRefs(store)
 .layout { 
 
   /* LAYOUT */ display: grid; grid-template-columns: 4fr 4fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
-  /* BOX    */ width: 100%; min-height: 0; padding: 1rem; gap: 1rem;
+  /* BOX    */ width: 100%; min-height: 0; padding: 1rem; column-gap: 1rem; row-gap: 0;
 
   &.fullscreen { display: flex;  flex-direction: column; overflow-y: hidden; width: 100%; height: 100%; gap: 0; }
 
@@ -65,14 +67,16 @@ const { computedFullscreen } = storeToRefs(store)
 
 .footer     { padding: 0rem 1rem 1rem 1rem; flex-shrink: 0; }
 
+.articulos.portada-collapsed .post { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; }
+
 @media (max-width: 1080px) { 
 
   .pagina { max-width: 100%; }
 
-  .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; &.fullscreen { overflow-y: hidden; } }
+  .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; row-gap: 0; &.fullscreen { overflow-y: hidden; } }
 
   .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
-  .portada { order: 1; } .navigation { order: 2; } .articulos { order: 3; }
+  .navigation { order: 1; margin-bottom: 1rem; } .portada { order: 2; } .articulos { order: 3; }
   
   .footer  { padding: 1rem; }
   .content { height: auto; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
