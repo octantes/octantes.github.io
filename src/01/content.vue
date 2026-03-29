@@ -246,15 +246,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   container-type: inline-size;
   container-name: post-viewer;
 
-  &::after {
-    
-    /* LAYOUT */ position: sticky; display: block; bottom: 0;
-    /* BOX    */ height: 3rem; margin-top: -1rem;
-    /* FONT   */ content: '';
-    
-  }
-
-  &::-webkit-scrollbar { display: none; }
+&::-webkit-scrollbar { display: none; }
   &.fs-mode { background: none; overflow: hidden; &::after { display: none } }
 
 }
