@@ -72,7 +72,6 @@ export const useStore = defineStore('store', () => {
   const subState                   = ref('default')                                                                                   // status states
   const subDone                    = ref((parseInt(localStorage.getItem('subscription_count') || '0', 10) || 0) > 0)                  // user already subscribed
   const emailRegex                 = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/                                             // email regex
-  const lsCounter                  = 3                                                                                                // localstorage counter
   const subResetTime               = 3000                                                                                             // submit reset timer
   
   // STATUS                                                                                                                           // BOTTOM BAR
@@ -218,9 +217,8 @@ export const useStore = defineStore('store', () => {
     const submissionsKey = 'subscription_count'
     const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10) || 0
     
-    if (subHoney.value)              { updateSub('success', 'mail registrado!',             true); return }
-    if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!',       false); return }
-    if (currentCount >= lsCounter)         { updateSub('error',   'no podés registrar más mails', false); return }
+    if (subHoney.value)                    { updateSub('success', 'mail registrado!',       true);  return }
+    if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!', false); return }
 
     if (window.umami && typeof window.umami.track === 'function') {
 
