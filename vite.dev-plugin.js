@@ -1,4 +1,5 @@
-import { readFile, readdir } from 'fs/promises'
+import { readFile, readdir, stat } from 'fs/promises'
+import { createReadStream } from 'fs'
 import path from 'path'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
@@ -194,6 +195,18 @@ function devPlugin() {
           return
         }
         
+        const docsPath = path.join('./docs', url)
+        try {
+          const fileStat = await stat(docsPath)
+          if (fileStat.isFile()) {
+            const ext = path.extname(url).toLowerCase()
+            const mime = { '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.ogg': 'audio/ogg', '.mp4': 'video/mp4', '.webm': 'video/webm', '.svg': 'image/svg+xml', '.css': 'text/css', '.js': 'text/javascript' }
+            res.setHeader('Content-Type', mime[ext] || 'application/octet-stream')
+            createReadStream(docsPath).pipe(res)
+            return
+          }
+        } catch { /* file not found in docs/, fall through */ }
+
         next()
 
       })

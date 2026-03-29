@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
-import authorpic from '../../content/assets/kaste.jpg'
+const authorpic = '/assets/kaste.webp'
 
 const store           = useStore()                                                                                                    // initializes global store
 

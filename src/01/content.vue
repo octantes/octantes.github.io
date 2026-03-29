@@ -90,9 +90,7 @@ async function handleLoadNote(slug) {                                           
     })
     
     await Promise.race([ Promise.all(mediaLoadPromises), new Promise(resolve => setTimeout(resolve, 1000)) ])
-    if (!computedFullscreen.value && isMobile.value) { const scrollEl = document.querySelector('.scroll-into')
-    if (scrollEl) { scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }
-    
+
   }
 
 }
@@ -200,7 +198,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   <div class="notedisplay">
     
-    <div class="container scroll-into" >
+    <div class="container" >
 
       <Shader class="shader" ref="shaderRef"/>
 
