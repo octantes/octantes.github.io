@@ -23,7 +23,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
       <span class="divisions">//</span>
       <a :href="'mailto:' + store.mailtoDir" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
       <span class="divisions">//</span>
-      <a href="/portfolio" title="ver portfolio dinamico" aria-label="ir al portfolio dinamico">portfolio</a>
+      <RouterLink to="/portfolio" title="ver portfolio dinamico" aria-label="ir al portfolio dinamico">portfolio</RouterLink>
 
     </div>
 
