@@ -2,7 +2,8 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
-const authorpic = '/assets/kaste.webp'
+
+const authorpic = '/assets/facu.webp'
 
 const router            = useRouter()
 const store             = useStore()
@@ -74,7 +75,7 @@ watch([currentProject, portfolioProjects], () => {
 }, { immediate: true })
 
 function handleRayClick(proj) { if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj  }
-function openCV()             { window.open('/assets/curriculum.pdf', '_blank')                                                                               }
+function openGithub()         { window.open('https://github.com/octantes', '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
@@ -86,8 +87,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   <div class="portfolio">
 
     <button class="close-btn" @click="closePortfolio" title="volver al inicio" aria-label="cerrar el portfolio">✘</button>
-    <div class="github"> <a href="https://github.com/octantes" target="_blank" rel="noopener noreferrer">Github</a> </div>
-      
+
     <div class="profile-group"> 
 
       <div class="message-box">
@@ -109,7 +109,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
       </div>
 
-      <img class="avatar" tabindex="0" @click="openCV" @keydown.enter="openCV" role="button" title="descargar curriculum vitae" aria-label="descargar el curriculum vitae de kaste en pdf" :src="authorpic" alt="avatar kaste" />
+      <img class="avatar" tabindex="0" @click="openGithub" @keydown.enter="openGithub" role="button" title="Ver perfil de GitHub" aria-label="Abrir GitHub de octantes" :src="authorpic" alt="avatar kaste" />    
     
     </div>
 
@@ -159,20 +159,6 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* CURSOR */ cursor: pointer; user-select: none;
   /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50;
   /* FILL   */ background: transparent; color: var(--humo99);
-  /* BORDER */ border: none; box-shadow: none;
-  /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
-  /* FX     */ mix-blend-mode: difference;
-  /* MOTION */ transition: color var(--animate-fast);
-
-  &:hover { color: var(--lirio); }
-
-}
-
-.github {
-
-  /* CURSOR */ cursor: pointer; user-select: none;
-  /* LAYOUT */ position: absolute; top: 1.5rem; left: 2rem; z-index: 50;
-  /* FILL   */ background: transparent; color: var(--humo99); opacity: 0.5;
   /* BORDER */ border: none; box-shadow: none;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
   /* FX     */ mix-blend-mode: difference;
