@@ -204,7 +204,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ position: relative; z-index: 2; overflow: hidden;
   /* BOX    */ width: 15rem; height: 15rem; flex-shrink: 0; object-fit: cover;
-  /* FILL   */ background-color: var(--carbon);
+  /* FILL   */ background-color: var(--carbon); filter: brightness(0.8);
   /* BORDER */ border-radius: 50%; border: 2px solid var(--humo25);
   /* MOTION */ transition: transform var(--animate-fast);
 
