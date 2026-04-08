@@ -105,7 +105,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
         </div>
 
-        <p>construyendo interfaces de alta fidelidad, sistemas de diseño y portales interactivos; el foco está en la multimedialidad y la autonomía técnica.</p>
+        <p>developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity</p>
 
       </div>
 
@@ -338,18 +338,17 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 @media (max-width: 1000px) { 
 
-  .fullscreen     { padding-bottom: 1rem !important;}
-
-  .portfolio      { flex-direction: column; justify-content: flex-start; overflow-y: auto; padding-top: 5rem !important; scrollbar-width: none; -ms-overflow-style: none;    }
-  .profile-group  { flex-direction: column-reverse; margin-bottom: 1.5rem; gap: 2rem;                                                                                        }
-  .message-box    { position: relative; right: auto; bottom: auto; margin: 0; text-align: left; width: 100%; max-width: 25rem;                                               }
-  .avatar         { width: 10rem; height: 10rem;                                                                                                                             }
-  .rays-wrapper   { position: relative; mask-image: none; -webkit-mask-image: none; width: 400px; height: 100%; display: flex; flex-direction: column; margin-bottom: 4rem;  }
-  .rays-container { position: relative; left: auto; top: auto; display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; width: 100%; height: 100%;         }
-  .ray-box        { position: relative; left: auto; top: auto; padding-left: 0; width: 100%; max-width: 22rem; height: auto; transform: none !important; flex-wrap: wrap;    }
-  .ray-data       { position: relative; top: auto; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                    }
-  .ray-line       { display: none;                                                                                                                                           }
-  .stack          { justify-content: flex-start;                                                                                                                             }
+  .fullscreen     { padding-bottom: 1rem !important;                                                                                                                                               }
+  .portfolio      { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5rem 1.5rem 4rem 1.5rem !important; overflow-y: auto; scrollbar-width: none; }
+  .profile-group  { display: flex; flex-direction: column-reverse; align-items: center; width: 100%; max-width: 25rem; margin-bottom: 1.5rem; gap: 2rem;                                           }
+  .message-box    { position: relative; right: auto; width: 100%; margin: 0; text-align: left;                                                                                                     }
+  .avatar         { width: 10rem; height: 10rem; align-self: flex-start;                                                                                                                           }
+  .rays-wrapper   { position: relative; display: flex; flex-direction: column; width: 100%; max-width: 25rem; height: auto; margin: 0; mask-image: none; -webkit-mask-image: none;                 }
+  .rays-container { position: relative; left: auto; top: auto; display: flex; flex-direction: column; width: 100%; gap: 1rem;                                                                      }
+  .ray-box        { position: relative; left: auto; top: auto; display: flex; flex-wrap: wrap; width: 100%; height: auto; padding-left: 0; transform: none !important;                             }
+  .ray-data       { position: relative; top: auto; display: flex; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                           }
+  .ray-line       { display: none;                                                                                                                                                                 }
+  .stack          { justify-content: flex-start;                                                                                                                                                   }
 
 }
 
