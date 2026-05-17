@@ -647,7 +647,7 @@ async function writeBilingualArchive() {                                   // cr
       navArticles: '[ART\u00cdCULOS]',
       navPortal: '[PORTAL]',
       navRss: '[RSS]',
-      toggleTo: 'ENGLISH'
+      toggleTo: '[ENG]'
     },
     en: {
       title: 'opening portals to alternative universes',
@@ -660,7 +660,7 @@ async function writeBilingualArchive() {                                   // cr
       navArticles: '[ARTICLES]',
       navPortal: '[PORTAL]',
       navRss: '[RSS]',
-      toggleTo: 'ESPA\u00d1OL'
+      toggleTo: '[ESP]'
     }
   }
   var lang = localStorage.getItem('archive_lang') || 'es'
@@ -700,11 +700,15 @@ async function writeBilingualArchive() {                                   // cr
         </div>
       </div>
       
-      <nav class="nav-links">
-        <a href="/archive.html" data-key="navArticles">[ART\u00cdCULOS]</a>
-        <a href="/" data-key="navPortal">[PORTAL]</a>
-        <a href="/feed.xml" data-key="navRss">[RSS]</a>
-        <button onclick="toggleLang()" data-key="toggleTo">ENGLISH</button>
+      <nav class="nav-links" style="flex-direction:column; align-items:center; gap:4px;">
+        <div class="nav-row" style="display:flex; gap:4px;">
+          <a href="/archive.html" data-key="navArticles">[ART\u00cdCULOS]</a>
+          <a href="/" data-key="navPortal">[PORTAL]</a>
+        </div>
+        <div class="nav-row" style="display:flex; gap:4px;">
+          <a href="/feed.xml" data-key="navRss">[RSS]</a>
+          <button onclick="toggleLang()" data-key="toggleTo" style="background:none; border:1px solid var(--polvo); padding:2px 6px; color:var(--cristal); cursor:pointer; font:inherit; line-height:inherit;">[ENG]</button>
+        </div>
       </nav>
       
       <div class="separator-nomargin" data-key="articles">art\u00edculos</div>
