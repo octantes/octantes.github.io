@@ -17,8 +17,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     
   <div class="gallery">
 
-    <div v-if="!notesLoaded" class="empty-state">cargando...</div>
-    <div v-else-if="noteSortFilter.length === 0" class="empty-state">no hay notas que coincidan{{ searchQuery ? `: "${searchQuery}"` : '' }}</div>
+    <div v-if="!notesLoaded" class="empty-state">{{ store.t.gallery.loading }}</div>
+    <div v-else-if="noteSortFilter.length === 0" class="empty-state">{{ store.t.gallery.empty }}{{ searchQuery ? `: "${searchQuery}"` : '' }}</div>
 
     <div v-for="(note, index) in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
 
@@ -30,7 +30,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
       }"
 
-      title="abrir nota" role="button" tabindex="0" :aria-label="'abrir la nota ' + note.title"
+      :title="store.t.gallery.open" role="button" tabindex="0" :aria-label="store.t.gallery.open + ': ' + note.title"
       @keydown.enter.prevent="noteOpen(note.type, note.slug)" @keydown.space.prevent="noteOpen(note.type, note.slug)" >
     
       <div class="card-cover">

@@ -86,7 +86,10 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   <div class="portfolio">
 
-    <button class="close-btn" @click="closePortfolio" title="volver al inicio" aria-label="cerrar el portfolio">✘</button>
+    <div class="top-actions">
+      <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
+      <button class="close-btn" @click="closePortfolio" :title="store.t.portfolio.close" :aria-label="store.t.portfolio.close">✘</button>
+    </div>
 
     <div class="profile-group"> 
 
@@ -94,7 +97,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
         <h2>Facundo Gerbino</h2>
 
-        <p class="subtitle">Frontend Engineer & Designer</p>
+        <p class="subtitle">{{ store.t.portfolio.subtitle }}</p>
 
         <div class="stack">
 
@@ -105,7 +108,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
         </div>
 
-        <p>developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity</p>
+        <p v-html="store.t.portfolio.desc"></p>
 
       </div>
 
@@ -117,18 +120,18 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
       <div class="rays-container">
         
-        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="'seleccionar proyecto ' + proj.title">
+        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="store.t.portfolio.select + proj.title">
           
           <div class="ray-line"></div>
           <span class="ray-text">{{ proj.title }}</span>
 
-          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="'abrir nota de ' + proj.title">
+          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="store.t.portfolio.open + proj.title">
             <div class="portal-line"></div>
             <div class="portal-trigger">▶</div>
           </div>
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
-            <p class="desc">{{ proj.description || 'sin descripción' }}</p>
+            <p class="desc">{{ proj.description || store.t.portfolio.noDesc }}</p>
             <div class="tags"> <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
           </div>
 
@@ -154,10 +157,17 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 }
 
+.top-actions {
+
+  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50; display: flex;
+  /* BOX    */ gap: 0.75rem;
+
+}
+
 .close-btn { 
 
   /* CURSOR */ cursor: pointer; user-select: none;
-  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50;
+  /* LAYOUT */ position: relative;
   /* FILL   */ background: transparent; color: var(--humo99);
   /* BORDER */ border: none; box-shadow: none;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
@@ -168,12 +178,14 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 }
 
+.lang-btn { font-size: 1rem; font-weight: bold; }
+
 .profile-group { position: relative; display: flex; align-items: center; z-index: 20; }
 
 .message-box { 
 
   /* LAYOUT */ position: absolute; right: 100%; z-index: 1; pointer-events: none;
-  /* BOX    */ width: 20rem; margin-right: 2rem;
+  /* BOX    */ width: 28rem; margin-right: 2rem;
   /* FONT   */ text-align: right;
 
   & p  { font-size: 0.95rem; line-height: 1.5; color: var(--humo); }

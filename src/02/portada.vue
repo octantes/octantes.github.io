@@ -9,7 +9,7 @@ const expanded            = ref(false)                                          
 const emit                = defineEmits(['update:expanded'])                                                                          // emit expanded state to parent
 
 function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link
-function toggle() { expanded.value = !expanded.value; emit('update:expanded', expanded.value) }                                      // toggle and notify parent
+function toggle() { expanded.value = !expanded.value; emit('update:expanded', expanded.value) }                                       // toggle and notify parent
 
 </script>
 
@@ -26,18 +26,24 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
         <div v-for="author in data.authors.filter(a => a.full)" :key="author.handle"
           class="profile" @click="openAuthor(author)"
           @keydown.enter.prevent="openAuthor(author)" @keydown.space.prevent="openAuthor(author)"
-          :title="'ver perfil de ' + author.handle" role="button" :tabindex="expanded ? -1 : 0"
+          :title="store.t.portada.viewProfile + ' ' + author.handle" role="button" :tabindex="expanded ? -1 : 0"
           :aria-hidden="expanded ? 'true' : undefined"
-          :aria-label="'ver el perfil de autor @' + author.handle + ' en una pestaña nueva'">
+          :aria-label="store.t.portada.openProfile + author.handle + ' en una pestaña nueva'">
           <img class="userpic bar-pic" :src="author.img" :alt="'foto de perfil de @' + author.handle" />
           <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
         </div>
 
       </div>
 
+      <button class="toggle lang-toggle" @click="store.toggleLang"
+        :title="store.t.portada.langTitle"
+        :aria-label="store.t.portada.langTitle">
+        {{ store.lang.toUpperCase() }}
+      </button>
+
       <button class="toggle" @click="toggle"
-        :title="expanded ? 'cerrar descripción' : 'ver descripción'"
-        :aria-label="expanded ? 'cerrar descripción' : 'ver descripción'">{{ expanded ? '↑' : '↓' }}</button>
+        :title="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"
+        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc">{{ expanded ? '↑' : '↓' }}</button>
 
     </div>
 
@@ -52,8 +58,8 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
           class="profile" :class="{ 'profile-full': author.full }"
           @click="openAuthor(author)"
           @keydown.enter.prevent="openAuthor(author)" @keydown.space.prevent="openAuthor(author)"
-          :title="'ver perfil de ' + author.handle" role="button" tabindex="0"
-          :aria-label="'ver el perfil de autor @' + author.handle + ' en una pestaña nueva'">
+          :title="store.t.portada.viewProfile + ' ' + author.handle" role="button" tabindex="0"
+          :aria-label="store.t.portada.openProfile + author.handle + ' en una pestaña nueva'">
           <img class="userpic" :src="author.img" :alt="'foto de perfil de @' + author.handle" />
           <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
         </div>
@@ -176,6 +182,12 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
   &:hover  { background-color: var(--carbon50); color: var(--carbon); }
   &:active { transform: var(--scale-min); }
 
+}
+
+.lang-toggle {
+  margin-right: 0.5rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
 }
 
 @media (max-width: 432px) { .description { display: none; } }
