@@ -17,7 +17,7 @@
     "url": "/posts/musica/orbitas/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "browsewithscroll",
@@ -117,7 +117,7 @@
     "url": "/posts/musica/geminis/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "viñetas",
@@ -137,7 +137,7 @@
     "url": "/posts/musica/viñetas/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "dinamik",
@@ -157,7 +157,7 @@
     "url": "/posts/diseño/dinamik/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "cruzar",
@@ -177,7 +177,7 @@
     "url": "/posts/diseño/cruzar/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "enuna",
@@ -197,7 +197,7 @@
     "url": "/posts/diseño/enuna/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "pof-softwarevr",
@@ -257,7 +257,7 @@
     "url": "/posts/musica/seance/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "pod-abandonware",
@@ -337,7 +337,7 @@
     "url": "/posts/musica/sixminutesolder/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "poa-kena",
@@ -377,6 +377,6 @@
     "url": "/posts/musica/moodworktapes/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   }
 ]
