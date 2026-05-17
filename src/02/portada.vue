@@ -185,7 +185,6 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 }
 
 .lang-toggle {
-  margin-right: 0.5rem;
   font-family: var(--font-mono);
   font-weight: bold;
 }

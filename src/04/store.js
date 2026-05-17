@@ -426,8 +426,8 @@ export const useStore = defineStore('store', () => {
 
     return { 
 
-      title: metadata.title || t.value.portada.welcome,
-      description: metadata.description || t.value.portada.desc,
+      title: (lang.value === 'en' && metadata.bilingual && metadata.titleEn) ? metadata.titleEn : (metadata.title || t.value.portada.welcome),
+      description: (lang.value === 'en' && metadata.bilingual && metadata.descriptionEn) ? metadata.descriptionEn : (metadata.description || t.value.portada.desc),
       authors: postAuthors,
       portada: metadata.portada || '',
 
@@ -441,7 +441,10 @@ export const useStore = defineStore('store', () => {
     const latest = notesIndex.value[0]
     const cleanUrl = latest.url.replace(/^\/posts/, '') 
 
-    return { title: latest.title, url: cleanUrl }
+    return {
+      title: (lang.value === 'en' && latest.bilingual && latest.titleEn) ? latest.titleEn : latest.title,
+      url: cleanUrl
+    }
 
   })
 
@@ -450,13 +453,20 @@ export const useStore = defineStore('store', () => {
     if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
     const filterType = activeFilter.value
     let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
+
+    filtered = filtered.map(note => ({                                                                                               // add lang-aware display fields
+      ...note,
+      displayTitle: (lang.value === 'en' && note.bilingual && note.titleEn) ? note.titleEn : note.title,
+      displayDescription: (lang.value === 'en' && note.bilingual && note.descriptionEn) ? note.descriptionEn : note.description,
+    }))
+
     const query = searchQuery.value.toLowerCase().trim()
 
     if (query) { 
 
       filtered = filtered.filter(note =>
-        note.title.toLowerCase().includes(query) ||
-        note.description.toLowerCase().includes(query) ||
+        note.displayTitle.toLowerCase().includes(query) ||
+        note.displayDescription.toLowerCase().includes(query) ||
         note.tags?.some(tag => tag.toLowerCase().includes(query)) ||
         note.date.includes(query)
       )
@@ -469,7 +479,7 @@ export const useStore = defineStore('store', () => {
 
       switch (sortKey.value) {
 
-        case 'title': valA = a.title.toLowerCase()          ; valB = b.title.toLowerCase()          ; break
+        case 'title': valA = a.displayTitle.toLowerCase()          ; valB = b.displayTitle.toLowerCase()          ; break
         case 'tags':  valA = a.tags?.[0]?.toLowerCase() || '' ; valB = b.tags?.[0]?.toLowerCase() || '' ; break
         default:      valA = new Date(a.isoDate)            ; valB = new Date(b.isoDate)            ; break
 

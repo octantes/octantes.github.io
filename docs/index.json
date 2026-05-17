@@ -12,12 +12,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "08/04/2026",
+    "date": "07/04/2026",
     "isoDate": "2026-04-08T00:00:00.000Z",
     "url": "/posts/musica/orbitas/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "órbitas",
+    "descriptionEn": "mix of instrumentals, variety of eras and styles"
   },
   {
     "slug": "browsewithscroll",
@@ -32,12 +34,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "05/03/2026",
+    "date": "04/03/2026",
     "isoDate": "2026-03-05T00:00:00.000Z",
     "url": "/posts/desarrollo/browsewithscroll/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "browsewithscroll",
+    "descriptionEn": "tool to preview fonts and multimedia with scroll directly in the browser"
   },
   {
     "slug": "arch-hud",
@@ -52,12 +56,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "14/09/2025",
+    "date": "13/09/2025",
     "isoDate": "2025-09-14T00:00:00.000Z",
     "url": "/posts/desarrollo/arch-hud/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "arch-hud",
+    "descriptionEn": "suckless tool pack to turn arch linux into a heads up display"
   },
   {
     "slug": "shadewithseal",
@@ -72,12 +78,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "03/07/2025",
+    "date": "02/07/2025",
     "isoDate": "2025-07-03T00:00:00.000Z",
     "url": "/posts/desarrollo/shadewithseal/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "shadewithseal",
+    "descriptionEn": "playground to program and record GLSL fragment shaders directly in the browser"
   },
   {
     "slug": "trackwithslate",
@@ -92,12 +100,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "23/06/2025",
+    "date": "22/06/2025",
     "isoDate": "2025-06-23T00:00:00.000Z",
     "url": "/posts/desarrollo/trackwithslate/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "trackwithslate",
+    "descriptionEn": "simple tool to edit and organize CSV tabular data directly in the browser"
   },
   {
     "slug": "geminis",
@@ -112,12 +122,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "06/06/2025",
+    "date": "05/06/2025",
     "isoDate": "2025-06-06T00:00:00.000Z",
     "url": "/posts/musica/geminis/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "geminis",
+    "descriptionEn": "my brother's music, alongside one of my own at the end"
   },
   {
     "slug": "viñetas",
@@ -132,12 +144,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "22/12/2024",
+    "date": "21/12/2024",
     "isoDate": "2024-12-22T00:00:00.000Z",
     "url": "/posts/musica/viñetas/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "viñetas",
+    "descriptionEn": "instrumental album with experimental visualizer"
   },
   {
     "slug": "dinamik",
@@ -152,12 +166,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "30/11/2024",
+    "date": "29/11/2024",
     "isoDate": "2024-11-30T00:00:00.000Z",
     "url": "/posts/diseño/dinamik/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "dinamik - studio dev",
+    "descriptionEn": "branding and motion graphics project for a productivity software development company"
   },
   {
     "slug": "cruzar",
@@ -172,12 +188,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "19/09/2024",
+    "date": "18/09/2024",
     "isoDate": "2024-09-19T00:00:00.000Z",
     "url": "/posts/diseño/cruzar/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "cruzar - crypto cordillera",
+    "descriptionEn": "branding and motion graphics project for a datacenter service across the mountain range"
   },
   {
     "slug": "enuna",
@@ -192,12 +210,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "06/09/2023",
+    "date": "05/09/2023",
     "isoDate": "2023-09-06T00:00:00.000Z",
     "url": "/posts/diseño/enuna/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "en una - digital publication",
+    "descriptionEn": "branding and motion graphics project for a digital music magazine"
   },
   {
     "slug": "pof-softwarevr",
@@ -212,12 +232,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "21/07/2022",
+    "date": "20/07/2022",
     "isoDate": "2022-07-21T00:00:00.000Z",
     "url": "/posts/textos/pof-softwarevr/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "virtual reality - the best applications",
+    "descriptionEn": "In conversations about virtual reality, software often takes a back seat. Let's review some interesting uses."
   },
   {
     "slug": "poe-futurovr",
@@ -232,12 +254,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "10/05/2022",
+    "date": "09/05/2022",
     "isoDate": "2022-05-10T00:00:00.000Z",
     "url": "/posts/textos/poe-futurovr/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "virtual reality - a contemporary future",
+    "descriptionEn": "Virtual reality is in a remarkably interesting place, we invite you to discover it."
   },
   {
     "slug": "seance",
@@ -252,12 +276,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "08/05/2022",
+    "date": "07/05/2022",
     "isoDate": "2022-05-08T00:00:00.000Z",
     "url": "/posts/musica/seance/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "seance",
+    "descriptionEn": "first album with the guitar plugged in and an experimental visualizer"
   },
   {
     "slug": "pod-abandonware",
@@ -272,12 +298,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "31/03/2022",
+    "date": "30/03/2022",
     "isoDate": "2022-03-31T00:00:00.000Z",
     "url": "/posts/textos/pod-abandonware/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "abandonware - the permanence of the author",
+    "descriptionEn": "Abandonware occurs when art becomes tied to the advancement of technology, intensifying the difficulties of properly preserving it."
   },
   {
     "slug": "poc-propiedades",
@@ -292,12 +320,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "07/02/2022",
+    "date": "06/02/2022",
     "isoDate": "2022-02-07T00:00:00.000Z",
     "url": "/posts/textos/poc-propiedades/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "intellectual properties - do we need new IPs?",
+    "descriptionEn": "Nowadays, interest in intellectual properties has less to do with the particularities of the authors and more with hype."
   },
   {
     "slug": "pob-microtransacciones",
@@ -312,12 +342,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "13/12/2021",
+    "date": "12/12/2021",
     "isoDate": "2021-12-13T00:00:00.000Z",
     "url": "/posts/textos/pob-microtransacciones/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "microtransactions and their future",
+    "descriptionEn": "We explain the role of microtransactions within the industry and analyze the possible future of in-game monetization systems"
   },
   {
     "slug": "sixminutesolder",
@@ -332,12 +364,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "08/12/2021",
+    "date": "07/12/2021",
     "isoDate": "2021-12-08T00:00:00.000Z",
     "url": "/posts/musica/sixminutesolder/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "six minutes older",
+    "descriptionEn": "six one-minute midi experiments"
   },
   {
     "slug": "poa-kena",
@@ -352,12 +386,14 @@
     "handle": [
       "kaste"
     ],
-    "date": "10/09/2021",
+    "date": "09/09/2021",
     "isoDate": "2021-09-10T00:00:00.000Z",
     "url": "/posts/textos/poa-kena/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "kena - is it ok for aesthetics to be everything?",
+    "descriptionEn": "Within the framework Kena offers us, we bring up the debate between graphics versus content. Is it wrong for a game to be just pretty?"
   },
   {
     "slug": "moodworktapes",
@@ -372,11 +408,13 @@
     "handle": [
       "kaste"
     ],
-    "date": "11/04/2019",
+    "date": "10/04/2019",
     "isoDate": "2019-04-11T00:00:00.000Z",
     "url": "/posts/musica/moodworktapes/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": true
+    "bilingual": true,
+    "titleEn": "mood worktapes",
+    "descriptionEn": "my first little album, learning to use ableton live"
   }
 ]
