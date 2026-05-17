@@ -6,8 +6,8 @@ import { storeToRefs } from 'pinia'
 const router = useRouter()
 const store = useStore()
 
-const { processing, searchQuery, activeFilter } = storeToRefs(store)
-const { changeFilter, hasNotes, tabs, navHome, setActiveFilter } = store
+const { processing, searchQuery, activeFilter, tabs } = storeToRefs(store)
+const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
 </script>
 

@@ -223,13 +223,13 @@ export const useStore = defineStore('store', () => {
     if (processing.value) return
     
     const currentTabValue = activeFilter.value
-    const currentTabIndex = tabs.findIndex(tab => tab.value === currentTabValue)
-    const numTabs = tabs.length
+    const currentTabIndex = tabs.value.findIndex(tab => tab.value === currentTabValue)
+    const numTabs = tabs.value.length
 
     for (let i = 1; i <= numTabs; i++) {
 
       let nextIndex = ((currentTabIndex + direction * i) % numTabs + numTabs) % numTabs
-      const nextTabValue = tabs[nextIndex].value
+      const nextTabValue = tabs.value[nextIndex].value
 
       if (hasNotes(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
 
