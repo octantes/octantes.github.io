@@ -37,7 +37,7 @@
     "url": "/posts/desarrollo/browsewithscroll/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "arch-hud",
@@ -57,7 +57,7 @@
     "url": "/posts/desarrollo/arch-hud/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "shadewithseal",
@@ -77,7 +77,7 @@
     "url": "/posts/desarrollo/shadewithseal/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "trackwithslate",
@@ -97,7 +97,7 @@
     "url": "/posts/desarrollo/trackwithslate/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "geminis",
@@ -217,7 +217,7 @@
     "url": "/posts/textos/pof-softwarevr/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "poe-futurovr",
@@ -237,7 +237,7 @@
     "url": "/posts/textos/poe-futurovr/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "seance",
@@ -277,7 +277,7 @@
     "url": "/posts/textos/pod-abandonware/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "poc-propiedades",
@@ -297,7 +297,7 @@
     "url": "/posts/textos/poc-propiedades/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "pob-microtransacciones",
@@ -317,7 +317,7 @@
     "url": "/posts/textos/pob-microtransacciones/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "sixminutesolder",
@@ -357,7 +357,7 @@
     "url": "/posts/textos/poa-kena/",
     "vuecomp": null,
     "fullscreen": null,
-    "bilingual": false
+    "bilingual": true
   },
   {
     "slug": "moodworktapes",
