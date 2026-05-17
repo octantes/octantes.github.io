@@ -16,7 +16,8 @@
     "isoDate": "2026-04-08T00:00:00.000Z",
     "url": "/posts/musica/orbitas/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "browsewithscroll",
@@ -35,7 +36,8 @@
     "isoDate": "2026-03-05T00:00:00.000Z",
     "url": "/posts/desarrollo/browsewithscroll/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "arch-hud",
@@ -54,7 +56,8 @@
     "isoDate": "2025-09-14T00:00:00.000Z",
     "url": "/posts/desarrollo/arch-hud/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "shadewithseal",
@@ -73,7 +76,8 @@
     "isoDate": "2025-07-03T00:00:00.000Z",
     "url": "/posts/desarrollo/shadewithseal/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "trackwithslate",
@@ -92,7 +96,8 @@
     "isoDate": "2025-06-23T00:00:00.000Z",
     "url": "/posts/desarrollo/trackwithslate/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "geminis",
@@ -111,7 +116,8 @@
     "isoDate": "2025-06-06T00:00:00.000Z",
     "url": "/posts/musica/geminis/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "viñetas",
@@ -130,7 +136,8 @@
     "isoDate": "2024-12-22T00:00:00.000Z",
     "url": "/posts/musica/viñetas/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "dinamik",
@@ -149,7 +156,8 @@
     "isoDate": "2024-11-30T00:00:00.000Z",
     "url": "/posts/diseño/dinamik/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "cruzar",
@@ -168,7 +176,8 @@
     "isoDate": "2024-09-19T00:00:00.000Z",
     "url": "/posts/diseño/cruzar/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "enuna",
@@ -187,7 +196,8 @@
     "isoDate": "2023-09-06T00:00:00.000Z",
     "url": "/posts/diseño/enuna/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "pof-softwarevr",
@@ -206,7 +216,8 @@
     "isoDate": "2022-07-21T00:00:00.000Z",
     "url": "/posts/textos/pof-softwarevr/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "poe-futurovr",
@@ -225,7 +236,8 @@
     "isoDate": "2022-05-10T00:00:00.000Z",
     "url": "/posts/textos/poe-futurovr/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "seance",
@@ -244,7 +256,8 @@
     "isoDate": "2022-05-08T00:00:00.000Z",
     "url": "/posts/musica/seance/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "pod-abandonware",
@@ -263,7 +276,8 @@
     "isoDate": "2022-03-31T00:00:00.000Z",
     "url": "/posts/textos/pod-abandonware/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "poc-propiedades",
@@ -282,7 +296,8 @@
     "isoDate": "2022-02-07T00:00:00.000Z",
     "url": "/posts/textos/poc-propiedades/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "pob-microtransacciones",
@@ -301,7 +316,8 @@
     "isoDate": "2021-12-13T00:00:00.000Z",
     "url": "/posts/textos/pob-microtransacciones/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "sixminutesolder",
@@ -320,7 +336,8 @@
     "isoDate": "2021-12-08T00:00:00.000Z",
     "url": "/posts/musica/sixminutesolder/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "poa-kena",
@@ -339,7 +356,8 @@
     "isoDate": "2021-09-10T00:00:00.000Z",
     "url": "/posts/textos/poa-kena/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   },
   {
     "slug": "moodworktapes",
@@ -358,6 +376,7 @@
     "isoDate": "2019-04-11T00:00:00.000Z",
     "url": "/posts/musica/moodworktapes/",
     "vuecomp": null,
-    "fullscreen": null
+    "fullscreen": null,
+    "bilingual": false
   }
 ]
