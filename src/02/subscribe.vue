@@ -5,7 +5,10 @@ import { storeToRefs } from 'pinia'
 
 const store = useStore()                                                                                                              // initializes global store
 
+const { t }           = storeToRefs(store)
 const { subEmail, subHoney, subMessage, subState, subDone } = storeToRefs(store)                                                               // imports refs from main store
+
+const inputPlaceholder = computed(() => subState.value !== 'default' ? subMessage.value : t.value.subscribe.placeholder)
 
 const submitButtonText = computed(() => {                                                                                             // switch for message and button 
 
@@ -14,7 +17,7 @@ const submitButtonText = computed(() => {                                       
     case 'success': return '✓'
     case 'error':   return '✘'
 
-    default:        return 'suscribirme'
+    default:        return t.value.subscribe.button
 
   }
 
@@ -29,19 +32,19 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   <div class="subscribe">
 
     <template v-if="subDone">
-      <div class="cta">ya estás en la lista, gracias por sumarte!</div>
+      <div class="cta">{{ t.subscribe.done }}</div>
     </template>
 
     <template v-else>
 
-    <div class="cta" :class="{ [subState]: subState !== 'default' }">{{ subState !== 'default' ? subMessage : 'querés enterarte cuando subo algo nuevo? sumate a la lista de mails!' }}</div>
+    <div class="cta" :class="{ [subState]: subState !== 'default' }">{{ subState !== 'default' ? subMessage : t.subscribe.cta }}</div>
 
     <form class="form" @submit.prevent="handleSubscription">
 
       <input class="honeypot" type="text"  v-model="subHoney" name="user"  tabindex="-1" autocomplete="off" aria-hidden="true"/>
-      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="subMessage" required :class="{ [subState]: subState !== 'default'}" title="ingresar tu correo para suscribirte" aria-label="campo para ingresar correo electrónico"/>
+      <input class="textbox"  type="email" v-model="subEmail" name="email" :placeholder="inputPlaceholder" required :class="{ [subState]: subState !== 'default'}" :title="t.subscribe.emailTitle" :aria-label="t.subscribe.emailAria"/>
 
-      <button type="submit" class="submit" :class="{ [subState]: subState !== 'default' }" :title="subState === 'default' ? 'hacer click para suscribirte' : subMessage" aria-label="botón para enviar la suscripción">{{ submitButtonText }}</button>
+      <button type="submit" class="submit" :class="{ [subState]: subState !== 'default' }" :title="subState === 'default' ? t.subscribe.submitTitle : subMessage" :aria-label="t.subscribe.submitAria">{{ submitButtonText }}</button>
 
     </form>
 
