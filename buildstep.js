@@ -495,6 +495,7 @@ async function processPosts() {                                                 
       </nav>`
 
       let fullHtml = template
+        .replace(/{{langTag}}/g, 'es')
         .replace(/{{title}}/g, attributes.title || slug)
         .replace(/{{description}}/g, attributes.description || '')
         .replace(/{{portada}}/g, portadaUrl)
@@ -506,6 +507,13 @@ async function processPosts() {                                                 
         .replace(/{{htmlContent}}/g, htmlContent)
         .replace(/{{webURL}}/g, webURL)
         .replace(/{{sidebarLinks}}/g, sidebarLinks)
+        .replace(/{{subtitle}}/g, 'tejiendo hechizos')
+        .replace(/{{bio}}/g, 'm\u00fasica, dise\u00f1o, desarrollo y escritura')
+        .replace(/{{navArchive}}/g, '[ARCHIVO]')
+        .replace(/{{navArchiveHref}}/g, 'archivo.html')
+        .replace(/{{navArticles}}/g, 'art\u00edculos')
+        .replace(/{{toggleLabel}}/g, '[ENG]')
+        .replace(/{{toggleHref}}/g, 'ingles.html')
 
       await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
 
@@ -515,6 +523,7 @@ async function processPosts() {                                                 
         htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
 
         let fullHtmlEn = template
+          .replace(/{{langTag}}/g, 'en')
           .replace(/{{title}}/g, attrEn.title || slug)
           .replace(/{{description}}/g, attrEn.description || '')
           .replace(/{{portada}}/g, portadaUrl)
@@ -526,6 +535,13 @@ async function processPosts() {                                                 
           .replace(/{{htmlContent}}/g, htmlContentEn)
           .replace(/{{webURL}}/g, webURL)
           .replace(/{{sidebarLinks}}/g, sidebarLinks)
+          .replace(/{{subtitle}}/g, 'weaving spells')
+          .replace(/{{bio}}/g, 'music, design, dev &amp; writing')
+          .replace(/{{navArchive}}/g, '[ARTICLES]')
+          .replace(/{{navArchiveHref}}/g, 'archive.html')
+          .replace(/{{navArticles}}/g, 'articles')
+          .replace(/{{toggleLabel}}/g, '[ESP]')
+          .replace(/{{toggleHref}}/g, 'index.html')
 
         await fs.writeFile(path.join(noteOutputDir, 'ingles.html'), fullHtmlEn)
       }

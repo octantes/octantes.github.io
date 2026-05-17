@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="es">
+<html lang="{{langTag}}">
 
   <head>
 
@@ -41,7 +41,7 @@
       <div class="sidebar-content">
 
         <div class="site-logo">OCTANTES</div>
-        <div class="site-subtitle">tejiendo hechizos</div>
+        <div class="site-subtitle">{{subtitle}}</div>
 
         <div class="profile-box">
 
@@ -52,18 +52,23 @@
           <div class="profile-text">
             <strong>kaste</strong>
             <br>
-            <i>música, diseño, desarrollo y escritura</i>
+            <i>{{bio}}</i>
           </div>
 
         </div>
 
-        <nav class="nav-links">
-          <a href="/archivo.html">[ARCHIVO]</a>
-          <a href="/">[PORTAL]</a>
-          <a href="/feed.xml">[RSS]</a>
+        <nav class="nav-links" style="flex-direction:column; align-items:center; gap:4px;">
+          <div class="nav-row" style="display:flex; gap:4px;">
+            <a href="/{{navArchiveHref}}">{{navArchive}}</a>
+            <a href="/">[PORTAL]</a>
+          </div>
+          <div class="nav-row" style="display:flex; gap:4px;">
+            <a href="/feed.xml">[RSS]</a>
+            <a href="{{toggleHref}}">{{toggleLabel}}</a>
+          </div>
         </nav>
 
-        <div class="separator-nomargin">artículos</div>
+        <div class="separator-nomargin">{{navArticles}}</div>
         
         <ul class="article-list">{{sidebarLinks}}</ul>
 
