@@ -75,6 +75,14 @@ async function scanContentDir() {
             
             const rawHandle = attributes.handle
             const handles = Array.isArray(rawHandle) ? rawHandle : (rawHandle ? [rawHandle] : ['kaste'])
+
+            const mdEnPath = path.join(contentDir, tdir.name, pdir.name, 'ingles.md')
+            let enAttributes = {}
+            try {
+              const rawEn = await readFile(mdEnPath, 'utf-8')
+              enAttributes = fm(rawEn).attributes
+            } catch { /* no ingles.md, not bilingual */ }
+            const isBilingual = Object.keys(enAttributes).length > 0
             
             indexItems.push({
               slug: pdir.name,
@@ -88,7 +96,10 @@ async function scanContentDir() {
               isoDate: attributes.date || dateObj.toISOString(),
               url: `/posts/${attributes.type || tdir.name}/${pdir.name}/`,
               vuecomp: attributes.vuecomp || null,
-              fullscreen: attributes.fullscreen || null
+              fullscreen: attributes.fullscreen || null,
+              bilingual: isBilingual,
+              titleEn: enAttributes.title || null,
+              descriptionEn: enAttributes.description || null
             })
           }
         } catch (e) {
@@ -102,9 +113,9 @@ async function scanContentDir() {
 
 }
 
-async function renderNote(type, slug) { 
+async function renderNote(type, slug, lang = 'es') { 
   
-  const mdPath = path.join(contentDir, type, slug, 'index.md')
+  const mdPath = path.join(contentDir, type, slug, lang === 'en' ? 'ingles.md' : 'index.md')
   
   try {
     const raw = await readFile(mdPath, 'utf-8')
@@ -120,12 +131,15 @@ async function renderNote(type, slug) {
     const handles = Array.isArray(rawHandle) ? rawHandle : (rawHandle ? [rawHandle] : ['kaste'])
     const primaryHandle = handles[0]
     
+    const htmlLang = lang === 'en' ? 'en' : 'es'
+    const title = attributes.title || slug
+    
     const template = `<!DOCTYPE html>
-<html lang="es">
+<html lang="${htmlLang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${attributes.title || slug} - octantes.ar</title>
+  <title>${title} - octantes.ar</title>
   <link rel="stylesheet" href="/src/04/baseline.css">
   <style>
     body { background: #1B1C1C; color: #D8DADE; padding: 2rem; font-family: 'Outfit', sans-serif; }
@@ -138,7 +152,7 @@ async function renderNote(type, slug) {
   <div class="post">
     <nav class="static-nav">
       <a href="/">← VOLVER AL ARCHIVO</a>
-      <span>// ${attributes.title || slug}</span>
+      <span>// ${title}</span>
     </nav>
     ${htmlContent}
   </div>
@@ -147,6 +161,7 @@ async function renderNote(type, slug) {
     
     return template
   } catch (e) {
+    if (lang === 'en') return renderNote(type, slug, 'es')
     return `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>404</title></head>
@@ -180,12 +195,13 @@ function devPlugin() {
           return
         }
         
-        const match = url.match(/^\/posts\/([^\/]+)\/([^\/]+)\/?$/)
+        const match = url.match(/^\/posts\/([^\/]+)\/([^\/]+)\/((index|ingles)\.html)?$/)
 
         if (match) {
-          const [, type, slug] = match
+          const [, type, slug, , langSuffix] = match
+          const lang = langSuffix === 'ingles' ? 'en' : 'es'
           try {
-            const html = await renderNote(type, slug)
+            const html = await renderNote(type, slug, lang)
             res.setHeader('Content-Type', 'text/html')
             res.end(html)
           } catch (e) {

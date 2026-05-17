@@ -5,24 +5,18 @@ import { storeToRefs } from 'pinia'
 const authorpic = '/assets/kaste.webp'
 
 const store           = useStore()                                                                                                    // initializes global store
+const { t }           = storeToRefs(store)
 
 const { activeFilter, userStatus, currentPost } = storeToRefs(store)                                                                  // imports refs from main store
 
 const displayFilter = computed(() => currentPost.value?.type || activeFilter.value)                                                   // show note type when reading, else active filter
 
-const currentTagline  = ref('')                                                                                                       // current tagline phrase
-const taglines        = [                                                                                                             // random taglines 
-  'tejiendo hechizos',
-  'abriendo ventanas a universos alternativos',
-  'desplegando portales',
-  'investigando dualidades'
-]
+const currentTagline  = ref('')
 
-onMounted(async () => {                                                                                                               // set random tagline
-
+onMounted(() => {
+  const taglines = t.value.about.taglines
   const randomIndex = Math.floor(Math.random() * taglines.length)
   currentTagline.value = taglines[randomIndex]
-
 })
 
 </script>
@@ -45,205 +39,20 @@ onMounted(async () => {                                                         
       </div>
 
     </div>
-    
-    <div v-if="displayFilter === 'full'">
 
-      <p>
+    <template v-for="section in ['full', 'diseño', 'desarrollo', 'musica', 'textos', 'juegos']" :key="section">
 
-        buenas! soy <i>kaste</i> y lo que estás viendo es mi base de operaciones     <br>
+      <div v-if="displayFilter === section">
 
-        <br>
+        <p v-html="t.about.sections[section]"></p>
 
-        armé <b>octantes</b> para centralizar toda mi producción fuera de las redes  <br>
-        recuperando los fundamentos, sin algoritmos, reglas o intermediarios         <br>
-        vas a encontrar proyectos de todo tipo, vos elegís lo que querés ver         <br>
-        desde música, textos y diseño hasta videojuegos y software propio            <br>
+        <br><hr><br>
 
-        <br>
+        <p v-html="t.about.footers[section]"></p> <br>
 
-        la página me permite adaptar el formato al contenido que voy creando         <br>
-        y pensar mis proyectos se vuelve más fácil con outputs definidos             <br>
+      </div>
 
-        <br>
-
-        usá las pestañas superiores de la tabla para filtrar por sección             <br>
-        cuando un posteo te llame la atención, clickealo para cargarlo acá           <br>
-
-      </p>
-
-      <br><hr><br>
-    
-      <p>si querés saber más <i>sobre el proyecto</i> podes leer estos posteos</p> <br>
-
-      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué decidi armar una página')">por qué decidi armar una página en 2025?</a> <br>-->
-
-    </div>
-
-    <div v-if="displayFilter === 'diseño'"> 
-
-      <p>
-
-        estás viendo la sección de <i>diseño</i>, acá viven mis proyectos multimedia <br>
-
-        <br>
-
-        disfruto mucho armar <b>identidades</b> y pensar assets que las acompañen    <br>
-        algunos de estos trabajos son solo de práctica, excusas para aprender        <br>
-        otros son encargos reales, puestos a prueba en distintos entornos            <br>
-        mi foco es la multimedialidad, lograr una fusión interesante de medios       <br>
-
-        <br>
-
-        vas a encontrar trabajos de branding, diseño web y piezas editoriales        <br>
-        desde interfaces hasta logotipos, fanzines, stickers y otros objetos         <br>
-
-        <br>
-
-        si te interesa algún proyecto, clickealo para ver el desglose completo       <br>
-        vas a encontrar la galería, el proceso, las herramientas e influencias       <br>
-
-      </p>
-
-      <br><hr><br>
-    
-      <p>si querés saber más <i>sobre mis diseños</i> podes leer estos posteos</p> <br>
-
-      <!--<a href="#" @click.prevent="loadReference('textos', 'lo que me interesa al diseñar')">lo que me interesa al diseñar</a> <br>-->
-
-    </div>
-
-    <div v-if="displayFilter === 'desarrollo'"> 
-
-      <p>
-
-        estás viendo la sección de <i>desarrollo</i>, acá armo mis herramientas    <br>
-
-        <br>
-
-        desde que aprendí a <b>programar</b>, se me abrieron muchas posibilidades  <br>
-        ahora cuando no encuentro algo que necesito, puedo armarlo de cero         <br>
-        también me permite implementar diseños propios en entornos reales          <br>
-        esta sección muestra la parte que ya es pública de esos desarrollos        <br>
-
-
-        <br>
-
-        vas a encontrar software, experimentos gráficos y otras utilidades         <br>
-        desde herramientas de producción y productividad hasta shaders             <br>
-
-        <br>
-
-        si te interesa algún proyecto, clickealo para ver el desglose completo     <br>
-        vas a encontrar el repositorio, el proceso, las herramientas e imágenes    <br>
-
-      </p>
-
-      <br><hr><br>
-    
-      <p>si querés saber más <i>sobre mi desarrollo</i> podes leer estos posteos</p> <br>
-
-      <!--<a href="#" @click.prevent="loadReference('textos', 'mi roadmap de desarrollo')">mi roadmap de desarrollo</a> <br>-->
-
-    </div>
-
-    <div v-if="displayFilter === 'musica'"> 
-
-      <p>
-
-        estás viendo la sección de <i>música</i>, acá es donde tejo hechizos          <br>
-
-        <br>
-
-        desde el primer tema que hice, <b>producir</b> se volvió una necesidad total  <br>
-        cuando no entro seguido en ese estado de trance, pierdo la templanza          <br>
-        armar canciones en el sentido tradicional no es mi principal interés          <br>
-        me llama mucho más crear paisajes que transmitan una emoción                  <br>
-
-        <br>
-
-        vas a ver álbumes, acompañados por experimentos audiovisuales                 <br>
-        desde proyectos terminados hasta descartes y demos sin mezclar                <br>
-
-        <br>
-
-        si te interesa escuchar algo, clickealo para ver el video en youtube          <br>
-        también vas a encontrar el disco en spotify y otras plataformas               <br>
-
-      </p>
-
-      <br><hr><br>
-    
-      <p>si querés saber más <i>sobre mi música</i> podes leer estos posteos</p> <br>
-
-      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué hago música?')">por qué hago música?</a> <br>-->
-
-    </div>
-
-    <div v-if="displayFilter === 'textos'"> 
-
-      <p>
-
-        estás viendo la sección de <i>textos</i>, acá desarrollo mis intereses        <br>
-
-        <br>
-
-        para mí, <b>escribir</b> siempre fue la mejor forma de ordenar las ideas      <br>
-        en ese proceso aparecen borradores que acá traduzco a artículos               <br>
-        la idea es conectar los puntos entre distintos desarrollos de la página       <br>
-        para aportar un marco teórico a la práctica y disparar nuevos procesos        <br>
-
-        <br>
-
-        vas a encontrar bitácoras, reflexiones y análisis de cosas variadas           <br>
-        escritas en formato de blog personal, sin demasiada formalidad                <br>
-
-        <br>
-
-        si querés leer algunos de mis pensamientos, clickeá un posteo                 <br>
-        a lo largo de distintas notas se van desarrollando las temáticas              <br>
-
-      </p>
-
-      <br><hr><br>
-    
-      <p>si querés saber más <i>sobre lo que escribo</i> podes leer estos posteos</p> <br>
-
-      <!--<a href="#" @click.prevent="loadReference('textos', 'por qué y cómo escribo?')">por qué y cómo escribo?</a> <br>-->
-
-    </div>
-
-    <div v-if="displayFilter === 'juegos'"> 
-
-      <p>
-
-        estás viendo la sección de <i>videojuegos</i>, mi principal laboratorio       <br>
-
-        <br>
-
-        diseñar <b>fichines</b> siempre ha sido mi endgame, el objetivo final         <br>
-        participé en gamejams y armé prototipos para practicar un poco                <br>
-        pero siempre quise desarrollar cosas jugables desde el navegador              <br>
-        porque la web es de los pocos lugares donde aún hay límites técnicos          <br>
-
-        <br>
-
-        vas a encontrar juegos centrados en lo mecánico y otros en lo narrativo       <br>
-        lo que más me interesa es pensar el juego como sistema y ver qué sale         <br>
-
-        <br>
-
-        si querés probar algún prototipo, simplemente cargalo desde la tabla          <br>
-        la mayoría corren en el navegador y otros pueden ser descargables             <br>
-
-      </p>
-
-      <br><hr><br>
-    
-      <p>si querés saber más <i>sobre los juegos</i> podes leer estos posteos</p> <br>
-
-      <!--<a href="#" @click.prevent="loadReference('textos', 'mi proceso para hacer fichines')">mi proceso para hacer fichines</a> <br>-->
-
-    </div>
+    </template>
 
   </div>
 

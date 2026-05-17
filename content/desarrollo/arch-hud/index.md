@@ -8,7 +8,7 @@ date: 2025-09-14
 handle: kaste
 ---
 
-*You can find this project in english in my [Github](https://github.com/octantes/arch-hud)*
+*You can find the project repo in my [Github](https://github.com/octantes/arch-hud)*
 
 arch-hud es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch
 
