@@ -30,12 +30,12 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
       }"
 
-      :title="store.t.gallery.open" role="button" tabindex="0" :aria-label="store.t.gallery.open + ': ' + note.title"
+      :title="store.t.gallery.open" role="button" tabindex="0" :aria-label="store.t.gallery.open + ': ' + note.displayTitle"
       @keydown.enter.prevent="noteOpen(note.type, note.slug)" @keydown.space.prevent="noteOpen(note.type, note.slug)" >
     
       <div class="card-cover">
 
-        <img v-if="note.portada" :src="note.portada.replace(/\.webp$/, '-thumb.webp')" loading="lazy" :alt="'portada de la nota: ' + note.title" />
+        <img v-if="note.portada" :src="note.portada.replace(/\.webp$/, '-thumb.webp')" loading="lazy" :alt="'portada de la nota: ' + note.displayTitle" />
         <div v-else class="card-placeholder">/</div>
         
       </div>
@@ -43,9 +43,9 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
       <div class="card-info">
 
         <span class="date">{{ note.date }}</span>
-        <h3 class="title">{{ note.title }}</h3>
+        <h3 class="title">{{ note.displayTitle }}</h3>
 
-        <p v-if="route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery)" class="description">{{ note.description }}</p>
+        <p v-if="route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery)" class="description">{{ note.displayDescription }}</p>
         
         <div class="tags">
           <span v-for="tag in note.tags?.slice(0,3)" :key="tag" class="tag" role="button" tabindex="0" @click.stop="store.setSearchQuery(tag)" @keydown.enter.stop.prevent="store.setSearchQuery(tag)">{{ tag }}</span>

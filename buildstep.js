@@ -363,6 +363,7 @@ async function processPosts() {                                                 
     const isBilingual = !!rawEn
 
     const { attributes, body } = fm(raw)
+    const enAttributes = isBilingual ? fm(rawEn).attributes : {}
     const showNote = attributes.mostrar !== 'no' && attributes.mostrar !== false
     const postType = attributes.type || typeFolder
     const noteOutputDir = path.join(outputDir, 'posts', postType, slug)
@@ -547,7 +548,9 @@ async function processPosts() {                                                 
         url: `/posts/${postType}/${slug}/`,
         vuecomp: attributes.vuecomp || null,
         fullscreen: attributes.fullscreen || null,
-        bilingual: isBilingual
+        bilingual: isBilingual,
+        titleEn: enAttributes.title || null,
+        descriptionEn: enAttributes.description || null
       })
     }
 
