@@ -21,7 +21,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
       <RouterLink :to="latestPost.url || '/'" title="abrir la última nota publicada" aria-label="abrir la última nota publicada">{{ latestPost.title }}</RouterLink>
       <span class="divisions">//</span>
-      <a :href="'mailto:' + store.mailtoDir" title="enviar un correo" aria-label="enviar correo electrónico al autor">contactame!</a>
+      <a :href="'mailto:' + store.mailtoDir" :title="store.t.status.contact" :aria-label="store.t.status.contact">{{ store.t.status.contact }}</a>
       <span class="divisions">//</span>
       <RouterLink to="/portfolio" title="ver portfolio dinamico" aria-label="ir al portfolio dinamico">portfolio</RouterLink>
 
@@ -37,7 +37,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
     
     <div class="stright">
 
-      <a href="/archivo" title="ver archivo en formato web 1.0" aria-label="ir al archivo en formato web 1.0">ARCHIVO</a>
+      <a :href="store.t.status.archiveLink" :title="store.t.status.archive" :aria-label="store.t.status.archive">{{ store.t.status.archive }}</a>
       <span class="btc divisions">//</span>
       <a href="/feed.xml" target="_blank" title="suscribirse al feed RSS" aria-label="suscribirse a las últimas publicaciones por feed RSS">RSS</a>
       <span class="btc divisions">//</span>

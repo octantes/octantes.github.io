@@ -190,6 +190,12 @@ watch(                                                                          
 
 )
 
+watch(() => store.lang, async () => {
+  if (store.currentPost && store.currentPost.bilingual && !store.processing) {
+    await handleLoadNote(store.currentPost.slug)
+  }
+})
+
 onMounted(()   => { checkViewport(); window.addEventListener('resize', onResize) })
 onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout(resizeTimer) })
 

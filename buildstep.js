@@ -357,6 +357,11 @@ async function processPosts() {                                                 
     try { raw = await fs.readFile(mdPath, 'utf-8') }
     catch { console.warn(`index.md not found in ${typeFolder}, skipping`); continue }
 
+    const mdEnPath = path.join(postFolder, 'ingles.md')
+    let rawEn = null
+    try { rawEn = await fs.readFile(mdEnPath, 'utf-8') } catch { /* no existe, ignorar */ }
+    const isBilingual = !!rawEn
+
     const { attributes, body } = fm(raw)
     const showNote = attributes.mostrar !== 'no' && attributes.mostrar !== false
     const postType = attributes.type || typeFolder
@@ -430,6 +435,13 @@ async function processPosts() {                                                 
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
     const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const canonicalUrl = `${webURL}/${postType}/${slug}/`
+    const canonicalUrlEn = `${webURL}/posts/${postType}/${slug}/ingles.html`
+
+    const hreflangTags = isBilingual ? `
+      <link rel="alternate" hreflang="es" href="${canonicalUrl}">
+      <link rel="alternate" hreflang="en" href="${canonicalUrlEn}">
+      <link rel="alternate" hreflang="x-default" href="${canonicalUrl}">
+    `.trim() : ''
 
     const rawHandle = attributes.handle
     const handles = (Array.isArray(rawHandle) ? rawHandle : (rawHandle ? [rawHandle] : ['kaste'])).map(h => String(h).replace(/^@/, ''))
@@ -486,6 +498,7 @@ async function processPosts() {                                                 
         .replace(/{{description}}/g, attributes.description || '')
         .replace(/{{portada}}/g, portadaUrl)
         .replace(/{{canonicalUrl}}/g, canonicalUrl)
+        .replace(/{{hreflangTags}}/g, hreflangTags)
         .replace(/{{handle}}/g, primaryHandle)
         .replace(/{{date}}/g, formatted)
         .replace(/{{articleJson}}/g, finalArticleJson)
@@ -494,6 +507,28 @@ async function processPosts() {                                                 
         .replace(/{{sidebarLinks}}/g, sidebarLinks)
 
       await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
+
+      if (isBilingual) {
+        const { attributes: attrEn, body: bodyEn } = fm(rawEn)
+        let htmlContentEn = renderType(bodyEn, attrEn).trim()
+        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+
+        let fullHtmlEn = template
+          .replace(/{{title}}/g, attrEn.title || slug)
+          .replace(/{{description}}/g, attrEn.description || '')
+          .replace(/{{portada}}/g, portadaUrl)
+          .replace(/{{canonicalUrl}}/g, canonicalUrlEn)
+          .replace(/{{hreflangTags}}/g, hreflangTags)
+          .replace(/{{handle}}/g, primaryHandle)
+          .replace(/{{date}}/g, formatted)
+          .replace(/{{articleJson}}/g, finalArticleJson)
+          .replace(/{{htmlContent}}/g, htmlContentEn)
+          .replace(/{{webURL}}/g, webURL)
+          .replace(/{{sidebarLinks}}/g, sidebarLinks)
+
+        await fs.writeFile(path.join(noteOutputDir, 'ingles.html'), fullHtmlEn)
+      }
+
       cache[`${postType}/${slug}/index.md`] = finalHash
 
     } else { console.log(`skipping ${slug}/index.md (unchanged)`) }
@@ -511,7 +546,8 @@ async function processPosts() {                                                 
         isoDate: isoDate,
         url: `/posts/${postType}/${slug}/`,
         vuecomp: attributes.vuecomp || null,
-        fullscreen: attributes.fullscreen || null
+        fullscreen: attributes.fullscreen || null,
+        bilingual: isBilingual
       })
     }
 
@@ -535,74 +571,94 @@ async function writeIndex() {                                                   
 
 }
 
-function generateGroupedSidebar() {                                              // create sidebar for basic archive webpage 
+function generateGroupedSidebar(lang = 'es') {                                    // create sidebar for basic archive webpage 
 
   const groups = {}
 
   indexItems.forEach(item => {
-
     if (!groups[item.type]) groups[item.type] = []
     groups[item.type].push(item)
-
   })
 
   const order = ['musica', 'diseño', 'juegos', 'desarrollo', 'textos']
-  
   Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
+
+  const catDict = lang === 'en' ? { diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' } : {}
 
   let html = ''
 
   order.forEach(type => {
-
     if (groups[type]) {
-
-      html += `<li class="cat-header">${type}</li>`
-      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => { html += `<li><a href="${webURL}${p.url}">${p.title}</a></li>` })
-
+      const typeLabel = catDict[type] || type
+      html += `<li class="cat-header">${typeLabel}</li>`
+      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
+        const fileTarget = (lang === 'en' && p.bilingual) ? 'ingles.html' : ''
+        html += `<li><a href="${webURL}${p.url}${fileTarget}">${p.title}</a></li>`
+      })
     }
-
   })
   
   return html
-
 }
 
-async function writeBasicIndex() {                                               // create archivo.html with basic site structure 
- 
-  const sidebarHTML = generateGroupedSidebar()
+async function writeBasicIndexVersion(lang = 'es') {                             // create archive html for a specific language
+
+  const sidebarHTML = generateGroupedSidebar(lang)
   const sortedItems = [...indexItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
+
+  const t = lang === 'es' ? {
+    title: 'abriendo portales a universos alternativos',
+    desc: 'archivo plano // octantes.ar',
+    subtitle: 'tejiendo hechizos',
+    instruct: 'seleccioná una nota del menú izquierdo para comenzar la lectura.',
+    latest: 'últimas actualizaciones',
+    articles: 'artículos',
+    filename: 'archivo.html',
+    bio: 'música, diseño, desarrollo y escritura'
+  } : {
+    title: 'opening portals to alternative universes',
+    desc: 'flat archive // octantes.ar',
+    subtitle: 'weaving spells',
+    instruct: 'select a note from the left menu to start reading.',
+    latest: 'latest updates',
+    articles: 'articles',
+    filename: 'archive.html',
+    bio: 'music, design, dev & writing'
+  }
 
   const mainContent =
   `
     <header class="post-header">
-      <h1>abriendo portales a universos alternativos</h1>
-      <div class="meta">archivo plano // octantes.ar</div>
+      <h1>${t.title}</h1>
+      <div class="meta">${t.desc}</div>
     </header>
     
-    <p>seleccioná una nota del menú izquierdo para comenzar la lectura.</p>
+    <p>${t.instruct}</p>
     
-    <div class="separator-margin">últimas actualizaciones</div>
+    <div class="separator-margin">${t.latest}</div>
 
     <ul class="article-list">
-      ${sortedItems.slice(0, 15).map(i => `
+      ${sortedItems.slice(0, 15).map(i => {
+        const fileTarget = (lang === 'en' && i.bilingual) ? 'ingles.html' : ''
+        return `
         <li>
-          <a href="${i.url}">
+          <a href="${i.url}${fileTarget}">
             <span class="list-span">[${i.date}]</span>
             ${i.title}
           </a>
         </li>
-      `).join('\n')}
+      `}).join('\n')}
     </ul>
   `
 
   const basicHtml = 
   `
   <!DOCTYPE html>
-  <html lang="es">
+  <html lang="${lang}">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>octantes.ar - archivo</title>
+    <title>octantes.ar - ${lang === 'es' ? 'archivo' : 'archive'}</title>
     <link rel="stylesheet" href="/assets/neocities.css">
     <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
     <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
@@ -613,7 +669,7 @@ async function writeBasicIndex() {                                              
       <div class="sidebar-content">
       
         <div class="site-logo">OCTANTES</div>
-        <div class="site-subtitle">tejiendo hechizos</div>
+        <div class="site-subtitle">${t.subtitle}</div>
         
         <div class="profile-box">
           <a href="https://x.com/octantes" target="_blank" class="profile-link">
@@ -621,17 +677,17 @@ async function writeBasicIndex() {                                              
           </a>
           <div class="profile-text">
             <strong>kaste</strong><br>
-            <i>música, diseño, desarrollo y escritura</i>
+            <i>${t.bio}</i>
           </div>
         </div>
         
         <nav class="nav-links">
-          <a href="/archivo.html">[ARCHIVO]</a>
+          <a href="/${t.filename}">[${t.articles.toUpperCase()}]</a>
           <a href="/">[PORTAL]</a>
           <a href="/feed.xml">[RSS]</a>
         </nav>
         
-        <div class="separator-nomargin">artículos</div>
+        <div class="separator-nomargin">${t.articles}</div>
         <ul class="article-list">${sidebarHTML}</ul>
         
       </div>
@@ -645,24 +701,36 @@ async function writeBasicIndex() {                                              
   </html>
   `
 
-  await fs.writeFile(path.join(outputDir, 'archivo.html'), basicHtml)
-  console.log('archivo.html generated (clean styles)')
+  await fs.writeFile(path.join(outputDir, t.filename), basicHtml)
+  console.log(`${t.filename} generated`)
 
+}
+
+async function writeBasicIndex() {                                               // create both language archive versions
+  await writeBasicIndexVersion('es')
+  await writeBasicIndexVersion('en')
 }
 
 async function updateSidebars() {                                                // update old archive website sidebars 
 
-  const sidebarHTML = generateGroupedSidebar()
+  const sidebarES = generateGroupedSidebar('es')
+  const sidebarEN = generateGroupedSidebar('en')
   
   for (const item of indexItems) {
 
-    const filePath = path.join(outputDir, 'posts', item.type, item.slug, 'index.html')
+    const basePath = path.join(outputDir, 'posts', item.type, item.slug)
 
     try {
 
-      let html = await fs.readFile(filePath, 'utf-8')
-      html = html.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, `<ul class="article-list">${sidebarHTML}</ul>`)
-      await fs.writeFile(filePath, html)
+      let html = await fs.readFile(path.join(basePath, 'index.html'), 'utf-8')
+      html = html.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, `<ul class="article-list">${sidebarES}</ul>`)
+      await fs.writeFile(path.join(basePath, 'index.html'), html)
+
+      if (item.bilingual) {
+        let htmlEn = await fs.readFile(path.join(basePath, 'ingles.html'), 'utf-8')
+        htmlEn = htmlEn.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, `<ul class="article-list">${sidebarEN}</ul>`)
+        await fs.writeFile(path.join(basePath, 'ingles.html'), htmlEn)
+      }
 
     } catch (e) { console.error(`Error updating sidebar for ${item.slug}`, e) }
 

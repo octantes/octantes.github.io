@@ -15,11 +15,11 @@ const { changeFilter, hasNotes, tabs, navHome, setActiveFilter } = store
 
   <div class="filters"> 
 
-    <button class="logo-xx" @click="navHome(router)" :disabled="processing" title="volver al inicio">OCTANTES</button>
+    <button class="logo-xx" @click="navHome(router)" :disabled="processing" :title="store.t.nav.home">OCTANTES</button>
 
-    <input class="searchbox" type="text" v-model="searchQuery" placeholder="buscar..." :disabled="processing" title="buscar en la tabla de notas" aria-label="caja de búsqueda para notas"/>
+    <input class="searchbox" type="text" v-model="searchQuery" :placeholder="store.t.nav.search" :disabled="processing" :title="store.t.nav.search" :aria-label="store.t.nav.search"/>
 
-    <button @click="changeFilter(router, -1)" :disabled="processing" title="ver el filtro anterior" aria-label="navegar al filtro de contenido anterior"> < </button>
+    <button @click="changeFilter(router, -1)" :disabled="processing" :title="store.t.nav.prev" :aria-label="store.t.nav.prev"> < </button>
 
     <div class="tabs"> 
 
@@ -31,7 +31,7 @@ const { changeFilter, hasNotes, tabs, navHome, setActiveFilter } = store
       
     </div>
 
-    <button @click="changeFilter(router, +1)" :disabled="processing" title="ver el filtro siguiente" aria-label="navegar al filtro de contenido siguiente"> > </button>
+    <button @click="changeFilter(router, +1)" :disabled="processing" :title="store.t.nav.next" :aria-label="store.t.nav.next"> > </button>
 
   </div>
 

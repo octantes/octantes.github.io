@@ -3,16 +3,16 @@ import { ref, computed } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
-  const tabs                       = [                                                                                                // names for filters 
+  const tabs                       = computed(() => [                                                                                 // names for filters 
 
-    { label: 'completo',   value: 'full'       },
-    { label: 'diseño',     value: 'diseño'     },
-    { label: 'desarrollo', value: 'desarrollo' },
-    { label: 'música',     value: 'musica'     },
-    { label: 'textos',     value: 'textos'     },
-    { label: 'juegos',     value: 'juegos'     },
+    { label: t.value.nav.tabs.full,       value: 'full'       },
+    { label: t.value.nav.tabs.diseño,     value: 'diseño'     },
+    { label: t.value.nav.tabs.desarrollo, value: 'desarrollo' },
+    { label: t.value.nav.tabs.musica,     value: 'musica'     },
+    { label: t.value.nav.tabs.textos,     value: 'textos'     },
+    { label: t.value.nav.tabs.juegos,     value: 'juegos'     },
 
-  ]
+  ])
 
   const authorsMap = {                                                                                                                // author profile pic and link 
 
@@ -30,6 +30,58 @@ export const useStore = defineStore('store', () => {
     default:  { emoji: '🪡', message: 'dominando el mundo' },
 
   }
+
+  // LENGUAJE Y DICCIONARIO
+
+  const lang = ref(localStorage.getItem('lang') || 'es')
+
+  function toggleLang() {
+    lang.value = lang.value === 'es' ? 'en' : 'es'
+    localStorage.setItem('lang', lang.value)
+  }
+
+  const dict = {
+    es: {
+      portada: {
+        welcome: 'bienvenido a octantes.ar!',
+        desc: 'tocá un posteo de la tabla para cargarlo; también podés filtrar según el tipo de contenido que querés encontrar en la página',
+        viewProfile: 'ver perfil de',
+        openProfile: 'ver el perfil de autor @',
+        closeDesc: 'cerrar descripción',
+        openDesc: 'ver descripción',
+        langTitle: 'cambiar a inglés'
+      },
+      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' } },
+      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html' },
+      gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota' },
+      portfolio: {
+        subtitle: 'Desarrollador Frontend & Diseñador',
+        desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
+        close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción'
+      }
+    },
+    en: {
+      portada: {
+        welcome: 'welcome to octantes.ar!',
+        desc: 'click a post on the table to load it; you can also filter by the type of content you want to find on the page',
+        viewProfile: 'view profile of',
+        openProfile: 'view author profile @',
+        closeDesc: 'close description',
+        openDesc: 'view description',
+        langTitle: 'switch to spanish'
+      },
+      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { full: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' } },
+      status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html' },
+      gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note' },
+      portfolio: {
+        subtitle: 'Frontend Engineer & Designer',
+        desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',
+        close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description'
+      }
+    }
+  }
+
+  const t = computed(() => dict[lang.value])
 
   const error404   =                                                                                                                  // div for content miss 
 `
@@ -254,7 +306,8 @@ export const useStore = defineStore('store', () => {
 
     try {
 
-      const fetchPath = post.url || `${base}/posts/${post.type || 'textos'}/${slug}/`
+      const fileName = (lang.value === 'en' && post.bilingual) ? 'ingles.html' : 'index.html'
+      const fetchPath = `${base}/posts/${post.type || 'textos'}/${slug}/${fileName}`
       const res = await fetch(fetchPath)
 
       if (!res.ok) throw new Error(`HTTP error ${res.status}`)
@@ -373,8 +426,8 @@ export const useStore = defineStore('store', () => {
 
     return { 
 
-      title: metadata.title || 'bienvenido a octantes.ar!',
-      description: metadata.description || 'toca un posteo de la tabla para cargarlo; tambien podes filtrar segun el tipo de contenido que queres encontrar en la pagina',
+      title: metadata.title || t.value.portada.welcome,
+      description: metadata.description || t.value.portada.desc,
       authors: postAuthors,
       portada: metadata.portada || '',
 
@@ -384,7 +437,7 @@ export const useStore = defineStore('store', () => {
 
   const loadLatestPost    = computed(() => {                                                                                          // compute latest post 
 
-    if (notesIndex.value.length === 0) return { title: 'cargando...', url: '' }
+    if (notesIndex.value.length === 0) return { title: t.value.gallery.loading, url: '' }
     const latest = notesIndex.value[0]
     const cleanUrl = latest.url.replace(/^\/posts/, '') 
 
@@ -448,6 +501,8 @@ export const useStore = defineStore('store', () => {
     /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, hasNotes,
     /* NAVIG COM */ noteSortFilter,
+    /* LANG VAR  */ lang, t,
+    /* LANG FUN  */ toggleLang,
 
   }
 
