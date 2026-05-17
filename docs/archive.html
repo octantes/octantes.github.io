@@ -1,180 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>octantes.ar - archive</title>
+  <link rel="stylesheet" href="/assets/neocities.css">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
+  <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
+  <script>
+(function() {
+  var L = {
+    es: {
+      title: 'abriendo portales a universos alternativos',
+      desc: 'archivo plano // octantes.ar',
+      subtitle: 'tejiendo hechizos',
+      instruct: 'seleccioná una nota del menú izquierdo para comenzar la lectura.',
+      latest: 'últimas actualizaciones',
+      articles: 'artículos',
+      bio: 'música, diseño, desarrollo y escritura',
+      navArticles: '[ARTÍCULOS]',
+      navPortal: '[PORTAL]',
+      navRss: '[RSS]',
+      toggleTo: 'ENGLISH'
+    },
+    en: {
+      title: 'opening portals to alternative universes',
+      desc: 'flat archive // octantes.ar',
+      subtitle: 'weaving spells',
+      instruct: 'select a note from the left menu to start reading.',
+      latest: 'latest updates',
+      articles: 'articles',
+      bio: 'music, design, dev &amp; writing',
+      navArticles: '[ARTICLES]',
+      navPortal: '[PORTAL]',
+      navRss: '[RSS]',
+      toggleTo: 'ESPAÑOL'
+    }
+  }
+  var lang = localStorage.getItem('archive_lang') || 'es'
+  function applyLang(l) {
+    lang = l
+    localStorage.setItem('archive_lang', l)
+    document.querySelectorAll('[data-key]').forEach(function(el) {
+      el.textContent = L[l][el.dataset.key]
+    })
+    document.querySelectorAll('[data-es-text]').forEach(function(el) {
+      el.textContent = el.dataset[l + 'Text']
+    })
+    document.querySelectorAll('[data-es-href]').forEach(function(el) {
+      el.href = el.dataset[l + 'Href']
+    })
+  }
+  applyLang(lang)
+  window.toggleLang = function() { applyLang(lang === 'es' ? 'en' : 'es') }
+})()
+  </script>
+</head>
+<body>
 
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>octantes.ar - archive</title>
-    <link rel="stylesheet" href="/assets/neocities.css">
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
-    <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
-  </head>
-  <body>
-  
-    <aside class="static-nav">
-      <div class="sidebar-content">
-      
-        <div class="site-logo">OCTANTES</div>
-        <div class="site-subtitle">weaving spells</div>
-        
-        <div class="profile-box">
-          <a href="https://x.com/octantes" target="_blank" class="profile-link">
-            <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
-          </a>
-          <div class="profile-text">
-            <strong>kaste</strong><br>
-            <i>music, design, dev & writing</i>
-          </div>
-        </div>
-        
-        <nav class="nav-links">
-          <a href="/archive.html">[ARTICLES]</a>
-          <a href="/">[PORTAL]</a>
-          <a href="/feed.xml">[RSS]</a>
-        </nav>
-        
-        <div class="separator-nomargin">articles</div>
-        <ul class="article-list"><li class="cat-header">music</li><li><a href="https://octantes.github.io/posts/musica/orbitas/ingles.html">órbitas</a></li><li><a href="https://octantes.github.io/posts/musica/geminis/ingles.html">geminis</a></li><li><a href="https://octantes.github.io/posts/musica/viñetas/ingles.html">viñetas</a></li><li><a href="https://octantes.github.io/posts/musica/seance/ingles.html">seance</a></li><li><a href="https://octantes.github.io/posts/musica/sixminutesolder/ingles.html">six minutes older</a></li><li><a href="https://octantes.github.io/posts/musica/moodworktapes/ingles.html">mood worktapes</a></li><li class="cat-header">design</li><li><a href="https://octantes.github.io/posts/diseño/dinamik/ingles.html">dinamik - studio dev</a></li><li><a href="https://octantes.github.io/posts/diseño/cruzar/ingles.html">cruzar - cordillera cripto</a></li><li><a href="https://octantes.github.io/posts/diseño/enuna/ingles.html">en una - publicación digital</a></li><li class="cat-header">dev</li><li><a href="https://octantes.github.io/posts/desarrollo/browsewithscroll/ingles.html">browsewithscroll</a></li><li><a href="https://octantes.github.io/posts/desarrollo/arch-hud/ingles.html">arch-hud</a></li><li><a href="https://octantes.github.io/posts/desarrollo/shadewithseal/ingles.html">shadewithseal</a></li><li><a href="https://octantes.github.io/posts/desarrollo/trackwithslate/ingles.html">trackwithslate</a></li><li class="cat-header">writing</li><li><a href="https://octantes.github.io/posts/textos/pof-softwarevr/ingles.html">realidad virtual - las mejores aplicaciones</a></li><li><a href="https://octantes.github.io/posts/textos/poe-futurovr/ingles.html">realidad virtual - un futuro contemporáneo</a></li><li><a href="https://octantes.github.io/posts/textos/pod-abandonware/ingles.html">abandonware - la permanencia del autor</a></li><li><a href="https://octantes.github.io/posts/textos/poc-propiedades/ingles.html">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="https://octantes.github.io/posts/textos/pob-microtransacciones/ingles.html">las microtransacciones y su futuro</a></li><li><a href="https://octantes.github.io/posts/textos/poa-kena/ingles.html">kena - está bien que la estética lo sea todo?</a></li></ul>
-        
-      </div>
-    </aside>
+  <aside class="static-nav">
+    <div class="sidebar-content">
     
-    <main class="post-content">
+      <div class="site-logo">OCTANTES</div>
+      <div class="site-subtitle" data-key="subtitle">tejiendo hechizos</div>
       
+      <div class="profile-box">
+        <a href="https://x.com/octantes" target="_blank" class="profile-link">
+          <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
+        </a>
+        <div class="profile-text">
+          <strong>kaste</strong><br>
+          <i data-key="bio">música, diseño, desarrollo y escritura</i>
+        </div>
+      </div>
+      
+      <nav class="nav-links">
+        <a href="/archive.html" data-key="navArticles">[ARTÍCULOS]</a>
+        <a href="/" data-key="navPortal">[PORTAL]</a>
+        <a href="/feed.xml" data-key="navRss">[RSS]</a>
+        <button onclick="toggleLang()" data-key="toggleTo">ENGLISH</button>
+      </nav>
+      
+      <div class="separator-nomargin" data-key="articles">artículos</div>
+      <ul class="article-list"><li class="cat-header" data-es-text="música" data-en-text="music">música</li><li><a href="https://octantes.github.io/posts/musica/orbitas/" data-es-href="https://octantes.github.io/posts/musica/orbitas/" data-en-href="https://octantes.github.io/posts/musica/orbitas/ingles.html"><span data-es-text="órbitas" data-en-text="órbitas">órbitas</span></a></li><li><a href="https://octantes.github.io/posts/musica/geminis/" data-es-href="https://octantes.github.io/posts/musica/geminis/" data-en-href="https://octantes.github.io/posts/musica/geminis/ingles.html"><span data-es-text="geminis" data-en-text="geminis">geminis</span></a></li><li><a href="https://octantes.github.io/posts/musica/viñetas/" data-es-href="https://octantes.github.io/posts/musica/viñetas/" data-en-href="https://octantes.github.io/posts/musica/viñetas/ingles.html"><span data-es-text="viñetas" data-en-text="viñetas">viñetas</span></a></li><li><a href="https://octantes.github.io/posts/musica/seance/" data-es-href="https://octantes.github.io/posts/musica/seance/" data-en-href="https://octantes.github.io/posts/musica/seance/ingles.html"><span data-es-text="seance" data-en-text="seance">seance</span></a></li><li><a href="https://octantes.github.io/posts/musica/sixminutesolder/" data-es-href="https://octantes.github.io/posts/musica/sixminutesolder/" data-en-href="https://octantes.github.io/posts/musica/sixminutesolder/ingles.html"><span data-es-text="six minutes older" data-en-text="six minutes older">six minutes older</span></a></li><li><a href="https://octantes.github.io/posts/musica/moodworktapes/" data-es-href="https://octantes.github.io/posts/musica/moodworktapes/" data-en-href="https://octantes.github.io/posts/musica/moodworktapes/ingles.html"><span data-es-text="mood worktapes" data-en-text="mood worktapes">mood worktapes</span></a></li><li class="cat-header" data-es-text="diseño" data-en-text="design">diseño</li><li><a href="https://octantes.github.io/posts/diseño/dinamik/" data-es-href="https://octantes.github.io/posts/diseño/dinamik/" data-en-href="https://octantes.github.io/posts/diseño/dinamik/ingles.html"><span data-es-text="dinamik - studio dev" data-en-text="dinamik - studio dev">dinamik - studio dev</span></a></li><li><a href="https://octantes.github.io/posts/diseño/cruzar/" data-es-href="https://octantes.github.io/posts/diseño/cruzar/" data-en-href="https://octantes.github.io/posts/diseño/cruzar/ingles.html"><span data-es-text="cruzar - cordillera cripto" data-en-text="cruzar - crypto cordillera">cruzar - cordillera cripto</span></a></li><li><a href="https://octantes.github.io/posts/diseño/enuna/" data-es-href="https://octantes.github.io/posts/diseño/enuna/" data-en-href="https://octantes.github.io/posts/diseño/enuna/ingles.html"><span data-es-text="en una - publicación digital" data-en-text="en una - digital publication">en una - publicación digital</span></a></li><li class="cat-header" data-es-text="desarrollo" data-en-text="dev">desarrollo</li><li><a href="https://octantes.github.io/posts/desarrollo/browsewithscroll/" data-es-href="https://octantes.github.io/posts/desarrollo/browsewithscroll/" data-en-href="https://octantes.github.io/posts/desarrollo/browsewithscroll/ingles.html"><span data-es-text="browsewithscroll" data-en-text="browsewithscroll">browsewithscroll</span></a></li><li><a href="https://octantes.github.io/posts/desarrollo/arch-hud/" data-es-href="https://octantes.github.io/posts/desarrollo/arch-hud/" data-en-href="https://octantes.github.io/posts/desarrollo/arch-hud/ingles.html"><span data-es-text="arch-hud" data-en-text="arch-hud">arch-hud</span></a></li><li><a href="https://octantes.github.io/posts/desarrollo/shadewithseal/" data-es-href="https://octantes.github.io/posts/desarrollo/shadewithseal/" data-en-href="https://octantes.github.io/posts/desarrollo/shadewithseal/ingles.html"><span data-es-text="shadewithseal" data-en-text="shadewithseal">shadewithseal</span></a></li><li><a href="https://octantes.github.io/posts/desarrollo/trackwithslate/" data-es-href="https://octantes.github.io/posts/desarrollo/trackwithslate/" data-en-href="https://octantes.github.io/posts/desarrollo/trackwithslate/ingles.html"><span data-es-text="trackwithslate" data-en-text="trackwithslate">trackwithslate</span></a></li><li class="cat-header" data-es-text="textos" data-en-text="writing">textos</li><li><a href="https://octantes.github.io/posts/textos/pof-softwarevr/" data-es-href="https://octantes.github.io/posts/textos/pof-softwarevr/" data-en-href="https://octantes.github.io/posts/textos/pof-softwarevr/ingles.html"><span data-es-text="realidad virtual - las mejores aplicaciones" data-en-text="virtual reality - the best applications">realidad virtual - las mejores aplicaciones</span></a></li><li><a href="https://octantes.github.io/posts/textos/poe-futurovr/" data-es-href="https://octantes.github.io/posts/textos/poe-futurovr/" data-en-href="https://octantes.github.io/posts/textos/poe-futurovr/ingles.html"><span data-es-text="realidad virtual - un futuro contemporáneo" data-en-text="virtual reality - a contemporary future">realidad virtual - un futuro contemporáneo</span></a></li><li><a href="https://octantes.github.io/posts/textos/pod-abandonware/" data-es-href="https://octantes.github.io/posts/textos/pod-abandonware/" data-en-href="https://octantes.github.io/posts/textos/pod-abandonware/ingles.html"><span data-es-text="abandonware - la permanencia del autor" data-en-text="abandonware - the permanence of the author">abandonware - la permanencia del autor</span></a></li><li><a href="https://octantes.github.io/posts/textos/poc-propiedades/" data-es-href="https://octantes.github.io/posts/textos/poc-propiedades/" data-en-href="https://octantes.github.io/posts/textos/poc-propiedades/ingles.html"><span data-es-text="propiedades intelectuales - hacen falta nuevas IPs?" data-en-text="intellectual properties - do we need new IPs?">propiedades intelectuales - hacen falta nuevas IPs?</span></a></li><li><a href="https://octantes.github.io/posts/textos/pob-microtransacciones/" data-es-href="https://octantes.github.io/posts/textos/pob-microtransacciones/" data-en-href="https://octantes.github.io/posts/textos/pob-microtransacciones/ingles.html"><span data-es-text="las microtransacciones y su futuro" data-en-text="microtransactions and their future">las microtransacciones y su futuro</span></a></li><li><a href="https://octantes.github.io/posts/textos/poa-kena/" data-es-href="https://octantes.github.io/posts/textos/poa-kena/" data-en-href="https://octantes.github.io/posts/textos/poa-kena/ingles.html"><span data-es-text="kena - está bien que la estética lo sea todo?" data-en-text="kena - is it ok for aesthetics to be everything?">kena - está bien que la estética lo sea todo?</span></a></li></ul>
+      
+    </div>
+  </aside>
+  
+  <main class="post-content">
+  
     <header class="post-header">
-      <h1>opening portals to alternative universes</h1>
-      <div class="meta">flat archive // octantes.ar</div>
+      <h1 data-key="title">abriendo portales a universos alternativos</h1>
+      <div class="meta" data-key="desc">archivo plano // octantes.ar</div>
     </header>
     
-    <p>select a note from the left menu to start reading.</p>
+    <p data-key="instruct">seleccioná una nota del menú izquierdo para comenzar la lectura.</p>
     
-    <div class="separator-margin">latest updates</div>
+    <div class="separator-margin" data-key="latest">últimas actualizaciones</div>
 
     <ul class="article-list">
-      
-        <li>
-          <a href="/posts/musica/orbitas/ingles.html">
-            <span class="list-span">[08/04/2026]</span>
-            órbitas
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/desarrollo/browsewithscroll/ingles.html">
-            <span class="list-span">[05/03/2026]</span>
-            browsewithscroll
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/desarrollo/arch-hud/ingles.html">
-            <span class="list-span">[14/09/2025]</span>
-            arch-hud
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/desarrollo/shadewithseal/ingles.html">
-            <span class="list-span">[03/07/2025]</span>
-            shadewithseal
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/desarrollo/trackwithslate/ingles.html">
-            <span class="list-span">[23/06/2025]</span>
-            trackwithslate
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/musica/geminis/ingles.html">
-            <span class="list-span">[06/06/2025]</span>
-            geminis
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/musica/viñetas/ingles.html">
-            <span class="list-span">[22/12/2024]</span>
-            viñetas
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/diseño/dinamik/ingles.html">
-            <span class="list-span">[30/11/2024]</span>
-            dinamik - studio dev
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/diseño/cruzar/ingles.html">
-            <span class="list-span">[19/09/2024]</span>
-            cruzar - cordillera cripto
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/diseño/enuna/ingles.html">
-            <span class="list-span">[06/09/2023]</span>
-            en una - publicación digital
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/textos/pof-softwarevr/ingles.html">
-            <span class="list-span">[21/07/2022]</span>
-            realidad virtual - las mejores aplicaciones
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/textos/poe-futurovr/ingles.html">
-            <span class="list-span">[10/05/2022]</span>
-            realidad virtual - un futuro contemporáneo
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/musica/seance/ingles.html">
-            <span class="list-span">[08/05/2022]</span>
-            seance
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/textos/pod-abandonware/ingles.html">
-            <span class="list-span">[31/03/2022]</span>
-            abandonware - la permanencia del autor
-          </a>
-        </li>
-      
-
-        <li>
-          <a href="/posts/textos/poc-propiedades/ingles.html">
-            <span class="list-span">[07/02/2022]</span>
-            propiedades intelectuales - hacen falta nuevas IPs?
-          </a>
-        </li>
-      
+      <li><a href="/posts/musica/orbitas/" data-es-href="/posts/musica/orbitas/" data-en-href="/posts/musica/orbitas/ingles.html"><span class="list-span">[07/04/2026]</span> <span data-es-text="órbitas" data-en-text="órbitas">órbitas</span></a></li>
+<li><a href="/posts/desarrollo/browsewithscroll/" data-es-href="/posts/desarrollo/browsewithscroll/" data-en-href="/posts/desarrollo/browsewithscroll/ingles.html"><span class="list-span">[04/03/2026]</span> <span data-es-text="browsewithscroll" data-en-text="browsewithscroll">browsewithscroll</span></a></li>
+<li><a href="/posts/desarrollo/arch-hud/" data-es-href="/posts/desarrollo/arch-hud/" data-en-href="/posts/desarrollo/arch-hud/ingles.html"><span class="list-span">[13/09/2025]</span> <span data-es-text="arch-hud" data-en-text="arch-hud">arch-hud</span></a></li>
+<li><a href="/posts/desarrollo/shadewithseal/" data-es-href="/posts/desarrollo/shadewithseal/" data-en-href="/posts/desarrollo/shadewithseal/ingles.html"><span class="list-span">[02/07/2025]</span> <span data-es-text="shadewithseal" data-en-text="shadewithseal">shadewithseal</span></a></li>
+<li><a href="/posts/desarrollo/trackwithslate/" data-es-href="/posts/desarrollo/trackwithslate/" data-en-href="/posts/desarrollo/trackwithslate/ingles.html"><span class="list-span">[22/06/2025]</span> <span data-es-text="trackwithslate" data-en-text="trackwithslate">trackwithslate</span></a></li>
+<li><a href="/posts/musica/geminis/" data-es-href="/posts/musica/geminis/" data-en-href="/posts/musica/geminis/ingles.html"><span class="list-span">[05/06/2025]</span> <span data-es-text="geminis" data-en-text="geminis">geminis</span></a></li>
+<li><a href="/posts/musica/viñetas/" data-es-href="/posts/musica/viñetas/" data-en-href="/posts/musica/viñetas/ingles.html"><span class="list-span">[21/12/2024]</span> <span data-es-text="viñetas" data-en-text="viñetas">viñetas</span></a></li>
+<li><a href="/posts/diseño/dinamik/" data-es-href="/posts/diseño/dinamik/" data-en-href="/posts/diseño/dinamik/ingles.html"><span class="list-span">[29/11/2024]</span> <span data-es-text="dinamik - studio dev" data-en-text="dinamik - studio dev">dinamik - studio dev</span></a></li>
+<li><a href="/posts/diseño/cruzar/" data-es-href="/posts/diseño/cruzar/" data-en-href="/posts/diseño/cruzar/ingles.html"><span class="list-span">[18/09/2024]</span> <span data-es-text="cruzar - cordillera cripto" data-en-text="cruzar - crypto cordillera">cruzar - cordillera cripto</span></a></li>
+<li><a href="/posts/diseño/enuna/" data-es-href="/posts/diseño/enuna/" data-en-href="/posts/diseño/enuna/ingles.html"><span class="list-span">[05/09/2023]</span> <span data-es-text="en una - publicación digital" data-en-text="en una - digital publication">en una - publicación digital</span></a></li>
+<li><a href="/posts/textos/pof-softwarevr/" data-es-href="/posts/textos/pof-softwarevr/" data-en-href="/posts/textos/pof-softwarevr/ingles.html"><span class="list-span">[20/07/2022]</span> <span data-es-text="realidad virtual - las mejores aplicaciones" data-en-text="virtual reality - the best applications">realidad virtual - las mejores aplicaciones</span></a></li>
+<li><a href="/posts/textos/poe-futurovr/" data-es-href="/posts/textos/poe-futurovr/" data-en-href="/posts/textos/poe-futurovr/ingles.html"><span class="list-span">[09/05/2022]</span> <span data-es-text="realidad virtual - un futuro contemporáneo" data-en-text="virtual reality - a contemporary future">realidad virtual - un futuro contemporáneo</span></a></li>
+<li><a href="/posts/musica/seance/" data-es-href="/posts/musica/seance/" data-en-href="/posts/musica/seance/ingles.html"><span class="list-span">[07/05/2022]</span> <span data-es-text="seance" data-en-text="seance">seance</span></a></li>
+<li><a href="/posts/textos/pod-abandonware/" data-es-href="/posts/textos/pod-abandonware/" data-en-href="/posts/textos/pod-abandonware/ingles.html"><span class="list-span">[30/03/2022]</span> <span data-es-text="abandonware - la permanencia del autor" data-en-text="abandonware - the permanence of the author">abandonware - la permanencia del autor</span></a></li>
+<li><a href="/posts/textos/poc-propiedades/" data-es-href="/posts/textos/poc-propiedades/" data-en-href="/posts/textos/poc-propiedades/ingles.html"><span class="list-span">[06/02/2022]</span> <span data-es-text="propiedades intelectuales - hacen falta nuevas IPs?" data-en-text="intellectual properties - do we need new IPs?">propiedades intelectuales - hacen falta nuevas IPs?</span></a></li>
     </ul>
-  
-    </main>
     
-  </body>
-  </html>
+  </main>
   
+</body>
+</html>

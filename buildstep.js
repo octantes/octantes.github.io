@@ -574,7 +574,176 @@ async function writeIndex() {                                                   
 
 }
 
-function generateGroupedSidebar(lang = 'es') {                                    // create sidebar for basic archive webpage 
+function generateBilingualSidebar() {                                        // create bilingual sidebar for archive page
+
+  const groups = {}
+
+  indexItems.forEach(item => {
+    if (!groups[item.type]) groups[item.type] = []
+    groups[item.type].push(item)
+  })
+
+  const order = ['musica', 'diseño', 'juegos', 'desarrollo', 'textos']
+  Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
+
+  const catLabels = { diseño: ['diseño', 'design'], desarrollo: ['desarrollo', 'dev'], musica: ['música', 'music'], textos: ['textos', 'writing'], juegos: ['juegos', 'games'] }
+
+  let html = ''
+
+  order.forEach(type => {
+    if (groups[type]) {
+      const labels = catLabels[type] || [type, type]
+      html += `<li class="cat-header" data-es-text="${esc(labels[0])}" data-en-text="${esc(labels[1])}">${esc(labels[0])}</li>`
+      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
+        const esUrl = `${webURL}${p.url}`
+        const enUrl = p.bilingual ? `${webURL}${p.url}ingles.html` : esUrl
+        const esTitle = p.title
+        const enTitle = p.titleEn || p.title
+        html += `<li><a href="${esc(esUrl)}" data-es-href="${esc(esUrl)}" data-en-href="${esc(enUrl)}"><span data-es-text="${esc(esTitle)}" data-en-text="${esc(enTitle)}">${esc(esTitle)}</span></a></li>`
+      })
+    }
+  })
+  
+  return html
+}
+
+function esc(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+async function writeBilingualArchive() {                                   // create bilingual archive page with JS toggle
+
+  const sidebarHTML = generateBilingualSidebar()
+  const sortedItems = [...indexItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
+
+  const latestHTML = sortedItems.slice(0, 15).map(i => {
+    const esUrl = `${i.url}`
+    const enUrl = i.bilingual ? `${i.url}ingles.html` : esUrl
+    const esTitle = i.title
+    const enTitle = i.titleEn || i.title
+    return `<li><a href="${esc(esUrl)}" data-es-href="${esc(esUrl)}" data-en-href="${esc(enUrl)}"><span class="list-span">[${i.date}]</span> <span data-es-text="${esc(esTitle)}" data-en-text="${esc(enTitle)}">${esc(esTitle)}</span></a></li>`
+  }).join('\n')
+
+  const pageHtml = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>octantes.ar - archive</title>
+  <link rel="stylesheet" href="/assets/neocities.css">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
+  <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
+  <script>
+(function() {
+  var L = {
+    es: {
+      title: 'abriendo portales a universos alternativos',
+      desc: 'archivo plano // octantes.ar',
+      subtitle: 'tejiendo hechizos',
+      instruct: 'seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.',
+      latest: '\u00faltimas actualizaciones',
+      articles: 'art\u00edculos',
+      bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura',
+      navArticles: '[ART\u00cdCULOS]',
+      navPortal: '[PORTAL]',
+      navRss: '[RSS]',
+      toggleTo: 'ENGLISH'
+    },
+    en: {
+      title: 'opening portals to alternative universes',
+      desc: 'flat archive // octantes.ar',
+      subtitle: 'weaving spells',
+      instruct: 'select a note from the left menu to start reading.',
+      latest: 'latest updates',
+      articles: 'articles',
+      bio: 'music, design, dev &amp; writing',
+      navArticles: '[ARTICLES]',
+      navPortal: '[PORTAL]',
+      navRss: '[RSS]',
+      toggleTo: 'ESPA\u00d1OL'
+    }
+  }
+  var lang = localStorage.getItem('archive_lang') || 'es'
+  function applyLang(l) {
+    lang = l
+    localStorage.setItem('archive_lang', l)
+    document.querySelectorAll('[data-key]').forEach(function(el) {
+      el.textContent = L[l][el.dataset.key]
+    })
+    document.querySelectorAll('[data-es-text]').forEach(function(el) {
+      el.textContent = el.dataset[l + 'Text']
+    })
+    document.querySelectorAll('[data-es-href]').forEach(function(el) {
+      el.href = el.dataset[l + 'Href']
+    })
+  }
+  applyLang(lang)
+  window.toggleLang = function() { applyLang(lang === 'es' ? 'en' : 'es') }
+})()
+  <\/script>
+</head>
+<body>
+
+  <aside class="static-nav">
+    <div class="sidebar-content">
+    
+      <div class="site-logo">OCTANTES</div>
+      <div class="site-subtitle" data-key="subtitle">tejiendo hechizos</div>
+      
+      <div class="profile-box">
+        <a href="https://x.com/octantes" target="_blank" class="profile-link">
+          <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
+        </a>
+        <div class="profile-text">
+          <strong>kaste</strong><br>
+          <i data-key="bio">m\u00fasica, dise\u00f1o, desarrollo y escritura</i>
+        </div>
+      </div>
+      
+      <nav class="nav-links">
+        <a href="/archive.html" data-key="navArticles">[ART\u00cdCULOS]</a>
+        <a href="/" data-key="navPortal">[PORTAL]</a>
+        <a href="/feed.xml" data-key="navRss">[RSS]</a>
+        <button onclick="toggleLang()" data-key="toggleTo">ENGLISH</button>
+      </nav>
+      
+      <div class="separator-nomargin" data-key="articles">art\u00edculos</div>
+      <ul class="article-list">${sidebarHTML}</ul>
+      
+    </div>
+  </aside>
+  
+  <main class="post-content">
+  
+    <header class="post-header">
+      <h1 data-key="title">abriendo portales a universos alternativos</h1>
+      <div class="meta" data-key="desc">archivo plano // octantes.ar</div>
+    </header>
+    
+    <p data-key="instruct">seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.</p>
+    
+    <div class="separator-margin" data-key="latest">\u00faltimas actualizaciones</div>
+
+    <ul class="article-list">
+      ${latestHTML}
+    </ul>
+    
+  </main>
+  
+</body>
+</html>`
+
+  await fs.writeFile(path.join(outputDir, 'archivo.html'), pageHtml)
+  await fs.writeFile(path.join(outputDir, 'archive.html'), pageHtml)
+  console.log('archivo.html / archive.html generated (bilingual)')
+
+}
+
+async function writeBasicIndex() {                                               // create both language archive versions
+  await writeBilingualArchive()
+}
+
+function generateMonolingualSidebar(lang = 'es') {                          // create static sidebar for post pages
 
   const groups = {}
 
@@ -604,120 +773,10 @@ function generateGroupedSidebar(lang = 'es') {                                  
   return html
 }
 
-async function writeBasicIndexVersion(lang = 'es') {                             // create archive html for a specific language
-
-  const sidebarHTML = generateGroupedSidebar(lang)
-  const sortedItems = [...indexItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
-
-  const t = lang === 'es' ? {
-    title: 'abriendo portales a universos alternativos',
-    desc: 'archivo plano // octantes.ar',
-    subtitle: 'tejiendo hechizos',
-    instruct: 'seleccioná una nota del menú izquierdo para comenzar la lectura.',
-    latest: 'últimas actualizaciones',
-    articles: 'artículos',
-    filename: 'archivo.html',
-    bio: 'música, diseño, desarrollo y escritura'
-  } : {
-    title: 'opening portals to alternative universes',
-    desc: 'flat archive // octantes.ar',
-    subtitle: 'weaving spells',
-    instruct: 'select a note from the left menu to start reading.',
-    latest: 'latest updates',
-    articles: 'articles',
-    filename: 'archive.html',
-    bio: 'music, design, dev & writing'
-  }
-
-  const mainContent =
-  `
-    <header class="post-header">
-      <h1>${t.title}</h1>
-      <div class="meta">${t.desc}</div>
-    </header>
-    
-    <p>${t.instruct}</p>
-    
-    <div class="separator-margin">${t.latest}</div>
-
-    <ul class="article-list">
-      ${sortedItems.slice(0, 15).map(i => {
-        const fileTarget = (lang === 'en' && i.bilingual) ? 'ingles.html' : ''
-        return `
-        <li>
-          <a href="${i.url}${fileTarget}">
-            <span class="list-span">[${i.date}]</span>
-            ${i.title}
-          </a>
-        </li>
-      `}).join('\n')}
-    </ul>
-  `
-
-  const basicHtml = 
-  `
-  <!DOCTYPE html>
-  <html lang="${lang}">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>octantes.ar - ${lang === 'es' ? 'archivo' : 'archive'}</title>
-    <link rel="stylesheet" href="/assets/neocities.css">
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
-    <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
-  </head>
-  <body>
-  
-    <aside class="static-nav">
-      <div class="sidebar-content">
-      
-        <div class="site-logo">OCTANTES</div>
-        <div class="site-subtitle">${t.subtitle}</div>
-        
-        <div class="profile-box">
-          <a href="https://x.com/octantes" target="_blank" class="profile-link">
-            <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
-          </a>
-          <div class="profile-text">
-            <strong>kaste</strong><br>
-            <i>${t.bio}</i>
-          </div>
-        </div>
-        
-        <nav class="nav-links">
-          <a href="/${t.filename}">[${t.articles.toUpperCase()}]</a>
-          <a href="/">[PORTAL]</a>
-          <a href="/feed.xml">[RSS]</a>
-        </nav>
-        
-        <div class="separator-nomargin">${t.articles}</div>
-        <ul class="article-list">${sidebarHTML}</ul>
-        
-      </div>
-    </aside>
-    
-    <main class="post-content">
-      ${mainContent}
-    </main>
-    
-  </body>
-  </html>
-  `
-
-  await fs.writeFile(path.join(outputDir, t.filename), basicHtml)
-  console.log(`${t.filename} generated`)
-
-}
-
-async function writeBasicIndex() {                                               // create both language archive versions
-  await writeBasicIndexVersion('es')
-  await writeBasicIndexVersion('en')
-}
-
 async function updateSidebars() {                                                // update old archive website sidebars 
 
-  const sidebarES = generateGroupedSidebar('es')
-  const sidebarEN = generateGroupedSidebar('en')
+  const sidebarES = generateMonolingualSidebar('es')
+  const sidebarEN = generateMonolingualSidebar('en')
   
   for (const item of indexItems) {
 

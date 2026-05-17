@@ -53,7 +53,6 @@ async function handleLoadNote(slug) {                                           
   const { html, error } = await fetchPost(slug)
 
   noteContent.value = html
-  if (postRef.value) { postRef.value.scrollTop = 0 }
   await nextTick()
 
   const contentElement = contentRef.value

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 export const useStore = defineStore('store', () => {
 
@@ -59,6 +59,20 @@ export const useStore = defineStore('store', () => {
         desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
         close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción'
       },
+      subscribe: {
+        cta: 'querés enterarte cuando subo algo nuevo? sumate a la lista de mails!',
+        placeholder: 'dejá tu mail acá...',
+        done: 'ya estás en la lista, gracias por sumarte!',
+        button: 'suscribirme',
+        emailTitle: 'ingresar tu correo para suscribirte',
+        emailAria: 'campo para ingresar correo electrónico',
+        submitTitle: 'hacer click para suscribirte',
+        submitAria: 'botón para enviar la suscripción',
+        successMsg: 'mail registrado!',
+        errorMsg: 'ese mail no es válido!',
+        thanksMsg: 'gracias por sumarte!',
+        adblockMsg: 'prevenido por adblocker'
+      },
       about: {
         taglines: ['tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales', 'investigando dualidades'],
         sections: {
@@ -96,6 +110,20 @@ export const useStore = defineStore('store', () => {
         subtitle: 'Frontend Engineer & Designer',
         desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',
         close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description'
+      },
+      subscribe: {
+        cta: 'want to know when i upload something new? join the mailing list!',
+        placeholder: 'leave your email here...',
+        done: "you're already on the list, thanks for joining!",
+        button: 'subscribe',
+        emailTitle: 'enter your email to subscribe',
+        emailAria: 'field to enter email address',
+        submitTitle: 'click to subscribe',
+        submitAria: 'button to send subscription',
+        successMsg: 'email registered!',
+        errorMsg: 'that email is not valid!',
+        thanksMsg: 'thanks for joining!',
+        adblockMsg: 'blocked by adblocker'
       },
       about: {
         taglines: ['weaving spells', 'opening windows to alternate universes', 'unfolding portals', 'investigating dualities'],
@@ -158,7 +186,7 @@ export const useStore = defineStore('store', () => {
 
   const subEmail                   = ref('')                                                                                          // email
   const subHoney                   = ref('')                                                                                          // bot honeypot
-  const subMessage                 = ref('dejá tu mail acá...')                                                                       // status message
+  const subMessage                 = ref(t.value.subscribe.placeholder)                                                                 // status message
   const subState                   = ref('default')                                                                                   // status states
   const subDone                    = ref((parseInt(localStorage.getItem('subscription_count') || '0', 10) || 0) > 0)                  // user already subscribed
   const emailRegex                 = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/                                             // email regex
@@ -284,7 +312,7 @@ export const useStore = defineStore('store', () => {
 
   function resetSub() {                                                                                                               // reset sub message and value 
 
-    subMessage.value = 'dejá tu mail acá...'
+    subMessage.value = t.value.subscribe.placeholder
     subState.value = 'default'
 
   }
@@ -307,8 +335,8 @@ export const useStore = defineStore('store', () => {
     const submissionsKey = 'subscription_count'
     const currentCount   = parseInt(localStorage.getItem(submissionsKey) || '0', 10) || 0
     
-    if (subHoney.value)                    { updateSub('success', 'mail registrado!',       true);  return }
-    if (!email || !emailRegex.test(email)) { updateSub('error',   'ese mail no es válido!', false); return }
+    if (subHoney.value)                    { updateSub('success', t.value.subscribe.successMsg, true);  return }
+    if (!email || !emailRegex.test(email)) { updateSub('error',   t.value.subscribe.errorMsg,   false); return }
 
     if (window.umami && typeof window.umami.track === 'function') {
 
@@ -316,9 +344,9 @@ export const useStore = defineStore('store', () => {
         localStorage.setItem(submissionsKey, currentCount + 1)
         subDone.value = true
 
-        updateSub('success', `gracias por sumarte!`, true)
+        updateSub('success', t.value.subscribe.thanksMsg, true)
 
-    } else { updateSub('error', 'prevenido por adblocker', true) }
+    } else { updateSub('error', t.value.subscribe.adblockMsg, true) }
     
   }
 
@@ -328,6 +356,8 @@ export const useStore = defineStore('store', () => {
     userStatus.value = status
 
   }
+
+  watch(lang, () => { if (subState.value === 'default') subMessage.value = t.value.subscribe.placeholder })                            // sync placeholder on lang switch
 
   
   // ASYNCS -------------------------------------------------------------------------------------------------------------------------------------------------------------
