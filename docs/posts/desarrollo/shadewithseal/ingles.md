@@ -8,7 +8,7 @@ date: 2025-07-03
 handle: kaste
 ---
 
-*You can find this project in english in my [Github](https://github.com/octantes/shadewithseal)*
+*You can find the project repo in my [Github](https://github.com/octantes/shadewithseal)*
 
 seal is a local tool to **create, save and record glsl frag shaders**
 no installation or internet needed: just download the HTML and open it in your browser
