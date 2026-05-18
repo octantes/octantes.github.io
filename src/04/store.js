@@ -22,14 +22,16 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  const statusMap  = {                                                                                                                // status lines with emojis 
+  const statusMap  = {                                                                                                                // status emojis (messages in dict)
 
-    frenzy:   { emoji: '❤️‍🔥', message: 'in a frenzy!'       },
-    dominion: { emoji: '🪡', message: 'dominando el mundo' },
-    stuck:    { emoji: '🌀', message: 'stuck in a loop'    },
-    default:  { emoji: '🪡', message: 'dominando el mundo' },
+    frenzy:   { emoji: '❤️‍🔥' },
+    dominion: { emoji: '🪡' },
+    stuck:    { emoji: '🌀' },
+    default:  { emoji: '🪡' },
 
   }
+
+  const statusKey = ref('frenzy')                                                                                                      // current status key
 
   // LENGUAJE Y DICCIONARIO
 
@@ -65,7 +67,7 @@ export const useStore = defineStore('store', () => {
         sigilAlt: 'sigilo'
       },
       nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
-      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS' },
+      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:', frenzy: 'de frenes\u00ed!', dominion: 'dominando el mundo', stuck: 'atascado en un bucle', default: 'dominando el mundo' },
       gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
       portfolio: {
         subtitle: 'Desarrollador Frontend & Diseñador',
@@ -126,7 +128,7 @@ export const useStore = defineStore('store', () => {
         sigilAlt: 'sigil'
       },
       nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { full: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
-      status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed' },
+      status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:', frenzy: 'in a frenzy!', dominion: 'dominating the world', stuck: 'stuck in a loop', default: 'dominating the world' },
       gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
       portfolio: {
         subtitle: 'Frontend Engineer & Designer',
@@ -203,7 +205,13 @@ export const useStore = defineStore('store', () => {
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
   const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
   const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
-  const userStatus                 = ref(statusMap['frenzy'])                                                                         // current user status var
+  const userStatus                 = computed(() => {                                                                                   // current user status (lang-aware)
+
+    const key = statusKey.value
+    const entry = statusMap[key] || statusMap.default
+    return { emoji: entry.emoji, message: t.value.status[key] || t.value.status.default || entry.emoji }
+
+  })
 
   // SUBS                                                                                                                             // SUBSCRIPTION HANDLING
 
@@ -375,8 +383,7 @@ export const useStore = defineStore('store', () => {
 
   function setUserStatus(key) {                                                                                                       // set emoji and status phrase 
 
-    const status = statusMap[key] || statusMap['default']
-    userStatus.value = status
+    statusKey.value = key
 
   }
 
