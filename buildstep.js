@@ -689,7 +689,7 @@ async function writeBilingualArchive() {                                   // cr
       instruct: 'select a note from the left menu to start reading.',
       latest: 'latest updates',
       articles: 'articles',
-      bio: 'music, design, dev &amp; writing',
+      bio: 'music, design, dev & writing',
       navArticles: '[ARTICLES]',
       navPortal: '[PORTAL]',
       navRss: '[RSS]',
