@@ -528,7 +528,7 @@ async function processPosts() {                                                 
         .replace(/{{navArchiveHref}}/g, 'archivo.html')
         .replace(/{{navArticles}}/g, 'art\u00edculos')
         .replace(/{{toggleLabel}}/g, '[ENG]')
-        .replace(/{{toggleHref}}/g, 'ingles.html')
+        .replace(/{{toggleHref}}/g, 'ingles.html?lang=en')
 
       await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
 
@@ -556,7 +556,7 @@ async function processPosts() {                                                 
           .replace(/{{navArchiveHref}}/g, 'archive.html')
           .replace(/{{navArticles}}/g, 'articles')
           .replace(/{{toggleLabel}}/g, '[ESP]')
-          .replace(/{{toggleHref}}/g, 'index.html')
+          .replace(/{{toggleHref}}/g, 'index.html?lang=es')
 
         await fs.writeFile(path.join(noteOutputDir, 'ingles.html'), fullHtmlEn)
       }
@@ -806,10 +806,11 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
   order.forEach(type => {
     if (groups[type]) {
       const typeLabel = catDict[type] || type
-      html += `<li class="cat-header">${typeLabel}</li>`
+      html += `<li class="cat-header">${esc(typeLabel)}</li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
         const fileTarget = (lang === 'en' && p.bilingual) ? 'ingles.html' : ''
-        html += `<li><a href="${webURL}${p.url}${fileTarget}">${p.titleEn || p.title}</a></li>`
+        const title = lang === 'en' ? (p.titleEn || p.title) : p.title
+        html += `<li><a href="${webURL}${p.url}${fileTarget}">${esc(title)}</a></li>`
       })
     }
   })
