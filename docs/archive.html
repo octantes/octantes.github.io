@@ -39,15 +39,15 @@
       toggleTo: '[ESP]'
     }
   }
-  var lang = localStorage.getItem('archive_lang')
+  var lang = localStorage.getItem('lang')
   if (!lang) {
     var nav = (navigator.language || '').toLowerCase().split('-')[0]
     lang = nav === 'es' ? 'es' : 'en'
-    localStorage.setItem('archive_lang', lang)
+    localStorage.setItem('lang', lang)
   }
   function applyLang(l) {
     lang = l
-    localStorage.setItem('archive_lang', l)
+    localStorage.setItem('lang', l)
     document.documentElement.lang = l
     document.title = L[l].pageTitle
     document.querySelectorAll('[data-key]').forEach(function(el) {
@@ -85,7 +85,7 @@
       
       <nav class="nav-links" style="flex-direction:column; align-items:center; gap:4px;">
         <div class="nav-row" style="display:flex; gap:4px;">
-          <a href="/archive.html" data-key="navArticles">[ARTÍCULOS]</a>
+          <a href="/archive.html" data-key="navArticles" data-es-href="/archivo.html" data-en-href="/archive.html">[ARTÍCULOS]</a>
           <a href="/" data-key="navPortal">[PORTAL]</a>
         </div>
         <div class="nav-row" style="display:flex; gap:4px;">
