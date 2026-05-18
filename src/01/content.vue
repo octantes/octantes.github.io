@@ -136,7 +136,7 @@ watch(                                                                          
         if (!isMobile.value) await shaderRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
-        document.title = 'octantes.ar - portal multimedia'
+        document.title = store.t.nav.siteTitle
         break
       
       // first load without note, INTRO only on first page load
@@ -146,7 +146,7 @@ watch(                                                                          
         lastSlug = null
         setCurrentPost(null)
         noteContent.value = ''
-        document.title = 'octantes.ar - portal multimedia'
+        document.title = store.t.nav.siteTitle
         if (!isMobile.value) await shaderRef.value?.runQueue('intro')
         break
       
@@ -208,7 +208,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
       <Shader class="shader" ref="shaderRef"/>
 
-      <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" title="salir de la vista en pantalla completa" aria-label="cerrar el contenido en pantalla completa">X</button>
+      <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" :title="store.t.portfolio.closeFullscreen" :aria-label="store.t.portfolio.closeFullscreenAria">X</button>
 
       <div class="post" ref="postRef" :class="{ 'fs-mode': computedFullscreen }">
 

@@ -468,6 +468,27 @@ async function processPosts() {                                                 
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 
+    const enDesc = (isBilingual && enAttributes.description) || 'short note description'
+    const articleJsonEn = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrlEn },
+      "headline": attributes.title || slug,
+      "image": portadaUrl || `${webURL}/assets/portada.webp`,
+      "author": { "@type": "Person", "name": primaryHandle, "url": primaryHandle ? `https://x.com/${primaryHandle}` : `${webURL}/about` },
+      "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
+      "datePublished": isoDate,
+      "dateModified": isoDate,
+      "description": enDesc,
+      "keywords": (attributes.tags || []).join(', ')
+    });
+    const finalArticleJsonEn = articleJsonEn
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
     if (fullRebuild || cache[`${postType}/${slug}/index.md`] !== finalHash) {
 
       const isTradStyle = attributes.style === 'trad'
@@ -487,12 +508,6 @@ async function processPosts() {                                                 
           if (!/(target\s*=\s*['"]_blank['"])/i.test(match)) { return `<a ${before}href="${href}"${after} target="_blank" rel="noopener noreferrer">` }
           return match
       })
-
-      const staticNav = `
-      <nav class="static-nav">
-        <a href="/archivo.html">← VOLVER AL ARCHIVO</a>
-        <span>// ${attributes.title || slug}</span>
-      </nav>`
 
       let fullHtml = template
         .replace(/{{langTag}}/g, 'es')
@@ -531,10 +546,10 @@ async function processPosts() {                                                 
           .replace(/{{hreflangTags}}/g, hreflangTags)
           .replace(/{{handle}}/g, primaryHandle)
           .replace(/{{date}}/g, formatted)
-          .replace(/{{articleJson}}/g, finalArticleJson)
           .replace(/{{htmlContent}}/g, htmlContentEn)
           .replace(/{{webURL}}/g, webURL)
           .replace(/{{sidebarLinks}}/g, sidebarLinks)
+          .replace(/{{articleJson}}/g, finalArticleJsonEn)
           .replace(/{{subtitle}}/g, 'weaving spells')
           .replace(/{{bio}}/g, 'music, design, dev &amp; writing')
           .replace(/{{navArchive}}/g, '[ARTICLES]')
@@ -645,7 +660,7 @@ async function writeBilingualArchive() {                                   // cr
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>octantes.ar - archive</title>
+  <title data-key="pageTitle">octantes.ar - archive</title>
   <link rel="stylesheet" href="/assets/neocities.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
   <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
@@ -653,6 +668,7 @@ async function writeBilingualArchive() {                                   // cr
 (function() {
   var L = {
     es: {
+      pageTitle: 'octantes.ar - archivo',
       title: 'abriendo portales a universos alternativos',
       desc: 'archivo plano // octantes.ar',
       subtitle: 'tejiendo hechizos',
@@ -666,6 +682,7 @@ async function writeBilingualArchive() {                                   // cr
       toggleTo: '[ENG]'
     },
     en: {
+      pageTitle: 'octantes.ar - archive',
       title: 'opening portals to alternative universes',
       desc: 'flat archive // octantes.ar',
       subtitle: 'weaving spells',
@@ -679,10 +696,17 @@ async function writeBilingualArchive() {                                   // cr
       toggleTo: '[ESP]'
     }
   }
-  var lang = localStorage.getItem('archive_lang') || 'es'
+  var lang = localStorage.getItem('archive_lang')
+  if (!lang) {
+    var nav = (navigator.language || '').toLowerCase().split('-')[0]
+    lang = nav === 'es' ? 'es' : 'en'
+    localStorage.setItem('archive_lang', lang)
+  }
   function applyLang(l) {
     lang = l
     localStorage.setItem('archive_lang', l)
+    document.documentElement.lang = l
+    document.title = L[l].pageTitle
     document.querySelectorAll('[data-key]').forEach(function(el) {
       el.textContent = L[l][el.dataset.key]
     })
@@ -864,7 +888,7 @@ async function writeFeed() {                                                    
   const now = new Date().toUTCString()
   const feedTitle = 'octantes.ar'
   const feedUrl = `${webURL}/feed.xml`
-  const feedDescription = 'un portal web de contenido multimedia, sin algoritmos ni intermediarios'
+  const feedDescription = 'a multimedia web portal, no algorithms or middlemen'
 
   const channelItems = indexItems.map(post => {
     const postUrl = `${webURL}${post.url}`

@@ -151,7 +151,7 @@ async function renderNote(type, slug, lang = 'es') {
 <body>
   <div class="post">
     <nav class="static-nav">
-      <a href="/">← VOLVER AL ARCHIVO</a>
+      <a href="/">← BACK TO ARCHIVE</a>
       <span>// ${title}</span>
     </nav>
     ${htmlContent}
@@ -166,9 +166,9 @@ async function renderNote(type, slug, lang = 'es') {
 <html lang="es">
 <head><meta charset="UTF-8"><title>404</title></head>
 <body style="background:#1B1C1C;color:#D8DADE;font-family:monospace;padding:2rem;">
-  <h1>Nota no encontrada: ${type}/${slug}</h1>
+  <h1>Note not found: ${type}/${slug}</h1>
   <p>${e.message}</p>
-  <a href="/" style="color:#8AB6BB;">← Volver</a>
+  <a href="/" style="color:#8AB6BB;">← Back</a>
 </body></html>`
   }
 

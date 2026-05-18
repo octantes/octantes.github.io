@@ -25,7 +25,7 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
       <template v-for="tab in tabs" :key="tab.value">
         <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="setActiveFilter(router, 'full')"
-          :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="'filtrar por ' + tab.label" :aria-label="'filtrar contenidos por ' + tab.label"> {{ tab.label }}
+          :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"> {{ tab.label }}
         </button>
       </template>
       

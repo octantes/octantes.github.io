@@ -33,7 +33,12 @@ export const useStore = defineStore('store', () => {
 
   // LENGUAJE Y DICCIONARIO
 
-  const lang = ref(localStorage.getItem('lang') || 'es')
+  function detectLang() {
+    var nav = (navigator.language || navigator.languages?.[0] || '').toLowerCase().split('-')[0]
+    return nav === 'es' ? 'es' : 'en'
+  }
+
+  const lang = ref(localStorage.getItem('lang') || detectLang())
 
   function toggleLang() {
     lang.value = lang.value === 'es' ? 'en' : 'es'
@@ -49,15 +54,21 @@ export const useStore = defineStore('store', () => {
         openProfile: 'ver el perfil de autor @',
         closeDesc: 'cerrar descripción',
         openDesc: 'ver descripción',
-        langTitle: 'cambiar a inglés'
+        langTitle: 'cambiar a inglés',
+        profilePicAlt: 'foto de perfil de @',
+        closePopup: 'cerrar notificación',
+        closePopupAria: 'cerrar la notificación popup',
+        popupLink: 'ir al enlace',
+        popupLinkAria: 'abrir enlace de la notificación',
+        popupText: "p\u00e1sate a escuchar<br>mi \u00faltimo disco"
       },
-      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' } },
-      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html' },
-      gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota' },
+      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
+      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS' },
+      gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
       portfolio: {
         subtitle: 'Desarrollador Frontend & Diseñador',
         desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
-        close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción'
+        close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción', closeFullscreen: 'salir de la vista en pantalla completa', closeFullscreenAria: 'cerrar el contenido en pantalla completa', githubProfile: 'Ver perfil de GitHub', openGithub: 'Abrir GitHub de octantes'
       },
       subscribe: {
         cta: 'querés enterarte cuando subo algo nuevo? sumate a la lista de mails!',
@@ -75,6 +86,7 @@ export const useStore = defineStore('store', () => {
       },
       about: {
         taglines: ['tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales', 'investigando dualidades'],
+        profilePic: 'foto de perfil',
         sections: {
           full: 'buenas! soy <i>kaste</i> y lo que estás viendo es mi base de operaciones     <br><br>armé <b>octantes</b> para centralizar toda mi producción fuera de las redes  <br>recuperando los fundamentos, sin algoritmos, reglas o intermediarios         <br>vas a encontrar proyectos de todo tipo, vos elegís lo que querés ver         <br>desde música, textos y diseño hasta videojuegos y software propio            <br><br>la página me permite adaptar el formato al contenido que voy creando         <br>y pensar mis proyectos se vuelve más fácil con outputs definidos             <br><br>usá las pestañas superiores de la tabla para filtrar por sección             <br>cuando un posteo te llame la atención, clickealo para cargarlo acá           <br>',
           diseño: 'estás viendo la sección de <i>diseño</i>, acá viven mis proyectos multimedia <br><br>disfruto mucho armar <b>identidades</b> y pensar assets que las acompañen    <br>algunos de estos trabajos son solo de práctica, excusas para aprender        <br>otros son encargos reales, puestos a prueba en distintos entornos            <br>mi foco es la multimedialidad, lograr una fusión interesante de medios       <br><br>vas a encontrar trabajos de branding, diseño web y piezas editoriales        <br>desde interfaces hasta logotipos, fanzines, stickers y otros objetos         <br><br>si te interesa algún proyecto, clickealo para ver el desglose completo       <br>vas a encontrar la galería, el proceso, las herramientas e influencias       <br>',
@@ -101,15 +113,21 @@ export const useStore = defineStore('store', () => {
         openProfile: 'view author profile @',
         closeDesc: 'close description',
         openDesc: 'view description',
-        langTitle: 'switch to spanish'
+        langTitle: 'switch to spanish',
+        profilePicAlt: 'profile pic of @',
+        closePopup: 'close notification',
+        closePopupAria: 'close popup notification',
+        popupLink: 'go to link',
+        popupLinkAria: 'open notification link',
+        popupText: "come listen to<br>my latest album"
       },
-      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { full: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' } },
-      status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html' },
-      gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note' },
+      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { full: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
+      status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed' },
+      gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
       portfolio: {
         subtitle: 'Frontend Engineer & Designer',
         desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',
-        close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description'
+        close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description', closeFullscreen: 'exit fullscreen view', closeFullscreenAria: 'close fullscreen content', githubProfile: 'View GitHub profile', openGithub: 'Open octantes GitHub'
       },
       subscribe: {
         cta: 'want to know when i upload something new? join the mailing list!',
@@ -127,6 +145,7 @@ export const useStore = defineStore('store', () => {
       },
       about: {
         taglines: ['weaving spells', 'opening windows to alternate universes', 'unfolding portals', 'investigating dualities'],
+        profilePic: 'profile picture',
         sections: {
           full: 'hey! i\'m <i>kaste</i> and what you\'re seeing is my operations base     <br><br>i built <b>octantes</b> to centralize all my production outside social media  <br>getting back to fundamentals, no algorithms, rules or middlemen               <br>you\'ll find projects of all kinds, you choose what you want to see            <br>from music, writing and design to video games and custom software             <br><br>the page lets me adapt the format to whatever content i\'m creating            <br>and thinking about my projects gets easier with defined outputs               <br><br>use the top tabs of the table to filter by section                            <br>when a post catches your attention, click it to load it here                  <br>',
           diseño: 'you\'re viewing the <i>design</i> section, where my multimedia projects live <br><br>i really enjoy building <b>identities</b> and designing assets to go with them<br>some of these works are just practice, excuses to learn                       <br>others are real commissions, tested in different environments                 <br>my focus is multimediality, achieving an interesting fusion of media          <br><br>you\'ll find branding work, web design and editorial pieces                    <br>from interfaces to logos, fanzines, stickers and other objects                <br><br>if you\'re interested in a project, click it to see the full breakdown         <br>you\'ll find the gallery, the process, tools and influences                    <br>',
@@ -178,7 +197,7 @@ export const useStore = defineStore('store', () => {
   const processing                 = ref(false)                                                                                       // disabled component state
   const popLink                    = ref('https://www.youtube.com/watch?v=eOnO8ECvJl0')                                               // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
-  const popString                  = ref('pasate a escuchar<br>mi ultimo disco')                                                      // popup text
+  const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
   const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
   const userStatus                 = ref(statusMap['frenzy'])                                                                         // current user status var
 
@@ -251,7 +270,7 @@ export const useStore = defineStore('store', () => {
     searchQuery.value = ''
     routerInstance.push({ path: '/' })
     activeFilter.value = 'full'
-    document.title = 'octantes.ar - portal multimedia'
+    document.title = t.value.nav.siteTitle
 
   }
 
@@ -407,11 +426,11 @@ export const useStore = defineStore('store', () => {
       try {
 
         const response = await fetch(`${base}/index.json`)
-        if (!response.ok) throw new Error('no se encontró el index.json')
+        if (!response.ok) throw new Error('index.json not found')
         notesIndex.value = await response.json()
         notesLoaded.value = true
 
-      } catch (e) { console.error('error cargando índice de notas:', e); notesIndex.value = []; notesLoaded.value = true }
+      } catch (e) { console.error('error loading notes index:', e); notesIndex.value = []; notesLoaded.value = true }
       finally { notesLoadingPromise = null }
 
       return notesIndex.value
@@ -426,14 +445,14 @@ export const useStore = defineStore('store', () => {
     try {
 
       const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-      if (!response.ok) throw new Error('la respuesta de la api falló')
+      if (!response.ok) throw new Error('API response failed')
       const data = await response.json()
       const price = data?.bitcoin?.usd
       if (typeof price !== 'number' || !isFinite(price)) { btcPrice.value = null; return }
       const formattedPrice = Math.round((price / 1000) * 10) / 10
       btcPrice.value = `${formattedPrice}K`
 
-    } catch (e) { console.error('error buscando el precio de btc:', e); btcPrice.value = null }
+    } catch (e) { console.error('error fetching btc price:', e); btcPrice.value = null }
 
   }
 
