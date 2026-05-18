@@ -19,11 +19,11 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
     <div class="stleft">
 
-      <RouterLink :to="latestPost.url || '/'" title="abrir la última nota publicada" aria-label="abrir la última nota publicada">{{ latestPost.title }}</RouterLink>
+      <RouterLink :to="latestPost.url || '/'" :title="store.t.status.openLatest" :aria-label="store.t.status.openLatest">{{ latestPost.title }}</RouterLink>
       <span class="divisions">//</span>
       <a :href="'mailto:' + store.mailtoDir" :title="store.t.status.contact" :aria-label="store.t.status.contact">{{ store.t.status.contact }}</a>
       <span class="divisions">//</span>
-      <RouterLink to="/portfolio" title="ver portfolio dinamico" aria-label="ir al portfolio dinamico">portfolio</RouterLink>
+      <RouterLink to="/portfolio" :title="store.t.status.portfolioTitle" :aria-label="store.t.status.portfolioTitle">portfolio</RouterLink>
 
     </div>
 
@@ -39,7 +39,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
       <a :href="store.t.status.archiveLink" :title="store.t.status.archive" :aria-label="store.t.status.archive">{{ store.t.status.archive }}</a>
       <span class="btc divisions">//</span>
-      <a href="/feed.xml" target="_blank" title="suscribirse al feed RSS" aria-label="suscribirse a las últimas publicaciones por feed RSS">RSS</a>
+      <a href="/feed.xml" target="_blank" :title="store.t.status.rssTitle" :aria-label="store.t.status.rssAria">RSS</a>
       <span class="btc divisions">//</span>
       <template v-if="btcPrice !== null">
         <span class="btc">BTC: {{ btcPrice }}</span>

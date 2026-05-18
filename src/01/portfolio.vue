@@ -112,7 +112,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
       </div>
 
-      <img class="avatar" tabindex="0" @click="openGithub" @keydown.enter="openGithub" role="button" title="Ver perfil de GitHub" aria-label="Abrir GitHub de octantes" :src="authorpic" alt="avatar kaste" />    
+      <img class="avatar" tabindex="0" @click="openGithub" @keydown.enter="openGithub" role="button" :title="store.t.portfolio.githubProfile" :aria-label="store.t.portfolio.openGithub" :src="authorpic" alt="avatar kaste" />    
     
     </div>
 

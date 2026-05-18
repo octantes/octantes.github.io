@@ -35,7 +35,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
     
       <div class="card-cover">
 
-        <img v-if="note.portada" :src="note.portada.replace(/\.webp$/, '-thumb.webp')" loading="lazy" :alt="'portada de la nota: ' + note.displayTitle" />
+        <img v-if="note.portada" :src="note.portada.replace(/\.webp$/, '-thumb.webp')" loading="lazy" :alt="store.t.gallery.noteCover + note.displayTitle" />
         <div v-else class="card-placeholder">/</div>
         
       </div>

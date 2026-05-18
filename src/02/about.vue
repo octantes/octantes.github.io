@@ -27,7 +27,7 @@ onMounted(() => {
 
     <div class="profile-head">
 
-      <img class="profilepic" :src="authorpic" alt="foto de perfil" title="foto de perfil"/>
+      <img class="profilepic" :src="authorpic" :alt="store.t.about.profilePic" :title="store.t.about.profilePic"/>
 
       <span class="tagline" v-if="currentTagline">{{ currentTagline }}</span>
 
