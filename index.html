@@ -31,6 +31,7 @@
         localStorage.setItem('lang', lang)
       }
       if (lang === 'en') {
+        document.documentElement.lang = 'en'
         document.title = 'octantes.ar - multimedia portal'
         document.querySelector('meta[name="description"]').content = 'weaving spells'
         document.querySelector('meta[property="og:description"]').content = 'weaving spells'

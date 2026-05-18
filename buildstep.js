@@ -696,15 +696,15 @@ async function writeBilingualArchive() {                                   // cr
       toggleTo: '[ESP]'
     }
   }
-  var lang = localStorage.getItem('archive_lang')
+  var lang = localStorage.getItem('lang')
   if (!lang) {
     var nav = (navigator.language || '').toLowerCase().split('-')[0]
     lang = nav === 'es' ? 'es' : 'en'
-    localStorage.setItem('archive_lang', lang)
+    localStorage.setItem('lang', lang)
   }
   function applyLang(l) {
     lang = l
-    localStorage.setItem('archive_lang', l)
+    localStorage.setItem('lang', l)
     document.documentElement.lang = l
     document.title = L[l].pageTitle
     document.querySelectorAll('[data-key]').forEach(function(el) {
@@ -742,7 +742,7 @@ async function writeBilingualArchive() {                                   // cr
       
       <nav class="nav-links" style="flex-direction:column; align-items:center; gap:4px;">
         <div class="nav-row" style="display:flex; gap:4px;">
-          <a href="/archive.html" data-key="navArticles">[ART\u00cdCULOS]</a>
+          <a href="/archive.html" data-key="navArticles" data-es-href="/archivo.html" data-en-href="/archive.html">[ART\u00cdCULOS]</a>
           <a href="/" data-key="navPortal">[PORTAL]</a>
         </div>
         <div class="nav-row" style="display:flex; gap:4px;">
@@ -809,7 +809,7 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
       html += `<li class="cat-header">${typeLabel}</li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
         const fileTarget = (lang === 'en' && p.bilingual) ? 'ingles.html' : ''
-        html += `<li><a href="${webURL}${p.url}${fileTarget}">${p.title}</a></li>`
+        html += `<li><a href="${webURL}${p.url}${fileTarget}">${p.titleEn || p.title}</a></li>`
       })
     }
   })

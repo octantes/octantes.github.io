@@ -12,7 +12,7 @@ const store           = useStore()                                              
 
     <div class="popup">
 
-      <img  class="sigil" :src="sigil" alt="sigilo" />
+      <img  class="sigil" :src="sigil" :alt="store.t.portada.sigilAlt" />
       
       <button class="closebutton" @click.stop="store.togglePopup" :title="store.t.portada.closePopup" :aria-label="store.t.portada.closePopupAria">✘</button>
 

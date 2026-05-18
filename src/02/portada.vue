@@ -28,7 +28,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
           @keydown.enter.prevent="openAuthor(author)" @keydown.space.prevent="openAuthor(author)"
           :title="store.t.portada.viewProfile + ' ' + author.handle" role="button" :tabindex="expanded ? -1 : 0"
           :aria-hidden="expanded ? 'true' : undefined"
-          :aria-label="store.t.portada.openProfile + author.handle + ' en una pestaña nueva'">
+          :aria-label="store.t.portada.openProfile + author.handle + store.t.portada.openProfileNewTab">
           <img class="userpic bar-pic" :src="author.img" :alt="store.t.portada.profilePicAlt + author.handle" />
           <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
         </div>
@@ -59,7 +59,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
           @click="openAuthor(author)"
           @keydown.enter.prevent="openAuthor(author)" @keydown.space.prevent="openAuthor(author)"
           :title="store.t.portada.viewProfile + ' ' + author.handle" role="button" tabindex="0"
-          :aria-label="store.t.portada.openProfile + author.handle + ' en una pestaña nueva'">
+          :aria-label="store.t.portada.openProfile + author.handle + store.t.portada.openProfileNewTab">
           <img class="userpic" :src="author.img" :alt="store.t.portada.profilePicAlt + author.handle" />
           <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
         </div>
