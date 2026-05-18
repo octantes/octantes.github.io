@@ -37,6 +37,13 @@
     <script>
     (function() {
       var currentLang = document.documentElement.lang
+      var params = new URLSearchParams(location.search)
+      var forcedLang = params.get('lang')
+      if (forcedLang) {
+        localStorage.setItem('lang', forcedLang)
+        history.replaceState(null, '', location.pathname)
+        return
+      }
       var pref = localStorage.getItem('lang')
       if (pref) {
         if (pref !== currentLang) {
@@ -81,7 +88,7 @@
           </div>
           <div class="nav-row" style="display:flex; gap:4px;">
             <a href="/feed.xml">[RSS]</a>
-            <a href="index.html">[ESP]</a>
+            <a href="index.html?lang=es">[ESP]</a>
           </div>
         </nav>
 
