@@ -56,11 +56,13 @@ export const useStore = defineStore('store', () => {
         openDesc: 'ver descripción',
         langTitle: 'cambiar a inglés',
         profilePicAlt: 'foto de perfil de @',
+        openProfileNewTab: ' en una pesta\u00f1a nueva',
         closePopup: 'cerrar notificación',
         closePopupAria: 'cerrar la notificación popup',
         popupLink: 'ir al enlace',
         popupLinkAria: 'abrir enlace de la notificación',
-        popupText: "p\u00e1sate a escuchar<br>mi \u00faltimo disco"
+        popupText: "p\u00e1sate a escuchar<br>mi \u00faltimo disco",
+        sigilAlt: 'sigilo'
       },
       nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
       status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS' },
@@ -115,11 +117,13 @@ export const useStore = defineStore('store', () => {
         openDesc: 'view description',
         langTitle: 'switch to spanish',
         profilePicAlt: 'profile pic of @',
+        openProfileNewTab: ' in a new tab',
         closePopup: 'close notification',
         closePopupAria: 'close popup notification',
         popupLink: 'go to link',
         popupLinkAria: 'open notification link',
-        popupText: "come listen to<br>my latest album"
+        popupText: "come listen to<br>my latest album",
+        sigilAlt: 'sigil'
       },
       nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { full: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
       status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed' },

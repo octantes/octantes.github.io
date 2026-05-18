@@ -120,18 +120,18 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
       <div class="rays-container">
         
-        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="store.t.portfolio.select + proj.title">
+        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
           
           <div class="ray-line"></div>
-          <span class="ray-text">{{ proj.title }}</span>
+          <span class="ray-text">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span>
 
-          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="store.t.portfolio.open + proj.title">
+          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
             <div class="portal-line"></div>
             <div class="portal-trigger">▶</div>
           </div>
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
-            <p class="desc">{{ proj.description || store.t.portfolio.noDesc }}</p>
+            <p class="desc">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
             <div class="tags"> <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
           </div>
 
