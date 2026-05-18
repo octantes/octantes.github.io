@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>octantes.ar - archive</title>
+  <title data-key="pageTitle">octantes.ar - archive</title>
   <link rel="stylesheet" href="/assets/neocities.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
   <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
@@ -11,6 +11,7 @@
 (function() {
   var L = {
     es: {
+      pageTitle: 'octantes.ar - archivo',
       title: 'abriendo portales a universos alternativos',
       desc: 'archivo plano // octantes.ar',
       subtitle: 'tejiendo hechizos',
@@ -24,6 +25,7 @@
       toggleTo: '[ENG]'
     },
     en: {
+      pageTitle: 'octantes.ar - archive',
       title: 'opening portals to alternative universes',
       desc: 'flat archive // octantes.ar',
       subtitle: 'weaving spells',
@@ -37,10 +39,17 @@
       toggleTo: '[ESP]'
     }
   }
-  var lang = localStorage.getItem('archive_lang') || 'es'
+  var lang = localStorage.getItem('archive_lang')
+  if (!lang) {
+    var nav = (navigator.language || '').toLowerCase().split('-')[0]
+    lang = nav === 'es' ? 'es' : 'en'
+    localStorage.setItem('archive_lang', lang)
+  }
   function applyLang(l) {
     lang = l
     localStorage.setItem('archive_lang', l)
+    document.documentElement.lang = l
+    document.title = L[l].pageTitle
     document.querySelectorAll('[data-key]').forEach(function(el) {
       el.textContent = L[l][el.dataset.key]
     })

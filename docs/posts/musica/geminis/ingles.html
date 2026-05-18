@@ -32,7 +32,26 @@
     <meta name="twitter:image" content="https://octantes.github.io/posts/musica/geminis/portada.webp">
     <meta name="twitter:creator" content="@kaste">
 
-    <script type="application/ld+json">{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;BlogPosting&quot;,&quot;mainEntityOfPage&quot;:{&quot;@type&quot;:&quot;WebPage&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/musica/geminis/&quot;},&quot;headline&quot;:&quot;geminis&quot;,&quot;image&quot;:&quot;https://octantes.github.io/posts/musica/geminis/portada.webp&quot;,&quot;author&quot;:{&quot;@type&quot;:&quot;Person&quot;,&quot;name&quot;:&quot;kaste&quot;,&quot;url&quot;:&quot;https://x.com/kaste&quot;},&quot;publisher&quot;:{&quot;@type&quot;:&quot;Organization&quot;,&quot;name&quot;:&quot;octantes.ar&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;,&quot;url&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;}},&quot;datePublished&quot;:&quot;2025-06-06T00:00:00.000Z&quot;,&quot;dateModified&quot;:&quot;2025-06-06T00:00:00.000Z&quot;,&quot;description&quot;:&quot;la musica de mi hermano, junto a un tema propio al final&quot;,&quot;keywords&quot;:&quot;album, instrumental&quot;}</script>
+    <script type="application/ld+json">{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;BlogPosting&quot;,&quot;mainEntityOfPage&quot;:{&quot;@type&quot;:&quot;WebPage&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/posts/musica/geminis/ingles.html&quot;},&quot;headline&quot;:&quot;geminis&quot;,&quot;image&quot;:&quot;https://octantes.github.io/posts/musica/geminis/portada.webp&quot;,&quot;author&quot;:{&quot;@type&quot;:&quot;Person&quot;,&quot;name&quot;:&quot;kaste&quot;,&quot;url&quot;:&quot;https://x.com/kaste&quot;},&quot;publisher&quot;:{&quot;@type&quot;:&quot;Organization&quot;,&quot;name&quot;:&quot;octantes.ar&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;@id&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;,&quot;url&quot;:&quot;https://octantes.github.io/assets/logo.webp&quot;}},&quot;datePublished&quot;:&quot;2025-06-06T00:00:00.000Z&quot;,&quot;dateModified&quot;:&quot;2025-06-06T00:00:00.000Z&quot;,&quot;description&quot;:&quot;my brother&#39;s music, alongside one of my own at the end&quot;,&quot;keywords&quot;:&quot;album, instrumental&quot;}</script>
+
+    <script>
+    (function() {
+      var currentLang = document.documentElement.lang
+      var pref = localStorage.getItem('lang')
+      if (pref) {
+        if (pref !== currentLang) {
+          location.href = currentLang === 'es' ? 'ingles.html' : 'index.html'
+        }
+        return
+      }
+      var nav = (navigator.language || '').toLowerCase().split('-')[0]
+      var detected = nav === 'es' ? 'es' : 'en'
+      if (detected !== currentLang) {
+        location.href = currentLang === 'es' ? 'ingles.html' : 'index.html'
+      }
+      localStorage.setItem('lang', detected)
+    })()
+    </script>
     
   </head>
 
