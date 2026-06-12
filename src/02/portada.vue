@@ -30,7 +30,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
           :aria-hidden="expanded ? 'true' : undefined"
           :aria-label="store.t.portada.openProfile + author.handle + store.t.portada.openProfileNewTab">
           <img class="userpic bar-pic" :src="author.img" :alt="store.t.portada.profilePicAlt + author.handle" />
-          <span>@{{ author.handle }}<span v-if="author.date"> - {{ author.date }}</span></span>
+          <span>@{{ author.handle }}<span v-if="author.date" class="authdate"> - {{ author.date }}</span></span>
         </div>
 
       </div>
@@ -189,6 +189,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
   font-weight: bold;
 }
 
-@media (max-width: 432px) { .description { display: none; } }
+@media (max-width: 432px)  { .description { display: none; } }
+@media (max-width: 1420px) { .authdate    { display: none; } }
 
 </style>
