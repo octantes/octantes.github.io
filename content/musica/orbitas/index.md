@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: órbitas
-description: mezcla de instrumentales, variedad de épocas y estilos
+description: loops que pegan la vuelta, pirámides del cajón
 portada: portada.png
 date: 2026-04-08
 handle: kaste

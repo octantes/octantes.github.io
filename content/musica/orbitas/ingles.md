@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: órbitas
-description: mix of instrumentals, variety of eras and styles
+description: loops that come full circle, pyramids from the drawer
 portada: portada.png
 date: 2026-04-08
 handle: kaste

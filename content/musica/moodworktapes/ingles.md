@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: mood worktapes
-description: my first little album, learning to use ableton live
+description: my first album, learning to use ableton live
 portada: portada.png
 date: 2019-04-11
 handle: kaste
