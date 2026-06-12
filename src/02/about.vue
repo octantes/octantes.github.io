@@ -91,7 +91,7 @@ onMounted(() => {
 .user-status    { 
 
   /* LAYOUT */ display: inline-flex; align-items: center; white-space: nowrap; z-index: 5;
-  /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .65rem; padding-top: .5rem; padding-bottom: .5rem;
+  /* BOX    */ gap: 0.35rem; padding-left: .65rem; padding-right: .80rem; padding-top: .5rem; padding-bottom: .5rem;
   /* BORDER */ border: var(--small-outline) var(--lirio50); border-radius: 9999px;
   /* FILL   */ background-color: var(--carbon);
   
