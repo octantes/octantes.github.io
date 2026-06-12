@@ -96,7 +96,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
 .title {
 
-  /* BOX    */ max-width: 50%; min-width: 0;
+  /* BOX    */ min-width: 0;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 
 }
@@ -190,6 +190,6 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 }
 
 @media (max-width: 432px)  { .description { display: none; } }
-@media (max-width: 1420px) { .authdate    { display: none; } }
+@media (max-width: 1530px) { .authdate    { display: none; } }
 
 </style>
