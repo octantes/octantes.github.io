@@ -196,6 +196,7 @@ export const useStore = defineStore('store', () => {
   let   notesLoadingPromise        = null                                                                                               // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
+  const postHtmlCache              = ref({})
 
 
   // STATES                                                                                                                           // CHANGE STATES
@@ -393,6 +394,29 @@ export const useStore = defineStore('store', () => {
   // ASYNCS -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+  async function fetchAndParse(slug, post, langCode) {
+
+    const cacheKey = `${slug}-${langCode}`
+    const cached = postHtmlCache.value[cacheKey]
+    if (cached) return cached
+
+    const fileName = langCode === 'en' ? 'ingles.html' : 'index.html'
+    const fetchPath = `${base}/posts/${post.type || 'textos'}/${slug}/${fileName}`
+    const res = await fetch(fetchPath)
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+
+    const rawText = await res.text()
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(rawText, 'text/html')
+    const staticNav = doc.querySelector('.static-nav')
+    if (staticNav) staticNav.remove()
+
+    const html = doc.body.innerHTML
+    postHtmlCache.value[cacheKey] = html
+    return html
+
+  }
+
   async function fetchPost(slug) {                                                                                                    // fetch post html 
 
     if (!slug) { setCurrentPost(null); return { html: '', error: null } }
@@ -402,23 +426,18 @@ export const useStore = defineStore('store', () => {
     setCurrentPost(metadataSlug || { type: 'textos', slug })
     const post = currentPost.value
 
+    const currentLang = (lang.value === 'en' && post.bilingual) ? 'en' : 'es'
+
     try {
 
-      const fileName = (lang.value === 'en' && post.bilingual) ? 'ingles.html' : 'index.html'
-      const fetchPath = `${base}/posts/${post.type || 'textos'}/${slug}/${fileName}`
-      const res = await fetch(fetchPath)
+      const html = await fetchAndParse(slug, post, currentLang)
 
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-
-      const rawText = await res.text()
-
-      const parser = new DOMParser()
-      const doc = parser.parseFromString(rawText, 'text/html')
-      const staticNav = doc.querySelector('.static-nav')
-
-      if (staticNav) staticNav.remove()
-
-      const html = doc.body.innerHTML
+      if (post.bilingual) {
+        const otherLang = currentLang === 'en' ? 'es' : 'en'
+        if (!postHtmlCache.value[`${slug}-${otherLang}`]) {
+          fetchAndParse(slug, post, otherLang).catch(() => {})
+        }
+      }
 
       if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
 
