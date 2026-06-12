@@ -30,7 +30,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
           :aria-hidden="expanded ? 'true' : undefined"
           :aria-label="store.t.portada.openProfile + author.handle + store.t.portada.openProfileNewTab">
           <img class="userpic bar-pic" :src="author.img" :alt="store.t.portada.profilePicAlt + author.handle" />
-          <span>@{{ author.handle }}<span v-if="author.date" class="authdate"> - {{ author.date }}</span></span>
+          <span><span class="pill-handle">@{{ author.handle }}</span><span v-if="author.date" class="authdate"> - {{ author.date }}</span></span>
         </div>
 
       </div>
@@ -89,7 +89,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 .bar {
 
   /* LAYOUT */ display: flex; align-items: center; flex-shrink: 0;
-  /* BOX    */ width: 100%; gap: 1rem; padding: 1rem 1.5rem;
+  /* BOX    */ width: 100%; gap: 1rem; padding: 1rem 1.5rem; overflow: hidden;
   /* FONT   */ font-size: 0.9rem;
 
 }
@@ -154,6 +154,10 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
 }
 
+.profile > span { display: flex; min-width: 0; }
+.pill-handle   { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.authdate      { flex-shrink: 9999; min-width: 0; overflow: hidden; white-space: nowrap; }
+
 .profile-full {
 
   /* LAYOUT */ flex-grow: 1; justify-content: flex-start;
@@ -190,6 +194,5 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 }
 
 @media (max-width: 432px)  { .description { display: none; } }
-@media (max-width: 1530px) { .authdate    { display: none; } }
 
 </style>
