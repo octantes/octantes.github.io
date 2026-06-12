@@ -1,8 +1,30 @@
 [
   {
+    "slug": "bocetos",
+    "title": "bocetos",
+    "description": "presentes descartados, recuerdos posibles y símbolos residuales",
+    "type": "musica",
+    "tags": [
+      "album",
+      "instrumental"
+    ],
+    "portada": "https://octantes.github.io/posts/musica/bocetos/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "08/06/2026",
+    "isoDate": "2026-06-08T00:00:00.000Z",
+    "url": "/posts/musica/bocetos/",
+    "vuecomp": null,
+    "fullscreen": null,
+    "bilingual": true,
+    "titleEn": "bocetos",
+    "descriptionEn": "discarded presents, possible memories, and residual symbols"
+  },
+  {
     "slug": "orbitas",
     "title": "órbitas",
-    "description": "mezcla de instrumentales, variedad de épocas y estilos",
+    "description": "loops que pegan la vuelta, pirámides del cajón",
     "type": "musica",
     "tags": [
       "album",
@@ -19,7 +41,7 @@
     "fullscreen": null,
     "bilingual": true,
     "titleEn": "órbitas",
-    "descriptionEn": "mix of instrumentals, variety of eras and styles"
+    "descriptionEn": "loops that come full circle, pyramids from the drawer"
   },
   {
     "slug": "browsewithscroll",
@@ -415,6 +437,6 @@
     "fullscreen": null,
     "bilingual": true,
     "titleEn": "mood worktapes",
-    "descriptionEn": "my first little album, learning to use ableton live"
+    "descriptionEn": "my first album, learning to use ableton live"
   }
 ]

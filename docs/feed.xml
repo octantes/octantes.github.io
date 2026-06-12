@@ -4,15 +4,23 @@
     <title>octantes.ar</title>
     <link>https://octantes.github.io</link>
     <description>a multimedia web portal, no algorithms or middlemen</description>
-    <lastBuildDate>Mon, 18 May 2026 10:15:42 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 12 Jun 2026 05:20:55 GMT</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="https://octantes.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+      <title>bocetos</title>
+      <link>https://octantes.github.io/posts/musica/bocetos/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/musica/bocetos/</guid>
+      <pubDate>Mon, 08 Jun 2026 00:00:00 GMT</pubDate>
+      <description>presentes descartados, recuerdos posibles y símbolos residuales</description>
+      <author>kaste@octantes.ar (kaste)</author>
+    </item>
+<item>
       <title>órbitas</title>
       <link>https://octantes.github.io/posts/musica/orbitas/</link>
       <guid isPermaLink="true">https://octantes.github.io/posts/musica/orbitas/</guid>
       <pubDate>Wed, 08 Apr 2026 00:00:00 GMT</pubDate>
-      <description>mezcla de instrumentales, variedad de épocas y estilos</description>
+      <description>loops que pegan la vuelta, pirámides del cajón</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
