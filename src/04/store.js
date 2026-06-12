@@ -67,7 +67,7 @@ export const useStore = defineStore('store', () => {
         sigilAlt: 'sigilo'
       },
       nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
-      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:', frenzy: 'de frenes\u00ed!', dominion: 'dominando el mundo', stuck: 'atascado en un bucle', default: 'dominando el mundo' },
+      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:', frenzy: 'in a frenzy!', dominion: 'dominando el mundo', stuck: 'stuck in a loop', default: 'dominando el mundo' },
       gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
       portfolio: {
         subtitle: 'Desarrollador Frontend & Diseñador',
