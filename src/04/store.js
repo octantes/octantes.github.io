@@ -523,6 +523,12 @@ export const useStore = defineStore('store', () => {
     const twImage = document.querySelector('meta[name="twitter:image"]')
     if (twImage && post.portada) twImage.content = post.portada
 
+    const twCreator = document.querySelector('meta[name="twitter:creator"]')
+    if (twCreator) {
+      const handle = Array.isArray(post.handle) ? post.handle[0] : (post.handle || 'kaste')
+      twCreator.content = `@${handle.replace(/^@/, '')}`
+    }
+
     const canonical = document.querySelector('link[rel="canonical"]')
     if (canonical) canonical.href = `${webURL}/${post.type}/${slug}/`
 
@@ -572,6 +578,9 @@ export const useStore = defineStore('store', () => {
 
     const twImage = document.querySelector('meta[name="twitter:image"]')
     if (twImage) twImage.content = 'https://octantes.github.io/assets/portada.webp'
+
+    const twCreator = document.querySelector('meta[name="twitter:creator"]')
+    if (twCreator) twCreator.content = '@octantes'
 
     const canonical = document.querySelector('link[rel="canonical"]')
     if (canonical) canonical.href = 'https://octantes.github.io/'
