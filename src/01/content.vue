@@ -21,7 +21,7 @@ function checkViewport() { isMobile.value = window.innerWidth <= 1080 }         
 function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkViewport, 150) }                                       // use resize timer
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, setActiveFilter } = store                                          // imports variables from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, setActiveFilter, resetSEOTags } = store                                          // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
@@ -136,7 +136,7 @@ watch(                                                                          
         if (!isMobile.value) await shaderRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
-        document.title = store.t.nav.siteTitle
+        resetSEOTags()
         break
       
       // first load without note, INTRO only on first page load
@@ -146,7 +146,7 @@ watch(                                                                          
         lastSlug = null
         setCurrentPost(null)
         noteContent.value = ''
-        document.title = store.t.nav.siteTitle
+        resetSEOTags()
         if (!isMobile.value) await shaderRef.value?.runQueue('intro')
         break
       
