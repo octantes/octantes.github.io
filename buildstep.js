@@ -432,8 +432,8 @@ async function processPosts() {                                                 
     const finalHash = hash.digest('hex')
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
     const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
-    const isoDate = attributes.date || dateObj.toISOString()
-    const modifiedDate = attributes.modified || isoDate
+    const isoDate = attributes.date ? new Date(attributes.date).toISOString() : dateObj.toISOString()
+    const modifiedDate = attributes.modified ? new Date(attributes.modified).toISOString() : isoDate
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
     const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const canonicalUrl = `${webURL}/${postType}/${slug}/`
@@ -810,8 +810,13 @@ async function writeBilingualArchive() {                                   // cr
 </body>
 </html>`
 
+  const pageHtmlEn = pageHtml
+    .replace('lang="es"', 'lang="en"')
+    .replace(/https:\/\/octantes\.github\.io\/archivo\.html/g, 'https://octantes.github.io/archive.html')
+    .replace('"name": "octantes.ar - archivo"', '"name": "octantes.ar - archive"')
+
   await fs.writeFile(path.join(outputDir, 'archivo.html'), pageHtml)
-  await fs.writeFile(path.join(outputDir, 'archive.html'), pageHtml)
+  await fs.writeFile(path.join(outputDir, 'archive.html'), pageHtmlEn)
   console.log('archivo.html / archive.html generated (bilingual)')
 
 }
@@ -884,7 +889,8 @@ async function writeSitemap() {                                                 
 
   const staticPages = [
     { url: '/', lastmod: new Date().toISOString() },
-    { url: '/archivo.html', lastmod: new Date().toISOString() }
+    { url: '/archivo.html', lastmod: new Date().toISOString() },
+    { url: '/archive.html', lastmod: new Date().toISOString() }
   ]
 
   const postPages = indexItems.map( post => ({ url: `/${post.type}/${post.slug}/`, lastmod: post.isoDate }) )
@@ -928,14 +934,15 @@ async function writeFeed() {                                                    
   const channelItems = indexItems.map(post => {
     const postUrl = `${webURL}${post.url}`
     const postDate = new Date(post.isoDate).toUTCString()
-    const escapedDescription = post.description
+    const rssTitle = post.titleEn || post.title
+    const rssDesc = post.titleEn ? (post.descriptionEn || post.description) : post.description
+    const escapedTitle = rssTitle
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&apos;');
-    const rssTitle = post.titleEn || post.title
-    const escapedTitle = rssTitle
+    const escapedDescription = rssDesc
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -988,6 +995,11 @@ async function finalizeBuild() {                                                
 
   await fs.writeFile(path.join(outputDir, '.nojekyll'), '')
   console.log('.nojekyll created')
+  
+  try {
+    await fs.writeFile(path.resolve('docs', '.nojekyll'), '')
+    console.log('.nojekyll created in docs/')
+  } catch (e) { console.warn('could not write .nojekyll to docs/:', e.message) }
 
 }
 

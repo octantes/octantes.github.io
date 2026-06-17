@@ -8,19 +8,19 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node buildstep.js",
+    "build:vite": "vite build",
+    "build:static": "node buildstep.js",
+    "deploy": "rsync -av --delete dist/ docs/",
     "preview": "vite preview"
   },
   "dependencies": {
-    "crypto": "1.0.1",
     "ffmpeg-static": "^5.2.0",
     "front-matter": "4.0.2",
     "image-size": "2.0.2",
     "markdown-it": "14.1.0",
-    "path": "0.12.7",
     "pinia": "^3.0.4",
     "pixi.js": "^8.14.0",
-    "promises": "0.2.5",
     "sharp": "0.34.3",
     "vue": "3.5.18",
     "vue-router": "4.5.1"
