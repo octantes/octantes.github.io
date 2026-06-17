@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
+import { SITE_URL } from '@/site-config.js'
 
 export const useStore = defineStore('store', () => {
+
+  const webURL = SITE_URL
 
   const tabs                       = computed(() => [                                                                                 // names for filters 
 
@@ -491,7 +494,6 @@ export const useStore = defineStore('store', () => {
 
     if (!post) { resetSEOTags(); return }
 
-    const webURL = 'https://octantes.github.io'
     const isEn = lang.value === 'en'
     const title = (isEn && post.bilingual && post.titleEn) ? post.titleEn : post.title
     const description = (isEn && post.bilingual && post.descriptionEn) ? post.descriptionEn : post.description
@@ -572,10 +574,10 @@ export const useStore = defineStore('store', () => {
     if (ogDesc) ogDesc.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
 
     const ogUrl = document.querySelector('meta[property="og:url"]')
-    if (ogUrl) ogUrl.content = 'https://octantes.github.io/'
+    if (ogUrl) ogUrl.content = webURL + '/'
 
     const ogImage = document.querySelector('meta[property="og:image"]')
-    if (ogImage) ogImage.content = 'https://octantes.github.io/assets/portada.webp'
+    if (ogImage) ogImage.content = webURL + '/assets/portada.webp'
 
     const twTitle = document.querySelector('meta[name="twitter:title"]')
     if (twTitle) twTitle.content = 'octantes.ar'
@@ -584,13 +586,13 @@ export const useStore = defineStore('store', () => {
     if (twDesc) twDesc.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
 
     const twImage = document.querySelector('meta[name="twitter:image"]')
-    if (twImage) twImage.content = 'https://octantes.github.io/assets/portada.webp'
+    if (twImage) twImage.content = webURL + '/assets/portada.webp'
 
     const twCreator = document.querySelector('meta[name="twitter:creator"]')
     if (twCreator) twCreator.content = '@octantes'
 
     const canonical = document.querySelector('link[rel="canonical"]')
-    if (canonical) canonical.href = 'https://octantes.github.io/'
+    if (canonical) canonical.href = webURL + '/'
 
     const ogPublished = document.querySelector('meta[property="article:published_time"]')
     if (ogPublished) ogPublished.remove()
@@ -603,7 +605,7 @@ export const useStore = defineStore('store', () => {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "octantes.ar",
-        "url": "https://octantes.github.io/",
+        "url": webURL + "/",
         "description": isEn ? 'weaving spells' : 'tejiendo hechizos',
         "author": { "@type": "Person", "name": "kaste" }
       })
@@ -742,6 +744,9 @@ export const useStore = defineStore('store', () => {
 
 
   return { 
+
+    /* SITE VAR */ webURL,
+    /* SITE CON */ SITE_URL,
 
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, subDone, statusMap, userStatus,
     /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, resetSub, updateSub, emitSub, setUserStatus,

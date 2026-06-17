@@ -21,7 +21,7 @@ function checkViewport() { isMobile.value = window.innerWidth <= 1080 }         
 function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkViewport, 150) }                                       // use resize timer
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, setActiveFilter, resetSEOTags } = store                                          // imports variables from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
@@ -119,8 +119,6 @@ watch(                                                                          
     setProcessing(true)
 
     try {
-
-    if (slug && route.params.type && store.activeFilter !== route.params.type) { setActiveFilter(router, route.params.type) }
 
     await nextTick()
     
