@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { SITE_URL } from '@/site-config.js'
+import { SITE_URL, CONTACT_EMAIL } from '@/site-config.js'
 
 export const useStore = defineStore('store', () => {
 
@@ -208,7 +208,7 @@ export const useStore = defineStore('store', () => {
   const popLink                    = ref('https://www.youtube.com/watch?v=eOnO8ECvJl0')                                               // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
   const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
-  const mailtoDir                  = ref('facugerbino@gmail.com')                                                                     // contact direction
+  const mailtoDir                  = ref(CONTACT_EMAIL)                                                                               // contact direction
   const userStatus                 = computed(() => {                                                                                   // current user status (lang-aware)
 
     const key = statusKey.value
