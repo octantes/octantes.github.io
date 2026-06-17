@@ -543,9 +543,16 @@ export const useStore = defineStore('store', () => {
         "author": { "@type": "Person", "name": (Array.isArray(post.handle) ? post.handle[0] : post.handle) || 'kaste' },
         "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
         "datePublished": post.isoDate,
-        "description": description
+        "dateModified": post.isoDate,
+        "description": description,
+        "keywords": (Array.isArray(post.tags) ? post.tags.join(', ') : '')
       })
     }
+
+    const ogPublished = document.querySelector('meta[property="article:published_time"]')
+    if (ogPublished) ogPublished.content = post.isoDate
+    const ogModified = document.querySelector('meta[property="article:modified_time"]')
+    if (ogModified) ogModified.content = post.isoDate
 
   }
 
@@ -584,6 +591,11 @@ export const useStore = defineStore('store', () => {
 
     const canonical = document.querySelector('link[rel="canonical"]')
     if (canonical) canonical.href = 'https://octantes.github.io/'
+
+    const ogPublished = document.querySelector('meta[property="article:published_time"]')
+    if (ogPublished) ogPublished.remove()
+    const ogModified = document.querySelector('meta[property="article:modified_time"]')
+    if (ogModified) ogModified.remove()
 
     const ldScript = document.querySelector('script[type="application/ld+json"]')
     if (ldScript) {
