@@ -2,90 +2,94 @@
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
       <loc>https://octantes.github.io/</loc>
-      <lastmod>2026-06-17T12:23:06.595Z</lastmod>
+      <lastmod>2026-06-17T12:44:25.129Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/archivo.html</loc>
-      <lastmod>2026-06-17T12:23:06.595Z</lastmod>
+      <lastmod>2026-06-17T12:44:25.129Z</lastmod>
+    </url>
+<url>
+      <loc>https://octantes.github.io/archive.html</loc>
+      <lastmod>2026-06-17T12:44:25.129Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/musica/bocetos/</loc>
-      <lastmod>Mon Jun 08 2026 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2026-06-08T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/musica/orbitas/</loc>
-      <lastmod>Wed Apr 08 2026 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2026-04-08T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/desarrollo/browsewithscroll/</loc>
-      <lastmod>Thu Mar 05 2026 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2026-03-05T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/desarrollo/arch-hud/</loc>
-      <lastmod>Sun Sep 14 2025 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2025-09-14T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/desarrollo/shadewithseal/</loc>
-      <lastmod>Thu Jul 03 2025 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2025-07-03T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/desarrollo/trackwithslate/</loc>
-      <lastmod>Mon Jun 23 2025 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2025-06-23T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/musica/geminis/</loc>
-      <lastmod>Fri Jun 06 2025 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2025-06-06T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/musica/viñetas/</loc>
-      <lastmod>Sun Dec 22 2024 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2024-12-22T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/diseño/dinamik/</loc>
-      <lastmod>Sat Nov 30 2024 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2024-11-30T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/diseño/cruzar/</loc>
-      <lastmod>Thu Sep 19 2024 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2024-09-19T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/diseño/enuna/</loc>
-      <lastmod>Wed Sep 06 2023 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2023-09-06T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/textos/pof-softwarevr/</loc>
-      <lastmod>Thu Jul 21 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2022-07-21T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/textos/poe-futurovr/</loc>
-      <lastmod>Tue May 10 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2022-05-10T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/musica/seance/</loc>
-      <lastmod>Sun May 08 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2022-05-08T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/textos/pod-abandonware/</loc>
-      <lastmod>Thu Mar 31 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2022-03-31T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/textos/poc-propiedades/</loc>
-      <lastmod>Mon Feb 07 2022 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2022-02-07T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/textos/pob-microtransacciones/</loc>
-      <lastmod>Mon Dec 13 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2021-12-13T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/musica/sixminutesolder/</loc>
-      <lastmod>Wed Dec 08 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2021-12-08T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/textos/poa-kena/</loc>
-      <lastmod>Fri Sep 10 2021 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2021-09-10T00:00:00.000Z</lastmod>
     </url>
 <url>
       <loc>https://octantes.github.io/musica/moodworktapes/</loc>
-      <lastmod>Thu Apr 11 2019 00:00:00 GMT+0000 (Coordinated Universal Time)</lastmod>
+      <lastmod>2019-04-11T00:00:00.000Z</lastmod>
     </url>
   </urlset>
