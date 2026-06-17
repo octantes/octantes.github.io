@@ -433,6 +433,7 @@ async function processPosts() {                                                 
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
     const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
     const isoDate = attributes.date || dateObj.toISOString()
+    const modifiedDate = attributes.modified || isoDate
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
     const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
     const canonicalUrl = `${webURL}/${postType}/${slug}/`
@@ -456,7 +457,7 @@ async function processPosts() {                                                 
       "author": { "@type": "Person", "name": primaryHandle, "url": primaryHandle ? `https://x.com/${primaryHandle}` : `${webURL}/about` },
       "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
       "datePublished": isoDate,
-      "dateModified": isoDate,
+      "dateModified": modifiedDate,
       "description": attributes.description || 'descripción corta de la nota',
       "keywords": (attributes.tags || []).join(', ')
     });
@@ -473,12 +474,12 @@ async function processPosts() {                                                 
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrlEn },
-      "headline": attributes.title || slug,
+      "headline": enAttributes.title || attributes.title || slug,
       "image": portadaUrl || `${webURL}/assets/portada.webp`,
       "author": { "@type": "Person", "name": primaryHandle, "url": primaryHandle ? `https://x.com/${primaryHandle}` : `${webURL}/about` },
       "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
       "datePublished": isoDate,
-      "dateModified": isoDate,
+      "dateModified": modifiedDate,
       "description": enDesc,
       "keywords": (attributes.tags || []).join(', ')
     });
@@ -516,6 +517,8 @@ async function processPosts() {                                                 
         .replace(/{{portada}}/g, portadaUrl)
         .replace(/{{canonicalUrl}}/g, canonicalUrl)
         .replace(/{{hreflangTags}}/g, hreflangTags)
+        .replace(/{{articlePublishedTime}}/g, isoDate)
+        .replace(/{{articleModifiedTime}}/g, modifiedDate)
         .replace(/{{handle}}/g, primaryHandle)
         .replace(/{{date}}/g, formatted)
         .replace(/{{articleJson}}/g, finalArticleJson)
@@ -544,6 +547,8 @@ async function processPosts() {                                                 
           .replace(/{{portada}}/g, portadaUrl)
           .replace(/{{canonicalUrl}}/g, canonicalUrlEn)
           .replace(/{{hreflangTags}}/g, hreflangTags)
+          .replace(/{{articlePublishedTime}}/g, isoDate)
+          .replace(/{{articleModifiedTime}}/g, modifiedDate)
           .replace(/{{handle}}/g, primaryHandle)
           .replace(/{{date}}/g, formatted)
           .replace(/{{htmlContent}}/g, htmlContentEn)
@@ -929,7 +934,8 @@ async function writeFeed() {                                                    
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&apos;');
-    const escapedTitle = post.title
+    const rssTitle = post.titleEn || post.title
+    const escapedTitle = rssTitle
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
