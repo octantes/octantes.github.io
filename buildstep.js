@@ -5,6 +5,7 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
+import { SITE_URL } from './src/site-config.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -81,7 +82,7 @@ setCustomSoftbreak()
 
 const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
-const webURL = 'https://octantes.github.io'
+const webURL = SITE_URL
 const contentDir = './content'
 const outputDir = './dist'
 
@@ -814,6 +815,9 @@ async function writeBilingualArchive() {                                   // cr
     .replace('lang="es"', 'lang="en"')
     .replace(/https:\/\/octantes\.github\.io\/archivo\.html/g, 'https://octantes.github.io/archive.html')
     .replace('"name": "octantes.ar - archivo"', '"name": "octantes.ar - archive"')
+    .replace('"description": "archivo plano // octantes.ar"', '"description": "flat archive // octantes.ar"')
+    .replaceAll('content="octantes.ar - archivo"', 'content="octantes.ar - archive"')
+    .replaceAll('content="archivo plano // octantes.ar"', 'content="flat archive // octantes.ar"')
 
   await fs.writeFile(path.join(outputDir, 'archivo.html'), pageHtml)
   await fs.writeFile(path.join(outputDir, 'archive.html'), pageHtmlEn)
