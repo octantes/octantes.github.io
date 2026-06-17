@@ -661,6 +661,33 @@ async function writeBilingualArchive() {                                   // cr
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-key="pageTitle">octantes.ar - archive</title>
+  <meta name="description" content="archivo plano // octantes.ar" data-key="desc">
+  <link rel="canonical" href="https://octantes.github.io/archivo.html">
+  <link rel="alternate" hreflang="es" href="https://octantes.github.io/archivo.html">
+  <link rel="alternate" hreflang="en" href="https://octantes.github.io/archive.html">
+  <link rel="alternate" hreflang="x-default" href="https://octantes.github.io/archivo.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="octantes.ar - archivo" data-key="pageTitle">
+  <meta property="og:description" content="archivo plano // octantes.ar" data-key="desc">
+  <meta property="og:url" content="https://octantes.github.io/archivo.html">
+  <meta property="og:image" content="https://octantes.github.io/assets/portada.webp">
+  <meta property="og:site_name" content="octantes.ar">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="octantes.ar - archivo" data-key="pageTitle">
+  <meta name="twitter:description" content="archivo plano // octantes.ar" data-key="desc">
+  <meta name="twitter:image" content="https://octantes.github.io/assets/portada.webp">
+  <meta name="twitter:creator" content="@octantes">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "octantes.ar - archivo",
+    "description": "archivo plano // octantes.ar",
+    "url": "https://octantes.github.io/archivo.html",
+    "author": { "@type": "Person", "name": "kaste" },
+    "publisher": { "@type": "Organization", "name": "octantes.ar" }
+  }
+  <\/script>
   <link rel="stylesheet" href="/assets/neocities.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
   <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
@@ -708,6 +735,7 @@ async function writeBilingualArchive() {                                   // cr
     document.documentElement.lang = l
     document.title = L[l].pageTitle
     document.querySelectorAll('[data-key]').forEach(function(el) {
+      if (el.tagName === 'META') { el.content = L[l][el.dataset.key]; return }
       el.textContent = L[l][el.dataset.key]
     })
     document.querySelectorAll('[data-es-text]').forEach(function(el) {
@@ -850,10 +878,11 @@ async function updateSidebars() {                                               
 async function writeSitemap() {                                                  // create sitemap and robots.txt 
 
   const staticPages = [
-    { url: '/', lastmod: new Date().toISOString() }
+    { url: '/', lastmod: new Date().toISOString() },
+    { url: '/archivo.html', lastmod: new Date().toISOString() }
   ]
 
-  const postPages = indexItems.map( post => ({ url:post.url,lastmod:post.isoDate }) )
+  const postPages = indexItems.map( post => ({ url: `/${post.type}/${post.slug}/`, lastmod: post.isoDate }) )
   const allPages = [...staticPages,...postPages]
   const sitemapItems = allPages.map( p =>
     `<url>
@@ -950,6 +979,9 @@ async function finalizeBuild() {                                                
     await fs.copyFile(indexHtmlPath, notFoundPath)
     console.log('404.html generated from index.html')
   } catch (e) { console.warn('could not generate 404.html (index.html missing, did vite build?):', e.message) }
+
+  await fs.writeFile(path.join(outputDir, '.nojekyll'), '')
+  console.log('.nojekyll created')
 
 }
 

@@ -439,7 +439,8 @@ export const useStore = defineStore('store', () => {
         }
       }
 
-      if (currentPost.value.title && currentPost.value.title !== document.title) { document.title = currentPost.value.title }
+      updateSEOTags(currentPost.value)
+      document.title = currentPost.value.title || document.title
 
       return { html, error: null }
 
@@ -483,6 +484,109 @@ export const useStore = defineStore('store', () => {
       btcPrice.value = `${formattedPrice}K`
 
     } catch (e) { console.error('error fetching btc price:', e); btcPrice.value = null }
+
+  }
+
+  function updateSEOTags(post) {
+
+    if (!post) { resetSEOTags(); return }
+
+    const webURL = 'https://octantes.github.io'
+    const isEn = lang.value === 'en'
+    const title = (isEn && post.bilingual && post.titleEn) ? post.titleEn : post.title
+    const description = (isEn && post.bilingual && post.descriptionEn) ? post.descriptionEn : post.description
+    const slug = post.slug
+
+    document.title = `${title} - octantes.ar`
+
+    const descMeta = document.querySelector('meta[name="description"]')
+    if (descMeta) descMeta.content = description
+
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) ogTitle.content = title
+
+    const ogDesc = document.querySelector('meta[property="og:description"]')
+    if (ogDesc) ogDesc.content = description
+
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) ogUrl.content = `${webURL}/${post.type}/${slug}/`
+
+    const ogImage = document.querySelector('meta[property="og:image"]')
+    if (ogImage && post.portada) ogImage.content = post.portada
+
+    const twTitle = document.querySelector('meta[name="twitter:title"]')
+    if (twTitle) twTitle.content = title
+
+    const twDesc = document.querySelector('meta[name="twitter:description"]')
+    if (twDesc) twDesc.content = description
+
+    const twImage = document.querySelector('meta[name="twitter:image"]')
+    if (twImage && post.portada) twImage.content = post.portada
+
+    const canonical = document.querySelector('link[rel="canonical"]')
+    if (canonical) canonical.href = `${webURL}/${post.type}/${slug}/`
+
+    const ldScript = document.querySelector('script[type="application/ld+json"]')
+    if (ldScript) {
+      ldScript.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": `${webURL}/${post.type}/${slug}/` },
+        "headline": title,
+        "image": post.portada || `${webURL}/assets/portada.webp`,
+        "author": { "@type": "Person", "name": (Array.isArray(post.handle) ? post.handle[0] : post.handle) || 'kaste' },
+        "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
+        "datePublished": post.isoDate,
+        "description": description
+      })
+    }
+
+  }
+
+  function resetSEOTags() {
+
+    const isEn = lang.value === 'en'
+
+    document.title = isEn ? 'octantes.ar - multimedia portal' : 'octantes.ar - portal multimedia'
+
+    const descMeta = document.querySelector('meta[name="description"]')
+    if (descMeta) descMeta.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
+
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) ogTitle.content = 'octantes.ar'
+
+    const ogDesc = document.querySelector('meta[property="og:description"]')
+    if (ogDesc) ogDesc.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
+
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) ogUrl.content = 'https://octantes.github.io/'
+
+    const ogImage = document.querySelector('meta[property="og:image"]')
+    if (ogImage) ogImage.content = 'https://octantes.github.io/assets/portada.webp'
+
+    const twTitle = document.querySelector('meta[name="twitter:title"]')
+    if (twTitle) twTitle.content = 'octantes.ar'
+
+    const twDesc = document.querySelector('meta[name="twitter:description"]')
+    if (twDesc) twDesc.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
+
+    const twImage = document.querySelector('meta[name="twitter:image"]')
+    if (twImage) twImage.content = 'https://octantes.github.io/assets/portada.webp'
+
+    const canonical = document.querySelector('link[rel="canonical"]')
+    if (canonical) canonical.href = 'https://octantes.github.io/'
+
+    const ldScript = document.querySelector('script[type="application/ld+json"]')
+    if (ldScript) {
+      ldScript.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "octantes.ar",
+        "url": "https://octantes.github.io/",
+        "description": isEn ? 'weaving spells' : 'tejiendo hechizos',
+        "author": { "@type": "Person", "name": "kaste" }
+      })
+    }
 
   }
 
@@ -630,6 +734,7 @@ export const useStore = defineStore('store', () => {
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
     /* LANG FUN  */ toggleLang,
+    /* SEO  FUN  */ updateSEOTags, resetSEOTags,
 
   }
 
