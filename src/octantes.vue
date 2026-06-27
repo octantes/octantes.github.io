@@ -9,8 +9,8 @@ import Portada from './02/portada.vue'
 
 const store = useStore()
 const route = useRoute()
-const { computedFullscreen } = storeToRefs(store)
-const portadaExpanded = ref(false)
+const { computedFullscreen, currentPost } = storeToRefs(store)
+const portadaExpanded = ref(window.innerWidth <= 1080)
 
 </script>
 
@@ -22,7 +22,7 @@ const portadaExpanded = ref(false)
 
       <template v-if="!computedFullscreen && route.path !== '/portfolio'">
 
-        <Portada class="portada" @update:expanded="portadaExpanded = $event" />
+        <Portada class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" />
         <Navigation class="navigation" :disabled="store.processing" />
 
       </template>
@@ -76,7 +76,7 @@ const portadaExpanded = ref(false)
   .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; row-gap: 0; &.fullscreen { overflow-y: hidden; } }
 
   .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
-  .navigation { order: 1; margin-bottom: 1rem; } .portada { order: 2; } .articulos { order: 3; }
+  .portada { order: 1; } .portada.mobile-gap { margin-bottom: 1rem; border-radius: var(--radius-ss); } .articulos { order: 2; margin-bottom: 1rem; } .navigation { order: 3; }
   
   .footer  { padding: 1rem; }
   .content { height: auto; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
