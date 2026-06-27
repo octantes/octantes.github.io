@@ -132,7 +132,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
 .statusbar.disabled { pointer-events: none; opacity: var(--alpha-disabled); }
 
+@media (max-width: 768px) { .stleft > :nth-child(-n+2) { display: none; } }
 @media (max-width: 590px) { .stcenter { display: none; }       .btc { display: none; }           }
-@media (max-width: 432px) { .stleft   { display: none; } .statusbar { justify-content: center; } }
+@media (max-width: 432px) { .stleft { display: flex; } .stleft > :nth-child(-n+2) { display: none; } .stleft > .divisions { display: none; } .stright > :nth-child(-n+4) { display: none; } .statusbar { justify-content: center; } }
 
 </style>

@@ -63,7 +63,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
 .navigation { grid-column: 1; overflow-y: auto; min-height: 0; grid-row: 1 / span 2; }
 .portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1;          }
-.articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2;          }
+.articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2; }
 
 .footer     { padding: 0rem 1rem 1rem 1rem; flex-shrink: 0; }
 

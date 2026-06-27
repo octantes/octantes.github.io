@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
-const expanded            = ref(window.innerWidth <= 1080)                                                                                                // description deploy state
+const expanded            = ref(false)                                                                                                                      // description deploy state
 const emit                = defineEmits(['update:expanded'])                                                                          // emit expanded state to parent
 
 function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link
@@ -108,7 +108,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 .bar-right {
 
   /* LAYOUT */ display: flex; align-items: center; margin-left: auto;
-  /* BOX    */ gap: 1rem;
+  /* BOX    */ gap: 1rem; overflow: hidden; min-width: 0;
 
 }
 
@@ -177,7 +177,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center;
-  /* BOX    */ padding: 0; align-self: stretch; aspect-ratio: 1; overflow: hidden; flex: none;
+  /* BOX    */ padding: 0; align-self: stretch; aspect-ratio: 1; overflow: hidden; flex: none; min-width: 2rem; min-height: 2rem;
   /* FILL   */ background-color: var(--carbon25); color: var(--carbon80);
   /* BORDER */ border: none; border-radius: 9999px;
   /* FONT   */ font-family: var(--font-main); font-weight: normal;
@@ -193,6 +193,6 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
   font-weight: bold;
 }
 
-@media (max-width: 432px)  { .description { display: none; } }
+@media (max-width: 432px)  { .bar-right .profile { display: none; } .bar { padding: .75rem 1rem; gap: .75rem; } .title { font-size: .8rem; } .description { font-size: .8rem; } .info { padding: 0 1rem 1rem; } }
 
 </style>
