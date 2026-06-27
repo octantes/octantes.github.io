@@ -24,7 +24,7 @@ handle: kaste
 dinamik was my *third* design project on fictional brand identities
 
 in this case, the idea was to build something **responsive** that adapts to the screen
-i thought of the branding so it could be revisited in future projects
+I thought of the branding so it could be revisited in future projects
 the result is a studio that builds tools to improve productivity
 the aesthetic draws from *optics*, which surprisingly has a lot of appeal
 

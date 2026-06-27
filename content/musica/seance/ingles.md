@@ -12,10 +12,10 @@ handle: kaste
 
 what do you want to *change*? shall we read the cards?
 
-this album went through **many iterations** that i still have saved
+this album went through **many iterations** that I still have saved
 some of them even had finished lyrics, but the vocals didn't click
 
-i ended up deciding to release it as instrumentals to move on to the next album
+I ended up deciding to release it as instrumentals to move on to the next album
 
 the beats were based on the idea of processing guitars as if they were synths
 the video is a *weird experiment*; as always, an excuse to mess around

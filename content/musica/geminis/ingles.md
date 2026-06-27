@@ -12,10 +12,10 @@ handle: kaste
 
 the first three tracks are by *emi*
 
-i felt i had a pending debt with him, i needed to publish them
-i wanted to have a corner of the internet to go find them, **to find him**
+I felt I had a pending debt with him, I needed to publish them
+I wanted to have a corner of the internet to go find them, **to find him**
 
-i barely touched the tracks, adjusted structures and gave them names
-the fourth is mine, i made it thinking of him and i think it captures something of his cadence
+I barely touched the tracks, adjusted structures and gave them names
+the fourth is mine, I made it thinking of him and I think it captures something of his cadence
 
-i hope it reaches those who knew him, i hope it's of some use
+I hope it reaches those who knew him, I hope it's of some use
