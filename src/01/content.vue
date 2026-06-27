@@ -93,6 +93,8 @@ async function handleLoadNote(slug) {                                           
 
   }
 
+  if (isMobile.value) { await nextTick(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+
 }
 
 watch(isMobile, (newVal) => { 
@@ -200,7 +202,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <div class="notedisplay">
+  <div v-if="!isMobile || currentPost" class="notedisplay">
     
     <div class="container" >
 

@@ -6,7 +6,7 @@ No database or dynamic backend dependencies — everything stems from markdown f
 Built to centralize production outside of social networks (design, music, writing, dev and games), recovering web fundamentals without algorithms or external rules.
 Content is written in plain text and an automated action processes assets, hidrates and builds the final site.
 
-![portada](content/assets/ghscreen.png)
+![portada](content/assets/octantes.gif)
 
 ## features
 
