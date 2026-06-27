@@ -21,12 +21,12 @@ handle: kaste
 ![embed youtube](https://www.youtube.com/watch?v=dINpNVg0hiw)
 
 this was my first *design* project, after years of not diving too deep
-i came up with fictional brand concepts as an excuse to practice
+I came up with fictional brand concepts as an excuse to practice
 
 in this case, the goal was to design assets and **animate** them using after effects
 for that, the excuse was a digital publication magazine with very few colors
-today i see spacing issues, and the copy text feels basic to me
-i'd like to revisit this *aesthetic* with a real project that makes use of it
+today I see spacing issues, and the copy text feels basic to me
+I'd like to revisit this *aesthetic* with a real project that makes use of it
 
 the work was done using figma, photoshop and after effects, among others
 

@@ -1,5 +1,27 @@
 [
   {
+    "slug": "nubenueve",
+    "title": "nubenueve - tienda de discos",
+    "description": "pagina para tienda de discos, vinilos y cintas de casette",
+    "type": "diseño",
+    "tags": [
+      "sitio",
+      "portfolio"
+    ],
+    "portada": "https://octantes.github.io/posts/diseño/nubenueve/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "20/06/2026",
+    "isoDate": "2026-06-20T00:00:00.000Z",
+    "url": "/posts/diseño/nubenueve/",
+    "vuecomp": null,
+    "fullscreen": null,
+    "bilingual": true,
+    "titleEn": "nubenueve - record store",
+    "descriptionEn": "record store website, cd's, vinyls and cassette tapes"
+  },
+  {
     "slug": "bocetos",
     "title": "bocetos",
     "description": "presentes descartados, recuerdos posibles y símbolos residuales",

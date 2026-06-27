@@ -4,10 +4,18 @@
     <title>octantes.ar</title>
     <link>https://octantes.github.io</link>
     <description>a multimedia web portal, no algorithms or middlemen</description>
-    <lastBuildDate>Wed, 17 Jun 2026 14:40:15 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 27 Jun 2026 13:56:47 GMT</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="https://octantes.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+      <title>nubenueve - record store</title>
+      <link>https://octantes.github.io/posts/diseño/nubenueve/</link>
+      <guid isPermaLink="true">https://octantes.github.io/posts/diseño/nubenueve/</guid>
+      <pubDate>Sat, 20 Jun 2026 00:00:00 GMT</pubDate>
+      <description>record store website, cd&apos;s, vinyls and cassette tapes</description>
+      <author>kaste@octantes.ar (kaste)</author>
+    </item>
+<item>
       <title>bocetos</title>
       <link>https://octantes.github.io/posts/musica/bocetos/</link>
       <guid isPermaLink="true">https://octantes.github.io/posts/musica/bocetos/</guid>
