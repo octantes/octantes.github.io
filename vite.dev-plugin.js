@@ -6,6 +6,27 @@ import fm from 'front-matter'
 
 const md = new MarkdownIt()
 
+const defaultSoftbreak = md.renderer.rules.softbreak
+
+const customSoftbreak = (tokens, idx, options, env, self) => {
+
+    const token = tokens[idx]
+
+    if (token.level % 2 === 1) { return '<br />' }
+
+    const prev = tokens[idx - 1]
+    const next = tokens[idx + 1]
+
+    const isAsset = (t) => t && t.type === 'inline' && (t.children.some(c => c.type === 'image') || t.content.match(/<iframe|<img/i))
+
+    if (isAsset(prev) || isAsset(next)) { return '' }
+
+    return '<br />'
+
+}
+
+md.renderer.rules.softbreak = customSoftbreak
+
 const contentDir = './content'
 
 function renderMarkdown(body, attributes, type) { 
@@ -198,7 +219,8 @@ function devPlugin() {
         const match = url.match(/^\/posts\/([^\/]+)\/([^\/]+)\/((index|ingles)\.html)?$/)
 
         if (match) {
-          const [, type, slug, , langSuffix] = match
+          const [, rawType, slug, , langSuffix] = match
+          const type = decodeURIComponent(rawType)
           const lang = langSuffix === 'ingles' ? 'en' : 'es'
           try {
             const html = await renderNote(type, slug, lang)
