@@ -84,6 +84,8 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 
 }
 
+@media (max-width: 600px) { .form { padding-left: 1rem; padding-right: 1rem; gap: .5rem; } }
+
 .textbox { 
 
   /* CURSOR */ cursor: text;
@@ -106,7 +108,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex: 0 1 auto;
-  /* BOX    */ padding: .5rem 1rem; width: 10rem; max-width: 100%;
+  /* BOX    */ padding: .5rem 1rem; min-width: 6rem; max-width: 10rem;
   /* FILL   */ background-color: var(--lirio); color: var(--carbon);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;

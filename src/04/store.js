@@ -53,7 +53,7 @@ export const useStore = defineStore('store', () => {
   const dict = {
     es: {
       portada: {
-        welcome: 'bienvenido a octantes.ar!',
+        welcome: 'bienvenido a octantes!',
         desc: 'tocá un posteo de la tabla para cargarlo; también podés filtrar según el tipo de contenido que querés encontrar en la página',
         viewProfile: 'ver perfil de',
         openProfile: 'ver el perfil de autor @',
@@ -114,7 +114,7 @@ export const useStore = defineStore('store', () => {
     },
     en: {
       portada: {
-        welcome: 'welcome to octantes.ar!',
+        welcome: 'welcome to octantes!',
         desc: 'click a post on the table to load it; you can also filter by the type of content you want to find on the page',
         viewProfile: 'view profile of',
         openProfile: 'view author profile @',
