@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import Navbar from '../02/navbar.vue'
 import Gallery from '../02/gallery.vue'
+import Popup from '../02/popup.vue'
 
 const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
@@ -37,6 +38,8 @@ watch(() => route.params.filterType, (newFilterType) => {                       
       <Navbar/>
       
       <div class="nav-views"> <Gallery /> </div>
+      
+      <Popup v-if="store.showPopup" />
 
     </div>
 

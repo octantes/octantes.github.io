@@ -6,7 +6,6 @@ import { useRoute } from 'vue-router'
 import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'
 import Portada from './02/portada.vue'
-import Popup from './02/popup.vue'
 
 const store = useStore()
 const route = useRoute()
@@ -42,8 +41,6 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
         <Status />
         
     </div>
-
-    <Popup v-if="store.showPopup" />
 
   </div>
 
