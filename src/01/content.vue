@@ -295,4 +295,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   
 }
 
+@media (max-width: 500px) { .post hr { margin: 0; } }
+
 </style>
