@@ -93,7 +93,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   /* BOX    */ padding: .5rem 1rem; min-width: 0;
   /* FILL   */ background-color: transparent; color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--lirio50);
-  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: 1rem;
+  /* FONT   */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:focus { background-color: var(--lirio25); color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--humo25); }
@@ -111,7 +111,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
   /* BOX    */ padding: .5rem 1rem; min-width: 6rem; max-width: 10rem;
   /* FILL   */ background-color: var(--lirio); color: var(--carbon);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* FONT   */ font-family: var(--font-main); font-style: italic; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* FONT   */ font-family: var(--font-main); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   /* MOTION */ transition: all var(--animate-fast);
 
   &:hover { background-color: var(--lirio65); }
@@ -121,7 +121,8 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 .submit.error   { color: var(--carbon); background-color: var(--arcilla); box-shadow: var(--shadow-border) var(--arcilla); }
 .submit.success { color: var(--carbon); background-color: var(--poma);    box-shadow: var(--shadow-border) var(--poma);    }
 
-@media (max-width: 1405px) { .subscribe { font-size: .65rem; } }
-@media (max-width: 1080px) { .subscribe { font-size:   1rem; } }
+@container post-viewer (min-width: 0px) { .subscribe, .cta, .textbox, .submit { font-size: clamp(0.50rem, 2.25cqw, 1.35rem); } }
+
+@media (max-width: 500px) { .subscribe { gap: 0; } .form { padding-bottom: 0; } }
 
 </style>
