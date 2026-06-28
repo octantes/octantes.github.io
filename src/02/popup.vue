@@ -40,7 +40,7 @@ const store           = useStore()                                              
 
 .backdrop { 
 
-  /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0; container-type: size;
+  /* LAYOUT */ position: fixed; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0;
   /* FILL   */ background-color: var(--carbon99); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   /* MOTION */ animation: fadeIn var(--animate-mid);
 
@@ -106,18 +106,17 @@ const store           = useStore()                                              
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@container (max-width: 680px) { .popup { scale: 0.90; } }
-@container (max-width: 560px) { .popup { scale: 0.80; } }
-@container (max-width: 480px) { .popup { scale: 0.60; } }
-@container (max-width: 400px) { .popup { scale: 0.40; } }
-@container (max-width: 340px) { .popup { scale: 0.30; } }
+@media (max-width: 680px) { .popup { scale: 0.90; } }
+@media (max-width: 560px) { .popup { scale: 0.80; } }
+@media (max-width: 480px) { .popup { scale: 0.60; } }
+@media (max-width: 432px) { .popup { scale: 0.35; } }
+@media (max-width: 400px) { .popup { scale: 0.35; } }
+@media (max-width: 340px) { .popup { scale: 0.30; } }
 
-@container (max-height: 680px) { .popup { scale: 0.90; } }
-@container (max-height: 560px) { .popup { scale: 0.80; } }
-@container (max-height: 480px) { .popup { scale: 0.60; } }
-@container (max-height: 400px) { .popup { scale: 0.50; } }
-@container (max-height: 340px) { .popup { scale: 0.50; } }
-
-@media (max-width: 432px)      { .popup { scale: .35;  } }
+@media (max-height: 680px) { .popup { scale: 0.90; } }
+@media (max-height: 560px) { .popup { scale: 0.80; } }
+@media (max-height: 480px) { .popup { scale: 0.60; } }
+@media (max-height: 400px) { .popup { scale: 0.50; } }
+@media (max-height: 340px) { .popup { scale: 0.50; } }
 
 </style>
