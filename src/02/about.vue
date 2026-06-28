@@ -116,6 +116,6 @@ onMounted(() => {
 
 @media (max-width: 500px) { .about { padding-left: 0.4rem; padding-right: 0.4rem; padding-bottom: 0.8rem; } .about hr, .about br { display: none; } }
 
-@container post-viewer (min-width: 0px) { .about, .tagline, .user-status { font-size: clamp(0.50rem, 2.25cqw, 1.35rem); } }
+@container post-viewer (min-width: 0px) { .about, .tagline, .user-status { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
 
 </style>

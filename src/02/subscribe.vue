@@ -121,7 +121,7 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 .submit.error   { color: var(--carbon); background-color: var(--arcilla); box-shadow: var(--shadow-border) var(--arcilla); }
 .submit.success { color: var(--carbon); background-color: var(--poma);    box-shadow: var(--shadow-border) var(--poma);    }
 
-@container post-viewer (min-width: 0px) { .subscribe, .cta, .textbox, .submit { font-size: clamp(0.50rem, 2.25cqw, 1.35rem); } }
+@container post-viewer (min-width: 0px) { .subscribe, .cta, .textbox, .submit { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
 
 @media (max-width: 500px) { .subscribe { gap: 0; } .form { padding-bottom: 0; } }
 
