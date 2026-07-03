@@ -55,6 +55,18 @@
       localStorage.setItem('lang', nav === 'es' ? 'es' : 'en')
     })()
     </script>
+
+    <script>
+    (function() {
+      if (window.location.pathname.startsWith('/posts/')) {
+        var ref = document.referrer || ''
+        var isInternal = ref && ref.indexOf(window.location.hostname) !== -1
+        if (!isInternal) {
+          window.location.replace(window.location.pathname.replace('/posts/', '/'))
+        }
+      }
+    })()
+    </script>
     
   </head>
 
