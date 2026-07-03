@@ -437,7 +437,7 @@ async function processPosts() {                                                 
     const modifiedDate = attributes.modified ? new Date(attributes.modified).toISOString() : isoDate
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
     const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
-    const canonicalUrl = `${webURL}/${postType}/${slug}/`
+    const canonicalUrl = `${webURL}/posts/${postType}/${slug}/`
     const canonicalUrlEn = `${webURL}/posts/${postType}/${slug}/ingles.html`
 
     const hreflangTags = isBilingual ? `
@@ -897,7 +897,7 @@ async function writeSitemap() {                                                 
     { url: '/archive.html', lastmod: new Date().toISOString() }
   ]
 
-  const postPages = indexItems.map( post => ({ url: `/${post.type}/${post.slug}/`, lastmod: post.isoDate }) )
+  const postPages = indexItems.map( post => ({ url: `/posts/${post.type}/${post.slug}/`, lastmod: post.isoDate }) )
   const allPages = [...staticPages,...postPages]
   const sitemapItems = allPages.map( p =>
     `<url>
