@@ -57,6 +57,18 @@
       localStorage.setItem('lang', nav === 'es' ? 'es' : 'en')
     })()
     </script>
+
+    <script>
+    (function() {
+      if (window.location.pathname.startsWith('/posts/')) {
+        var ref = document.referrer || ''
+        var isInternal = ref && ref.indexOf(window.location.hostname) !== -1
+        if (!isInternal) {
+          window.location.replace(window.location.pathname.replace('/posts/', '/'))
+        }
+      }
+    })()
+    </script>
     
   </head>
 
@@ -106,7 +118,7 @@
 
       <header class="post-header">
         <h1>nubenueve - tienda de discos</h1>
-        <div class="meta">20/06/2026 // kaste</div>
+        <div class="meta">19/06/2026 // kaste</div>
       </header>
       
       <div class="S7TEXT"><p><em>Podés visitar la página entrando al link: <a href="https://inercia-ar.github.io/front-nubenueve/" target="_blank" rel="noopener noreferrer">nubenueve</a></em></p>

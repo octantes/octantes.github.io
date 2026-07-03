@@ -57,6 +57,18 @@
       localStorage.setItem('lang', nav === 'es' ? 'es' : 'en')
     })()
     </script>
+
+    <script>
+    (function() {
+      if (window.location.pathname.startsWith('/posts/')) {
+        var ref = document.referrer || ''
+        var isInternal = ref && ref.indexOf(window.location.hostname) !== -1
+        if (!isInternal) {
+          window.location.replace(window.location.pathname.replace('/posts/', '/'))
+        }
+      }
+    })()
+    </script>
     
   </head>
 
@@ -106,7 +118,7 @@
 
       <header class="post-header">
         <h1>intellectual properties - do we need new IPs?</h1>
-        <div class="meta">07/02/2022 // kaste</div>
+        <div class="meta">06/02/2022 // kaste</div>
       </header>
       
       <div class="S6TRAD"><p><em>This note was originally written for and published in <a href="https://pressover.news/opinion/no-solo-propiedades-intelectuales/">Press Over</a></em></p>
