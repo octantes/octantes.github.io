@@ -464,11 +464,6 @@ async function processPosts() {                                                 
     });
 
     const finalArticleJson = articleJson
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
 
     const enDesc = (isBilingual && enAttributes.description) || 'short note description'
     const articleJsonEn = JSON.stringify({
@@ -485,10 +480,6 @@ async function processPosts() {                                                 
       "keywords": (attributes.tags || []).join(', ')
     });
     const finalArticleJsonEn = articleJsonEn
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 
     if (fullRebuild || cache[`${postType}/${slug}/index.md`] !== finalHash) {
