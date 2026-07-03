@@ -205,7 +205,7 @@ export const useStore = defineStore('store', () => {
   // STATES                                                                                                                           // CHANGE STATES
 
   const processing                 = ref(false)                                                                                       // disabled component state
-  const popLink                    = ref('https://www.youtube.com/watch?v=eOnO8ECvJl0')                                               // popup go link
+  const popLink                    = ref('https://www.youtube.com/watch?v=pwzLUeVghDc')                                               // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
   const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
   const mailtoDir                  = ref(CONTACT_EMAIL)                                                                               // contact direction
