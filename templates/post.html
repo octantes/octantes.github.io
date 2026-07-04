@@ -59,9 +59,9 @@
     <script>
     (function() {
       if (window.location.pathname.startsWith('/posts/')) {
-        var ref = document.referrer || ''
+        var ref = document.referrer
         var isInternal = ref && ref.indexOf(window.location.hostname) !== -1
-        if (!isInternal) {
+        if (ref && !isInternal) {
           var target = window.location.pathname
             .replace('/posts/', '/')
             .replace(/\/?(index\.html|ingles\.html)$/, '/')

@@ -61,9 +61,9 @@
     <script>
     (function() {
       if (window.location.pathname.startsWith('/posts/')) {
-        var ref = document.referrer || ''
+        var ref = document.referrer
         var isInternal = ref && ref.indexOf(window.location.hostname) !== -1
-        if (!isInternal) {
+        if (ref && !isInternal) {
           var target = window.location.pathname
             .replace('/posts/', '/')
             .replace(/\/?(index\.html|ingles\.html)$/, '/')
@@ -121,7 +121,7 @@
 
       <header class="post-header">
         <h1>arch-hud</h1>
-        <div class="meta">14/09/2025 // kaste</div>
+        <div class="meta">13/09/2025 // kaste</div>
       </header>
       
       <p><em>You can find the project repo in my <a href="https://github.com/octantes/arch-hud">Github</a></em></p>

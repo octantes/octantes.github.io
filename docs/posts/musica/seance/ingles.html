@@ -61,9 +61,9 @@
     <script>
     (function() {
       if (window.location.pathname.startsWith('/posts/')) {
-        var ref = document.referrer || ''
+        var ref = document.referrer
         var isInternal = ref && ref.indexOf(window.location.hostname) !== -1
-        if (!isInternal) {
+        if (ref && !isInternal) {
           var target = window.location.pathname
             .replace('/posts/', '/')
             .replace(/\/?(index\.html|ingles\.html)$/, '/')
@@ -121,7 +121,7 @@
 
       <header class="post-header">
         <h1>seance</h1>
-        <div class="meta">08/05/2022 // kaste</div>
+        <div class="meta">07/05/2022 // kaste</div>
       </header>
       
       <p><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Ud0ZK6ZfOqk?rel=0" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe></p>
