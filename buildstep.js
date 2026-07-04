@@ -906,10 +906,15 @@ async function writeSitemap() {                                                 
   await fs.writeFile(path.join(outputDir,'sitemap.xml'),sitemap)
   console.log('sitemap.xml updated')
 
+  const sitemapTxt = allPages.map(p => `${webURL}${p.url}`).join('\n')
+  await fs.writeFile(path.join(outputDir,'sitemap.txt'), sitemapTxt)
+  console.log('sitemap.txt updated')
+
   const robots = `User-agent: *
   Disallow:
 
   Sitemap: ${webURL}/sitemap.xml
+  Sitemap: ${webURL}/sitemap.txt
   `
   await fs.writeFile(path.join(outputDir,'robots.txt'),robots)
   console.log('robots.txt generated')
