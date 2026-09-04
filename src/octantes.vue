@@ -24,6 +24,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
         <Portada class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" />
         <Navigation class="navigation" :disabled="store.processing" />
+        <div class="portal-glow" aria-hidden="true" />
 
       </template>
       
@@ -59,10 +60,19 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 }
 
 .layout.fullscreen .articulos { width: 100%; height: 100%; border: none; }
+.layout.fullscreen .portal-glow { display: none; }
 
 .navigation { grid-column: 1; overflow-y: auto; min-height: 0; grid-row: 1 / span 2; }
 .portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1;          }
-.articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2; }
+.articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2; position: relative; z-index: 1; }
+
+.portal-glow {
+
+  /* LAYOUT */ grid-column: 2; grid-row: 2; z-index: 0; pointer-events: none;
+  /* BOX    */ margin: -5rem -4rem;
+  /* FILL   */ background: radial-gradient(ellipse 65% 55% at 50% 45%, var(--lirio-a21) 0%, var(--lirio-a08) 45%, transparent 72%);
+
+}
 
 .footer     { padding: 0rem 1rem 1rem 1rem; flex-shrink: 0; }
 
@@ -75,6 +85,10 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
   .layout { display: flex; flex-direction: column; height: 100%; overflow-y: auto; row-gap: 0; &.fullscreen { overflow-y: hidden; } }
 
   .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
+
+  /* no portal on the vertical layout, so no light — the rule stays consistent
+     rather than relocating a glow that has nothing to come from */
+  .portal-glow { display: none; }
   .portada { order: 1; } .portada.mobile-gap { margin-bottom: 1rem; border-radius: var(--radius-ss); } .articulos { order: 2; margin-bottom: 1rem; } .navigation { order: 3; }
   
   .footer  { padding: 1rem; }
