@@ -246,9 +246,9 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
   /* FILL   */
   background:
-    linear-gradient(to right, var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
-    linear-gradient(to left,  var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
-    linear-gradient(to top,   var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem);
+    linear-gradient(to right, var(--carbon) 0, var(--carbon-a56) 1rem, var(--carbon-a21) 2.4rem, transparent 4.8rem),
+    linear-gradient(to left,  var(--carbon) 0, var(--carbon-a56) 1rem, var(--carbon-a21) 2.4rem, transparent 4.8rem),
+    linear-gradient(to top,   var(--carbon) 0, var(--carbon-a56) 1rem, var(--carbon-a21) 2.4rem, transparent 4.8rem);
 
 }
 
