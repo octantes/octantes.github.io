@@ -70,7 +70,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
   /* LAYOUT */ grid-column: 2; grid-row: 2; z-index: 0; pointer-events: none;
   /* BOX    */ margin: -5rem -4rem;
-  /* FILL   */ background: radial-gradient(ellipse 65% 82% at 50% 47%, var(--lirio-a21) 0%, var(--lirio-a08) 45%, transparent 76%);
+  /* FILL   */ background: radial-gradient(ellipse 65% 55% at 50% 45%, var(--lirio-a21) 0%, var(--lirio-a08) 45%, transparent 72%);
 
 }
 

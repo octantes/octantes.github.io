@@ -204,7 +204,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   <div v-if="!isMobile || currentPost" class="notedisplay">
     
-    <div class="container" :class="{ 'fs-container': computedFullscreen }">
+    <div class="container" >
 
       <Shader class="shader" ref="shaderRef"/>
 
@@ -240,16 +240,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 .container { position: relative; }
 
-.container::after {
-
-  /* CURSOR */ pointer-events: none;
-  /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
-  /* FILL   */ background: radial-gradient(ellipse 76% 80% at 50% 48%, transparent 34%, color-mix(in srgb, var(--carbon) 55%, transparent) 66%, var(--carbon) 100%);
-
-}
-
-.container.fs-container::after { display: none; }
-
 .post {
 
   /* LAYOUT */ position: relative;
@@ -273,6 +263,14 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ position: absolute; top: 0; left: 0;
   /* BOX    */ width: 100%; height: 100%; z-index: 10;
+
+}
+
+.shader[data-shader="on"]::after {
+
+  /* CURSOR */ pointer-events: none;
+  /* LAYOUT */ content: ''; position: absolute; inset: 0;
+  /* FILL   */ background: radial-gradient(ellipse 76% 80% at 50% 48%, transparent 34%, color-mix(in srgb, var(--carbon) 55%, transparent) 66%, var(--carbon) 100%);
 
 }
 
