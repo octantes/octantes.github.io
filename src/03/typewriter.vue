@@ -32,6 +32,8 @@ const POEM_FLOOR   = 0.55                                                       
 const POEM_LIFT    = 2.5                                                        // cells the closed bottom takes off the visible field, see layout
 const POEM_CLICKS  = 5                                                          // on the home button
 const POEM_WINDOW  = 2500                                                       // ms they have to land in
+const POEM_IDLE_MS = 60000                                                      // of watching the field, and one comes on its own
+const POEM_BEAT_MS = 1000                                                       // how often that is counted
 
 const POEMS = {
 
@@ -343,6 +345,7 @@ function onDown(ev) {
 function onResize() { grid = null; at = null; hover.clear(); recital = null; poem.clear(); compose() }
 
 let knocks = 0, firstKnock = 0
+let watched = 0, beat = 0
 
 function onDocClick(ev) {
   if (!ev.target?.closest?.('.logo-xx')) return
@@ -379,15 +382,22 @@ watch(() => props.shader,    s => { if (s?.attachOverlay) s.attachOverlay(cells)
 watch(() => props.container, el => bind(el), { immediate: true })
 watch(() => props.enabled, () => {
   checkLive()
-  if (!live) { at = null; active = []; recital = null; hover.clear(); ripples.clear(); poem.clear(); compose(); return }
+  if (!live) { at = null; active = []; recital = null; watched = 0; hover.clear(); ripples.clear(); poem.clear(); compose(); return }
   if (pending && performance.now() - pending < POEM_WINDOW) { pending = 0; grid = null; recite() } else { pending = 0 }
 })
+
+function onBeat() {
+  if (!live || recital || document.hidden) return
+  watched += POEM_BEAT_MS
+  if (watched >= POEM_IDLE_MS) { watched = 0; recite() }
+}
 
 onMounted(() => {
   checkLive()
   window.addEventListener('resize', onResize)
   window.addEventListener('resize', checkLive)
   document.addEventListener('click', onDocClick)
+  beat = setInterval(onBeat, POEM_BEAT_MS)
 })
 
 onBeforeUnmount(() => {
@@ -395,6 +405,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
   window.removeEventListener('resize', checkLive)
   document.removeEventListener('click', onDocClick)
+  clearInterval(beat)
   if (frame) cancelAnimationFrame(frame)
   active = []; recital = null
   hover.clear(); ripples.clear(); poem.clear(); cells.clear()
