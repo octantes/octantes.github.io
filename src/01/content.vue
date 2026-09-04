@@ -280,14 +280,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.shader[data-shader="on"]::after {
-
-  /* CURSOR */ pointer-events: none;
-  /* LAYOUT */ content: ''; position: absolute; inset: 0;
-  /* FILL   */ background: radial-gradient(ellipse 76% 95% at 50% 32%, transparent 34%, color-mix(in srgb, var(--carbon) 55%, transparent) 66%, var(--carbon) 100%);
-
-}
-
 .fs-close {
   
   /* CURSOR */ user-select: none;
