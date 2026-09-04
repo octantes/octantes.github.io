@@ -246,10 +246,9 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
   /* FILL   */
   background:
-    linear-gradient(to right,  var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
-    linear-gradient(to left,   var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
-    linear-gradient(to bottom, var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
-    linear-gradient(to top,    var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem);
+    linear-gradient(to right, var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
+    linear-gradient(to left,  var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
+    linear-gradient(to top,   var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem);
 
 }
 
@@ -285,7 +284,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ content: ''; position: absolute; inset: 0;
-  /* FILL   */ background: radial-gradient(ellipse 76% 80% at 50% 48%, transparent 34%, color-mix(in srgb, var(--carbon) 55%, transparent) 66%, var(--carbon) 100%);
+  /* FILL   */ background: radial-gradient(ellipse 76% 95% at 50% 32%, transparent 34%, color-mix(in srgb, var(--carbon) 55%, transparent) 66%, var(--carbon) 100%);
 
 }
 
