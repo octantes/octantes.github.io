@@ -51,16 +51,10 @@ watch(() => route.params.filterType, (newFilterType) => {                       
 
 .navigation { 
 
-  /* The gallery is a room, not a panel. It used to paint its own carbon ground,
-     which is identical to the page's — invisible on its own, but it blocked the
-     portal's light the moment there was any, and the column read as a dead
-     rectangle in a lit page. Transparent here; the cards keep their own tint and
-     now sit *in* the light rather than in front of it. */
-
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; flex-direction: column; align-items: center; position: relative;
   /* BOX    */ padding: 0rem; gap: .8rem; min-height: 300px;
-  /* FILL   */ background-color: transparent; color: var(--niebla);
+  /* FILL   */ background-color: var(--carbon); color: var(--niebla);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-main); font-size: 0.9rem;
 
