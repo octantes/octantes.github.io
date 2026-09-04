@@ -11,12 +11,11 @@ const props = defineProps({
 /* TUNING */
 
 const HOVER_COLOR  = '#8AB6BB'                                                  // COLOR_RAIN, the field's own teal
-const RIPPLE_RGB   = '138,182,187'                                              // the same teal, for the ring
+const RIPPLE_COLOR = '#8AB6BB'                                                  // the same teal, at full strength for the ring's whole life
 const SHADOW_RGB   = '152,108,152'                                              // COLOR_PORTAL, so a dimmed cell reads as the same char
 const RIPPLE_MS    = 70                                                         // one cell of radius per tick
-const RIPPLE_MAX   = 12                                                         // cells of radius before it dies
+const RIPPLE_MAX   = 9                                                          // cells of radius, and then it is over
 const RIPPLE_WIDTH = 1                                                          // cells thick
-const RIPPLE_HOLD  = 0.5                                                        // fraction of its life spent at full strength
 const SHADOW_MIN   = 0.10                                                       // char alpha immediately behind the front
 const SHADOW_DEPTH = 4                                                          // cells of wake trailing the front
 const STEPS        = 8                                                          // alpha quantisation, see composeRipples
@@ -49,7 +48,11 @@ function toCell(ev) {
   return { cx: x, cy: y }
 }
 
-const HOVER_SHAPE = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]]
+const HOVER_PLUS    = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]]
+const HOVER_DIAMOND = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1],                // the plus
+                       [-1, -1], [1, -1], [-1, 1], [1, 1],                      // filled to a 3x3
+                       [-2, 0], [2, 0], [0, -2], [0, 2]]                        // arms out one further
+const HOVER_SHAPE   = HOVER_DIAMOND
 
 function buildHover() {
   hover.clear()
@@ -69,7 +72,6 @@ function composeRipples(now) {
   active = active.filter(rp => (now - rp.born) / RIPPLE_MS < RIPPLE_MAX)
   for (const rp of active) {
     const r = (now - rp.born) / RIPPLE_MS
-    const fade = Math.min(1, (1 - r / RIPPLE_MAX) / RIPPLE_HOLD)
     const hi = r + RIPPLE_WIDTH / 2, lo = Math.max(0, r - RIPPLE_WIDTH / 2)
 
     const y0 = Math.max(0, Math.ceil(rp.cy - hi)), y1 = Math.min(rows - 1, Math.floor(rp.cy + hi))
@@ -95,14 +97,14 @@ function composeRipples(now) {
             const d = Math.sqrt((x - rp.cx) * (x - rp.cx) + dy * dy)
             const u = Math.min(1, Math.max(0, (d - back) / Math.max(0.001, lo - back)))
             const depth = 1 - (1 - SHADOW_MIN) * u * u * Math.sqrt(u)              // darkest just behind the front, gone further in
-            const a = Math.round((1 - (1 - depth) * fade) * STEPS) / STEPS
+            const a = Math.round(depth * STEPS) / STEPS
             if (a < 1) ripples.set(y * cols + x, { color: `rgba(${SHADOW_RGB},${a})` })
           }
         }
       }
 
       // the front itself
-      const ring = `rgba(${RIPPLE_RGB},${(Math.max(1, Math.round(fade * STEPS)) / STEPS).toFixed(3)})`
+      const ring = RIPPLE_COLOR
       const spans = xi < 0
         ? [[rp.cx - xo, rp.cx + xo]]
         : [[rp.cx - xo, rp.cx - xi], [rp.cx + xi, rp.cx + xo]]
