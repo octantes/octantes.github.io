@@ -263,7 +263,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* FILL   */ color: var(--humo);
   /* BORDER */ border-radius: 9999px;
   /* FONT   */ font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap;
-  /* MOTION */ transition: color var(--animate-fast), background-color var(--animate-fast), border-color var(--animate-fast);
+  /* MOTION */ transition: color var(--animate-fast), background-color var(--animate-fast), border-color var(--animate-fast), box-shadow var(--animate-fast);
 
 }
 
@@ -326,8 +326,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   &:hover .ray-line, &.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
   &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--lirio); border-color: var(--lirio); }
 
-  &:hover   .ray-text { box-shadow: 0 0 2rem   -0.5rem var(--lirio-a21), 0 0 0.8rem -0.5rem  var(--lirio-a08); }
-  &.selected .ray-text { box-shadow: 0 0 3.2rem -0.4rem var(--lirio-a21), 0 0 1rem   -0.45rem var(--lirio-a15); }
+  &:hover    .ray-text { box-shadow: 0 0 1rem   0 var(--lirio-a31), 0 0 .35rem 0 var(--lirio-a15); }
+  &.selected .ray-text { box-shadow: 0 0 1.8rem 0 var(--lirio-a40), 0 0 .6rem  0 var(--lirio-a21); }
 
   &:hover .ray-portal .portal-line        { width: 4rem; }
   
@@ -343,8 +343,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   &:hover .ray-line, &.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
   &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--cristal); border-color: var(--cristal); }
 
-  &:hover   .ray-text { box-shadow: 0 0 2rem   -0.5rem var(--cristal-a21), 0 0 0.8rem -0.5rem  var(--cristal-a08); }
-  &.selected .ray-text { box-shadow: 0 0 3.2rem -0.4rem var(--cristal-a21), 0 0 1rem   -0.45rem var(--cristal-a15); }
+  &:hover    .ray-text { box-shadow: 0 0 1rem   0 var(--cristal-a31), 0 0 .35rem 0 var(--cristal-a15); }
+  &.selected .ray-text { box-shadow: 0 0 1.8rem 0 var(--cristal-a40), 0 0 .6rem  0 var(--cristal-a21); }
 
   &:hover .ray-portal .portal-line { width: 4rem; }
   

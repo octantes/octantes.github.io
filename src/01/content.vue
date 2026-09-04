@@ -6,6 +6,7 @@ import { storeToRefs } from 'pinia'
 import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
 import Shader from '../03/shader.vue'
+import Typewriter from '../03/typewriter.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 
@@ -24,6 +25,7 @@ const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } =
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
+const containerRef= ref(null)                                                                                                         // ref for the portal box, where pointer effects listen
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
 const contentRef  = ref(null)                                                                                                         // ref for content element
 const noteContent = ref('')                                                                                                           // basic note html for insert
@@ -204,9 +206,10 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   <div v-if="!isMobile || currentPost" class="notedisplay">
     
-    <div class="container" :class="{ 'fs-container': computedFullscreen }">
+    <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
 
       <Shader class="shader" ref="shaderRef"/>
+      <Typewriter :shader="shaderRef" :container="containerRef" :enabled="!currentPost && !computedFullscreen" />
 
       <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" :title="store.t.portfolio.closeFullscreen" :aria-label="store.t.portfolio.closeFullscreenAria">X</button>
 
