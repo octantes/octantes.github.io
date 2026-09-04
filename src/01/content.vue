@@ -204,7 +204,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   <div v-if="!isMobile || currentPost" class="notedisplay">
     
-    <div class="container" >
+    <div class="container" :class="{ 'fs-container': computedFullscreen }">
 
       <Shader class="shader" ref="shaderRef"/>
 
@@ -239,6 +239,21 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 .notedisplay { display: flex; flex-direction: column; height: 100%; gap: 1rem; }
 
 .container { position: relative; }
+
+.container::after {
+
+  /* CURSOR */ pointer-events: none;
+  /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
+  /* FILL   */
+  background:
+    linear-gradient(to right,  var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
+    linear-gradient(to left,   var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
+    linear-gradient(to bottom, var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem),
+    linear-gradient(to top,    var(--carbon) 0, var(--carbon-a56) .5rem, var(--carbon-a21) 1.2rem, transparent 2.4rem);
+
+}
+
+.container.fs-container::after { display: none; }
 
 .post {
 
