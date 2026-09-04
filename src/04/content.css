@@ -35,7 +35,8 @@
 
 }
 
-.nota .nota-prosa { padding: 0; }
+.nota.nota-prosa  { padding-top: var(--space-xxl); }
+.nota .nota-prosa { padding: var(--space-ll) 0 0; }
 
 /* medios — the asset block of a diseño note; full bleed, no line breaks */
 
