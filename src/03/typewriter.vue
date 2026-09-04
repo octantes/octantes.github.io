@@ -46,10 +46,6 @@ const POEMS = {
       { text: 'silencio', dx:   -5, dy:  2 },
       { text: 'en el nodo', dx:   -1, dy:  5 } ],
 
-    [ { text: 'cartoneros del DOM', dx:  -13, dy: -4 },
-      { text: 'arquitectos', dx:   -1, dy:  0 },
-      { text: 'del caos', dx:   -5, dy:  4 } ],
-
     [ { text: 'lo que el monolito', dx:  -15, dy: -5 },
       { text: 'esconde', dx:   -2, dy: -1 },
       { text: 'el cable', dx:    0, dy:  2 },
@@ -80,10 +76,6 @@ const POEMS = {
       { text: 'on the network', dx:   -2, dy: -1 },
       { text: 'silence', dx:   -4, dy:  2 },
       { text: 'in the node', dx:   -1, dy:  5 } ],
-
-    [ { text: 'scavengers of the DOM', dx:  -14, dy: -4 },
-      { text: 'architects', dx:   -1, dy:  0 },
-      { text: 'of chaos', dx:   -5, dy:  4 } ],
 
     [ { text: 'what the monolith', dx:  -14, dy: -5 },
       { text: 'hides', dx:   -1, dy: -1 },
