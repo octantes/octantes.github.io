@@ -144,6 +144,8 @@ function drawFrame(deltaTime) {                                         // draw 
 
   if (!context) return
 
+  if (containerRef.value) containerRef.value.dataset.shader = mode === 'hidden' ? 'off' : 'on'
+
   if (mode === 'hidden') {
     context.clearRect(0, 0, width, height)
     if (taskPromise) { const r = taskResolve; taskPromise = null; taskResolve = null; if (r) r() }
