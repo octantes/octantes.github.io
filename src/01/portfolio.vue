@@ -127,7 +127,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
             <div class="portal-line"></div>
-            <div class="portal-trigger">▶</div>
+            <div class="portal-trigger"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.6 L9.4 6 L4.2 9.4 Z" /></svg></div>
           </div>
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
@@ -261,7 +261,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* LAYOUT */ position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: center;
   /* BOX    */ padding: 0.3rem 0.8rem; height: 1.5rem;
   /* FILL   */ color: var(--humo);
-  /* BORDER */ border-radius: 9999px;
+  /* BORDER */ border-radius: 9999px; corner-shape: superellipse(1.4);
   /* FONT   */ font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap;
   /* MOTION */ transition: color var(--animate-fast), background-color var(--animate-fast), border-color var(--animate-fast), box-shadow var(--animate-fast);
 
@@ -285,11 +285,12 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 .portal-trigger {
 
   /* LAYOUT */ position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  /* BOX    */ width: 1.5rem; height: 1.5rem; padding-left: 1px; padding-top: 1px;
+  /* BOX    */ width: 1.5rem; height: 1.5rem;
   /* FILL   */ color: var(--carbon);
   /* BORDER */ border-radius: 50%;
-  /* FONT   */ font-family: var(--font-mono); font-size: 0.8rem;  
   /* MOTION */ transition: transform var(--animate-fast), box-shadow var(--animate-fast);
+
+  & svg { width: .55rem; height: .55rem; display: block; fill: currentColor; }
 
 }
 
@@ -326,8 +327,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   &:hover .ray-line, &.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
   &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--lirio); border-color: var(--lirio); }
 
-  &:hover    .ray-text { box-shadow: 0 0 1rem   0 var(--lirio-a31), 0 0 .35rem 0 var(--lirio-a15); }
-  &.selected .ray-text { box-shadow: 0 0 1.8rem 0 var(--lirio-a40), 0 0 .6rem  0 var(--lirio-a21); }
+  &:hover    .ray-text { box-shadow: 0 0 .7rem  0 var(--lirio-a15); }
+  &.selected .ray-text { box-shadow: 0 0 1.1rem 0 var(--lirio-a21), 0 0 .4rem 0 var(--lirio-a08); }
 
   &:hover .ray-portal .portal-line        { width: 4rem; }
   
@@ -343,8 +344,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   &:hover .ray-line, &.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
   &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--cristal); border-color: var(--cristal); }
 
-  &:hover    .ray-text { box-shadow: 0 0 1rem   0 var(--cristal-a31), 0 0 .35rem 0 var(--cristal-a15); }
-  &.selected .ray-text { box-shadow: 0 0 1.8rem 0 var(--cristal-a40), 0 0 .6rem  0 var(--cristal-a21); }
+  &:hover    .ray-text { box-shadow: 0 0 .7rem  0 var(--cristal-a15); }
+  &.selected .ray-text { box-shadow: 0 0 1.1rem 0 var(--cristal-a21), 0 0 .4rem 0 var(--cristal-a08); }
 
   &:hover .ray-portal .portal-line { width: 4rem; }
   
