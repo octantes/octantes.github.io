@@ -33,7 +33,6 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
         
       </RouterView>
 
-
     </div>
 
     <div class="footer" v-if="route.path !== '/portfolio'">

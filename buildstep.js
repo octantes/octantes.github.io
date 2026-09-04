@@ -39,9 +39,8 @@ CUSTOM:       add "vuecomp: componente" to metadata to mount a component (add im
 TEXTOS:       add "style: trad" in metadata to remove the softbreaks rule from that specific note and set left alignment
 JUEGOS:       just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
 
-- S6 & S7TEXT are centered text classes which are affected by the container query
-- S6TRAD & S7TEXT-TRAD are the left aligned, normal page, fixed rem size text classes
-- S7 is the class for the asset block in design notes that disables line breaks
+- .nota & .nota-verso are centered text classes which are affected by the container query
+- .nota-prosa is the left aligned, normal page, fixed rem size text class
 
 - usar como maximo tres tags
 - en la tabla solo se muestra hasta la primera coma- bloque de "novedades"
@@ -111,7 +110,7 @@ function renderType(body, attributes) {                                         
         .replace(/^\s*<p>(.*?)<\/p>\s*$/is, '$1')
         .replace(/<br\s*\/?>/gi, '')
 
-      const noteBlockClass = isTrad ? 'S7TEXT-TRAD' : 'S7TEXT'
+      const noteBlockClass = isTrad ? 'nota nota-prosa' : 'nota nota-verso'
 
       return `${renderedAssets}${ noteBlock ? `<div class="${noteBlockClass}">${md.render(noteBlock)}</div>` : ''}`
 
@@ -119,7 +118,7 @@ function renderType(body, attributes) {                                         
 
     default: {
 
-        if (isTrad) { return `<div class="S6TRAD">${md.render(body)}</div>` }
+        if (isTrad) { return `<div class="nota-prosa">${md.render(body)}</div>` }
         return md.render(body) 
 
     }

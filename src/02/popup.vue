@@ -41,7 +41,7 @@ const store           = useStore()                                              
 .backdrop { 
 
   /* LAYOUT */ position: absolute; display: flex; align-items: center; justify-content: center; z-index: 50; inset: 0; container-type: size;
-  /* FILL   */ background-color: var(--carbon99); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  /* FILL   */ background-color: var(--carbon-a60); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   /* MOTION */ animation: fadeIn var(--animate-mid);
 
 }
@@ -63,7 +63,7 @@ const store           = useStore()                                              
   /* BOX    */ width: 480px; height: 480px;
   /* FILL   */ background-color: var(--niebla);
   /* SHAPE  */ clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%); filter: drop-shadow(0 0 1px var(--ceniza));
-  /* IMAGE  */ background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, var(--humo25) 2px, var(--humo25) 4px);
+  /* IMAGE  */ background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, var(--humo-a15) 2px, var(--humo-a15) 4px);
 
   &:hover { box-shadow: inset 0rem 0rem 5rem var(--ceniza); }
   &::after { content: ""; position: absolute; inset: 0; background-color: var(--arcilla); opacity: 0; transition: opacity var(--animate-fast); pointer-events: none; }
@@ -78,7 +78,7 @@ const store           = useStore()                                              
   /* LAYOUT */ text-align: center; line-height: 1.5;
   /* FONT   */ font-family: var(--font-mono); font-weight: bold; font-size: 1.5rem;
   /* FILL   */ color: var(--carbon);
-  /* BORDER */ text-shadow: .5px .5px 0px var(--arcilla80);
+  /* BORDER */ text-shadow: .5px .5px 0px var(--arcilla-a50);
   
 }
 

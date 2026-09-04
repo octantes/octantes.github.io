@@ -72,7 +72,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   /* LAYOUT */ grid-column: 1 / -1; text-align: center;
   /* BOX    */ padding: 2rem;
-  /* FILL   */ color: var(--humo50);
+  /* FILL   */ color: var(--humo-a31);
   /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 1rem;
 
 }
@@ -82,8 +82,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; flex-direction: column;
   /* BOX    */ height: 100%;
-  /* FILL   */ background-color: var(--carbon25);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
+  /* FILL   */ background-color: var(--carbon-a15);
+  /* BORDER */ border: var(--small-outline) var(--humo-a06); border-radius: var(--radius-ss);
   /* MOTION */ transition: all var(--animate-fast);
 
   &.expanded {
@@ -127,7 +127,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   /* LAYOUT */ position: relative;
   /* BOX    */ width: 100%; padding-top: 56.25%; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); 
-  /* BORDER */ border-bottom: var(--small-outline) var(--humo10); border-top-left-radius: var(--radius-ss); border-top-right-radius: var(--radius-ss);
+  /* BORDER */ border-bottom: var(--small-outline) var(--humo-a06); border-top-left-radius: var(--radius-ss); border-top-right-radius: var(--radius-ss);
   
   
   & img {
@@ -144,7 +144,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0;
   /* BOX    */ width: 100%; height: 100%;
-  /* FILL   */ color: var(--humo25);
+  /* FILL   */ color: var(--humo-a15);
   /* FONT   */ font-size: 2rem;
 
 }
@@ -156,7 +156,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
 }
 
-.date { font-size: 0.7rem; font-family: var(--font-mono); color: var(--humo99); }
+.date { font-size: 0.7rem; font-family: var(--font-mono); color: var(--humo-a60); }
 
 .title { 
 
@@ -180,11 +180,11 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   /* CURSOR */ cursor: pointer;
   /* BOX    */ padding: 0.1rem 0.3rem; border-radius: 2px;
-  /* FILL   */ background-color: var(--humo10); color: var(--lirio);
+  /* FILL   */ background-color: var(--humo-a06); color: var(--lirio);
   /* FONT   */ font-size: 0.6rem;
   /* MOTION */ transition: background-color var(--animate-fast);
 
-  &:hover { background-color: var(--lirio25); }
+  &:hover { background-color: var(--lirio-a15); }
 
 }
 

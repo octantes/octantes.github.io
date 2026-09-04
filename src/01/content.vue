@@ -245,7 +245,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ position: relative;
   /* BOX    */ height: 100%; width: 100%; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
   /* FILL   */ background-color: var(--carbon);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
+  /* BORDER */ border: var(--small-outline) var(--humo-a06); border-radius: var(--radius-ss);
 
   container-type: inline-size;
   container-name: post-viewer;
@@ -269,10 +269,10 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ position: absolute; top: 1rem; right: 2rem; z-index: 20;
   /* BORDER */ border: none; border-radius: 9999px;
   /* BOX    */ padding: .8rem 1rem .8rem 1rem;
-  /* FILL   */ background-color: var(--niebla50); color: var(--carbon);
+  /* FILL   */ background-color: var(--niebla-a31); color: var(--carbon);
   /* MOTION */ transition: all var(--animate-fast);
 
-  &:hover { cursor: pointer; background-color: var(--niebla99); }
+  &:hover { cursor: pointer; background-color: var(--niebla-a60); }
 
 }
 
