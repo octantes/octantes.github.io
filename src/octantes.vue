@@ -69,8 +69,8 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 .portal-glow {
 
   /* LAYOUT */ grid-column: 2; grid-row: 2; z-index: 0; pointer-events: none;
-  /* BOX    */ margin: -16rem -24rem -12rem -50rem;
-  /* FILL   */ background: radial-gradient(ellipse 75% 70% at 60% 48%, var(--lirio-a31) 0%, var(--lirio-a21) 28%, var(--lirio-a15) 52%, var(--lirio-a08) 76%, transparent 100%);
+  /* BOX    */ margin: -5rem -4rem;
+  /* FILL   */ background: radial-gradient(ellipse 65% 55% at 50% 45%, var(--lirio-a21) 0%, var(--lirio-a08) 45%, transparent 72%);
 
 }
 

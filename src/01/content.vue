@@ -270,7 +270,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ content: ''; position: absolute; inset: 0;
-  /* FILL   */ background: radial-gradient(ellipse 74% 78% at 50% 48%, transparent 38%, var(--lirio-a08) 70%, var(--lirio-a15) 88%, var(--lirio-a21) 100%);
+  /* FILL   */ background: radial-gradient(ellipse 76% 80% at 50% 48%, transparent 34%, color-mix(in srgb, var(--carbon) 55%, transparent) 66%, var(--carbon) 100%);
 
 }
 
