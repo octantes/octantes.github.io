@@ -61,7 +61,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
   /* LAYOUT */ display: flex; justify-content: space-between; align-items: center;
   /* BOX    */ min-width: 0; width: 100%; padding: .5rem 1rem; gap: 1.5rem; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
-  /* BORDER */ border: var(--small-outline) var(--humo10); border-radius: var(--radius-ss);
+  /* BORDER */ border: var(--small-outline) var(--humo-a06); border-radius: var(--radius-ss);
   /* FONT   */ font-size: 1rem;
   
 }
@@ -105,13 +105,13 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
 }
 
-.divisions { color: var(--humo50); }
+.divisions { color: var(--humo-a31); }
 
 .progress-bar { 
 
   /* CURSOR */ user-select: none;
   /* BOX    */ width: 100%; overflow: hidden;
-  /* FILL   */ background-color: var(--carbon); color: var(--humo50);
+  /* FILL   */ background-color: var(--carbon); color: var(--humo-a31);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); line-height: 1.5; white-space: nowrap;
 

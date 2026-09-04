@@ -198,9 +198,8 @@ export const useStore = defineStore('store', () => {
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   let   notesLoadingPromise        = null                                                                                               // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
-  const classMap                   = { desarrollo: 'S6', textos: 'S6', diseño: 'S7', musica: 'S6', juegos: 'S6'}                      // note type custom class map
+  const classMap                   = { desarrollo: 'nota nota-verso', textos: 'nota nota-verso', diseño: 'nota-medios', musica: 'nota nota-verso', juegos: 'nota nota-verso'}                      // note type custom class map
   const postHtmlCache              = ref({})
-
 
   // STATES                                                                                                                           // CHANGE STATES
 
@@ -242,10 +241,7 @@ export const useStore = defineStore('store', () => {
   const sortOrder                  = ref('desc')                                                                                      // current sort order
   const searchQuery                = ref('')                                                                                          // searchbox current search
 
-
-
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
   function togglePopup()                { showPopup.value = !showPopup.value; if (!showPopup.value) localStorage.setItem('popup_seen', popLink.value) } // toggle popup for notifications
@@ -317,7 +313,6 @@ export const useStore = defineStore('store', () => {
     }
 
   }
-
 
   function changeFilter(routerInstance, direction) {                                                                                  // advance or reduce filters 
 
@@ -395,7 +390,6 @@ export const useStore = defineStore('store', () => {
 
   
   // ASYNCS -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
   async function fetchAndParse(slug, post, langCode) {
 
@@ -613,9 +607,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-
   // COMPUTEDS ----------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
   const computedNoteComp  = computed(() => {                                                                                          // compute vuecomp if it exists 
 
@@ -638,10 +630,10 @@ export const useStore = defineStore('store', () => {
 
     if (currentPost.value) {
       const typeKey = currentPost.value.type
-      return classMap[typeKey] || 'S6' 
+      return classMap[typeKey] || 'nota nota-verso' 
     }
 
-    return 'S6' 
+    return 'nota nota-verso' 
 
   })
 
@@ -739,9 +731,7 @@ export const useStore = defineStore('store', () => {
 
   })
 
-
   // RETURN -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
   return { 
 

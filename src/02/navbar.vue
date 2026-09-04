@@ -50,15 +50,15 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
     /* CURSOR */ cursor: pointer;
     /* BOX    */ padding: 0.5rem 1rem;
-    /* FILL   */ background-color: transparent; color: var(--carbon80);
+    /* FILL   */ background-color: transparent; color: var(--carbon-a50);
     /* BORDER */ border: none; border-radius: var(--radius-ss);
     /* FONT   */ font-family: var(--font-main);
     /* MOTION */ transition: all var(--animate-faster);
     &:active   { transform: var(--scale-min); }
-    &:hover    { background-color: var(--carbon15); color: var(--carbon); }
+    &:hover    { background-color: var(--carbon-a08); color: var(--carbon); }
     &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
 
-    &.active   { background-color: var(--carbon25); color: var(--carbon); box-shadow: var(--shadow-border) var(--carbon10); }
+    &.active   { background-color: var(--carbon-a15); color: var(--carbon); box-shadow: var(--shadow-border) var(--carbon-a06); }
     
   }
 
@@ -69,13 +69,13 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   /* CURSOR */ cursor: text;
   /* LAYOUT */ text-align: center; flex: 1 1 auto; min-width: 0;
   /* BOX */ padding: 0.5rem 1rem;
-  /* FILL */ background-color: var(--carbon05); color: var(--carbon);
-  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon25);
+  /* FILL */ background-color: var(--carbon-a02); color: var(--carbon);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon-a15);
   /* FONT */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
-  &::placeholder { color: var(--carbon99); }
-  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon50); background-color: var(--carbon15); }
+  &::placeholder { color: var(--carbon-a60); }
+  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon-a31); background-color: var(--carbon-a08); }
 
 }
 

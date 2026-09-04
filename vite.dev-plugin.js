@@ -43,13 +43,13 @@ function renderMarkdown(body, attributes, type) {
         .replace(/^\s*<p>(.*?)<\/p>\s*$/is, '$1')
         .replace(/<br\s*\/?>/gi, '')
       
-      const noteBlockClass = isTrad ? 'S7TEXT-TRAD' : 'S7TEXT'
+      const noteBlockClass = isTrad ? 'nota nota-prosa' : 'nota nota-verso'
       
       return `${renderedAssets}${ noteBlock ? `<div class="${noteBlockClass}">${md.render(noteBlock)}</div>` : ''}`
     }
     
     default: {
-      if (isTrad) return `<div class="S6TRAD">${md.render(body)}</div>`
+      if (isTrad) return `<div class="nota-prosa">${md.render(body)}</div>`
       return md.render(body)
     }
   }

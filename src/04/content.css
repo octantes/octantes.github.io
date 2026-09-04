@@ -1,109 +1,77 @@
-/* TEXTOS */
 
-.S6 { 
+.nota {
+
+  /* BOX    */ z-index: 1; width: 100%; padding: var(--space-ll) var(--space-xxl) 0 var(--space-xxl); overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: var(--text-ll); line-height: var(--leading-base); word-break: break-word;
+
+  & img {
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo-a15); border-radius: var(--radius-ss);
+
+  }
+
+}
+
+/* verso — the default voice */
+
+.nota-verso {
 
   /* LAYOUT */ text-align: center;
-  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
-  /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
-  
-  & img { 
 
-    /* LAYOUT */ display: block; 
-    /* BOX    */ max-width: 100%; height: auto; margin: 0rem auto;
-    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
-
-  }
+  & img { margin: 0 auto; }
 
 }
 
-.S6TRAD { 
+/* prosa — running text, held to a readable measure and left aligned. */
+
+.nota-prosa {
 
   /* LAYOUT */ text-align: left;
-  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
-  /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
-  
-  & img { 
-
-    /* LAYOUT */ display: block; 
-    /* BOX    */ max-width: 100%; height: auto;
-    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
-
-  }
+  /* BOX    */ max-width: var(--measure); margin-inline: auto;
+  /* FONT   */ font-size: var(--text-ll);
 
 }
 
-/* DISEÑO */
+.nota .nota-prosa { padding: 0; }
 
-.S7 { 
+/* medios — the asset block of a diseño note; full bleed, no line breaks */
+
+.nota-medios {
 
   /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+  /* FONT   */ font-size: var(--text-ll); line-height: var(--leading-base); word-break: break-word;
 
-  & img { 
-
-    /* LAYOUT */ display: block; object-fit: cover;
-    /* BOX    */ max-width: 100%; width: 100%; height: auto;
-
-  }
-
-  & video { 
+  & img {
 
     /* LAYOUT */ display: block; object-fit: cover;
     /* BOX    */ max-width: 100%; width: 100%; height: auto;
-    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+
+  }
+
+  & video {
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo-a15); border-radius: var(--radius-ss);
 
   }
 
 }
 
-.S7TEXT { 
+/* EMBEDS */
 
-  /* LAYOUT */ text-align: center;
-  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
-  /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
+.YTVideo {
 
-  & img { 
-
-    /* LAYOUT */ display: block;
-    /* BOX    */ max-width: 100%; height: auto;
-    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
-
-  }
-  
-}
-
-.S7TEXT-TRAD { 
-
-  /* LAYOUT */ text-align: left;
-  /* BOX    */ z-index: 1; width: 100%; padding: 1rem 2rem 0rem 2rem; overflow-wrap: break-word;
-  /* FILL   */ color: var(--humo);
-  /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
-
-  & img { 
-
-    /* LAYOUT */ display: block;
-    /* BOX    */ max-width: 100%; height: auto;
-    /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
-
-  }
-  
-}
-
-/* EMBEDS */  
-
-.YTVideo { 
-
-  /* LAYOUT */ position: relative; 
+  /* LAYOUT */ position: relative;
   /* BOX    */ width: 100%; height: 100%; aspect-ratio: 16 / 9;
-  /* BORDER */ border: var(--small-outline) var(--humo25); border-radius: var(--radius-ss);
+  /* BORDER */ border: var(--small-outline) var(--humo-a15); border-radius: var(--radius-ss);
 
 }
 
-@container post-viewer (min-width: 0px) { .S6, .S7TEXT { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
-@container post-viewer (min-width: 0px) { .S6TRAD, .S7TEXT-TRAD { font-size: 1rem; } }
+@container post-viewer (min-width: 0px) { .nota-verso { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
 
-@media (max-width: 500px) { .S6, .S6TRAD, .S7TEXT, .S7TEXT-TRAD { padding: 0.2rem 0.4rem 0rem 0.4rem; } }
+@media (max-width: 500px) { .nota { padding: 0.2rem var(--space-xs) 0 var(--space-xs); } }

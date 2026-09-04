@@ -168,7 +168,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   /* CURSOR */ cursor: pointer; user-select: none;
   /* LAYOUT */ position: relative;
-  /* FILL   */ background: transparent; color: var(--humo99);
+  /* FILL   */ background: transparent; color: var(--humo-a60);
   /* BORDER */ border: none; box-shadow: none;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
   /* FX     */ mix-blend-mode: difference;
@@ -191,7 +191,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   & p  { font-size: 0.95rem; line-height: 1.5; color: var(--humo); }
   & h2 { color: var(--lirio); margin: 0 0 0.5rem 0; font-size: 1.5rem; }
 
-  & .subtitle { font-family: var(--font-mono); font-style: italic; font-size: 0.9rem; color: var(--humo99); margin: 0; }
+  & .subtitle { font-family: var(--font-mono); font-style: italic; font-size: 0.9rem; color: var(--humo-a60); margin: 0; }
 
 }
 
@@ -203,8 +203,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   & span {
 
     /* BOX    */ padding: 0.2rem 0.5rem;
-    /* FILL   */ background-color: var(--carbon25); color: var(--cristal);
-    /* BORDER */ border: 1px solid var(--cristal50); border-radius: var(--radius-ss);
+    /* FILL   */ background-color: var(--carbon-a15); color: var(--cristal);
+    /* BORDER */ border: 1px solid var(--cristal-a31); border-radius: var(--radius-ss);
     /* FONT   */ font-family: var(--font-mono); font-size: 0.75rem;
 
   }
@@ -217,7 +217,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* LAYOUT */ position: relative; z-index: 2; overflow: hidden;
   /* BOX    */ width: 15rem; height: 15rem; flex-shrink: 0; object-fit: cover;
   /* FILL   */ background-color: var(--carbon); filter: brightness(0.8);
-  /* BORDER */ border-radius: 50%; border: 2px solid var(--humo25);
+  /* BORDER */ border-radius: 50%; border: 2px solid var(--humo-a15);
   /* MOTION */ transition: transform var(--animate-fast);
 
   &:hover { transform: scale(.95); }
@@ -251,7 +251,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   /* LAYOUT */ position: relative; z-index: 2; flex-shrink: 0;
   /* BOX    */ width: 1.5rem; height: 1px; margin-right: 0.5rem;
-  /* FILL   */ background-color: var(--humo25);
+  /* FILL   */ background-color: var(--humo-a15);
   /* MOTION */ transition: background-color var(--animate-fast), width var(--animate-fast);
 
 }
@@ -310,7 +310,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   & .tag {
 
     /* BOX    */ padding: 0; 
-    /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem; color: var(--humo50);
+    /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem; color: var(--humo-a31);
 
   }
 
@@ -320,7 +320,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 .ray-diseño { 
 
-  & .ray-text { border: 1px solid var(--lirio99); }
+  & .ray-text { border: 1px solid var(--lirio-a60); }
 
   & .portal-line,    & .portal-trigger    { background-color: var(--lirio); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
@@ -334,7 +334,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 .ray-desarrollo { 
 
-  & .ray-text { border: 1px solid var(--cristal99); }
+  & .ray-text { border: 1px solid var(--cristal-a60); }
 
   & .portal-line,    & .portal-trigger    { background-color: var(--cristal); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
