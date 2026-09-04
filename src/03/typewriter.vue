@@ -29,24 +29,80 @@ const POEM_HOLD_MS = 5200                                                       
 const POEM_VOID    = 13                                                         // cells of shadow beyond the composition's edge
 const POEM_VOID_MS = 700                                                        // the void opening, and later closing, on its own
 const POEM_FLOOR   = 0.55                                                       // fraction of the void held at full depth, see buildPoem
-const POEM_LIFT    = 4.5                                                        // cells the closed bottom takes off the visible field, see layout
+const POEM_LIFT    = 2.5                                                        // cells the closed bottom takes off the visible field, see layout
 const POEM_CLICKS  = 5                                                          // on the home button
 const POEM_WINDOW  = 2500                                                       // ms they have to land in
 
 const POEMS = {
 
   es: [
-    { text: 'nadie es dueño', dx: -13, dy: -5 },
-    { text: 'de la luz',      dx:   1, dy: -1 },
-    { text: 'que emite',      dx:  -7, dy:  2 },
-    { text: 'tu pantalla',    dx:   4, dy:  5 },
+    [ { text: 'nadie es dueño', dx: -13, dy: -5 },
+      { text: 'de la luz',      dx:   1, dy: -1 },
+      { text: 'que emite',      dx:  -7, dy:  2 },
+      { text: 'tu pantalla',    dx:   4, dy:  5 } ],
+
+    [ { text: 'ruido',          dx: -11, dy: -5 },
+      { text: 'en la red',      dx:   3, dy: -1 },
+      { text: 'silencio',       dx:  -8, dy:  2 },
+      { text: 'en el nodo',     dx:   2, dy:  5 } ],
+
+    [ { text: 'cartoneros del DOM', dx: -14, dy: -4 },
+      { text: 'arquitectos',        dx:   2, dy:  0 },
+      { text: 'del caos',           dx:  -5, dy:  4 } ],
+
+    [ { text: 'lo que el monolito', dx: -14, dy: -5 },
+      { text: 'esconde',            dx:   4, dy: -1 },
+      { text: 'el cable',           dx:  -9, dy:  2 },
+      { text: 'lo revela',          dx:   3, dy:  5 } ],
+
+    [ { text: 'en el repo',          dx: -13, dy: -5 },
+      { text: 'el código muere',     dx:   1, dy: -1 },
+      { text: 'en el runtime',       dx: -11, dy:  2 },
+      { text: 'es presente continuo', dx:  0, dy:  5 } ],
+
+    [ { text: 'solo tres colores', dx: -13, dy: -4 },
+      { text: 'contienen',         dx:   3, dy:  0 },
+      { text: 'millones',          dx:  -6, dy:  4 } ],
+
+    [ { text: 'cuando se apaga', dx: -13, dy: -5 },
+      { text: 'la ciudad',        dx:   3, dy: -1 },
+      { text: 'se enciende',      dx:  -8, dy:  2 },
+      { text: 'la mente',         dx:   4, dy:  5 } ],
   ],
 
   en: [
-    { text: 'no one owns',    dx: -12, dy: -5 },
-    { text: 'the light',      dx:   2, dy: -1 },
-    { text: 'your screen',    dx:  -8, dy:  2 },
-    { text: 'gives off',      dx:   5, dy:  5 },
+    [ { text: 'no one owns',   dx: -12, dy: -5 },
+      { text: 'the light',     dx:   2, dy: -1 },
+      { text: 'your screen',   dx:  -8, dy:  2 },
+      { text: 'gives off',     dx:   5, dy:  5 } ],
+
+    [ { text: 'noise',           dx: -12, dy: -5 },
+      { text: 'on the network', dx:   1, dy: -1 },
+      { text: 'silence',        dx:  -9, dy:  2 },
+      { text: 'in the node',    dx:   3, dy:  5 } ],
+
+    [ { text: 'scavengers of the DOM', dx: -15, dy: -4 },
+      { text: 'architects',            dx:   4, dy:  0 },
+      { text: 'of chaos',              dx:  -6, dy:  4 } ],
+
+    [ { text: 'what the monolith', dx: -14, dy: -5 },
+      { text: 'hides',             dx:   5, dy: -1 },
+      { text: 'the cable',         dx:  -9, dy:  2 },
+      { text: 'reveals',           dx:   4, dy:  5 } ],
+
+    [ { text: 'in the repo',        dx: -13, dy: -5 },
+      { text: 'the code dies',      dx:   2, dy: -1 },
+      { text: 'in the runtime',     dx: -12, dy:  2 },
+      { text: 'it is present tense', dx:  1, dy:  5 } ],
+
+    [ { text: 'only three colours', dx: -13, dy: -4 },
+      { text: 'hold',               dx:   4, dy:  0 },
+      { text: 'millions',           dx:  -6, dy:  4 } ],
+
+    [ { text: 'when the city', dx: -13, dy: -5 },
+      { text: 'goes dark',     dx:   3, dy: -1 },
+      { text: 'the mind',      dx:  -8, dy:  2 },
+      { text: 'lights up',     dx:   4, dy:  5 } ],
   ],
 
 }
@@ -186,11 +242,15 @@ function layout(g, lines) {
 }
 
 let pending = 0
+let lastPoem = -1                                                               // never the same phrase twice running
 
 function recite() {
   if (!live) { pending = performance.now(); return }
   if (!grid && !readGrid()) return
-  recital = { ...layout(grid, POEMS[store.lang] || POEMS.es), born: performance.now() }
+  const list = POEMS[store.lang] || POEMS.es
+  if (list.length > 1) { let i; do { i = Math.floor(Math.random() * list.length) } while (i === lastPoem); lastPoem = i }
+  else lastPoem = 0
+  recital = { ...layout(grid, list[lastPoem]), born: performance.now() }
   recitalKey = null
   start()
 }
