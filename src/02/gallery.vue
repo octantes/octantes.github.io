@@ -109,6 +109,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   &.active {
 
     border-color: var(--lirio);
+    background-color: var(--carbon-a06);
+    box-shadow: 0 0 4rem -0.25rem var(--lirio-a31), 0 0 1.2rem -0.4rem var(--lirio-a21);
 
     & .title { color: var(--cristal); }
     & .date  { font-size: 0.85rem; }

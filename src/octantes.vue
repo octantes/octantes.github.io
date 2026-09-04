@@ -22,9 +22,9 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
       <template v-if="!computedFullscreen && route.path !== '/portfolio'">
 
+        <div class="portal-glow" aria-hidden="true" />
         <Portada class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" />
         <Navigation class="navigation" :disabled="store.processing" />
-        <div class="portal-glow" aria-hidden="true" />
 
       </template>
       
@@ -62,15 +62,15 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 .layout.fullscreen .articulos { width: 100%; height: 100%; border: none; }
 .layout.fullscreen .portal-glow { display: none; }
 
-.navigation { grid-column: 1; overflow-y: auto; min-height: 0; grid-row: 1 / span 2; }
-.portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1;          }
+.navigation { grid-column: 1; overflow-y: auto; min-height: 0; grid-row: 1 / span 2; position: relative; z-index: 1; }
+.portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1; position: relative; z-index: 1; }
 .articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2; position: relative; z-index: 1; }
 
 .portal-glow {
 
   /* LAYOUT */ grid-column: 2; grid-row: 2; z-index: 0; pointer-events: none;
-  /* BOX    */ margin: -5rem -4rem;
-  /* FILL   */ background: radial-gradient(ellipse 65% 55% at 50% 45%, var(--lirio-a21) 0%, var(--lirio-a08) 45%, transparent 72%);
+  /* BOX    */ margin: -16rem -24rem -12rem -50rem;
+  /* FILL   */ background: radial-gradient(ellipse 75% 70% at 60% 48%, var(--lirio-a31) 0%, var(--lirio-a21) 28%, var(--lirio-a15) 52%, var(--lirio-a08) 76%, transparent 100%);
 
 }
 
