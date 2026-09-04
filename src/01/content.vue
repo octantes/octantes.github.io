@@ -246,7 +246,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
   /* FILL   */
   background:
-    radial-gradient(ellipse 50% 70% at 50% 30%, transparent 88%, var(--carbon-a31) 100%, var(--carbon) 118%),
+    radial-gradient(ellipse 50% 70% at 50% 30%, transparent 100%, var(--carbon-a31) 125%, var(--carbon-a60) 150%),
     linear-gradient(to right, var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
     linear-gradient(to left,  var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
     linear-gradient(to top,   var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem);
