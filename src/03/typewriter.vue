@@ -29,6 +29,7 @@ const POEM_HOLD_MS = 5200                                                       
 const POEM_VOID    = 13                                                         // cells of shadow beyond the composition's edge
 const POEM_VOID_MS = 700                                                        // the void opening, and later closing, on its own
 const POEM_FLOOR   = 0.55                                                       // fraction of the void held at full depth, see buildPoem
+const POEM_LIFT    = 4.5                                                        // cells the closed bottom takes off the visible field, see layout
 const POEM_CLICKS  = 5                                                          // on the home button
 const POEM_WINDOW  = 2500                                                       // ms they have to land in
 
@@ -174,8 +175,9 @@ function layout(g, lines) {
   }
   let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity
   for (const p of glyphs) { if (p.x < x0) x0 = p.x; if (p.x > x1) x1 = p.x; if (p.y < y0) y0 = p.y; if (p.y > y1) y1 = p.y }
-  const ox = Math.round(g.cols / 2 - (x0 + x1) / 2)
-  const oy = Math.round(g.rows / 2 - (y0 + y1) / 2)
+
+  const ox = Math.round((g.cols - 1 - x0 - x1) / 2)
+  const oy = Math.round((g.rows - POEM_LIFT - 1 - y0 - y1) / 2)
   return {
     glyphs: glyphs.filter(p => p.ch !== ' ').map(p => ({ ch: p.ch, x: p.x + ox, y: p.y + oy })),
     cx: (x0 + x1) / 2 + ox, cy: (y0 + y1) / 2 + oy,
