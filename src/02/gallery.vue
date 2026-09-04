@@ -120,7 +120,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   }
 
   &:focus { outline: none; }
-  &:focus-visible { outline: var(--small-outline) var(--humo); outline-offset: 2px; }
+  &:focus-visible { outline: var(--small-outline) var(--cristal); outline-offset: 2px; }
 
   &.disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
 
