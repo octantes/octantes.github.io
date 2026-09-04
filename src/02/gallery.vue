@@ -99,7 +99,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
   &:hover { 
 
     transform: translateY(-2px);
-    border-color: var(--lirio);
+    border-color: var(--cristal);
+    box-shadow: 0 0 2rem -0.5rem var(--cristal-a21), 0 0 0.8rem -0.5rem var(--cristal-a08);
 
     & .title { color: var(--cristal); }
     & img { transform: scale(1.05); }
@@ -110,7 +111,7 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
     border-color: var(--lirio);
     background-color: var(--carbon-a06);
-    box-shadow: 0 0 4rem -0.25rem var(--lirio-a31), 0 0 1.2rem -0.4rem var(--lirio-a21);
+    box-shadow: 0 0 3rem -0.6rem var(--lirio-a21), 0 0 1rem -0.5rem var(--lirio-a08);
 
     & .title { color: var(--cristal); }
     & .date  { font-size: 0.85rem; }
@@ -118,7 +119,8 @@ function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${t
 
   }
 
-  &:focus { box-shadow: none; border-color: var(--cristal); outline: none; }
+  &:focus { outline: none; }
+  &:focus-visible { outline: var(--small-outline) var(--cristal); outline-offset: 2px; }
 
   &.disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
 
