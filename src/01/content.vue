@@ -264,9 +264,13 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ position: absolute; top: 0; left: 0;
   /* BOX    */ width: 100%; height: 100%; z-index: 10;
 
-  /* MASK   */
-  -webkit-mask-image: radial-gradient(ellipse 78% 82% at 50% 48%, black 30%, rgba(0,0,0,.75) 58%, rgba(0,0,0,.28) 80%, transparent 100%);
-  mask-image: radial-gradient(ellipse 78% 82% at 50% 48%, black 30%, rgba(0,0,0,.75) 58%, rgba(0,0,0,.28) 80%, transparent 100%);
+}
+
+.shader[data-shader="on"]::after {
+
+  /* CURSOR */ pointer-events: none;
+  /* LAYOUT */ content: ''; position: absolute; inset: 0;
+  /* FILL   */ background: radial-gradient(ellipse 74% 78% at 50% 48%, transparent 38%, var(--lirio-a08) 70%, var(--lirio-a15) 88%, var(--lirio-a21) 100%);
 
 }
 
