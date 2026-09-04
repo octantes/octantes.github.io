@@ -240,27 +240,34 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 .container { position: relative; }
 
-.post { 
+.post {
 
   /* LAYOUT */ position: relative;
   /* BOX    */ height: 100%; width: 100%; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
-  /* FILL   */ background-color: var(--carbon);
-  /* BORDER */ border: var(--small-outline) var(--humo-a06); border-radius: var(--radius-ss);
+  /* FILL   */ background-color: transparent;
+
+  /* MASK   */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 2rem, black calc(100% - 2rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, black 2rem, black calc(100% - 2rem), transparent 100%);
 
   container-type: inline-size;
   container-name: post-viewer;
 
 &::-webkit-scrollbar { display: none; }
-  &.fs-mode { background: none; overflow: hidden; &::after { display: none } }
+  &.fs-mode { background: none; overflow: hidden; -webkit-mask-image: none; mask-image: none; &::after { display: none } }
 
 }
 
-.shader { 
-  
+.shader {
+
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ position: absolute; top: 0; left: 0;
   /* BOX    */ width: 100%; height: 100%; z-index: 10;
-  
+
+  /* MASK   */
+  -webkit-mask-image: radial-gradient(ellipse 78% 82% at 50% 48%, black 30%, rgba(0,0,0,.75) 58%, rgba(0,0,0,.28) 80%, transparent 100%);
+  mask-image: radial-gradient(ellipse 78% 82% at 50% 48%, black 30%, rgba(0,0,0,.75) 58%, rgba(0,0,0,.28) 80%, transparent 100%);
+
 }
 
 .fs-close {
@@ -288,6 +295,10 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 @media (max-width: 1080px) { 
 
   .notedisplay { height: auto; min-height: auto; }
+
+  /* the column stops being a viewport here and joins the document scroll, so
+     the aperture would clip the page rather than frame it */
+  .post { -webkit-mask-image: none; mask-image: none; }
 
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
