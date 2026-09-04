@@ -17,7 +17,8 @@ const RIPPLE_MS    = 70                                                         
 const RIPPLE_MAX   = 12                                                         // cells of radius before it dies
 const RIPPLE_WIDTH = 1                                                          // cells thick
 const RIPPLE_HOLD  = 0.5                                                        // fraction of its life spent at full strength
-const SHADOW_MIN   = 0.10                                                       // char alpha at the very centre of the wake
+const SHADOW_MIN   = 0.10                                                       // char alpha immediately behind the front
+const SHADOW_DEPTH = 4                                                          // cells of wake trailing the front
 const STEPS        = 8                                                          // alpha quantisation, see composeRipples
 
 /* STATE */
@@ -48,10 +49,17 @@ function toCell(ev) {
   return { cx: x, cy: y }
 }
 
+const HOVER_SHAPE = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]]
+
 function buildHover() {
   hover.clear()
   if (!at || !grid) return
-  hover.set(at.cy * grid.cols + at.cx, { color: HOVER_COLOR })
+  const { cols, rows } = grid
+  for (const [dx, dy] of HOVER_SHAPE) {
+    const x = at.cx + dx, y = at.cy + dy
+    if (x < 0 || y < 0 || x >= cols || y >= rows) continue
+    hover.set(y * cols + x, { color: HOVER_COLOR })
+  }
 }
 
 function composeRipples(now) {
@@ -74,15 +82,22 @@ function composeRipples(now) {
       const inner = lo * lo - dy * dy
       const xi = inner > 0 ? Math.sqrt(inner) : -1
 
-      // the wake: everything the front has already passed on this row
+      // the wake: a band trailing the front, not everything behind it
       if (xi >= 0) {
-        const w0 = Math.max(0, Math.ceil(rp.cx - xi)), w1 = Math.min(cols - 1, Math.floor(rp.cx + xi))
-        for (let x = w0; x <= w1; x++) {
-          const d = Math.sqrt((x - rp.cx) * (x - rp.cx) + dy * dy)
-          const t = lo > 0 ? d / lo : 1
-          const depth = SHADOW_MIN + (1 - SHADOW_MIN) * t * t * Math.sqrt(t)      // dark across the disc, lifting only near the front
-          const a = Math.round((1 - (1 - depth) * fade) * STEPS) / STEPS
-          if (a < 1) ripples.set(y * cols + x, { color: `rgba(${SHADOW_RGB},${a})` })
+        const back = Math.max(0, lo - SHADOW_DEPTH)
+        const wi = back > 0 ? Math.sqrt(Math.max(0, back * back - dy * dy)) : 0
+        const spansW = wi > 0
+          ? [[rp.cx - xi, rp.cx - wi], [rp.cx + wi, rp.cx + xi]]
+          : [[rp.cx - xi, rp.cx + xi]]
+        for (const [p0, p1] of spansW) {
+          const w0 = Math.max(0, Math.ceil(p0)), w1 = Math.min(cols - 1, Math.floor(p1))
+          for (let x = w0; x <= w1; x++) {
+            const d = Math.sqrt((x - rp.cx) * (x - rp.cx) + dy * dy)
+            const u = Math.min(1, Math.max(0, (d - back) / Math.max(0.001, lo - back)))
+            const depth = 1 - (1 - SHADOW_MIN) * u * u * Math.sqrt(u)              // darkest just behind the front, gone further in
+            const a = Math.round((1 - (1 - depth) * fade) * STEPS) / STEPS
+            if (a < 1) ripples.set(y * cols + x, { color: `rgba(${SHADOW_RGB},${a})` })
+          }
         }
       }
 

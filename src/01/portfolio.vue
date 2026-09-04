@@ -290,7 +290,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* BORDER */ border-radius: 50%;
   /* MOTION */ transition: transform var(--animate-fast), box-shadow var(--animate-fast);
 
-  & svg { width: .55rem; height: .55rem; display: block; fill: currentColor; }
+  & svg { width: 1.1rem; height: 1.1rem; display: block; fill: currentColor; }
 
 }
 
