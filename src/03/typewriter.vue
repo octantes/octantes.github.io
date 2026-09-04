@@ -1,6 +1,9 @@
 <script setup>
 
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useStore } from '../04/store.js'
+
+const store = useStore()
 
 const props = defineProps({
   shader:    { type: Object, default: null },                                   // the Shader component ref
@@ -23,17 +26,29 @@ const STEPS        = 8                                                          
 const POEM_COLOR   = '#AAABAC'                                                  // COLOR_BORDER, the brightest thing the field owns
 const POEM_TYPE_MS = 55                                                         // per character, typing in and typing away
 const POEM_HOLD_MS = 5200                                                       // how long the finished phrase stands
-const POEM_VOID    = 9                                                          // cells of shadow beyond the composition's edge
+const POEM_VOID    = 13                                                         // cells of shadow beyond the composition's edge
+const POEM_VOID_MS = 700                                                        // the void opening, and later closing, on its own
 const POEM_FLOOR   = 0.55                                                       // fraction of the void held at full depth, see buildPoem
 const POEM_CLICKS  = 5                                                          // on the home button
 const POEM_WINDOW  = 2500                                                       // ms they have to land in
 
-const POEM = [
-  { text: 'nadie es dueño', dx: -13, dy: -5 },
-  { text: 'de la luz',      dx:   1, dy: -1 },
-  { text: 'que emite',      dx:  -7, dy:  2 },
-  { text: 'tu pantalla',    dx:   4, dy:  5 },
-]
+const POEMS = {
+
+  es: [
+    { text: 'nadie es dueño', dx: -13, dy: -5 },
+    { text: 'de la luz',      dx:   1, dy: -1 },
+    { text: 'que emite',      dx:  -7, dy:  2 },
+    { text: 'tu pantalla',    dx:   4, dy:  5 },
+  ],
+
+  en: [
+    { text: 'no one owns',    dx: -12, dy: -5 },
+    { text: 'the light',      dx:   2, dy: -1 },
+    { text: 'your screen',    dx:  -8, dy:  2 },
+    { text: 'gives off',      dx:   5, dy:  5 },
+  ],
+
+}
 const SHADOW_STEP  = Array.from({ length: STEPS + 1 }, (_, i) => `rgba(${SHADOW_RGB},${i / STEPS})`)
 
 /* STATE */
@@ -152,9 +167,9 @@ function frontOf(rp, now) {
   }
 }
 
-function layout(g) {
+function layout(g, lines) {
   const glyphs = []
-  for (const line of POEM) {
+  for (const line of lines) {
     for (let i = 0; i < line.text.length; i++) glyphs.push({ ch: line.text[i], x: line.dx + i, y: line.dy })
   }
   let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity
@@ -173,7 +188,7 @@ let pending = 0
 function recite() {
   if (!live) { pending = performance.now(); return }
   if (!grid && !readGrid()) return
-  recital = { ...layout(grid), born: performance.now() }
+  recital = { ...layout(grid, POEMS[store.lang] || POEMS.es), born: performance.now() }
   recitalKey = null
   start()
 }
@@ -185,18 +200,24 @@ function buildPoem(now) {
   const n = recital.glyphs.length
   const type = n * POEM_TYPE_MS
   const e = now - recital.born
-  const tHold = type + POEM_HOLD_MS, tEnd = tHold + type
+
+  const tOpen = POEM_VOID_MS                                                    // void alone
+  const tIn   = tOpen + type                                                    // typing in
+  const tHold = tIn + POEM_HOLD_MS                                              // standing
+  const tOut  = tHold + type                                                    // typing away
+  const tEnd  = tOut + POEM_VOID_MS                                             // void alone again
 
   if (e >= tEnd) { recital = null; poem.clear(); recitalKey = null; return }
 
-  const shown = e < type  ? Math.min(n, Math.floor(e / POEM_TYPE_MS))
-              : e < tHold ? n
-              : Math.max(0, n - Math.floor((e - tHold) / POEM_TYPE_MS))
-
-  const raw = e < type ? e / type : e < tHold ? 1 : 1 - (e - tHold) / type
+  const raw = e < tOpen ? e / tOpen : e < tOut ? 1 : 1 - (e - tOut) / POEM_VOID_MS
   const presence = Math.round(Math.min(1, Math.max(0, raw)) * STEPS) / STEPS
 
-  const key = shown + ':' + presence
+  const from = e < tHold ? 0 : Math.min(n, Math.floor((e - tHold) / POEM_TYPE_MS))
+  const to   = e < tOpen ? 0
+             : e < tIn   ? Math.min(n, Math.floor((e - tOpen) / POEM_TYPE_MS))
+             : n
+
+  const key = from + ':' + to + ':' + presence
   if (key === recitalKey) return
   recitalKey = key
 
@@ -223,7 +244,7 @@ function buildPoem(now) {
     }
   }
 
-  for (let i = 0; i < shown; i++) {
+  for (let i = from; i < to; i++) {
     const p = recital.glyphs[i]
     if (p.x < 0 || p.y < 0 || p.x >= cols || p.y >= rows) continue
     poem.set(p.y * cols + p.x, { ch: p.ch, color: POEM_COLOR })
