@@ -16,9 +16,10 @@ const SHADOW_RGB   = '152,108,152'                                              
 const RIPPLE_MS    = 70                                                         // one cell of radius per tick
 const RIPPLE_MAX   = 9                                                          // cells of radius, and then it is over
 const RIPPLE_WIDTH = 1                                                          // cells thick
-const SHADOW_MIN   = 0.10                                                       // char alpha immediately behind the front
-const SHADOW_DEPTH = 4                                                          // cells of wake trailing the front
+const RIPPLE_FADE  = 0.35                                                       // fraction of its life spent dissolving
+const SHADOW_MIN   = 0.10                                                       // char alpha at the centre of the shadow
 const STEPS        = 8                                                          // alpha quantisation, see composeRipples
+const SHADOW_STEP  = Array.from({ length: STEPS + 1 }, (_, i) => `rgba(${SHADOW_RGB},${i / STEPS})`)
 
 /* STATE */
 
@@ -52,7 +53,7 @@ const HOVER_PLUS    = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]]
 const HOVER_DIAMOND = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1],                // the plus
                        [-1, -1], [1, -1], [-1, 1], [1, 1],                      // filled to a 3x3
                        [-2, 0], [2, 0], [0, -2], [0, 2]]                        // arms out one further
-const HOVER_SHAPE   = HOVER_DIAMOND
+const HOVER_SHAPE   = HOVER_PLUS
 
 function buildHover() {
   hover.clear()
@@ -65,52 +66,68 @@ function buildHover() {
   }
 }
 
+function dither(x, y) { return ((x * 73856093) ^ (y * 19349663)) >>> 24 }        // 0..255, stable per cell
+
 function composeRipples(now) {
   ripples.clear()
   if (!grid) return
-  const { cols, rows } = grid
   active = active.filter(rp => (now - rp.born) / RIPPLE_MS < RIPPLE_MAX)
-  for (const rp of active) {
-    const r = (now - rp.born) / RIPPLE_MS
-    const hi = r + RIPPLE_WIDTH / 2, lo = Math.max(0, r - RIPPLE_WIDTH / 2)
+  if (!active.length) return
 
-    const y0 = Math.max(0, Math.ceil(rp.cy - hi)), y1 = Math.min(rows - 1, Math.floor(rp.cy + hi))
+  for (const rp of active) shadowOf(rp, now)
+  for (const rp of active) frontOf(rp, now)
+}
 
-    for (let y = y0; y <= y1; y++) {
-      const dy = y - rp.cy
-      const outer = hi * hi - dy * dy
-      if (outer < 0) continue
-      const xo = Math.sqrt(outer)
-      const inner = lo * lo - dy * dy
-      const xi = inner > 0 ? Math.sqrt(inner) : -1
+function ringGeometry(rp, now) {
+  const r = (now - rp.born) / RIPPLE_MS
+  return {
+    r,
+    fade: Math.min(1, (1 - r / RIPPLE_MAX) / RIPPLE_FADE),                      // 1 until the last stretch, then down
+    hi: r + RIPPLE_WIDTH / 2,
+    lo: Math.max(0, r - RIPPLE_WIDTH / 2),
+  }
+}
 
-      // the wake: a band trailing the front, not everything behind it
-      if (xi >= 0) {
-        const back = Math.max(0, lo - SHADOW_DEPTH)
-        const wi = back > 0 ? Math.sqrt(Math.max(0, back * back - dy * dy)) : 0
-        const spansW = wi > 0
-          ? [[rp.cx - xi, rp.cx - wi], [rp.cx + wi, rp.cx + xi]]
-          : [[rp.cx - xi, rp.cx + xi]]
-        for (const [p0, p1] of spansW) {
-          const w0 = Math.max(0, Math.ceil(p0)), w1 = Math.min(cols - 1, Math.floor(p1))
-          for (let x = w0; x <= w1; x++) {
-            const d = Math.sqrt((x - rp.cx) * (x - rp.cx) + dy * dy)
-            const u = Math.min(1, Math.max(0, (d - back) / Math.max(0.001, lo - back)))
-            const depth = 1 - (1 - SHADOW_MIN) * u * u * Math.sqrt(u)              // darkest just behind the front, gone further in
-            const a = Math.round(depth * STEPS) / STEPS
-            if (a < 1) ripples.set(y * cols + x, { color: `rgba(${SHADOW_RGB},${a})` })
-          }
-        }
-      }
+function shadowOf(rp, now) {
+  const { cols, rows } = grid
+  const { fade, hi, lo } = ringGeometry(rp, now)
+  if (lo <= 0) return
+  const y0 = Math.max(0, Math.ceil(rp.cy - lo)), y1 = Math.min(rows - 1, Math.floor(rp.cy + lo))
+  for (let y = y0; y <= y1; y++) {
+    const dy = y - rp.cy
+    const inner = lo * lo - dy * dy
+    if (inner <= 0) continue
+    const xi = Math.sqrt(inner)
+    const x0 = Math.max(0, Math.ceil(rp.cx - xi)), x1 = Math.min(cols - 1, Math.floor(rp.cx + xi))
+    for (let x = x0; x <= x1; x++) {
+      const dx = x - rp.cx
+      const t = Math.sqrt(dx * dx + dy * dy) / lo
+      const base = SHADOW_MIN + (1 - SHADOW_MIN) * t * t * Math.sqrt(t)          // deepest at the centre
+      const a = Math.round((1 - (1 - base) * fade) * STEPS) / STEPS
+      if (a < 1) ripples.set(y * cols + x, { color: SHADOW_STEP[Math.round(a * STEPS)] })
+    }
+  }
+}
 
-      // the front itself
-      const ring = RIPPLE_COLOR
-      const spans = xi < 0
-        ? [[rp.cx - xo, rp.cx + xo]]
-        : [[rp.cx - xo, rp.cx - xi], [rp.cx + xi, rp.cx + xo]]
-      for (const [p0, p1] of spans) {
-        const x0 = Math.max(0, Math.ceil(p0)), x1 = Math.min(cols - 1, Math.floor(p1))
-        for (let x = x0; x <= x1; x++) ripples.set(y * cols + x, { color: ring })
+function frontOf(rp, now) {
+  const { cols, rows } = grid
+  const { fade, hi, lo } = ringGeometry(rp, now)
+  const y0 = Math.max(0, Math.ceil(rp.cy - hi)), y1 = Math.min(rows - 1, Math.floor(rp.cy + hi))
+  for (let y = y0; y <= y1; y++) {
+    const dy = y - rp.cy
+    const outer = hi * hi - dy * dy
+    if (outer < 0) continue
+    const xo = Math.sqrt(outer)
+    const inner = lo * lo - dy * dy
+    const xi = inner > 0 ? Math.sqrt(inner) : -1
+    const spans = xi < 0
+      ? [[rp.cx - xo, rp.cx + xo]]
+      : [[rp.cx - xo, rp.cx - xi], [rp.cx + xi, rp.cx + xo]]
+    for (const [p0, p1] of spans) {
+      const x0 = Math.max(0, Math.ceil(p0)), x1 = Math.min(cols - 1, Math.floor(p1))
+      for (let x = x0; x <= x1; x++) {
+        if (fade < 1 && dither(x, y) >= fade * 256) continue
+        ripples.set(y * cols + x, { color: RIPPLE_COLOR })
       }
     }
   }
