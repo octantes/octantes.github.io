@@ -19,6 +19,21 @@ const RIPPLE_WIDTH = 1                                                          
 const RIPPLE_FADE  = 0.35                                                       // fraction of its life spent dissolving
 const SHADOW_MIN   = 0.10                                                       // char alpha at the centre of the shadow
 const STEPS        = 8                                                          // alpha quantisation, see composeRipples
+
+const POEM_COLOR   = '#AAABAC'                                                  // COLOR_BORDER, the brightest thing the field owns
+const POEM_TYPE_MS = 55                                                         // per character, typing in and typing away
+const POEM_HOLD_MS = 5200                                                       // how long the finished phrase stands
+const POEM_VOID    = 9                                                          // cells of shadow beyond the composition's edge
+const POEM_FLOOR   = 0.55                                                       // fraction of the void held at full depth, see buildPoem
+const POEM_CLICKS  = 5                                                          // on the home button
+const POEM_WINDOW  = 2500                                                       // ms they have to land in
+
+const POEM = [
+  { text: 'nadie es dueño', dx: -13, dy: -5 },
+  { text: 'de la luz',      dx:   1, dy: -1 },
+  { text: 'que emite',      dx:  -7, dy:  2 },
+  { text: 'tu pantalla',    dx:   4, dy:  5 },
+]
 const SHADOW_STEP  = Array.from({ length: STEPS + 1 }, (_, i) => `rgba(${SHADOW_RGB},${i / STEPS})`)
 
 /* STATE */
@@ -26,17 +41,21 @@ const SHADOW_STEP  = Array.from({ length: STEPS + 1 }, (_, i) => `rgba(${SHADOW_
 const cells   = new Map()                                                       // the map the shader reads
 const hover   = new Map()                                                       // this effect's own cells
 const ripples = new Map()                                                       // and this one's
+const poem    = new Map()                                                       // and this one's
 
 let grid   = null                                                               // { cols, rows, fontSize, rect }
 let at     = null                                                               // pointer, in cells
 let live   = false                                                              // is the pointer layer wanted at all
 let active = []                                                                 // { cx, cy, born }
+let recital = null                                                              // { glyphs, cx, cy, rx, ry, born }
+let recitalKey = null                                                           // last built state, so the void is not rebuilt per frame
 let frame  = 0
 
 function compose() {
   cells.clear()
   for (const [k, v] of hover)   cells.set(k, v)
   for (const [k, v] of ripples) cells.set(k, v)
+  for (const [k, v] of poem)    cells.set(k, v)
 }
 
 function readGrid() { grid = props.shader?.gridInfo?.() || null; return grid }
@@ -133,10 +152,89 @@ function frontOf(rp, now) {
   }
 }
 
+function layout(g) {
+  const glyphs = []
+  for (const line of POEM) {
+    for (let i = 0; i < line.text.length; i++) glyphs.push({ ch: line.text[i], x: line.dx + i, y: line.dy })
+  }
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity
+  for (const p of glyphs) { if (p.x < x0) x0 = p.x; if (p.x > x1) x1 = p.x; if (p.y < y0) y0 = p.y; if (p.y > y1) y1 = p.y }
+  const ox = Math.round(g.cols / 2 - (x0 + x1) / 2)
+  const oy = Math.round(g.rows / 2 - (y0 + y1) / 2)
+  return {
+    glyphs: glyphs.filter(p => p.ch !== ' ').map(p => ({ ch: p.ch, x: p.x + ox, y: p.y + oy })),
+    cx: (x0 + x1) / 2 + ox, cy: (y0 + y1) / 2 + oy,
+    rx: (x1 - x0) / 2 + POEM_VOID, ry: (y1 - y0) / 2 + POEM_VOID,
+  }
+}
+
+let pending = 0
+
+function recite() {
+  if (!live) { pending = performance.now(); return }
+  if (!grid && !readGrid()) return
+  recital = { ...layout(grid), born: performance.now() }
+  recitalKey = null
+  start()
+}
+
+function buildPoem(now) {
+  if (!recital) { if (poem.size) { poem.clear(); recitalKey = null } return }
+  if (!live) { recital = null; poem.clear(); recitalKey = null; return }
+
+  const n = recital.glyphs.length
+  const type = n * POEM_TYPE_MS
+  const e = now - recital.born
+  const tHold = type + POEM_HOLD_MS, tEnd = tHold + type
+
+  if (e >= tEnd) { recital = null; poem.clear(); recitalKey = null; return }
+
+  const shown = e < type  ? Math.min(n, Math.floor(e / POEM_TYPE_MS))
+              : e < tHold ? n
+              : Math.max(0, n - Math.floor((e - tHold) / POEM_TYPE_MS))
+
+  const raw = e < type ? e / type : e < tHold ? 1 : 1 - (e - tHold) / type
+  const presence = Math.round(Math.min(1, Math.max(0, raw)) * STEPS) / STEPS
+
+  const key = shown + ':' + presence
+  if (key === recitalKey) return
+  recitalKey = key
+
+  poem.clear()
+  const { cols, rows } = grid
+  const { cx, cy, rx, ry } = recital
+
+  if (presence > 0) {
+    const y0 = Math.max(0, Math.ceil(cy - ry)), y1 = Math.min(rows - 1, Math.floor(cy + ry))
+    for (let y = y0; y <= y1; y++) {
+      const ny = (y - cy) / ry
+      const span = 1 - ny * ny
+      if (span <= 0) continue
+      const half = rx * Math.sqrt(span)
+      const x0 = Math.max(0, Math.ceil(cx - half)), x1 = Math.min(cols - 1, Math.floor(cx + half))
+      for (let x = x0; x <= x1; x++) {
+        const nx = (x - cx) / rx
+        const d = Math.sqrt(nx * nx + ny * ny)
+        const k = Math.max(0, (d - POEM_FLOOR) / (1 - POEM_FLOOR))                // flat across the words, falling off outside them
+        const base = SHADOW_MIN + (1 - SHADOW_MIN) * Math.pow(k, 1.6)
+        const a = Math.round((1 - (1 - base) * presence) * STEPS) / STEPS
+        if (a < 1) poem.set(y * cols + x, { color: SHADOW_STEP[Math.round(a * STEPS)] })
+      }
+    }
+  }
+
+  for (let i = 0; i < shown; i++) {
+    const p = recital.glyphs[i]
+    if (p.x < 0 || p.y < 0 || p.x >= cols || p.y >= rows) continue
+    poem.set(p.y * cols + p.x, { ch: p.ch, color: POEM_COLOR })
+  }
+}
+
 function tick(now) {
   composeRipples(now)
+  buildPoem(now)
   compose()
-  frame = active.length ? requestAnimationFrame(tick) : 0
+  frame = (active.length || recital) ? requestAnimationFrame(tick) : 0
 }
 
 function start() { if (!frame) frame = requestAnimationFrame(tick) }
@@ -167,7 +265,16 @@ function onDown(ev) {
   start()
 }
 
-function onResize() { grid = null; at = null; hover.clear(); compose() }
+function onResize() { grid = null; at = null; hover.clear(); recital = null; poem.clear(); compose() }
+
+let knocks = 0, firstKnock = 0
+
+function onDocClick(ev) {
+  if (!ev.target?.closest?.('.logo-xx')) return
+  const now = performance.now()
+  if (now - firstKnock > POEM_WINDOW) { firstKnock = now; knocks = 0 }
+  if (++knocks >= POEM_CLICKS) { knocks = 0; recite() }
+}
 
 function checkLive() { live = props.enabled && window.innerWidth > 1080 }
 
@@ -195,21 +302,27 @@ function unbind() {
 
 watch(() => props.shader,    s => { if (s?.attachOverlay) s.attachOverlay(cells) }, { immediate: true })
 watch(() => props.container, el => bind(el), { immediate: true })
-watch(() => props.enabled, () => { checkLive(); if (!live) { at = null; active = []; hover.clear(); ripples.clear(); compose() } })
+watch(() => props.enabled, () => {
+  checkLive()
+  if (!live) { at = null; active = []; recital = null; hover.clear(); ripples.clear(); poem.clear(); compose(); return }
+  if (pending && performance.now() - pending < POEM_WINDOW) { pending = 0; grid = null; recite() } else { pending = 0 }
+})
 
 onMounted(() => {
   checkLive()
   window.addEventListener('resize', onResize)
   window.addEventListener('resize', checkLive)
+  document.addEventListener('click', onDocClick)
 })
 
 onBeforeUnmount(() => {
   unbind()
   window.removeEventListener('resize', onResize)
   window.removeEventListener('resize', checkLive)
+  document.removeEventListener('click', onDocClick)
   if (frame) cancelAnimationFrame(frame)
-  active = []
-  hover.clear(); ripples.clear(); cells.clear()
+  active = []; recital = null
+  hover.clear(); ripples.clear(); poem.clear(); cells.clear()
   props.shader?.attachOverlay?.(null)
 })
 
