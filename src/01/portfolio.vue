@@ -324,7 +324,10 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   & .portal-line,    & .portal-trigger    { background-color: var(--lirio); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--lirio); width: 2.5rem; }
-  &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--lirio); border-color: var(--lirio); box-shadow: none; }
+  &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--lirio); border-color: var(--lirio); }
+
+  &:hover   .ray-text { box-shadow: 0 0 2rem   -0.5rem var(--lirio-a21), 0 0 0.8rem -0.5rem  var(--lirio-a08); }
+  &.selected .ray-text { box-shadow: 0 0 3.2rem -0.4rem var(--lirio-a21), 0 0 1rem   -0.45rem var(--lirio-a15); }
 
   &:hover .ray-portal .portal-line        { width: 4rem; }
   
@@ -338,7 +341,10 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   & .portal-line,    & .portal-trigger    { background-color: var(--cristal); }
   &:hover .ray-line, &.selected .ray-line { background-color: var(--cristal); width: 2.5rem; }
-  &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--cristal); border-color: var(--cristal); box-shadow: none; }
+  &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--cristal); border-color: var(--cristal); }
+
+  &:hover   .ray-text { box-shadow: 0 0 2rem   -0.5rem var(--cristal-a21), 0 0 0.8rem -0.5rem  var(--cristal-a08); }
+  &.selected .ray-text { box-shadow: 0 0 3.2rem -0.4rem var(--cristal-a21), 0 0 1rem   -0.45rem var(--cristal-a15); }
 
   &:hover .ray-portal .portal-line { width: 4rem; }
   
