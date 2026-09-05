@@ -513,7 +513,8 @@ export const useStore = defineStore('store', () => {
     if (!post) { resetSEOTags(); return }
 
     const isEn = lang.value === 'en'
-    const title = (isEn && post.bilingual && post.titleEn) ? post.titleEn : post.title
+
+    const title = ((isEn && post.bilingual && post.titleEn) ? post.titleEn : post.title) || post.slug
     const description = (isEn && post.bilingual && post.descriptionEn) ? post.descriptionEn : post.description
     const slug = post.slug
 
