@@ -143,6 +143,11 @@
   --radius-ll: 10px;
   --radius-mm: 08px;
   --radius-ss: 05px;
+
+  /* the app's rhythm, so spacing here is chosen from the same ladder */
+  --space-xs: 0.40rem; --space-ss: 0.50rem; --space-mm: 0.75rem;
+  --space-ll: 1.00rem; --space-xl: 1.50rem; --space-xxl: 2.00rem;
+  --leading-base: 1.5;
   --radius-xs: 03px;
 
   --animate-fast: 0.25s ease;
@@ -165,7 +170,26 @@ body                             {
   /* LAYOUT */ display: grid; min-height: 100vh; padding: 0; margin: 0; grid-template-columns: 260px 1fr;
   /* FONT   */ font-family: 'Inconsolata', monospace; font-size: 13px; line-height: 1.4;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
-  /* IMG    */ background-image: url(/assets/square.gif); background-repeat: repeat-x;
+
+  /* BAND   */ background-image: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);
+               background-repeat: repeat-x; background-size: auto 8px;
+               -webkit-mask-image: url(/assets/square.gif), linear-gradient(#000, #000);
+               mask-image: url(/assets/square.gif), linear-gradient(#000, #000);
+               -webkit-mask-repeat: repeat-x, no-repeat;
+               mask-repeat: repeat-x, no-repeat;
+               -webkit-mask-size: auto 8px, 100% 100%;
+               mask-size: auto 8px, 100% 100%;
+               mask-mode: luminance, alpha;
+               -webkit-mask-composite: source-over;
+               mask-composite: add;
+
+}
+
+body::after {
+
+  /* LAYOUT */ content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  /* FILL   */ background-image: url('/assets/noise.webp'); opacity: .05;
+  /* SCALE  */ image-rendering: pixelated;
 
 }
 
@@ -235,10 +259,13 @@ body                             {
 .cat-header                      { color: var(--cristal); font-weight: 700; opacity: 0.6; margin: .25rem; }
 
 .nav-links                       { display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between;    }
-.nav-links a                     { display: inline-block; border: 1px solid var(--polvo); padding: 2px 6px; color: var(--cristal); }
+.nav-links a                     { display: inline-block; border: 1px solid var(--polvo); padding: var(--space-xs) var(--space-ss); color: var(--cristal); border-radius: var(--radius-ss); }
 .nav-links a:hover               { font-weight: 700; text-decoration: none; border-color: var(--cristal);                          }
 
-.post-content p                  { margin-top: .5rem; margin-bottom: .5rem; }
+.nota-prosa, .nota-prosa p, .nota-prosa li, .nota-prosa blockquote,
+.nota-verso, .nota-verso p, .nota-verso li       { font-family: var(--font-main); line-height: var(--leading-base); }
+
+.post-content p                  { margin-top: var(--space-mm); margin-bottom: var(--space-mm); }
 .post-header                     { margin-bottom: 1rem;                     }
 .post-content img                { border: none; max-width: 100%; height: auto; }
 .post-content p a                { 
@@ -303,7 +330,7 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus, tbody tr:focus
 
 h1                               { margin: 0; }
 p                                { margin: 0; max-width: none;                                     }
-img                              { border: 1px solid var(--polvo); margin: none;                   }
+img                              { border: 1px solid var(--polvo); margin: none; border-radius: var(--radius-ss); }
 
 video.gifvideo                   { display: block; max-width: 100%; width: 100%; height: auto;
                                    border: 1px solid var(--polvo);                                 }
