@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 
@@ -24,64 +24,121 @@ function figlet(code) {
   return [0, 1, 2, 3, 4, 5].map(r => digits.map(d => d[r]).join('')).join('\n')
 }
 
-const REPEATS = 4                                                               // times each word is thrown
+const REPEATS  = 6                                                              // times each word is thrown
+const TRIES    = 500                                                            // placements attempted per word, per size
+const SHRINKS  = 3                                                              // times a word will try again smaller before it is dropped
+const GAP      = 3                                                              // px of air required between two words
 
-function scatter(words) {
+function measurer(el) {
+  const font = getComputedStyle(el).fontFamily
+  const c = document.createElement('canvas').getContext('2d')
+  return (text, px) => { c.font = `${px}px ${font}`; return c.measureText(text).width }
+}
+
+function overlaps(a, b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
+}
+
+function scatter(words, el, stage, card) {
+
+  const W = stage.width, H = stage.height
+  const px = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+  const width = measurer(el)
 
   const thrown = []
   for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w)
-  for (let i = thrown.length - 1; i > 0; i--) {                                 // shuffle, so repeats never land in a ring
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
-  }
 
-  const step = 360 / thrown.length
-
-  return thrown.map((text, i) => {
-
-    const angle = (step * i + Math.random() * step) * Math.PI / 180
-    const roll  = Math.random()
-    const tier  = roll < 0.14 ? 2 : roll < 0.66 ? 1 : 0                         // giant, large, and merely big
-
-    const reach = tier === 2 ? 0.44 + Math.random() * 0.30
-                : tier === 1 ? 0.38 + Math.random() * 0.26
-                :              0.32 + Math.random() * 0.24
-
-    const size  = tier === 2 ? 7.5 + Math.random() * 3.5
-                : tier === 1 ? 3.6 + Math.random() * 2.6
-                :              1.7 + Math.random() * 1.0
-
+  // size first, then place biggest first - they are the ones with nowhere else to go
+  const sized = thrown.map(text => {
+    const roll = Math.random()
+    const tier = roll < 0.12 ? 2 : roll < 0.52 ? 1 : 0
+    const rem  = tier === 2 ? 7.5 + Math.random() * 3.5
+               : tier === 1 ? 3.6 + Math.random() * 2.6
+               :              1.7 + Math.random() * 1.0
     const alpha = tier === 2 ? 0.045 + Math.random() * 0.035
                 : tier === 1 ? 0.10  + Math.random() * 0.09
                 :              0.24  + Math.random() * 0.26
+    return { text, tier, rem, alpha, angle: Math.random() * 18 - 9 }
+  }).sort((a, b) => b.rem - a.rem)
 
-    return {
-      text,
-      style: {
-        left:      `${50 + Math.cos(angle) * reach * 100}%`,
-        top:       `${50 + Math.sin(angle) * reach * 82}%`,
-        transform: `translate(-50%, -50%) rotate(${(Math.random() * 18 - 9).toFixed(1)}deg)`,
-        fontSize:  `${size.toFixed(2)}rem`,
-        opacity:   alpha.toFixed(2),
-      },
+  const taken = [card]
+  const out = []
+
+  for (const item of sized) {
+
+    let placed = false
+
+    for (let shrink = 0; shrink <= SHRINKS && !placed; shrink++) {
+
+      const rem  = item.rem * Math.pow(0.72, shrink)
+      const size = rem * px
+      const w0 = width(item.text, size), h0 = size * 1.15
+      const rad = Math.abs(item.angle) * Math.PI / 180
+      const w = w0 * Math.cos(rad) + h0 * Math.sin(rad) + GAP
+      const h = w0 * Math.sin(rad) + h0 * Math.cos(rad) + GAP
+
+      for (let n = 0; n < TRIES; n++) {
+
+        const angle = Math.random() * Math.PI * 2
+        const reach = item.tier === 2 ? 0.42 + Math.random() * 0.42
+                    : item.tier === 1 ? 0.34 + Math.random() * 0.48
+                    :                   0.28 + Math.random() * 0.56
+
+        const cx = W / 2 + Math.cos(angle) * reach * W / 2
+        const cy = H / 2 + Math.sin(angle) * reach * H / 2
+        const box = { x: cx - w / 2, y: cy - h / 2, w, h }
+
+        if (taken.some(t => overlaps(box, t))) continue
+
+        taken.push(box)
+        out.push({
+          text: item.text,
+          style: {
+            left:      `${(cx / W) * 100}%`,
+            top:       `${(cy / H) * 100}%`,
+            transform: `translate(-50%, -50%) rotate(${item.angle.toFixed(1)}deg)`,
+            fontSize:  `${rem.toFixed(2)}rem`,
+            opacity:   item.alpha.toFixed(2),
+          },
+        })
+        placed = true
+        break
+
+      }
     }
-  })
+  }
+
+  return out
 
 }
 
 const art   = figlet(props.code)
 const copy  = store.t.notFound
-const words = ref(scatter((copy.byCode[String(props.code)] || copy.byCode.default).split(' ')))
+const stage = ref(null)
+const card  = ref(null)
+const words = ref([])
+
+onMounted(() => {
+  const s = stage.value?.getBoundingClientRect()
+  const c = card.value?.getBoundingClientRect()
+  if (!s || !c) return
+  words.value = scatter(
+    (copy.byCode[String(props.code)] || copy.byCode.default).split(' '),
+    stage.value,
+    { width: s.width, height: s.height },
+    { x: c.x - s.x - 24, y: c.y - s.y - 24, w: c.width + 48, h: c.height + 48 },
+  )
+})
 
 </script>
 
 <template>
 
-  <div class="errorstate">
+  <div class="errorstate" ref="stage">
 
     <span v-for="(w, i) in words" :key="i" class="thrown" :style="w.style" aria-hidden="true">{{ w.text }}</span>
 
-    <div class="errorcard" role="alert">
+    <div class="errorcard" role="alert" ref="card">
 
       <pre class="errorart" aria-hidden="true">{{ art }}</pre>
       <p class="errorline">{{ copy.byCode[String(code)] || copy.byCode.default }}</p>

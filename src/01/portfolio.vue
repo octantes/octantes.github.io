@@ -10,7 +10,7 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 const WELCOME_DELAY = 650                                                                                                             // let the page settle before it moves
-const WELCOME_WALK  = 2                                                                                                               // rays crossed on the way, the welcome being the third stop
+const WELCOME_WALK  = 1                                                                                                               // one ray crossed: the one under the welcome, then the welcome
 const WELCOME_STEP  = 520                                                                                                             // per project - just past --animate-mid, so each rotation lands
 
 const welcomeRay = computed(() => ({
@@ -385,6 +385,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
     /* BOX    */ margin: 0;
     /* FONT   */ font-family: var(--font-mono); color: var(--humo); font-size: 0.85rem; line-height: 1.5;
+    /* CLAMP  */ display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
 
   }
 
