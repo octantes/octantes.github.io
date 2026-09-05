@@ -9,7 +9,6 @@ const router            = useRouter()
 const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
-const WELCOME_DELAY = 650                                                                                                             // let the page settle before it moves
 
 const welcomeRay = computed(() => ({
   slug: WELCOME_SLUG,
@@ -100,21 +99,6 @@ function handleRayClick(proj) {
 }
 function openGithub()         { window.open('https://github.com/octantes', '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
-
-let welcomed = false
-
-async function openWelcome() {
-  if (welcomed || currentProject.value) return
-  welcomed = true
-
-  await new Promise(r => setTimeout(r, WELCOME_DELAY))
-  if (currentProject.value) return
-
-  currentProject.value = welcomeRay.value
-
-}
-
-watch(portfolioProjects, list => { if (list.length) openWelcome() }, { immediate: true })
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
