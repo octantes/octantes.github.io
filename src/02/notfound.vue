@@ -10,19 +10,18 @@ const router = useRouter()
 const store  = useStore()
 
 const GLYPHS = {
-  '0': ['01110', '10001', '10011', '10101', '11001', '10001', '01110'],
-  '1': ['00100', '01100', '00100', '00100', '00100', '00100', '01110'],
-  '2': ['01110', '10001', '00001', '00010', '00100', '01000', '11111'],
-  '3': ['11111', '00010', '00100', '00010', '00001', '10001', '01110'],
-  '4': ['00010', '00110', '01010', '10010', '11111', '00010', '00010'],
-  '5': ['11111', '10000', '11110', '00001', '00001', '10001', '01110'],
+  '0': [' ██████╗ ', '██╔═████╗', '██║██╔██║', '████╔╝██║', '╚██████╔╝', ' ╚═════╝ '],
+  '1': [' ██╗', '███║', '╚██║', ' ██║', ' ██║', ' ╚═╝'],
+  '2': ['██████╗ ', '╚════██╗', ' █████╔╝', '██╔═══╝ ', '███████╗', '╚══════╝'],
+  '3': ['██████╗ ', '╚════██╗', ' █████╔╝', ' ╚═══██╗', '██████╔╝', '╚═════╝ '],
+  '4': ['██╗  ██╗', '██║  ██║', '███████║', '╚════██║', '     ██║', '     ╚═╝'],
+  '5': ['███████╗', '██╔════╝', '███████╗', '╚════██║', '███████║', '╚══════╝'],
 }
 
-function bitmap(code) {
-  return String(code).split('')
-    .map(d => GLYPHS[d])
-    .filter(Boolean)
-    .map(rows => rows.flatMap(r => r.split('').map(c => c === '1')))
+function figlet(code) {
+  const digits = String(code).split('').map(d => GLYPHS[d]).filter(Boolean)
+  if (!digits.length) return String(code)
+  return [0, 1, 2, 3, 4, 5].map(r => digits.map(d => d[r]).join('')).join('\n')
 }
 
 function scatter(words) {
@@ -43,7 +42,7 @@ function scatter(words) {
   })
 }
 
-const art   = bitmap(props.code)
+const art   = figlet(props.code)
 const copy  = store.t.notFound
 const words = ref(scatter((copy.byCode[String(props.code)] || copy.byCode.default).split(' ')))
 
@@ -57,11 +56,7 @@ const words = ref(scatter((copy.byCode[String(props.code)] || copy.byCode.defaul
 
     <div class="errorcard" role="alert">
 
-      <div class="errorart" aria-hidden="true">
-        <div v-for="(digit, d) in art" :key="d" class="digit">
-          <i v-for="(on, c) in digit" :key="c" :class="{ on }" />
-        </div>
-      </div>
+      <pre class="errorart" aria-hidden="true">{{ art }}</pre>
       <p class="errorline">{{ copy.byCode[String(code)] || copy.byCode.default }}</p>
       <button class="errorback" @click="store.navHome(router)" :title="copy.back" :aria-label="copy.back">{{ copy.back }}</button>
 
@@ -102,15 +97,12 @@ const words = ref(scatter((copy.byCode[String(props.code)] || copy.byCode.defaul
 
 }
 
-.errorart { display: flex; gap: 0.5rem; }
+.errorart {
 
-.digit {
-
-  /* LAYOUT */ display: grid; grid-template-columns: repeat(5, var(--px)); grid-auto-rows: var(--px);
-  /* SIZE   */ --px: 0.42rem;
-
-  & i        { background-color: transparent; }
-  & i.on     { background-color: var(--lirio); }
+  /* LAYOUT */ margin: 0;
+  /* FILL   */ color: var(--lirio);
+  /* FONT   */ font-family: monospace; font-size: 0.62rem; line-height: 1.1; white-space: pre;
+  /* FONT   */ font-variant-ligatures: none; letter-spacing: 0;
 
 }
 

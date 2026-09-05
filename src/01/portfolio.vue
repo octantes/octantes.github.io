@@ -10,6 +10,7 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 const WELCOME_DELAY = 900                                                                                                             // let the page settle before it moves
+const WELCOME_STEP  = 190                                                                                                             // per project on the way round
 
 const welcomeRay = computed(() => ({
   slug: WELCOME_SLUG,
@@ -88,6 +89,7 @@ watch([currentProject, portfolioProjects], () => {
 }, { immediate: true })
 
 function handleRayClick(proj) {
+  welcomeAborted = true                                                                                                               // the reader is driving now
   if (proj.slug === WELCOME_SLUG) { currentProject.value = proj; return }                                                              // nothing to open behind it
   if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj
 }
@@ -99,9 +101,20 @@ let welcomed = false
 async function openWelcome() {
   if (welcomed || currentProject.value) return
   welcomed = true
+
   await new Promise(r => setTimeout(r, WELCOME_DELAY))
-  if (!currentProject.value) currentProject.value = welcomeRay.value
+  if (currentProject.value) return
+
+  for (const proj of realProjects.value) {
+    currentProject.value = proj
+    await new Promise(r => setTimeout(r, WELCOME_STEP))
+    if (welcomeAborted) return
+  }
+
+  if (!welcomeAborted) currentProject.value = welcomeRay.value
 }
+
+let welcomeAborted = false
 
 watch(portfolioProjects, list => { if (list.length) openWelcome() }, { immediate: true })
 
@@ -160,7 +173,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
             <p v-if="proj.slug !== WELCOME_SLUG" class="meta"><span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span><span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span></p>
             <p v-else class="legend"><span class="key dis"></span>{{ store.t.nav.tabs['diseño'] }}<span class="key dev"></span>{{ store.t.nav.tabs['desarrollo'] }}</p>
-            <p class="desc">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
+            <p class="desc" :class="{ welcome: proj.slug === WELCOME_SLUG }">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
             <div class="tags"> <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
           </div>
 
@@ -354,6 +367,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
     & .key.dev  { background-color: var(--cristal); margin-left: .6rem; }
 
   }
+
+  & .desc.welcome { white-space: pre-line; }
 
   & .desc {
 
