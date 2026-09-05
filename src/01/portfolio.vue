@@ -142,7 +142,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
       <div class="rays-container">
         
-        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" role="button" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
+        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
           
           <div class="ray-line"></div>
           <span class="ray-text">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span>
@@ -268,6 +268,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 .ray-box { 
 
   /* CURSOR */ cursor: pointer; pointer-events: auto;
+  /* FOCUS  */ &:focus { outline: none; } &:focus-visible .ray-text { outline: var(--small-outline) var(--humo); outline-offset: 3px; }
   /* LAYOUT */ position: absolute; left: 0; top: -1.5rem; display: flex; align-items: center; justify-content: flex-start;
   /* BOX    */ width: 35rem; height: 3rem; padding-left: 9rem; transform-origin: left center;
   /* MOTION */ transition: transform var(--animate-mid); will-change: transform;
