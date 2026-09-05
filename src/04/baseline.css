@@ -293,3 +293,16 @@ audio::-webkit-media-controls-enclosure:hover {
   }
 
 }
+
+.a11y-only {
+  /* LAYOUT */ position: absolute; width: 1px; height: 1px; overflow: hidden;
+  /* CLIP   */ clip-path: inset(50%); white-space: nowrap;
+  /* BOX    */ margin: -1px; padding: 0; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+                           transition-duration: .001ms !important; scroll-behavior: auto !important; }
+
+}

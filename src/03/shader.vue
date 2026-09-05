@@ -740,7 +740,9 @@ function checkTransitionFull()  { return mode === 'hidden' || mode === 'static' 
 function checkStatic()          { return true }
 function checkHidden()          { return true }
 
-function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; const prevMode = mode; drawFrame(deltaTime); if (mode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else if (prevMode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else { animationID = null } }
+const reduceMotion = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null
+
+function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; const prevMode = mode; drawFrame(deltaTime); if (reduceMotion && reduceMotion.matches && mode === 'static') { animationID = null; return } if (mode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else if (prevMode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else { animationID = null } }
 
 function attachOverlay(map) { overlay = map || null }
 

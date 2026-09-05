@@ -52,6 +52,15 @@ export const useStore = defineStore('store', () => {
 
   const dict = {
     es: {
+      notFound: {
+        back: 'volver al inicio',
+        byCode: {
+          '404': 'esta p\u00e1gina no existe',
+          '500': 'algo se rompi\u00f3 de este lado',
+          default: 'algo sali\u00f3 mal',
+        },
+      },
+
       portada: {
         welcome: 'bienvenido a octantes!',
         desc: 'tocá un posteo de la tabla para cargarlo; también podés filtrar según el tipo de contenido que querés encontrar en la página',
@@ -113,6 +122,15 @@ export const useStore = defineStore('store', () => {
       }
     },
     en: {
+      notFound: {
+        back: 'back to the start',
+        byCode: {
+          '404': 'this page does not exist',
+          '500': 'something broke on this side',
+          default: 'something went wrong',
+        },
+      },
+
       portada: {
         welcome: 'welcome to octantes!',
         desc: 'click a post on the table to load it; you can also filter by the type of content you want to find on the page',
@@ -405,8 +423,10 @@ export const useStore = defineStore('store', () => {
     const rawText = await res.text()
     const parser = new DOMParser()
     const doc = parser.parseFromString(rawText, 'text/html')
+
     const staticNav = doc.querySelector('.static-nav')
-    if (staticNav) staticNav.remove()
+    if (!staticNav) throw new Error('not a note page')
+    staticNav.remove()
 
     const html = doc.body.innerHTML
     postHtmlCache.value[cacheKey] = html

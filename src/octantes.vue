@@ -18,25 +18,27 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
   <div class="pagina">
 
+    <h1 class="a11y-only">octantes</h1>
+
     <div class="layout" :class="{ fullscreen: computedFullscreen || route.path === '/portfolio' }" >
 
       <template v-if="!computedFullscreen && route.path !== '/portfolio'">
 
         <div class="portal-glow" aria-hidden="true" />
-        <Portada class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" />
-        <Navigation class="navigation" :disabled="store.processing" />
+        <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" />
+        <Navigation role="navigation" :aria-label="store.t.nav.search" class="navigation" :disabled="store.processing" />
 
       </template>
       
       <RouterView v-slot="{ Component }" >
         
-        <component class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" :is="Component" @updateProcessing="store.setProcessing" />
+        <component role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" :is="Component" @updateProcessing="store.setProcessing" />
         
       </RouterView>
 
     </div>
 
-    <div class="footer" v-if="route.path !== '/portfolio'">
+    <div class="footer" role="contentinfo" v-if="route.path !== '/portfolio'">
 
         <Status />
         
