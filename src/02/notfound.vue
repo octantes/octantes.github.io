@@ -27,6 +27,7 @@ function figlet(code) {
 const REPEATS  = 5                                                              // times each word is thrown
 const TRIES    = 14                                                             // rerolls before a word is placed anyway
 const CROWD    = 0.34                                                           // fraction of the smaller word two may share
+const VSPREAD  = 1.22                                                           // the column is taller than it is wide; throw with it
 
 function measurer(el) {
   const font = getComputedStyle(el).fontFamily
@@ -61,13 +62,15 @@ function scatter(words, el, stage, card) {
   thrown.forEach((text, i) => {
 
     const roll = Math.random()
-    const tier = roll < 0.12 ? 2 : roll < 0.52 ? 1 : 0
-    const rem  = tier === 2 ? 7.5 + Math.random() * 3.5
-               : tier === 1 ? 3.6 + Math.random() * 2.6
-               :              1.7 + Math.random() * 1.0
-    const alpha = tier === 2 ? 0.045 + Math.random() * 0.035
-                : tier === 1 ? 0.10  + Math.random() * 0.09
-                :              0.24  + Math.random() * 0.26
+    const tier = roll < 0.10 ? 3 : roll < 0.38 ? 2 : roll < 0.68 ? 1 : 0
+    const rem  = tier === 3 ? 7.5 + Math.random() * 3.5
+               : tier === 2 ? 3.6 + Math.random() * 2.4
+               : tier === 1 ? 1.7 + Math.random() * 1.0
+               :              0.85 + Math.random() * 0.55
+    const alpha = tier === 3 ? 0.045 + Math.random() * 0.035
+                : tier === 2 ? 0.10  + Math.random() * 0.09
+                : tier === 1 ? 0.24  + Math.random() * 0.22
+                :              0.34  + Math.random() * 0.26
     const tilt = Math.random() * 18 - 9
 
     const size = rem * px
@@ -80,11 +83,11 @@ function scatter(words, el, stage, card) {
 
     for (let n = 0; n < TRIES; n++) {
       const angle = (step * i + Math.random() * step) * Math.PI / 180
-      const reach = tier === 2 ? 0.42 + Math.random() * 0.40
-                  : tier === 1 ? 0.34 + Math.random() * 0.44
-                  :              0.30 + Math.random() * 0.48
+      const reach = tier === 3 ? 0.42 + Math.random() * 0.40
+                  : tier === 2 ? 0.34 + Math.random() * 0.44
+                  :              0.30 + Math.random() * 0.50
       cx = W / 2 + Math.cos(angle) * reach * W / 2
-      cy = H / 2 + Math.sin(angle) * reach * H / 2
+      cy = H / 2 + Math.sin(angle) * reach * VSPREAD * H / 2
       box = { x: cx - w / 2, y: cy - h / 2, w, h }
       if (shared(box, card) > 0) continue
       if (taken.every(t => shared(box, t) <= CROWD)) break
