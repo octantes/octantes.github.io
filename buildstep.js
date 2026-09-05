@@ -11,7 +11,7 @@ import { SITE_URL } from './src/site-config.js'
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
 // EMBED   |  yt or spotify url   | reduced embed iframe |  unchanged  | <div> <iframe>
 // VIDEOS  | .mov .mp4 .avi .webm | direct copy          |  unchanged  | <video muted loop playsinline preload="auto" class="videosync">
-// GIFS    | .gif                 | direct copy          |  unchanged  | <img loading="lazy">
+// GIFS    | .gif                 | h264 transcode       | .mp4        | <video class="gifvideo" autoplay muted loop playsinline>  (GIF_AS_VIDEO)
 // OTHER   |  any other           | direct copy          |  unchanged  | doesnt change original tag
 
 // all files must be under 10MB and most should be under 5MB
@@ -82,6 +82,8 @@ setCustomSoftbreak()
 const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 const webURL = SITE_URL
+
+const GIF_AS_VIDEO = true
 const contentDir = './content'
 const outputDir = './dist'
 
@@ -152,7 +154,12 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
 
   } else if (isGif) {
-    
+
+    if (GIF_AS_VIDEO) {
+      const absUrl = `${webURL}/posts/${type}/${slug}/${filename.replace(/\.gif$/i, '.mp4')}`
+      return `<video src="${absUrl}" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
+    }
+
     const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
     return `<img src="${absUrl}" loading="lazy" alt="${altText}">`
 
@@ -239,16 +246,34 @@ async function convertVideo(inputPath, destPath) {                              
 
 }
 
-async function convertGif(inputPath, destPath) {                                 // just copies video files to output 
+async function convertGif(inputPath, destPath) {                                 // transcodes a gif to h264, or copies it
 
   try {
 
-    const finalOutputPath = destPath
-    const data = await fs.readFile(inputPath)
-    await fs.writeFile(finalOutputPath, data)
+    if (!GIF_AS_VIDEO) {
+
+      const data = await fs.readFile(inputPath)
+      await fs.writeFile(destPath, data)
+      return destPath
+
+    }
+
+    const finalOutputPath = destPath.replace(/\.gif$/i, '.mp4')
+
+    await new Promise((resolve, reject) => {
+      const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-i', inputPath,
+        '-pix_fmt', 'yuv420p', '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+        '-c:v', 'libx264', '-crf', '26', '-preset', 'slow', '-movflags', '+faststart',
+        '-an', finalOutputPath])
+      let err = ''
+      ff.stderr.on('data', d => { err += d })
+      ff.on('error', reject)
+      ff.on('close', code => code === 0 ? resolve() : reject(new Error(err.trim() || `ffmpeg exited ${code}`)))
+    })
+
     return finalOutputPath
 
-  } catch(e) { throw new Error(`error copying gif ${inputPath}: ${e.message}`) }
+  } catch(e) { throw new Error(`error converting gif ${inputPath}: ${e.message}`) }
 
 }
 
@@ -404,7 +429,7 @@ async function processPosts() {                                                 
 
         } else if (isGif) {
 
-          console.log(`copying gif ${asset.name} without processing...`)
+          console.log(GIF_AS_VIDEO ? `converting gif ${asset.name} to MP4...` : `copying gif ${asset.name} without processing...`)
           finalOutputPath = await convertGif(assetPath, destPath)
 
         } else if (isAudio) {

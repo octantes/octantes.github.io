@@ -304,6 +304,9 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus, tbody tr:focus
 h1                               { margin: 0; }
 p                                { margin: 0; max-width: none;                                     }
 img                              { border: 1px solid var(--polvo); margin: none;                   }
+
+video.gifvideo                   { display: block; max-width: 100%; width: 100%; height: auto;
+                                   border: 1px solid var(--polvo);                                 }
 ul, ol                           { margin-bottom: 1rem; padding-left: 1.2rem;                      }
 li                               { margin: 0;                                                      }
 hr                               { border: 0; border-top: 1px dashed var(--polvo); margin: 2rem 0; }

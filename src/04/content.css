@@ -61,6 +61,8 @@
 
   }
 
+  & video.gifvideo { border: none; border-radius: 0; }
+
 }
 
 /* EMBEDS */
