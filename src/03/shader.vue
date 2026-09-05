@@ -324,6 +324,8 @@ function resetContext() {                                               // updat
 
 function initGrid() {                                                   // create grid + animate rain 
 
+  if (!context) return
+
   // set size
   cols = Math.ceil(width / fontSize)
   rows = Math.ceil(height / fontSize)

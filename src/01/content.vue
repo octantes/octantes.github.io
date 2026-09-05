@@ -7,8 +7,7 @@ import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
 import Shader from '../03/shader.vue'
 import NotFound from '../02/notfound.vue'
-
-const MOBILE_PORTAL = true
+import { throughTheVeil } from '../03/veil.js'
 import Typewriter from '../03/typewriter.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
@@ -27,8 +26,6 @@ function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkV
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
 
-const veilOn      = ref(false)                                                                                                        // the mobile transition canvas, mounted only while it runs
-const veilRef     = ref(null)
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const containerRef= ref(null)                                                                                                         // ref for the portal box, where pointer effects listen
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
@@ -60,23 +57,6 @@ async function revealError() {
   if (isMobile.value || !shaderRef.value) return
   await shaderRef.value.runQueue('outro')
   await shaderRef.value.runQueue('hidden')
-}
-
-async function throughTheVeil(work) {
-
-  if (!MOBILE_PORTAL) { await work(); return }
-
-  veilOn.value = true
-  await nextTick()
-  await new Promise(r => requestAnimationFrame(r))
-
-  await veilRef.value?.runQueue('intro')
-  await work()
-  await veilRef.value?.runQueue('outro')
-  await veilRef.value?.runQueue('hidden')
-
-  veilOn.value = false
-
 }
 
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
@@ -147,9 +127,11 @@ watch(isMobile, (newVal) => {
 
 watch(computedFullscreen, async () => { await forceShaderResize() })                                                                  // watches for shader resize 
 
+const forcedError = Number(new URLSearchParams(window.location.search).get('error')) || 0
+
 watch(() => route.params.filterType, ft => {
-  if (ft === undefined) { if (!route.params.slug) notFound.value = 0; return }
-  notFound.value = store.tabs.some(tab => tab.value === ft) ? 0 : 404
+  if (ft === undefined) { if (!route.params.slug) notFound.value = forcedError; return }
+  notFound.value = forcedError || (store.tabs.some(tab => tab.value === ft) ? 0 : 404)
 }, { immediate: true })
 
 watch(                                                                                                                                // trigger notes and animations 
@@ -265,10 +247,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <Teleport to="body">
-    <div v-if="veilOn" class="veil" aria-hidden="true"><Shader ref="veilRef" /></div>
-  </Teleport>
-
   <div v-if="!isMobile || currentPost" class="notedisplay">
     
     <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
@@ -373,11 +351,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   &.fs-content { height: 100%; }
 
 }
-
-/* Fixed to the viewport, so it is one screen no matter how long the note under
-   it turns out to be, and under the grain so the page keeps its texture. */
-
-.veil { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
 @media (max-width: 1080px) { 
 

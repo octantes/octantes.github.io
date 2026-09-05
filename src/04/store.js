@@ -85,7 +85,7 @@ export const useStore = defineStore('store', () => {
         subtitle: 'Desarrollador Frontend & Diseñador',
         desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
         welcomeTitle: 'qu\u00e9 es esto',
-        welcomeDesc: 'cada rayo es un proyecto; toc\u00e1 uno para ver de qu\u00e9 se trata, y toc\u00e1lo de nuevo para abrir la nota completa',
+        welcomeDesc: 'cada rayo, un proyecto\ntoc\u00e1 una vez para mirar, dos para entrar',
         close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción', closeFullscreen: 'salir de la vista en pantalla completa', closeFullscreenAria: 'cerrar el contenido en pantalla completa', githubProfile: 'Ver perfil de GitHub', openGithub: 'Abrir GitHub de octantes'
       },
       subscribe: {
@@ -157,7 +157,7 @@ export const useStore = defineStore('store', () => {
         subtitle: 'Frontend Engineer & Designer',
         desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',
         welcomeTitle: 'what is this',
-        welcomeDesc: 'every ray is a project; tap one to see what it is, and tap it again to open the full note',
+        welcomeDesc: 'every ray, a project\ntap once to look, twice to go in',
         close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description', closeFullscreen: 'exit fullscreen view', closeFullscreenAria: 'close fullscreen content', githubProfile: 'View GitHub profile', openGithub: 'Open octantes GitHub'
       },
       subscribe: {
