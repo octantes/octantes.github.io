@@ -55,7 +55,8 @@ function scatter(words, el, stage, card) {
     ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
   }
 
-  const step  = 360 / thrown.length
+  const half  = Math.ceil(thrown.length / 2)
+  const step  = 180 / half
   const taken = []
   const out   = []
 
@@ -82,7 +83,9 @@ function scatter(words, el, stage, card) {
     let box, cx, cy
 
     for (let n = 0; n < TRIES; n++) {
-      const angle = (step * i + Math.random() * step) * Math.PI / 180
+      const slice = Math.floor(i / 2)
+      const upper = i % 2 === 0
+      const angle = ((upper ? 180 : 0) + step * slice + Math.random() * step) * Math.PI / 180
       const reach = tier === 3 ? 0.42 + Math.random() * 0.40
                   : tier === 2 ? 0.34 + Math.random() * 0.44
                   :              0.30 + Math.random() * 0.50
