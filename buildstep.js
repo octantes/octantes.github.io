@@ -816,7 +816,7 @@ async function writeBilingualArchive() {                                   // cr
         </div>
         <div class="nav-row">
           <a href="/feed.xml" data-key="navRss">[RSS]</a>
-          <button onclick="toggleLang()" data-key="toggleTo" style="background:none; border:1px solid var(--polvo); padding:2px 6px; color:var(--cristal); cursor:pointer; font:inherit; line-height:inherit;">[ENG]</button>
+          <button onclick="toggleLang()" data-key="toggleTo">[ENG]</button>
         </div>
       </nav>
       
