@@ -27,14 +27,12 @@ function figlet(code) {
 const REPEATS  = 5                                                              // times each word is thrown
 const TRIES    = 14                                                             // rerolls before a word is placed anyway
 const CROWD    = 0.34                                                           // fraction of the smaller word two may share
-const WEIGHT   = 900                                                            // heaviest Inconsolata carries, requested in index.html
 const VSPREAD  = 1.22                                                           // the column is taller than it is wide; throw with it
 
 function measurer(el) {
-  const cs = getComputedStyle(el)
-  const font = cs.fontFamily
+  const font = getComputedStyle(el).fontFamily
   const c = document.createElement('canvas').getContext('2d')
-  return (text, px) => { c.font = `${WEIGHT} ${px}px ${font}`; return c.measureText(text).width }
+  return (text, px) => { c.font = `${px}px ${font}`; return c.measureText(text).width }
 }
 
 function shared(a, b) {
@@ -51,7 +49,7 @@ function scatter(words, el, stage, card) {
   const width = measurer(el)
 
   const thrown = []
-  for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w.toUpperCase())
+  for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w)
   for (let i = thrown.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
@@ -178,7 +176,6 @@ onMounted(() => {
   /* CURSOR */ user-select: none; pointer-events: none;
   /* LAYOUT */ position: absolute; white-space: nowrap;
   /* FILL   */ color: var(--humo);
-  /* FONT   */ font-weight: 900;
 
 }
 
