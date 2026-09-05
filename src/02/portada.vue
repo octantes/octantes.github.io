@@ -78,12 +78,9 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   /* LAYOUT */ display: flex; flex-direction: column;
   /* BOX    */ width: 100%;
-  /* Same as the navbar, mirrored: a hairline around the whole bar rather than a
-     wash across it. See navbar.vue for why two backgrounds and not border-image. */
+  /* Same as the navbar, mirrored: the wash at a fifth strength. See navbar.vue. */
 
-  /* FILL   */ background: linear-gradient(var(--carbon), var(--carbon)) padding-box,
-                           linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%) border-box;
-  /* EDGE   */ border: 1px solid transparent;
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal-a31) 0%, var(--lirio-a31) 100%);
   /* BORDER */ border-radius: var(--radius-ss) var(--radius-ss) 0 0;
   /* MOTION */ transition: all var(--animate-fast);
 
