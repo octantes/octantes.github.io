@@ -21,7 +21,7 @@ let resizeTimer = null                                                          
 
 function checkViewport() { isMobile.value = window.innerWidth <= 1080 }                                                               // detect mobile
 
-function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitVerso() }, 150) }                                       // use resize timer
+function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitCentred() }, 150) }                                       // use resize timer
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
@@ -69,7 +69,23 @@ function resetScroll() {
 const VERSO_MAX = 21.6                                                                                                                // 1.35rem, the ceiling the wide layout already uses
 const FIT_STEPS = 7                                                                                                                   // halvings, so the result lands within ~0.1px
 
-function versoWraps(blocks) {
+const CENTRED = [
+  { root: '.nota-verso', parts: [],                            row: false },
+  { root: '.about',      parts: ['.tagline', '.user-status'],  row: false },
+  { root: '.subscribe',  parts: ['.cta', '.textbox', '.submit'], row: true },
+]
+
+function textBlocks(root) {
+  return [...root.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote, span, div')]
+    .filter(el => el.textContent.trim()
+              && !el.querySelector('img, video, iframe')
+              && !el.closest('.nota-prosa')
+              && getComputedStyle(el).display !== 'inline'
+              && ![...el.children].some(c => getComputedStyle(c).display !== 'inline'))
+}
+
+function breaks(root, blocks, row) {
+  if (row && root.scrollWidth > root.clientWidth + 1) return true
   for (const el of blocks) {
     const lh = parseFloat(getComputedStyle(el).lineHeight) || 0
     if (!lh) continue
@@ -79,34 +95,44 @@ function versoWraps(blocks) {
   return false
 }
 
-async function fitVerso() {
+function setSize(root, parts, px) {
+  root.style.fontSize = px
+  for (const sel of parts) for (const el of root.querySelectorAll(sel)) el.style.fontSize = px
+}
 
-  const wrap = contentRef.value?.querySelector('.nota-verso')
-  if (!wrap) return
+async function fitCentred() {
 
-  wrap.style.fontSize = ''
+  const host = contentRef.value
+  if (!host) return
+
+  const targets = CENTRED.map(t => ({ ...t, el: host.querySelector(t.root) })).filter(t => t.el)
+  for (const t of targets) setSize(t.el, t.parts, '')
+
   if (!isMobile.value) return
 
   if (document.fonts?.ready) await document.fonts.ready                                                                               // metrics change when the webfont lands
 
-  const blocks = [...wrap.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote')]
-    .filter(el => el.textContent.trim() && !el.querySelector('img, video, iframe') && !el.closest('.nota-prosa'))
+  for (const t of targets) {
 
-  if (!blocks.length) return
+    const blocks = textBlocks(t.el)
 
-  const base = parseFloat(getComputedStyle(wrap).fontSize) || 16
-  if (versoWraps(blocks)) return                                                                                                      // already wrapping at the column's size, nothing to win
+    if (!blocks.length) continue
 
-  let lo = base, hi = VERSO_MAX
-  if (hi <= lo) return
+    const base = parseFloat(getComputedStyle(t.el).fontSize) || 16
+    if (breaks(t.el, blocks, t.row)) continue                                                                                         // already breaking at the column's size, nothing to win
 
-  for (let i = 0; i < FIT_STEPS; i++) {
-    const mid = (lo + hi) / 2
-    wrap.style.fontSize = `${mid}px`
-    if (versoWraps(blocks)) hi = mid; else lo = mid
+    let lo = base, hi = VERSO_MAX
+    if (hi <= lo) continue
+
+    for (let i = 0; i < FIT_STEPS; i++) {
+      const mid = (lo + hi) / 2
+      setSize(t.el, t.parts, `${mid}px`)
+      if (breaks(t.el, blocks, t.row)) hi = mid; else lo = mid
+    }
+
+    setSize(t.el, t.parts, `${lo}px`)
+
   }
-
-  wrap.style.fontSize = `${lo}px`
 
 }
 
@@ -161,14 +187,14 @@ async function handleLoadNote(slug) {                                           
   }
 
   await nextTick()
-  await fitVerso()
+  await fitCentred()
   resetScroll()
 
 }
 
 watch(isMobile, async (newVal) => { 
 
-  await nextTick(); await fitVerso()                                                                                                        // the breakpoint is what decides whether a note is fitted
+  await nextTick(); await fitCentred()                                                                                                        // the breakpoint is what decides whether a note is fitted
 
   if (!shaderRef.value || !shaderRef.value.runQueue) return
   if (newVal) {
@@ -294,7 +320,7 @@ watch(() => store.lang, async () => {
 
 onMounted(async () => {
   checkViewport()
-  await nextTick(); await fitVerso()
+  await nextTick(); await fitCentred()
   window.addEventListener('resize', onResize)
   if (notFound.value) { await nextTick(); await new Promise(r => requestAnimationFrame(r)); await revealError() }
 })
