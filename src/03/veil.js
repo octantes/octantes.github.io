@@ -8,7 +8,7 @@ let canvas = null
 
 export function registerVeil(instance) { canvas = instance || null }
 
-export async function throughTheVeil(work, enter = 'intro', exit = 'outro') {
+export async function throughTheVeil(work, enter = 'intro', exit = 'outro', hold = 0) {
 
   if (!ENABLED) { await work(); return }
 
@@ -16,8 +16,8 @@ export async function throughTheVeil(work, enter = 'intro', exit = 'outro') {
   await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))  // mounted, and sized
 
   await canvas?.runQueue(enter)
-  window.scrollTo({ top: 0, behavior: 'auto' })
   await work()
+  if (hold) await new Promise(r => setTimeout(r, hold))
   await canvas?.runQueue(exit)
   await canvas?.runQueue('hidden')
 

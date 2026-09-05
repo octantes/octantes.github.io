@@ -40,10 +40,20 @@ function scatter(words) {
   return thrown.map((text, i) => {
 
     const angle = (step * i + Math.random() * step) * Math.PI / 180
-    const hero  = Math.random() < 0.18
-    const reach = hero ? 0.34 + Math.random() * 0.30 : 0.20 + Math.random() * 0.28
-    const size  = hero ? 3.4 + Math.random() * 2.6 : 0.8 + Math.random() * 1.0
-    const alpha = hero ? 0.07 + Math.random() * 0.06 : 0.26 + Math.random() * 0.38
+    const roll  = Math.random()
+    const tier  = roll < 0.14 ? 2 : roll < 0.66 ? 1 : 0                         // giant, large, and merely big
+
+    const reach = tier === 2 ? 0.36 + Math.random() * 0.34
+                : tier === 1 ? 0.28 + Math.random() * 0.28
+                :              0.18 + Math.random() * 0.24
+
+    const size  = tier === 2 ? 7.5 + Math.random() * 3.5
+                : tier === 1 ? 3.6 + Math.random() * 2.6
+                :              1.7 + Math.random() * 1.0
+
+    const alpha = tier === 2 ? 0.045 + Math.random() * 0.035
+                : tier === 1 ? 0.10  + Math.random() * 0.09
+                :              0.24  + Math.random() * 0.26
 
     return {
       text,

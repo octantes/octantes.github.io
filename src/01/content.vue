@@ -59,6 +59,13 @@ async function revealError() {
   await shaderRef.value.runQueue('hidden')
 }
 
+function resetScroll() {
+  document.querySelector('.layout')?.scrollTo?.({ top: 0, behavior: 'auto' })
+  if (postRef.value) postRef.value.scrollTop = 0
+  const col = document.querySelector('.articulos')
+  if (col) col.scrollTop = 0
+}
+
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
   const { html, error } = await fetchPost(slug)
@@ -109,7 +116,8 @@ async function handleLoadNote(slug) {                                           
 
   }
 
-  if (isMobile.value) { await nextTick(); window.scrollTo({ top: 0, behavior: 'auto' }) }                                             // under the veil, so nothing to smooth
+  await nextTick()
+  resetScroll()
 
 }
 
@@ -205,10 +213,11 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        if (!isMobile.value) await shaderRef.value?.runQueue('static')
+        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'static', 'direct', 500); break }
+        await shaderRef.value?.runQueue('static')
         await handleLoadNote(slug)
         await new Promise(resolve => setTimeout(resolve, 500))
-        if (!isMobile.value) await shaderRef.value?.runQueue('direct')
+        await shaderRef.value?.runQueue('direct')
         break
       
       // loaded note change, TRANSITION when switching note
@@ -359,6 +368,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* the column stops being a viewport here and joins the document scroll, so
      the aperture would clip the page rather than frame it */
   .post { -webkit-mask-image: none; mask-image: none; }
+
+  .container::after { display: none; }
 
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
