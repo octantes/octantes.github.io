@@ -322,7 +322,11 @@ watch(                                                                          
 watch(() => store.lang, async () => {
   if (store.currentPost && store.currentPost.bilingual && !store.processing) {
     await handleLoadNote(store.currentPost.slug)
+    return
   }
+  await nextTick()
+  await fitCentred()
+  setTimeout(fitCentred, 400)
 })
 
 onMounted(async () => {
