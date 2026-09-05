@@ -71,7 +71,7 @@ const FIT_STEPS = 7                                                             
 
 const CENTRED = [
   { root: '.nota-verso', parts: [],                            row: false },
-  { root: '.about',      parts: ['.tagline', '.user-status'],  row: false },
+  { root: '.about',      parts: ['.tagline', '.user-status'],  row: true  },
   { root: '.subscribe',  parts: ['.cta', '.textbox', '.submit'], row: true },
 ]
 
@@ -85,9 +85,14 @@ function textBlocks(root) {
 }
 
 function breaks(root, blocks, row) {
-  if (row && root.scrollWidth > root.clientWidth + 1) return true
+  if (row) {
+    for (const el of [root, ...root.querySelectorAll('*')]) {
+      if (el.scrollWidth > el.clientWidth + 1) return true
+    }
+  }
   for (const el of blocks) {
-    const lh = parseFloat(getComputedStyle(el).lineHeight) || 0
+    const cs = getComputedStyle(el)
+    const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.2
     if (!lh) continue
     const hard = el.innerHTML.split(/<br\s*\/?>/i).length
     if (el.getBoundingClientRect().height > lh * (hard + 0.4)) return true
