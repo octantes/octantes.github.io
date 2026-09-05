@@ -198,7 +198,7 @@ html, body, #octantes {
 #octantes::after {
 
   /* LAYOUT */ content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
-  /* FILL   */ background-image: url('/assets/noise.webp'); opacity: .065;
+  /* FILL   */ background-image: url('/assets/noise.webp'); opacity: .05;
   /* SCALE  */ image-rendering: pixelated;
 
 }
