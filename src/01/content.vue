@@ -95,7 +95,7 @@ function breaks(root, blocks, row) {
     const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.2
     if (!lh) continue
     const hard = el.innerHTML.split(/<br\s*\/?>/i).length
-    if (el.getBoundingClientRect().height > lh * (hard + 0.4)) return true
+    if (el.getBoundingClientRect().height > lh * (hard + 0.25)) return true
   }
   return false
 }
@@ -135,7 +135,7 @@ async function fitCentred() {
       if (breaks(t.el, blocks, t.row)) hi = mid; else lo = mid
     }
 
-    setSize(t.el, t.parts, `${lo}px`)
+    setSize(t.el, t.parts, `${lo * 0.98}px`)
 
   }
 
@@ -194,6 +194,8 @@ async function handleLoadNote(slug) {                                           
   await nextTick()
   await fitCentred()
   resetScroll()
+
+  setTimeout(fitCentred, 400)
 
 }
 
