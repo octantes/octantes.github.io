@@ -7,7 +7,20 @@ const authorpic = '/assets/facu.webp'
 
 const router            = useRouter()
 const store             = useStore()
-const portfolioProjects = computed(() => store.notesIndex.filter(n => n.type === 'diseño' || n.type === 'desarrollo'))
+
+const WELCOME_SLUG  = '__welcome'
+const WELCOME_DELAY = 900                                                                                                             // let the page settle before it moves
+
+const welcomeRay = computed(() => ({
+  slug: WELCOME_SLUG,
+  type: 'welcome',
+  title: store.t.portfolio.welcomeTitle,
+  description: store.t.portfolio.welcomeDesc,
+  tags: [],
+}))
+
+const realProjects      = computed(() => store.notesIndex.filter(n => n.type === 'diseño' || n.type === 'desarrollo'))
+const portfolioProjects = computed(() => realProjects.value.length ? [welcomeRay.value, ...realProjects.value] : [])
 const currentProject    = ref(null)
 const prevSelectedIdx   = ref(-1)
 const rayAngles         = ref([])
@@ -74,9 +87,23 @@ watch([currentProject, portfolioProjects], () => {
 
 }, { immediate: true })
 
-function handleRayClick(proj) { if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj  }
+function handleRayClick(proj) {
+  if (proj.slug === WELCOME_SLUG) { currentProject.value = proj; return }                                                              // nothing to open behind it
+  if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj
+}
 function openGithub()         { window.open('https://github.com/octantes', '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
+
+let welcomed = false
+
+async function openWelcome() {
+  if (welcomed || currentProject.value) return
+  welcomed = true
+  await new Promise(r => setTimeout(r, WELCOME_DELAY))
+  if (!currentProject.value) currentProject.value = welcomeRay.value
+}
+
+watch(portfolioProjects, list => { if (list.length) openWelcome() }, { immediate: true })
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
@@ -125,13 +152,14 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
           <div class="ray-line"></div>
           <span class="ray-text">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span>
 
-          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
+          <div v-if="currentProject && currentProject.slug === proj.slug && proj.slug !== WELCOME_SLUG" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
             <div class="portal-line"></div>
             <div class="portal-trigger"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.6 L9.4 6 L4.2 9.4 Z" /></svg></div>
           </div>
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
-            <p class="meta"><span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span><span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span></p>
+            <p v-if="proj.slug !== WELCOME_SLUG" class="meta"><span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span><span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span></p>
+            <p v-else class="legend"><span class="key dis"></span>{{ store.t.nav.tabs['diseño'] }}<span class="key dev"></span>{{ store.t.nav.tabs['desarrollo'] }}</p>
             <p class="desc">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
             <div class="tags"> <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
           </div>
@@ -314,6 +342,19 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   }
 
+  & .legend {
+
+    /* LAYOUT */ display: flex; align-items: center; gap: .35rem;
+    /* BOX    */ margin: 0 0 .15rem 0;
+    /* FILL   */ color: var(--humo);
+    /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem;
+
+    & .key      { width: .6rem; height: .6rem; border-radius: 2px; display: inline-block; }
+    & .key.dis  { background-color: var(--lirio);   }
+    & .key.dev  { background-color: var(--cristal); margin-left: .6rem; }
+
+  }
+
   & .desc {
 
     /* BOX    */ margin: 0;
@@ -346,6 +387,21 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   &:hover .ray-portal .portal-line        { width: 4rem; }
   
   & .tag { color: var(--cristal); }
+
+}
+
+/* The welcome ray borrows the design palette but never behaves like a project:
+   no portal trigger, no note behind it. */
+
+.ray-welcome {
+
+  & .ray-text { border: 1px solid var(--humo-a60); }
+
+  &:hover .ray-line, &.selected .ray-line { background-color: var(--humo); width: 2.5rem; }
+  &:hover .ray-text, &.selected .ray-text { color: var(--carbon); background-color: var(--humo); border-color: var(--humo); }
+
+  &:hover    .ray-text { box-shadow: 0 0 .7rem  0 var(--humo-a15); }
+  &.selected .ray-text { box-shadow: 0 0 1.1rem 0 var(--humo-a21), 0 0 .4rem 0 var(--humo-a08); }
 
 }
 

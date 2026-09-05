@@ -129,7 +129,7 @@ function renderType(body, attributes) {                                         
 
 }
 
-function processAssets(tag, attrs, type, slug, portada) {                        // replace asset src for optimized HTML tag 
+function processAssets(tag, attrs, type, slug, portada, silent = new Set()) {                        // replace asset src for optimized HTML tag 
 
   const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
 
@@ -150,28 +150,31 @@ function processAssets(tag, attrs, type, slug, portada) {                       
     let dimensions = { width: 600, height: 400 }
     if (filename === portada) dimensions = { width: 1200, height: 630 }
     filename = filename.replace(/\.(jpe?g|png)$/i, '.webp') 
-    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
+    const absUrl = `/posts/${type}/${slug}/${filename}`
     return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
 
   } else if (isGif) {
 
     if (GIF_AS_VIDEO) {
-      const absUrl = `${webURL}/posts/${type}/${slug}/${filename.replace(/\.gif$/i, '.mp4')}`
+      const absUrl = `/posts/${type}/${slug}/${filename.replace(/\.gif$/i, '.mp4')}`
       return `<video src="${absUrl}" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
     }
 
-    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
+    const absUrl = `/posts/${type}/${slug}/${filename}`
     return `<img src="${absUrl}" loading="lazy" alt="${altText}">`
 
   } else if (isVideo) {
     
-    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
+    const absUrl = `/posts/${type}/${slug}/${filename}`
+    if (silent.has(filename)) {
+      return `<video src="${absUrl}" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
+    }
     return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" aria-label="${altText}"></video>`
 
   } else if (isAudio) {
 
     filename = filename.replace(/\.(mp3|wav)$/i, '.ogg')
-    const absUrl = `${webURL}/posts/${type}/${slug}/${filename}`
+    const absUrl = `/posts/${type}/${slug}/${filename}`
     return `<audio controls style="width: 100%" preload="auto" src="${absUrl}" aria-label="${altText}"></audio>`
 
   } else if (isYoutube) {
@@ -243,6 +246,20 @@ async function convertVideo(inputPath, destPath) {                              
     return finalOutputPath
 
   } catch(e) { throw new Error(`error copying video ${inputPath}: ${e.message}`) }
+
+}
+
+const silentVideos = new Set()                                                   // videos in the post being built that carry no audio
+
+async function isSilent(inputPath) {
+
+  return new Promise(resolve => {
+    const ff = spawn('ffprobe', ['-v', 'error', '-select_streams', 'a', '-show_entries', 'stream=index', '-of', 'csv=p=0', inputPath])
+    let out = ''
+    ff.stdout.on('data', d => { out += d })
+    ff.on('error', () => resolve(false))
+    ff.on('close', () => resolve(out.trim() === ''))
+  })
 
 }
 
@@ -401,6 +418,7 @@ async function processPosts() {                                                 
     try {
 
       const assets = await fs.readdir(postFolder, { withFileTypes: true })
+      silentVideos.clear()
 
       for (const asset of assets) {
 
@@ -424,7 +442,9 @@ async function processPosts() {                                                 
 
         } else if (isVideo) {
 
-          console.log(`copying video ${asset.name} without processing...`)
+          const quiet = await isSilent(assetPath)
+          if (quiet) silentVideos.add(asset.name)
+          console.log(quiet ? `copying silent video ${asset.name} (treated as a gif)...` : `copying video ${asset.name} without processing...`)
           finalOutputPath = await convertVideo(assetPath, destPath)
 
         } else if (isGif) {
@@ -514,7 +534,7 @@ async function processPosts() {                                                 
       else { setCustomSoftbreak() }
 
       let htmlContent = renderType(body, attributes).trim()
-      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada, silentVideos))
 
       if (isTradStyle) { setCustomSoftbreak() }
 
