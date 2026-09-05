@@ -109,7 +109,7 @@ async function handleLoadNote(slug) {                                           
 
   }
 
-  if (isMobile.value) { await nextTick(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  if (isMobile.value) { await nextTick(); window.scrollTo({ top: 0, behavior: 'auto' }) }                                             // under the veil, so nothing to smooth
 
 }
 
@@ -190,7 +190,7 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug)); break }
+        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'intro', 'outro'); break }
         await handleLoadNote(slug)
         await shaderRef.value?.runQueue('outro')
         await shaderRef.value?.runQueue('hidden')
@@ -216,7 +216,7 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug)); break }
+        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'transition-intro', 'transition-outro'); break }
         await shaderRef.value?.runQueue('transition-intro')
         await handleLoadNote(slug)
         await shaderRef.value?.runQueue('transition-outro')

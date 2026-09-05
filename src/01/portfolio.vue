@@ -9,8 +9,8 @@ const router            = useRouter()
 const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
-const WELCOME_DELAY = 900                                                                                                             // let the page settle before it moves
-const WELCOME_STEP  = 190                                                                                                             // per project on the way round
+const WELCOME_DELAY = 650                                                                                                             // let the page settle before it moves
+const WELCOME_STEP  = 520                                                                                                             // per project - just past --animate-mid, so each rotation lands
 
 const welcomeRay = computed(() => ({
   slug: WELCOME_SLUG,
