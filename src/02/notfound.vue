@@ -24,10 +24,9 @@ function figlet(code) {
   return [0, 1, 2, 3, 4, 5].map(r => digits.map(d => d[r]).join('')).join('\n')
 }
 
-const REPEATS  = 6                                                              // times each word is thrown
-const TRIES    = 500                                                            // placements attempted per word, per size
-const SHRINKS  = 3                                                              // times a word will try again smaller before it is dropped
-const GAP      = 3                                                              // px of air required between two words
+const REPEATS  = 5                                                              // times each word is thrown
+const TRIES    = 14                                                             // rerolls before a word is placed anyway
+const CROWD    = 0.34                                                           // fraction of the smaller word two may share
 
 function measurer(el) {
   const font = getComputedStyle(el).fontFamily
@@ -35,8 +34,11 @@ function measurer(el) {
   return (text, px) => { c.font = `${px}px ${font}`; return c.measureText(text).width }
 }
 
-function overlaps(a, b) {
-  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
+function shared(a, b) {
+  const w = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)
+  const h = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y)
+  if (w <= 0 || h <= 0) return 0
+  return (w * h) / Math.min(a.w * a.h, b.w * b.h)
 }
 
 function scatter(words, el, stage, card) {
@@ -47,9 +49,17 @@ function scatter(words, el, stage, card) {
 
   const thrown = []
   for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w)
+  for (let i = thrown.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
+  }
 
-  // size first, then place biggest first - they are the ones with nowhere else to go
-  const sized = thrown.map(text => {
+  const step  = 360 / thrown.length
+  const taken = []
+  const out   = []
+
+  thrown.forEach((text, i) => {
+
     const roll = Math.random()
     const tier = roll < 0.12 ? 2 : roll < 0.52 ? 1 : 0
     const rem  = tier === 2 ? 7.5 + Math.random() * 3.5
@@ -58,55 +68,41 @@ function scatter(words, el, stage, card) {
     const alpha = tier === 2 ? 0.045 + Math.random() * 0.035
                 : tier === 1 ? 0.10  + Math.random() * 0.09
                 :              0.24  + Math.random() * 0.26
-    return { text, tier, rem, alpha, angle: Math.random() * 18 - 9 }
-  }).sort((a, b) => b.rem - a.rem)
+    const tilt = Math.random() * 18 - 9
 
-  const taken = [card]
-  const out = []
+    const size = rem * px
+    const w0 = width(text, size), h0 = size * 1.15
+    const rad = Math.abs(tilt) * Math.PI / 180
+    const w = w0 * Math.cos(rad) + h0 * Math.sin(rad)
+    const h = w0 * Math.sin(rad) + h0 * Math.cos(rad)
 
-  for (const item of sized) {
+    let box, cx, cy
 
-    let placed = false
-
-    for (let shrink = 0; shrink <= SHRINKS && !placed; shrink++) {
-
-      const rem  = item.rem * Math.pow(0.72, shrink)
-      const size = rem * px
-      const w0 = width(item.text, size), h0 = size * 1.15
-      const rad = Math.abs(item.angle) * Math.PI / 180
-      const w = w0 * Math.cos(rad) + h0 * Math.sin(rad) + GAP
-      const h = w0 * Math.sin(rad) + h0 * Math.cos(rad) + GAP
-
-      for (let n = 0; n < TRIES; n++) {
-
-        const angle = Math.random() * Math.PI * 2
-        const reach = item.tier === 2 ? 0.42 + Math.random() * 0.42
-                    : item.tier === 1 ? 0.34 + Math.random() * 0.48
-                    :                   0.28 + Math.random() * 0.56
-
-        const cx = W / 2 + Math.cos(angle) * reach * W / 2
-        const cy = H / 2 + Math.sin(angle) * reach * H / 2
-        const box = { x: cx - w / 2, y: cy - h / 2, w, h }
-
-        if (taken.some(t => overlaps(box, t))) continue
-
-        taken.push(box)
-        out.push({
-          text: item.text,
-          style: {
-            left:      `${(cx / W) * 100}%`,
-            top:       `${(cy / H) * 100}%`,
-            transform: `translate(-50%, -50%) rotate(${item.angle.toFixed(1)}deg)`,
-            fontSize:  `${rem.toFixed(2)}rem`,
-            opacity:   item.alpha.toFixed(2),
-          },
-        })
-        placed = true
-        break
-
-      }
+    for (let n = 0; n < TRIES; n++) {
+      const angle = (step * i + Math.random() * step) * Math.PI / 180
+      const reach = tier === 2 ? 0.42 + Math.random() * 0.40
+                  : tier === 1 ? 0.34 + Math.random() * 0.44
+                  :              0.30 + Math.random() * 0.48
+      cx = W / 2 + Math.cos(angle) * reach * W / 2
+      cy = H / 2 + Math.sin(angle) * reach * H / 2
+      box = { x: cx - w / 2, y: cy - h / 2, w, h }
+      if (shared(box, card) > 0) continue
+      if (taken.every(t => shared(box, t) <= CROWD)) break
     }
-  }
+
+    taken.push(box)
+    out.push({
+      text,
+      style: {
+        left:      `${(cx / W) * 100}%`,
+        top:       `${(cy / H) * 100}%`,
+        transform: `translate(-50%, -50%) rotate(${tilt.toFixed(1)}deg)`,
+        fontSize:  `${rem.toFixed(2)}rem`,
+        opacity:   alpha.toFixed(2),
+      },
+    })
+
+  })
 
   return out
 
