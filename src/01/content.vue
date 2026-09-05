@@ -21,7 +21,7 @@ let resizeTimer = null                                                          
 
 function checkViewport() { isMobile.value = window.innerWidth <= 1080 }                                                               // detect mobile
 
-function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkViewport, 150) }                                       // use resize timer
+function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitVerso() }, 150) }                                       // use resize timer
 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
@@ -64,6 +64,51 @@ function resetScroll() {
   if (postRef.value) postRef.value.scrollTop = 0
   const col = document.querySelector('.articulos')
   if (col) col.scrollTop = 0
+}
+
+const VERSO_MAX  = 21.6                                                                                                               // 1.35rem, the ceiling the wide layout already uses
+const VERSO_READ = 16                                                                                                                 // 1rem, what prose gets
+const SHAPE_MIN  = 8                                                                                                                   // below this there is no stanza to keep, only prose that was centred
+
+function fitVerso() {
+
+  const wrap = contentRef.value?.querySelector('.nota-verso')
+  if (!wrap) return
+
+  if (!isMobile.value) { wrap.style.fontSize = ''; return }
+
+  wrap.style.fontSize = ''
+  const cs = getComputedStyle(wrap)
+  const base = parseFloat(cs.fontSize) || 16
+
+  /* Prose nested inside a centred note carries its own fixed size and is not
+     part of the shape, so its long lines must not drag the measurement down. */
+
+  const blocks = [...wrap.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote')]
+    .filter(el => el.textContent.trim() && !el.querySelector('img, video, iframe') && !el.closest('.nota-prosa'))
+
+  if (!blocks.length) return
+
+  const ruler = document.createElement('span')
+  ruler.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;left:-9999px;top:0'
+  wrap.appendChild(ruler)
+
+  let widest = 0
+  for (const el of blocks) {
+    for (const line of el.innerHTML.split(/<br\s*\/?>/i)) {
+      ruler.innerHTML = line
+      if (ruler.offsetWidth > widest) widest = ruler.offsetWidth
+    }
+  }
+
+  ruler.remove()
+
+  const room = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+  if (!widest || room <= 0) return
+
+  const fit = base * room / widest
+  wrap.style.fontSize = `${Math.min(VERSO_MAX, fit < SHAPE_MIN ? VERSO_READ : fit)}px`
+
 }
 
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
@@ -117,11 +162,14 @@ async function handleLoadNote(slug) {                                           
   }
 
   await nextTick()
+  fitVerso()
   resetScroll()
 
 }
 
-watch(isMobile, (newVal) => { 
+watch(isMobile, async (newVal) => { 
+
+  await nextTick(); fitVerso()                                                                                                        // the breakpoint is what decides whether a note is fitted
 
   if (!shaderRef.value || !shaderRef.value.runQueue) return
   if (newVal) {
@@ -247,6 +295,7 @@ watch(() => store.lang, async () => {
 
 onMounted(async () => {
   checkViewport()
+  await nextTick(); fitVerso()
   window.addEventListener('resize', onResize)
   if (notFound.value) { await nextTick(); await new Promise(r => requestAnimationFrame(r)); await revealError() }
 })
