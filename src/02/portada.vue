@@ -78,10 +78,12 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   /* LAYOUT */ display: flex; flex-direction: column;
   /* BOX    */ width: 100%;
-  /* Same as the navbar, mirrored: an edge rather than a fill. See navbar.vue. */
-  /* FILL   */ background-color: var(--carbon-a60);
-  /* EDGE   */ border-top: 2px solid transparent;
-               border-image: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%) 1;
+  /* Same as the navbar, mirrored: a hairline around the whole bar rather than a
+     wash across it. See navbar.vue for why two backgrounds and not border-image. */
+
+  /* FILL   */ background: linear-gradient(var(--carbon), var(--carbon)) padding-box,
+                           linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%) border-box;
+  /* EDGE   */ border: 1px solid transparent;
   /* BORDER */ border-radius: var(--radius-ss) var(--radius-ss) 0 0;
   /* MOTION */ transition: all var(--animate-fast);
 
@@ -104,6 +106,9 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   /* BOX    */ min-width: 0;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%);
+               -webkit-background-clip: text; background-clip: text;
+               -webkit-text-fill-color: transparent; color: transparent;
 
 }
 

@@ -5,13 +5,15 @@
   /* FILL   */ color: var(--humo);
   /* FONT   */ font-size: var(--text-ll); line-height: var(--leading-base); word-break: break-word;
 
-  & img {
+  & img, & video {
 
     /* LAYOUT */ display: block;
     /* BOX    */ max-width: 100%; height: auto;
     /* BORDER */ border: var(--small-outline) var(--humo-a15); border-radius: var(--radius-ss);
 
   }
+
+  & video.gifvideo { border: none; border-radius: 0; width: 100%; }
 
 }
 
