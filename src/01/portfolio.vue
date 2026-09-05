@@ -105,13 +105,12 @@ async function openWelcome() {
   await new Promise(r => setTimeout(r, WELCOME_DELAY))
   if (currentProject.value) return
 
-  for (const proj of realProjects.value) {
-    currentProject.value = proj
-    await new Promise(r => setTimeout(r, WELCOME_STEP))
+  const list = portfolioProjects.value
+  for (let i = Math.floor(list.length / 2); i >= 0; i--) {
+    currentProject.value = list[i]
+    if (i > 0) await new Promise(r => setTimeout(r, WELCOME_STEP))
     if (welcomeAborted) return
   }
-
-  if (!welcomeAborted) currentProject.value = welcomeRay.value
 }
 
 let welcomeAborted = false
