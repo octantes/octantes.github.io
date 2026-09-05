@@ -118,10 +118,4 @@ onMounted(() => {
 
 @container post-viewer (min-width: 0px) { .about, .tagline, .user-status { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
 
-/* Same floor as the notes, same reason - these are centred and appear under
-   every one of them, so they were small even where the note above them was not.
-   See content.css. */
-
-@media (max-width: 1080px) { .about, .tagline, .user-status { font-size: clamp(1rem, 2.25cqw, 1.35rem); } }
-
 </style>

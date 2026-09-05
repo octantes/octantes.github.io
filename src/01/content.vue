@@ -66,48 +66,47 @@ function resetScroll() {
   if (col) col.scrollTop = 0
 }
 
-const VERSO_MAX  = 21.6                                                                                                               // 1.35rem, the ceiling the wide layout already uses
-const VERSO_READ = 16                                                                                                                 // 1rem, what prose gets
-const SHAPE_MIN  = 8                                                                                                                   // below this there is no stanza to keep, only prose that was centred
+const VERSO_MAX = 21.6                                                                                                                // 1.35rem, the ceiling the wide layout already uses
+const FIT_STEPS = 7                                                                                                                   // halvings, so the result lands within ~0.1px
 
-function fitVerso() {
+function versoWraps(blocks) {
+  for (const el of blocks) {
+    const lh = parseFloat(getComputedStyle(el).lineHeight) || 0
+    if (!lh) continue
+    const hard = el.innerHTML.split(/<br\s*\/?>/i).length
+    if (el.getBoundingClientRect().height > lh * (hard + 0.4)) return true
+  }
+  return false
+}
+
+async function fitVerso() {
 
   const wrap = contentRef.value?.querySelector('.nota-verso')
   if (!wrap) return
 
-  if (!isMobile.value) { wrap.style.fontSize = ''; return }
-
   wrap.style.fontSize = ''
-  const cs = getComputedStyle(wrap)
-  const base = parseFloat(cs.fontSize) || 16
+  if (!isMobile.value) return
 
-  /* Prose nested inside a centred note carries its own fixed size and is not
-     part of the shape, so its long lines must not drag the measurement down. */
+  if (document.fonts?.ready) await document.fonts.ready                                                                               // metrics change when the webfont lands
 
   const blocks = [...wrap.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote')]
     .filter(el => el.textContent.trim() && !el.querySelector('img, video, iframe') && !el.closest('.nota-prosa'))
 
   if (!blocks.length) return
 
-  const ruler = document.createElement('span')
-  ruler.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;left:-9999px;top:0'
-  wrap.appendChild(ruler)
+  const base = parseFloat(getComputedStyle(wrap).fontSize) || 16
+  if (versoWraps(blocks)) return                                                                                                      // already wrapping at the column's size, nothing to win
 
-  let widest = 0
-  for (const el of blocks) {
-    for (const line of el.innerHTML.split(/<br\s*\/?>/i)) {
-      ruler.innerHTML = line
-      if (ruler.offsetWidth > widest) widest = ruler.offsetWidth
-    }
+  let lo = base, hi = VERSO_MAX
+  if (hi <= lo) return
+
+  for (let i = 0; i < FIT_STEPS; i++) {
+    const mid = (lo + hi) / 2
+    wrap.style.fontSize = `${mid}px`
+    if (versoWraps(blocks)) hi = mid; else lo = mid
   }
 
-  ruler.remove()
-
-  const room = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
-  if (!widest || room <= 0) return
-
-  const fit = base * room / widest
-  wrap.style.fontSize = `${Math.min(VERSO_MAX, fit < SHAPE_MIN ? VERSO_READ : fit)}px`
+  wrap.style.fontSize = `${lo}px`
 
 }
 
@@ -162,14 +161,14 @@ async function handleLoadNote(slug) {                                           
   }
 
   await nextTick()
-  fitVerso()
+  await fitVerso()
   resetScroll()
 
 }
 
 watch(isMobile, async (newVal) => { 
 
-  await nextTick(); fitVerso()                                                                                                        // the breakpoint is what decides whether a note is fitted
+  await nextTick(); await fitVerso()                                                                                                        // the breakpoint is what decides whether a note is fitted
 
   if (!shaderRef.value || !shaderRef.value.runQueue) return
   if (newVal) {
@@ -295,7 +294,7 @@ watch(() => store.lang, async () => {
 
 onMounted(async () => {
   checkViewport()
-  await nextTick(); fitVerso()
+  await nextTick(); await fitVerso()
   window.addEventListener('resize', onResize)
   if (notFound.value) { await nextTick(); await new Promise(r => requestAnimationFrame(r)); await revealError() }
 })
