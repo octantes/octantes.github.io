@@ -44,21 +44,24 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; position: relative; z-index: 2;
   /* BOX    */ width: 100%; gap: 1rem; padding: 1rem; 
-  /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);  
+
+  /* FILL   */ background-color: var(--carbon-a60);
+  /* EDGE   */ border-top: 2px solid transparent;
+               border-image: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%) 1;
 
   & button {
 
     /* CURSOR */ cursor: pointer;
     /* BOX    */ padding: 0.5rem 1rem;
-    /* FILL   */ background-color: transparent; color: var(--carbon-a50);
+    /* FILL   */ background-color: transparent; color: var(--humo-a60);
     /* BORDER */ border: none; border-radius: var(--radius-ss);
     /* FONT   */ font-family: var(--font-main);
     /* MOTION */ transition: all var(--animate-faster);
     &:active   { transform: var(--scale-min); }
-    &:hover    { background-color: var(--carbon-a08); color: var(--carbon); }
+    &:hover    { background-color: var(--humo-a08); color: var(--niebla); }
     &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
 
-    &.active   { background-color: var(--carbon-a15); color: var(--carbon); box-shadow: var(--shadow-border) var(--carbon-a06); }
+    &.active   { background-color: var(--humo-a15); color: var(--niebla); box-shadow: var(--shadow-border) var(--humo-a15); }
     
   }
 
@@ -69,13 +72,13 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   /* CURSOR */ cursor: text;
   /* LAYOUT */ text-align: center; flex: 1 1 auto; min-width: 0;
   /* BOX */ padding: 0.5rem 1rem;
-  /* FILL */ background-color: var(--carbon-a02); color: var(--carbon);
-  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon-a15);
+  /* FILL */ background-color: var(--humo-a02); color: var(--niebla);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--humo-a15);
   /* FONT */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
-  &::placeholder { color: var(--carbon-a60); }
-  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon-a31); background-color: var(--carbon-a08); }
+  &::placeholder { color: var(--humo-a40); }
+  &:focus { color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--cristal-a40); background-color: var(--humo-a06); }
 
 }
 
