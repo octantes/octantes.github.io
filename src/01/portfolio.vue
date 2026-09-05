@@ -10,7 +10,7 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 const WELCOME_DELAY = 650                                                                                                             // let the page settle before it moves
-const WELCOME_WALK  = 3                                                                                                               // rays visited on the way to it
+const WELCOME_WALK  = 2                                                                                                               // rays crossed on the way, the welcome being the third stop
 const WELCOME_STEP  = 520                                                                                                             // per project - just past --animate-mid, so each rotation lands
 
 const welcomeRay = computed(() => ({
@@ -22,7 +22,14 @@ const welcomeRay = computed(() => ({
 }))
 
 const realProjects      = computed(() => store.notesIndex.filter(n => n.type === 'diseño' || n.type === 'desarrollo'))
-const portfolioProjects = computed(() => realProjects.value.length ? [welcomeRay.value, ...realProjects.value] : [])
+
+const portfolioProjects = computed(() => {
+  const list = realProjects.value
+  if (!list.length) return []
+  return [...list.filter(n => n.type === 'diseño'), welcomeRay.value, ...list.filter(n => n.type === 'desarrollo')]
+})
+
+const welcomeIndex = computed(() => portfolioProjects.value.findIndex(p => p.slug === WELCOME_SLUG))
 const currentProject    = ref(null)
 const prevSelectedIdx   = ref(-1)
 const rayAngles         = ref([])
@@ -107,11 +114,15 @@ async function openWelcome() {
   if (currentProject.value) return
 
   const list = portfolioProjects.value
-  for (let i = Math.min(WELCOME_WALK, list.length - 1); i >= 0; i--) {
+  const home = welcomeIndex.value
+  const from = Math.min(home + WELCOME_WALK, list.length - 1)
+
+  for (let i = from; i >= home; i--) {
     currentProject.value = list[i]
-    if (i > 0) await new Promise(r => setTimeout(r, WELCOME_STEP))
+    if (i > home) await new Promise(r => setTimeout(r, WELCOME_STEP))
     if (welcomeAborted) return
   }
+
 }
 
 let welcomeAborted = false

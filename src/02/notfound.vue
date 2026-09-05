@@ -43,9 +43,9 @@ function scatter(words) {
     const roll  = Math.random()
     const tier  = roll < 0.14 ? 2 : roll < 0.66 ? 1 : 0                         // giant, large, and merely big
 
-    const reach = tier === 2 ? 0.36 + Math.random() * 0.34
-                : tier === 1 ? 0.28 + Math.random() * 0.28
-                :              0.18 + Math.random() * 0.24
+    const reach = tier === 2 ? 0.44 + Math.random() * 0.30
+                : tier === 1 ? 0.38 + Math.random() * 0.26
+                :              0.32 + Math.random() * 0.24
 
     const size  = tier === 2 ? 7.5 + Math.random() * 3.5
                 : tier === 1 ? 3.6 + Math.random() * 2.6
