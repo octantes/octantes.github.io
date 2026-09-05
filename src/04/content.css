@@ -77,4 +77,6 @@
 
 @container post-viewer (min-width: 0px) { .nota-verso { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
 
-@media (max-width: 500px) { .nota { padding: 0.2rem var(--space-xs) 0 var(--space-xs); } }
+@media (max-width: 1080px) { .nota, .nota.nota-prosa, .nota-medios { padding-top: 0; } }
+
+@media (max-width: 500px) { .nota { padding: 0 var(--space-xs) 0 var(--space-xs); } }

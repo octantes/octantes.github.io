@@ -68,7 +68,7 @@ function resetScroll() {
 
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
-  const { html, error } = await fetchPost(slug)
+  const { html, error } = await fetchPost(slug, route.params.type)
 
   /* Two failures, told apart: a note that is not there, and a note we could not
      reach. The first is the reader's mistake and says so; the second is ours. */

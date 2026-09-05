@@ -438,13 +438,13 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  async function fetchPost(slug) {                                                                                                    // fetch post html 
+  async function fetchPost(slug, routeType) {                                                                                        // fetch post html 
 
     if (!slug) { setCurrentPost(null); return { html: '', error: null } }
     if (!notesLoaded.value) { await loadNotesIndex() }
 
     const metadataSlug = notesIndex.value.find(p => p.slug === slug)
-    setCurrentPost(metadataSlug || { type: 'textos', slug })
+    setCurrentPost(metadataSlug || { type: routeType || 'textos', slug })
     const post = currentPost.value
 
     const currentLang = (lang.value === 'en' && post.bilingual) ? 'en' : 'es'
