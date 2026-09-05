@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 
-const authorpic = '/assets/facu.webp'
+const authorpic = '/assets/kaste.webp'
 
 const router            = useRouter()
 const store             = useStore()
@@ -247,9 +247,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* BORDER */ border-radius: 50%; border: 2px solid var(--humo-a15);
   /* MOTION */ transition: transform var(--animate-fast), filter var(--animate-fast);
 
-  /* GRADE  */ filter: grayscale(1) sepia(1) hue-rotate(178deg) saturate(0.62) brightness(0.42) contrast(1.22);
-
-  &:hover { transform: scale(.95); filter: grayscale(1) sepia(1) hue-rotate(178deg) saturate(0.72) brightness(0.58) contrast(1.14); }
+  &:hover { transform: scale(.95); filter: brightness(1.25); }
 
 }
 
