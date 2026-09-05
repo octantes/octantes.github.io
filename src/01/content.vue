@@ -7,6 +7,8 @@ import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
 import Shader from '../03/shader.vue'
 import NotFound from '../02/notfound.vue'
+
+const MOBILE_PORTAL = true
 import Typewriter from '../03/typewriter.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
@@ -25,6 +27,8 @@ function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkV
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
 
+const veilOn      = ref(false)                                                                                                        // the mobile transition canvas, mounted only while it runs
+const veilRef     = ref(null)
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
 const containerRef= ref(null)                                                                                                         // ref for the portal box, where pointer effects listen
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
@@ -58,11 +62,31 @@ async function revealError() {
   await shaderRef.value.runQueue('hidden')
 }
 
+async function throughTheVeil(work) {
+
+  if (!MOBILE_PORTAL) { await work(); return }
+
+  veilOn.value = true
+  await nextTick()
+  await new Promise(r => requestAnimationFrame(r))
+
+  await veilRef.value?.runQueue('intro')
+  await work()
+  await veilRef.value?.runQueue('outro')
+  await veilRef.value?.runQueue('hidden')
+
+  veilOn.value = false
+
+}
+
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
   const { html, error } = await fetchPost(slug)
 
-  notFound.value = error ? 404 : 0
+  /* Two failures, told apart: a note that is not there, and a note we could not
+     reach. The first is the reader's mistake and says so; the second is ours. */
+
+  notFound.value = !error ? 0 : /not a note page|HTTP error 404/.test(error.message || '') ? 404 : 500
   noteContent.value = error ? '' : html
   if (error) { setCurrentPost(null); return }
   await nextTick()
@@ -184,9 +208,10 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
+        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug)); break }
         await handleLoadNote(slug)
-        if (!isMobile.value) await shaderRef.value?.runQueue('outro')
-        if (!isMobile.value) await shaderRef.value?.runQueue('hidden')
+        await shaderRef.value?.runQueue('outro')
+        await shaderRef.value?.runQueue('hidden')
         break
 
       // a note that turned out not to exist still needs the field to move
@@ -209,9 +234,10 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        if (!isMobile.value) await shaderRef.value?.runQueue('transition-intro')
+        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug)); break }
+        await shaderRef.value?.runQueue('transition-intro')
         await handleLoadNote(slug)
-        if (!isMobile.value) await shaderRef.value?.runQueue('transition-outro')
+        await shaderRef.value?.runQueue('transition-outro')
         break
       
     }
@@ -238,6 +264,10 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 </script>
 
 <template> 
+
+  <Teleport to="body">
+    <div v-if="veilOn" class="veil" aria-hidden="true"><Shader ref="veilRef" /></div>
+  </Teleport>
 
   <div v-if="!isMobile || currentPost" class="notedisplay">
     
@@ -343,6 +373,11 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   &.fs-content { height: 100%; }
 
 }
+
+/* Fixed to the viewport, so it is one screen no matter how long the note under
+   it turns out to be, and under the grain so the page keeps its texture. */
+
+.veil { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
 @media (max-width: 1080px) { 
 
