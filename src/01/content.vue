@@ -52,6 +52,12 @@ async function forceShaderResize() {                                            
 
 }
 
+async function revealError() {
+  if (isMobile.value || !shaderRef.value) return
+  await shaderRef.value.runQueue('outro')
+  await shaderRef.value.runQueue('hidden')
+}
+
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
   const { html, error } = await fetchPost(slug)
@@ -155,10 +161,11 @@ watch(                                                                          
       // steps aside and the error state takes the column
       case !slug && notFound.value:
         noteLoaded = false
-        firstLoad = false
         lastSlug = null
         setCurrentPost(null)
         noteContent.value = ''
+        if (!firstLoad) await revealError()
+        firstLoad = false
         break
 
       // first load without note, INTRO only on first page load
@@ -221,7 +228,11 @@ watch(() => store.lang, async () => {
   }
 })
 
-onMounted(()   => { checkViewport(); window.addEventListener('resize', onResize) })
+onMounted(async () => {
+  checkViewport()
+  window.addEventListener('resize', onResize)
+  if (notFound.value) { await nextTick(); await new Promise(r => requestAnimationFrame(r)); await revealError() }
+})
 onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout(resizeTimer) })
 
 </script>
@@ -298,7 +309,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 &::-webkit-scrollbar { display: none; }
 
-  &.is-error { z-index: 12; & .content { height: 100%; } }
+  &.is-error .content { height: 100%; }
   &.fs-mode { background: none; overflow: hidden; -webkit-mask-image: none; mask-image: none; &::after { display: none } }
 
 }
