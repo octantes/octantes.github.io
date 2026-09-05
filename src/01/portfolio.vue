@@ -10,8 +10,6 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 const WELCOME_DELAY = 650                                                                                                             // let the page settle before it moves
-const WELCOME_WALK  = 1                                                                                                               // one ray crossed: the one under the welcome, then the welcome
-const WELCOME_STEP  = 520                                                                                                             // per project - just past --animate-mid, so each rotation lands
 
 const welcomeRay = computed(() => ({
   slug: WELCOME_SLUG,
@@ -97,7 +95,6 @@ watch([currentProject, portfolioProjects], () => {
 }, { immediate: true })
 
 function handleRayClick(proj) {
-  welcomeAborted = true                                                                                                               // the reader is driving now
   if (proj.slug === WELCOME_SLUG) { currentProject.value = proj; return }                                                              // nothing to open behind it
   if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj
 }
@@ -113,19 +110,9 @@ async function openWelcome() {
   await new Promise(r => setTimeout(r, WELCOME_DELAY))
   if (currentProject.value) return
 
-  const list = portfolioProjects.value
-  const home = welcomeIndex.value
-  const from = Math.min(home + WELCOME_WALK, list.length - 1)
-
-  for (let i = from; i >= home; i--) {
-    currentProject.value = list[i]
-    if (i > home) await new Promise(r => setTimeout(r, WELCOME_STEP))
-    if (welcomeAborted) return
-  }
+  currentProject.value = welcomeRay.value
 
 }
-
-let welcomeAborted = false
 
 watch(portfolioProjects, list => { if (list.length) openWelcome() }, { immediate: true })
 
@@ -182,10 +169,13 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
           </div>
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
-            <p v-if="proj.slug !== WELCOME_SLUG" class="meta"><span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span><span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span></p>
+            <p v-if="proj.slug !== WELCOME_SLUG" class="meta">
+              <span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span><span class="sep">//</span>
+              <span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span>
+              <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span>
+            </p>
             <p v-else class="legend"><span class="key dis"></span>{{ store.t.nav.tabs['diseño'] }}<span class="key dev"></span>{{ store.t.nav.tabs['desarrollo'] }}</p>
             <p class="desc" :class="{ welcome: proj.slug === WELCOME_SLUG }">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
-            <div class="tags"> <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
           </div>
 
         </div>
@@ -356,7 +346,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   & .meta {
 
-    /* LAYOUT */ display: flex; align-items: center; gap: .5rem;
+    /* LAYOUT */ display: flex; align-items: center; flex-wrap: nowrap; gap: .4rem; overflow: hidden; white-space: nowrap;
     /* BOX    */ margin: 0 0 .15rem 0;
     /* FILL   */ color: var(--humo);
     /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem; text-transform: lowercase; letter-spacing: .04em;
