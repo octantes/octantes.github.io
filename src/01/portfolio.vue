@@ -131,6 +131,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
           </div>
 
           <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
+            <p class="meta"><span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span><span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span></p>
             <p class="desc">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
             <div class="tags"> <span v-for="tag in proj.tags?.slice(0, 3)" :key="tag" class="tag">{{ tag }}</span> </div>
           </div>
@@ -300,6 +301,18 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* BOX    */ width: 22rem; gap: 0.5rem; padding: .5rem;
   /* FONT   */ text-shadow: 1px 1px 2px var(--carbon);
   /* MOTION */ animation: spawnData var(--animate-fast) forwards;
+
+  & .meta {
+
+    /* LAYOUT */ display: flex; align-items: center; gap: .5rem;
+    /* BOX    */ margin: 0 0 .15rem 0;
+    /* FILL   */ color: var(--humo);
+    /* FONT   */ font-family: var(--font-mono); font-size: 0.7rem; text-transform: lowercase; letter-spacing: .04em;
+
+    & .sep  { color: var(--humo-a40); }
+    & .year { color: var(--cristal); }
+
+  }
 
   & .desc {
 

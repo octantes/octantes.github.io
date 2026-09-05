@@ -6,6 +6,7 @@ import { storeToRefs } from 'pinia'
 import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
 import Shader from '../03/shader.vue'
+import NotFound from '../02/notfound.vue'
 import Typewriter from '../03/typewriter.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
@@ -29,6 +30,7 @@ const containerRef= ref(null)                                                   
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
 const contentRef  = ref(null)                                                                                                         // ref for content element
 const noteContent = ref('')                                                                                                           // basic note html for insert
+const notFound    = ref(0)                                                                                                            // status code to show instead of a note, 0 for none
 
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
@@ -54,7 +56,9 @@ async function handleLoadNote(slug) {                                           
 
   const { html, error } = await fetchPost(slug)
 
-  noteContent.value = html
+  notFound.value = error ? 404 : 0
+  noteContent.value = error ? '' : html
+  if (error) { setCurrentPost(null); return }
   await nextTick()
 
   const contentElement = contentRef.value
@@ -113,6 +117,11 @@ watch(isMobile, (newVal) => {
 
 watch(computedFullscreen, async () => { await forceShaderResize() })                                                                  // watches for shader resize 
 
+watch(() => route.params.filterType, ft => {
+  if (ft === undefined) { if (!route.params.slug) notFound.value = 0; return }
+  notFound.value = store.tabs.some(tab => tab.value === ft) ? 0 : 404
+}, { immediate: true })
+
 watch(                                                                                                                                // trigger notes and animations 
   
   () => route.params.slug,
@@ -135,12 +144,23 @@ watch(                                                                          
 
         noteLoaded = false
         lastSlug = null
+        notFound.value = 0
         if (!isMobile.value) await shaderRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
         resetSEOTags()
         break
       
+      // an unknown filter is an error, not an empty gallery: no intro, the field
+      // steps aside and the error state takes the column
+      case !slug && notFound.value:
+        noteLoaded = false
+        firstLoad = false
+        lastSlug = null
+        setCurrentPost(null)
+        noteContent.value = ''
+        break
+
       // first load without note, INTRO only on first page load
       case !slug && firstLoad:
         noteLoaded = false
@@ -160,6 +180,10 @@ watch(                                                                          
         await handleLoadNote(slug)
         if (!isMobile.value) await shaderRef.value?.runQueue('outro')
         if (!isMobile.value) await shaderRef.value?.runQueue('hidden')
+        break
+
+      // a note that turned out not to exist still needs the field to move
+      case slug && notFound.value:
         break
       
       // first load from url, DIRECT when loading from url
@@ -213,14 +237,15 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
       <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" :title="store.t.portfolio.closeFullscreen" :aria-label="store.t.portfolio.closeFullscreenAria">X</button>
 
-      <div class="post" ref="postRef" :class="{ 'fs-mode': computedFullscreen }">
+      <div class="post" ref="postRef" :class="{ 'fs-mode': computedFullscreen, 'is-error': notFound }">
 
         <div class="content" ref="contentRef" :class="{ 'fs-content': computedFullscreen }">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
+          <NotFound v-else-if="notFound" :code="notFound" :key="route.fullPath" />                    <!-- for anything missing    -->
           <div v-else :class="computedNoteClass" v-html="noteContent" />                              <!-- for html posts          -->
 
-          <template v-if="currentPost && !computedNoteComp && !computedFullscreen">
+          <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
             <br><hr><br>
             <Subscribe />
             <br><hr><br>
@@ -272,6 +297,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   container-name: post-viewer;
 
 &::-webkit-scrollbar { display: none; }
+
+  &.is-error { z-index: 12; & .content { height: 100%; } }
   &.fs-mode { background: none; overflow: hidden; -webkit-mask-image: none; mask-image: none; &::after { display: none } }
 
 }

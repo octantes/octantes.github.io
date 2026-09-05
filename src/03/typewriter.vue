@@ -354,7 +354,9 @@ function onDocClick(ev) {
   if (++knocks >= POEM_CLICKS) { knocks = 0; recite() }
 }
 
-function checkLive() { live = props.enabled && window.innerWidth > 1080 }
+const stillness = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null
+
+function checkLive() { live = props.enabled && window.innerWidth > 1080 && !(stillness && stillness.matches) }
 
 let bound = null
 
