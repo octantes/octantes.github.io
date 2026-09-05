@@ -24,22 +24,39 @@ function figlet(code) {
   return [0, 1, 2, 3, 4, 5].map(r => digits.map(d => d[r]).join('')).join('\n')
 }
 
+const REPEATS = 4                                                               // times each word is thrown
+
 function scatter(words) {
-  const step = 360 / words.length
-  return words.map((text, i) => {
+
+  const thrown = []
+  for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w)
+  for (let i = thrown.length - 1; i > 0; i--) {                                 // shuffle, so repeats never land in a ring
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
+  }
+
+  const step = 360 / thrown.length
+
+  return thrown.map((text, i) => {
+
     const angle = (step * i + Math.random() * step) * Math.PI / 180
-    const reach = 0.30 + Math.random() * 0.16
+    const hero  = Math.random() < 0.18
+    const reach = hero ? 0.34 + Math.random() * 0.30 : 0.20 + Math.random() * 0.28
+    const size  = hero ? 3.4 + Math.random() * 2.6 : 0.8 + Math.random() * 1.0
+    const alpha = hero ? 0.07 + Math.random() * 0.06 : 0.26 + Math.random() * 0.38
+
     return {
       text,
       style: {
         left:      `${50 + Math.cos(angle) * reach * 100}%`,
-        top:       `${50 + Math.sin(angle) * reach * 78}%`,
-        transform: `translate(-50%, -50%) rotate(${(Math.random() * 16 - 8).toFixed(1)}deg)`,
-        fontSize:  `${(0.9 + Math.random() * 0.9).toFixed(2)}rem`,
-        opacity:   (0.35 + Math.random() * 0.45).toFixed(2),
+        top:       `${50 + Math.sin(angle) * reach * 82}%`,
+        transform: `translate(-50%, -50%) rotate(${(Math.random() * 18 - 9).toFixed(1)}deg)`,
+        fontSize:  `${size.toFixed(2)}rem`,
+        opacity:   alpha.toFixed(2),
       },
     }
   })
+
 }
 
 const art   = figlet(props.code)
