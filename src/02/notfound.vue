@@ -49,7 +49,7 @@ function scatter(words, el, stage, card) {
   const width = measurer(el)
 
   const thrown = []
-  for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w)
+  for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w.toUpperCase())
   for (let i = thrown.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
