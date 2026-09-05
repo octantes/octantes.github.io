@@ -27,12 +27,14 @@ function figlet(code) {
 const REPEATS  = 5                                                              // times each word is thrown
 const TRIES    = 14                                                             // rerolls before a word is placed anyway
 const CROWD    = 0.34                                                           // fraction of the smaller word two may share
+const WEIGHT   = 900                                                            // heaviest Inconsolata carries, requested in index.html
 const VSPREAD  = 1.22                                                           // the column is taller than it is wide; throw with it
 
 function measurer(el) {
-  const font = getComputedStyle(el).fontFamily
+  const cs = getComputedStyle(el)
+  const font = cs.fontFamily
   const c = document.createElement('canvas').getContext('2d')
-  return (text, px) => { c.font = `${px}px ${font}`; return c.measureText(text).width }
+  return (text, px) => { c.font = `${WEIGHT} ${px}px ${font}`; return c.measureText(text).width }
 }
 
 function shared(a, b) {
@@ -176,6 +178,7 @@ onMounted(() => {
   /* CURSOR */ user-select: none; pointer-events: none;
   /* LAYOUT */ position: absolute; white-space: nowrap;
   /* FILL   */ color: var(--humo);
+  /* FONT   */ font-weight: 900;
 
 }
 
