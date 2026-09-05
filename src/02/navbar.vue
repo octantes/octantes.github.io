@@ -45,9 +45,9 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; position: relative; z-index: 2;
   /* BOX    */ width: 100%; gap: 1rem; padding: 1rem; 
 
-  /* FILL   */ background-color: var(--carbon-a60);
-  /* EDGE   */ border-top: 2px solid transparent;
-               border-image: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%) 1;
+  /* FILL   */ background: linear-gradient(var(--carbon), var(--carbon)) padding-box,
+                           linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%) border-box;
+  /* EDGE   */ border: 1px solid transparent;
 
   & button {
 
@@ -91,7 +91,19 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
 }
 
-.logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center; }  
+/* The wordmark carries the gradient too, mirrored against the portada's, so the
+   two bars read as a pair even though neither is filled any more. */
+
+.logo-xx {
+
+  /* FONT   */ font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center;
+  /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);
+               -webkit-background-clip: text; background-clip: text;
+               -webkit-text-fill-color: transparent; color: transparent;
+
+  &:hover { filter: brightness(1.25); }
+
+}
 
 @media (max-width: 500px) {
   .filters { gap: .75rem; }
