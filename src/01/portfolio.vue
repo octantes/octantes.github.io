@@ -142,7 +142,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
       <div class="rays-container">
         
-        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)` }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
+        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)`, '--i': i, '--n': portfolioProjects.length }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
           
           <div class="ray-line"></div>
           <span class="ray-text">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span>
@@ -436,7 +436,11 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   .avatar         { width: 10rem; height: 10rem; align-self: flex-start;                                                                                                                           }
   .rays-wrapper   { position: relative; display: flex; flex-direction: column; width: 100%; max-width: 25rem; height: auto; margin: 0; mask-image: none; -webkit-mask-image: none;                 }
   .rays-container { position: relative; left: auto; top: auto; display: flex; flex-direction: column; width: 100%; gap: 1rem;                                                                      }
-  .ray-box        { position: relative; left: auto; top: auto; display: flex; flex-wrap: wrap; width: 100%; height: auto; padding-left: 0; transform: none !important;                             }
+
+  .ray-box        { position: relative; left: auto; top: auto; display: flex; flex-wrap: wrap; width: 100%; height: auto;
+                    padding-left: calc(var(--i) * 0.42rem);
+                    transform: rotate(calc((var(--i) - (var(--n) - 1) / 2) * 1.15deg)) !important;
+                    transform-origin: left center;                                                                                                 }
   .ray-data       { position: relative; top: auto; display: flex; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                           }
   .ray-line       { display: none;                                                                                                                                                                 }
   .stack          { justify-content: flex-start;                                                                                                                                                   }
