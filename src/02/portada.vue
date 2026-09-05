@@ -5,7 +5,8 @@ import { storeToRefs } from 'pinia'
 
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
-const expanded            = ref(false)                                                                                                                      // description deploy state
+
+const expanded            = ref(typeof window !== 'undefined' && window.innerWidth <= 1080)                                            // description deploy state
 const emit                = defineEmits(['update:expanded'])                                                                          // emit expanded state to parent
 
 function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link
@@ -83,6 +84,8 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   &:not(.expanded):hover { filter: brightness(95%); }
   &.expanded { margin-bottom: 1rem; border-radius: var(--radius-ss); }
+
+  @media (max-width: 1080px) { border-radius: var(--radius-ss); }
 
 }
 

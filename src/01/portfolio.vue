@@ -10,6 +10,7 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 const WELCOME_DELAY = 650                                                                                                             // let the page settle before it moves
+const WELCOME_WALK  = 3                                                                                                               // rays visited on the way to it
 const WELCOME_STEP  = 520                                                                                                             // per project - just past --animate-mid, so each rotation lands
 
 const welcomeRay = computed(() => ({
@@ -106,7 +107,7 @@ async function openWelcome() {
   if (currentProject.value) return
 
   const list = portfolioProjects.value
-  for (let i = Math.floor(list.length / 2); i >= 0; i--) {
+  for (let i = Math.min(WELCOME_WALK, list.length - 1); i >= 0; i--) {
     currentProject.value = list[i]
     if (i > 0) await new Promise(r => setTimeout(r, WELCOME_STEP))
     if (welcomeAborted) return

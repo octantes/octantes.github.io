@@ -758,13 +758,37 @@ function gridInfo() {
 }
 
 defineExpose({ runQueue, attachOverlay, gridInfo })
-onMounted(() => { requestAnimationFrame(() => { resetContext(); window.addEventListener('resize', resetContext) }) })
+
+let observed = { w: 0, h: 0 }
+let sizeWatch = null
+
+function onContainerResize() {
+  const el = containerRef.value
+  if (!el) return
+  const r = el.getBoundingClientRect()
+  const w = Math.round(r.width), h = Math.round(r.height)
+  if (w === observed.w && h === observed.h) return
+  observed = { w, h }
+  resetContext()
+}
+
+onMounted(() => { requestAnimationFrame(() => {
+  resetContext()
+  window.addEventListener('resize', resetContext)
+  if (containerRef.value && typeof ResizeObserver !== 'undefined') {
+    const r = containerRef.value.getBoundingClientRect()
+    observed = { w: Math.round(r.width), h: Math.round(r.height) }
+    sizeWatch = new ResizeObserver(onContainerResize)
+    sizeWatch.observe(containerRef.value)
+  }
+}) })
 
 onBeforeUnmount(() => {
 
   if (taskResolve) { const r = taskResolve; taskPromise = null; taskResolve = null; r() }
   cancelAnimationFrame(animationID)
   window.removeEventListener('resize', resetContext)
+  if (sizeWatch) { sizeWatch.disconnect(); sizeWatch = null }
   if (animateGerm.lastRatio !== undefined) animateGerm.lastRatio = 0
   if (animateGermInv.frontierQueue !== undefined) animateGermInv.frontierQueue = null
   if (animateGermInv.frontierSet !== undefined) animateGermInv.frontierSet = null
