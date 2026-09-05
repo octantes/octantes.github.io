@@ -24,7 +24,7 @@ function figlet(code) {
   return [0, 1, 2, 3, 4, 5].map(r => digits.map(d => d[r]).join('')).join('\n')
 }
 
-const REPEATS  = 5                                                              // times each word is thrown
+const THROWS   = 20                                                             // words on screen, whatever the phrase is
 const TRIES    = 14                                                             // rerolls before a word is placed anyway
 const CROWD    = 0.34                                                           // fraction of the smaller word two may share
 const VSPREAD  = 1.22                                                           // the column is taller than it is wide; throw with it
@@ -49,7 +49,7 @@ function scatter(words, el, stage, card) {
   const width = measurer(el)
 
   const thrown = []
-  for (let r = 0; r < REPEATS; r++) for (const w of words) thrown.push(w)
+  for (let i = 0; i < THROWS; i++) thrown.push(words[i % words.length])
   for (let i = thrown.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]

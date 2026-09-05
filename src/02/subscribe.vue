@@ -123,6 +123,12 @@ function handleSubscription(e) { if (e) e.preventDefault(); store.emitSub() }   
 
 @container post-viewer (min-width: 0px) { .subscribe, .cta, .textbox, .submit { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
 
+/* Same floor as the notes, same reason - these are centred and appear under
+   every one of them, so they were small even where the note above them was not.
+   See content.css. */
+
+@media (max-width: 1080px) { .subscribe, .cta, .textbox, .submit { font-size: clamp(1rem, 2.25cqw, 1.35rem); } }
+
 @media (max-width: 500px) { .subscribe { gap: 0; } .form { padding-bottom: 0; } }
 
 </style>
