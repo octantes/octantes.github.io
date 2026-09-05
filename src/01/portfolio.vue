@@ -243,11 +243,13 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ position: relative; z-index: 2; overflow: hidden;
   /* BOX    */ width: 15rem; height: 15rem; flex-shrink: 0; object-fit: cover;
-  /* FILL   */ background-color: var(--carbon); filter: brightness(0.8);
+  /* FILL   */ background-color: var(--carbon);
   /* BORDER */ border-radius: 50%; border: 2px solid var(--humo-a15);
-  /* MOTION */ transition: transform var(--animate-fast);
+  /* MOTION */ transition: transform var(--animate-fast), filter var(--animate-fast);
 
-  &:hover { transform: scale(.95); }
+  /* GRADE  */ filter: grayscale(1) sepia(1) hue-rotate(178deg) saturate(0.62) brightness(0.42) contrast(1.22);
+
+  &:hover { transform: scale(.95); filter: grayscale(1) sepia(1) hue-rotate(178deg) saturate(0.72) brightness(0.58) contrast(1.14); }
 
 }
 

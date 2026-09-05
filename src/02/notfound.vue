@@ -55,6 +55,12 @@ function scatter(words, el, stage, card) {
     ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
   }
 
+  /* Two of the enormous ones, always. Rolling for them meant a load could come
+     up with one, or none, and the whole field lost its top note. */
+
+  const giants = new Set()
+  while (giants.size < Math.min(2, thrown.length)) giants.add(Math.floor(Math.random() * thrown.length))
+
   const half  = Math.ceil(thrown.length / 2)
   const step  = 180 / half
   const taken = []
@@ -63,7 +69,7 @@ function scatter(words, el, stage, card) {
   thrown.forEach((text, i) => {
 
     const roll = Math.random()
-    const tier = roll < 0.10 ? 3 : roll < 0.38 ? 2 : roll < 0.68 ? 1 : 0
+    const tier = giants.has(i) ? 3 : roll < 0.31 ? 2 : roll < 0.66 ? 1 : 0
     const rem  = tier === 3 ? 7.5 + Math.random() * 3.5
                : tier === 2 ? 3.6 + Math.random() * 2.4
                : tier === 1 ? 1.7 + Math.random() * 1.0
