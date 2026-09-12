@@ -44,22 +44,21 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   /* CURSOR */ user-select: none;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; position: relative; z-index: 2;
   /* BOX    */ width: 100%; gap: 1rem; padding: 1rem; 
-
-  /* FILL   */ background: linear-gradient(125deg, var(--lirio-a31) 0%, var(--cristal-a31) 100%);
+  /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);  
 
   & button {
 
     /* CURSOR */ cursor: pointer;
     /* BOX    */ padding: 0.5rem 1rem;
-    /* FILL   */ background-color: transparent; color: var(--humo-a60);
+    /* FILL   */ background-color: transparent; color: var(--carbon-a50);
     /* BORDER */ border: none; border-radius: var(--radius-ss);
     /* FONT   */ font-family: var(--font-main);
     /* MOTION */ transition: all var(--animate-faster);
     &:active   { transform: var(--scale-min); }
-    &:hover    { background-color: var(--humo-a08); color: var(--niebla); }
+    &:hover    { background-color: var(--carbon-a08); color: var(--carbon); }
     &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
 
-    &.active   { background-color: var(--humo-a15); color: var(--niebla); box-shadow: var(--shadow-border) var(--humo-a15); }
+    &.active   { background-color: var(--carbon-a15); color: var(--carbon); box-shadow: var(--shadow-border) var(--carbon-a06); }
     
   }
 
@@ -70,13 +69,13 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   /* CURSOR */ cursor: text;
   /* LAYOUT */ text-align: center; flex: 1 1 auto; min-width: 0;
   /* BOX */ padding: 0.5rem 1rem;
-  /* FILL */ background-color: var(--humo-a02); color: var(--niebla);
-  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--humo-a15);
+  /* FILL */ background-color: var(--carbon-a02); color: var(--carbon);
+  /* BORDER */ border: none; border-radius: var(--radius-ss); box-shadow: var(--shadow-border) var(--carbon-a15);
   /* FONT */ font-family: var(--font-main); font-style: italic;
   /* MOTION */ transition: all var(--animate-fast);
 
-  &::placeholder { color: var(--humo-a40); }
-  &:focus { color: var(--niebla); outline: none; box-shadow: var(--shadow-border) var(--cristal-a40); background-color: var(--humo-a06); }
+  &::placeholder { color: var(--carbon-a60); }
+  &:focus { color: var(--carbon); outline: none; box-shadow: var(--shadow-border) var(--carbon-a31); background-color: var(--carbon-a08); }
 
 }
 
@@ -89,19 +88,7 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
 }
 
-/* The wordmark carries the gradient too, mirrored against the portada's, so the
-   two bars read as a pair even though neither is filled any more. */
-
-.logo-xx {
-
-  /* FONT   */ font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center;
-  /* FILL   */ background: linear-gradient(125deg, var(--lirio) 0%, var(--cristal) 100%);
-               -webkit-background-clip: text; background-clip: text;
-               -webkit-text-fill-color: transparent; color: transparent;
-
-  &:hover { filter: brightness(1.25); }
-
-}
+.logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center; }  
 
 @media (max-width: 500px) {
   .filters { gap: .75rem; }
