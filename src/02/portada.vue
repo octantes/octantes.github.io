@@ -78,9 +78,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   /* LAYOUT */ display: flex; flex-direction: column;
   /* BOX    */ width: 100%;
-  /* Same as the navbar, mirrored: the wash at a fifth strength. See navbar.vue. */
-
-  /* FILL   */ background: linear-gradient(125deg, var(--cristal-a31) 0%, var(--lirio-a31) 100%);
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%);
   /* BORDER */ border-radius: var(--radius-ss) var(--radius-ss) 0 0;
   /* MOTION */ transition: all var(--animate-fast);
 
@@ -103,9 +101,6 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   /* BOX    */ min-width: 0;
   /* FONT   */ font-family: var(--font-mono); font-size: 1.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%);
-               -webkit-background-clip: text; background-clip: text;
-               -webkit-text-fill-color: transparent; color: transparent;
 
 }
 
@@ -129,7 +124,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   &:hover { transform: var(--scale-min); }
 
-  & hr { border: none; border-top: var(--small-outline) var(--humo-a15); margin: 0; }
+  & hr { border: none; border-top: var(--small-outline) var(--carbon); margin: 0; }
 
 }
 
@@ -153,11 +148,11 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
   /* LAYOUT */ display: inline-flex; flex-direction: row; align-items: center;
   /* BORDER */ border-radius: 9999px;
   /* BOX    */ padding: .5rem 1rem .5rem .6rem; gap: .65rem;
-  /* FILL   */ background-color: var(--humo-a08);
+  /* FILL   */ background-color: var(--carbon-a15);
   /* FONT   */ font-family: var(--font-mono); font-size: 1rem; font-weight: normal;
   /* MOTION */ transition: all var(--animate-fast);
 
-  &:hover  { cursor: pointer; background-color: var(--humo-a15); }
+  &:hover  { cursor: pointer; background-color: var(--carbon-a31); }
   &:active { transform: var(--scale-min); }
 
 }
@@ -186,12 +181,12 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
   /* CURSOR */ cursor: pointer;
   /* LAYOUT */ display: flex; align-items: center; justify-content: center;
   /* BOX    */ padding: 0; align-self: stretch; aspect-ratio: 1; overflow: hidden; flex: none; min-width: 2rem; min-height: 2rem;
-  /* FILL   */ background-color: var(--humo-a08); color: var(--humo-a60);
+  /* FILL   */ background-color: var(--carbon-a15); color: var(--carbon-a50);
   /* BORDER */ border: none; border-radius: 9999px;
   /* FONT   */ font-family: var(--font-main); font-weight: normal;
   /* MOTION */ transition: all var(--animate-faster);
 
-  &:hover  { background-color: var(--humo-a15); color: var(--niebla); }
+  &:hover  { background-color: var(--carbon-a31); color: var(--carbon); }
   &:active { transform: var(--scale-min); }
 
 }
