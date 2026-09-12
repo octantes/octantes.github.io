@@ -233,6 +233,8 @@ watch(                                                                          
     if (store.processing) return
     setProcessing(true)
 
+    if (route.params.type !== 'diseño') fullBleed.value = false
+
     try {
 
     await nextTick()
