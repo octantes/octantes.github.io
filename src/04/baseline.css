@@ -15,7 +15,7 @@
     --carbon-a56:  #1B1C1C90;
     --carbon-a60:  #1B1C1C99;
 
-    --carbon:    #1B1C1C;
+    --carbon:      #1B1C1C;
 
     --ceniza-a02:  #2B2C2C05;
     --ceniza-a06:  #2B2C2C10;
@@ -28,7 +28,7 @@
     --ceniza-a56:  #2B2C2C90;
     --ceniza-a60:  #2B2C2C99;
 
-    --ceniza:    #2B2C2C;
+    --ceniza:      #2B2C2C;
 
     --polvo-a02:   #3C3C3C05;
     --polvo-a06:   #3C3C3C10;
@@ -41,7 +41,7 @@
     --polvo-a56:   #3C3C3C90;
     --polvo-a60:   #3C3C3C99;
 
-    --polvo:     #3C3C3C;
+    --polvo:       #3C3C3C;
 
     --humo-a02:    #AAABAC05;
     --humo-a06:    #AAABAC10;
@@ -54,7 +54,7 @@
     --humo-a56:    #AAABAC90;
     --humo-a60:    #AAABAC99;
 
-    --humo:      #AAABAC;
+    --humo:        #AAABAC;
 
     --niebla-a02:  #D8DADE05;
     --niebla-a06:  #D8DADE10;
@@ -67,7 +67,7 @@
     --niebla-a56:  #D8DADE90;
     --niebla-a60:  #D8DADE99;
 
-    --niebla:    #D8DADE;
+    --niebla:      #D8DADE;
 
     --brillo-a02:  #F2F2F205;
     --brillo-a06:  #F2F2F210;
@@ -80,7 +80,7 @@
     --brillo-a56:  #F2F2F290;
     --brillo-a60:  #F2F2F299;
 
-    --brillo:    #F2F2F2;
+    --brillo:      #F2F2F2;
 
     --lirio-a02:   #986C9805;
     --lirio-a06:   #986C9810;
@@ -93,7 +93,7 @@
     --lirio-a56:   #986C9890;
     --lirio-a60:   #986C9899;
 
-    --lirio:     #986C98;
+    --lirio:       #986C98;
     
     --cristal-a02: #8AB6BB05;
     --cristal-a06: #8AB6BB10;
@@ -106,7 +106,7 @@
     --cristal-a56: #8AB6BB90;
     --cristal-a60: #8AB6BB99;
 
-    --cristal:   #8AB6BB;
+    --cristal:     #8AB6BB;
 
     --arcilla-a02: #85494905;
     --arcilla-a06: #85494910;
@@ -119,7 +119,7 @@
     --arcilla-a56: #85494990;
     --arcilla-a60: #85494999;
 
-    --arcilla:   #854949;
+    --arcilla:     #854949;
 
     --poma-a02:    #6FAC6705;
     --poma-a06:    #6FAC6710;
@@ -132,12 +132,10 @@
     --poma-a56:    #6FAC6790;
     --poma-a60:    #6FAC6799;
 
-    --poma:      #6FAC67;
+    --poma:        #6FAC67;
 
     --shadow-border: inset 0 0 0 1px;
     --small-outline: 1px solid;
-
-    /* SPACE - the rhythm; --space-ll is the base the page is already built on */
 
     --space-xxs: 0.25rem;
     --space-xs:  0.40rem;
@@ -147,8 +145,6 @@
     --space-xl:  1.50rem;
     --space-xxl: 2.00rem;
     --space-max: 4.00rem;
-
-    /* TEXT - the ramp; steps sit far enough apart to read as different ranks */
 
     --text-xs:   0.70rem;
     --text-ss:   0.80rem;
@@ -160,8 +156,6 @@
 
     --leading-tight: 1.25;
     --leading-base:  1.50;
-
-    /* MEASURE - line length for running prose, past ~75ch the eye loses the line */
 
     --measure: 34rem;
 
