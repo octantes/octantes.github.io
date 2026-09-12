@@ -348,9 +348,9 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <div v-if="!isMobile || currentPost" class="notedisplay">
+  <div v-if="!isMobile || currentPost" class="notedisplay" :class="{ 'no-aperture': fullBleed }">
     
-    <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen, 'no-aperture': fullBleed }">
+    <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
 
       <Shader class="shader" ref="shaderRef"/>
       <Typewriter :shader="shaderRef" :container="containerRef" :enabled="!currentPost && !computedFullscreen" />
@@ -406,14 +406,13 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
     linear-gradient(to right, var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
     linear-gradient(to left,  var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
     linear-gradient(to top,   var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem);
-  /* MOTION */ transition: opacity var(--animate-mid);
+  /* MOTION */ transition: opacity var(--animate-fast);
 
 }
 
-.container.no-aperture::after,
-.container.no-aperture .container::after { opacity: 0; }
+.notedisplay.no-aperture .container::after { opacity: 0; }
 
-.container.no-aperture .post {
+.notedisplay.no-aperture .post {
   -webkit-mask-size: 100% calc(100% + 4rem); mask-size: 100% calc(100% + 4rem);
   -webkit-mask-position: 0 -2rem;            mask-position: 0 -2rem;
 }
@@ -432,8 +431,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   -webkit-mask-size: 100% 100%;   mask-size: 100% 100%;
   -webkit-mask-position: 0 0;     mask-position: 0 0;
-  /* MOTION */ transition: -webkit-mask-size var(--animate-mid), -webkit-mask-position var(--animate-mid),
-                           mask-size var(--animate-mid), mask-position var(--animate-mid);
+  /* MOTION */ transition: -webkit-mask-size var(--animate-fast), -webkit-mask-position var(--animate-fast),
+                           mask-size var(--animate-fast), mask-position var(--animate-fast);
 
   container-type: inline-size;
   container-name: post-viewer;
