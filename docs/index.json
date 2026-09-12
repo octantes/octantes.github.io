@@ -1,5 +1,27 @@
 [
   {
+    "slug": "culto",
+    "title": "culto",
+    "description": "rituales vacíos, altares de asfalto y una fe en pausa",
+    "type": "musica",
+    "tags": [
+      "album",
+      "instrumental"
+    ],
+    "portada": "https://octantes.github.io/posts/musica/culto/portada.webp",
+    "handle": [
+      "kaste"
+    ],
+    "date": "08/08/2026",
+    "isoDate": "2026-08-08T00:00:00.000Z",
+    "url": "/posts/musica/culto/",
+    "vuecomp": null,
+    "fullscreen": null,
+    "bilingual": true,
+    "titleEn": "culto",
+    "descriptionEn": "empty rituals, altars of asphalt, and a faith in suspension"
+  },
+  {
     "slug": "nubenueve",
     "title": "nubenueve - tienda de discos",
     "description": "pagina para tienda de discos, vinilos y cintas de casette",
