@@ -268,7 +268,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 .ray-box { 
 
   /* CURSOR */ cursor: pointer; pointer-events: auto;
-  /* FOCUS  */ &:focus { outline: none; } &:focus-visible .ray-text { outline: var(--small-outline) var(--humo); outline-offset: 3px; }
+  /* FOCUS  */                &:focus { outline: none; box-shadow: none; }
+               &:focus-visible .ray-text { outline: var(--small-outline) var(--humo); outline-offset: 3px; }
   /* LAYOUT */ position: absolute; left: 0; top: -1.5rem; display: flex; align-items: center; justify-content: flex-start;
   /* BOX    */ width: 35rem; height: 3rem; padding-left: 9rem; transform-origin: left center;
   /* MOTION */ transition: transform var(--animate-mid); will-change: transform;
