@@ -410,7 +410,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.container.no-aperture::after { opacity: 0; }
+.container.no-aperture::after,
+.container.no-aperture .container::after { opacity: 0; }
 
 .container.no-aperture .post {
   -webkit-mask-size: 100% calc(100% + 4rem); mask-size: 100% calc(100% + 4rem);
