@@ -25,26 +25,6 @@
     <meta name="description" content="tejiendo hechizos">
     <link rel="canonical" href="__SITE_URL__/">
 
-    <script>
-    (function() {
-      var lang = localStorage.getItem('lang')
-      if (!lang) {
-        var nav = (navigator.language || '').toLowerCase().split('-')[0]
-        lang = nav === 'es' ? 'es' : 'en'
-        localStorage.setItem('lang', lang)
-      }
-      if (lang === 'en') {
-        document.documentElement.lang = 'en'
-        document.title = 'octantes.ar - multimedia portal'
-        document.querySelector('meta[name="description"]').content = 'weaving spells'
-        document.querySelector('meta[property="og:description"]').content = 'weaving spells'
-        document.querySelector('meta[name="twitter:description"]').content = 'weaving spells'
-        var ld = document.querySelector('script[type="application/ld+json"]')
-        if (ld) { try { var obj = JSON.parse(ld.textContent); obj.description = 'weaving spells'; ld.textContent = JSON.stringify(obj) } catch(e) {} }
-      }
-    })()
-    </script>
-
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -68,6 +48,26 @@
     <meta name="twitter:description" content="tejiendo hechizos">
     <meta name="twitter:image" content="__SITE_URL__/assets/portada.webp">
     <meta name="twitter:creator" content="@octantes">
+
+    <script>
+    (function() {
+      var lang = localStorage.getItem('lang')
+      if (!lang) {
+        var nav = (navigator.language || '').toLowerCase().split('-')[0]
+        lang = nav === 'es' ? 'es' : 'en'
+        localStorage.setItem('lang', lang)
+      }
+      if (lang === 'en') {
+        document.documentElement.lang = 'en'
+        document.title = 'octantes.ar - multimedia portal'
+        document.querySelector('meta[name="description"]').content = 'weaving spells'
+        document.querySelector('meta[property="og:description"]').content = 'weaving spells'
+        document.querySelector('meta[name="twitter:description"]').content = 'weaving spells'
+        var ld = document.querySelector('script[type="application/ld+json"]')
+        if (ld) { try { var obj = JSON.parse(ld.textContent); obj.description = 'weaving spells'; ld.textContent = JSON.stringify(obj) } catch(e) {} }
+      }
+    })()
+    </script>
 
   </head>
 
