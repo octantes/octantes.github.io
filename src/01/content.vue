@@ -385,19 +385,13 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.container::before,
+/* Paint rather than mask: a mask here would make the canvas translucent, and
+   the state machine depends on the field being solid while a note swaps in. */
+
 .container::after {
 
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
-  /* MOTION */ transition: opacity var(--animate-mid);
-
-}
-
-/* The wide aperture: every note but a design one. */
-
-.container::before {
-
   /* STATE  */ opacity: 1;
   /* FILL   */
   background:
@@ -405,25 +399,13 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
     linear-gradient(to right, var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
     linear-gradient(to left,  var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
     linear-gradient(to top,   var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem);
+  /* MOTION */ transition: opacity var(--animate-mid);
 
 }
 
-.container::after {
+.container:has(> .post .nota-medios[data-type="dise\00f1o"])::after { opacity: 0; }
 
-  /* STATE  */ opacity: 0;
-  /* FILL   */
-  background:
-    radial-gradient(ellipse 50% 70% at 50% 30%, transparent 100%, var(--carbon-a31) 127%, var(--carbon-a56) 152%),
-    linear-gradient(to right, var(--carbon-a56) 0, var(--carbon-a31) .9rem, var(--carbon-a15) 1.6rem, transparent 2.5rem),
-    linear-gradient(to left,  var(--carbon-a56) 0, var(--carbon-a31) .9rem, var(--carbon-a15) 1.6rem, transparent 2.5rem),
-    linear-gradient(to top,   var(--carbon-a56) 0, var(--carbon-a31) .9rem, var(--carbon-a15) 1.6rem, transparent 2.5rem);
-
-}
-
-.container:has(> .post .nota-medios[data-type="dise\00f1o"])::before { opacity: 0; }
-.container:has(> .post .nota-medios[data-type="dise\00f1o"])::after  { opacity: 1; }
-
-.container.fs-container::before, .container.fs-container::after { display: none; }
+.container.fs-container::after { display: none; }
 
 .post {
 
@@ -483,7 +465,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
      the aperture would clip the page rather than frame it */
   .post { -webkit-mask-image: none; mask-image: none; }
 
-  .container::before, .container::after { display: none; }
+  .container::after { display: none; }
 
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
