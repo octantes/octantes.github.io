@@ -412,6 +412,11 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 .container.no-aperture::after { opacity: 0; }
 
+.container.no-aperture .post {
+  -webkit-mask-size: 100% calc(100% + 4rem); mask-size: 100% calc(100% + 4rem);
+  -webkit-mask-position: 0 -2rem;            mask-position: 0 -2rem;
+}
+
 .container.fs-container::after { display: none; }
 
 .post {
@@ -423,6 +428,11 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* MASK   */
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 2rem, black calc(100% - 2rem), transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, black 2rem, black calc(100% - 2rem), transparent 100%);
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;   mask-size: 100% 100%;
+  -webkit-mask-position: 0 0;     mask-position: 0 0;
+  /* MOTION */ transition: -webkit-mask-size var(--animate-mid), -webkit-mask-position var(--animate-mid),
+                           mask-size var(--animate-mid), mask-position var(--animate-mid);
 
   container-type: inline-size;
   container-name: post-viewer;
