@@ -356,7 +356,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <NotFound v-else-if="notFound" :code="notFound" :key="route.fullPath" />                    <!-- for anything missing    -->
-          <div v-else :class="computedNoteClass" v-html="noteContent" />                              <!-- for html posts          -->
+          <div v-else :class="computedNoteClass" :data-type="currentPost?.type" v-html="noteContent" />   <!-- for html posts          -->
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
             <br><hr><br>
@@ -379,12 +379,26 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 .notedisplay { display: flex; flex-direction: column; height: 100%; gap: 1rem; }
 
-.container { position: relative; }
+.container {
 
+  /* LAYOUT */ position: relative;
+
+}
+
+.container::before,
 .container::after {
 
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
+  /* MOTION */ transition: opacity var(--animate-mid);
+
+}
+
+/* The wide aperture: every note but a design one. */
+
+.container::before {
+
+  /* STATE  */ opacity: 1;
   /* FILL   */
   background:
     radial-gradient(ellipse 50% 70% at 50% 30%, transparent 100%, var(--carbon-a31) 127%, var(--carbon-a56) 152%),
@@ -394,7 +408,22 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.container.fs-container::after { display: none; }
+.container::after {
+
+  /* STATE  */ opacity: 0;
+  /* FILL   */
+  background:
+    radial-gradient(ellipse 50% 70% at 50% 30%, transparent 100%, var(--carbon-a31) 127%, var(--carbon-a56) 152%),
+    linear-gradient(to right, var(--carbon-a56) 0, var(--carbon-a31) .9rem, var(--carbon-a15) 1.6rem, transparent 2.5rem),
+    linear-gradient(to left,  var(--carbon-a56) 0, var(--carbon-a31) .9rem, var(--carbon-a15) 1.6rem, transparent 2.5rem),
+    linear-gradient(to top,   var(--carbon-a56) 0, var(--carbon-a31) .9rem, var(--carbon-a15) 1.6rem, transparent 2.5rem);
+
+}
+
+.container:has(> .post .nota-medios[data-type="dise\00f1o"])::before { opacity: 0; }
+.container:has(> .post .nota-medios[data-type="dise\00f1o"])::after  { opacity: 1; }
+
+.container.fs-container::before, .container.fs-container::after { display: none; }
 
 .post {
 
@@ -454,7 +483,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
      the aperture would clip the page rather than frame it */
   .post { -webkit-mask-image: none; mask-image: none; }
 
-  .container::after { display: none; }
+  .container::before, .container::after { display: none; }
 
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
