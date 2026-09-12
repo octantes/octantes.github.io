@@ -33,6 +33,8 @@ const contentRef  = ref(null)                                                   
 const noteContent = ref('')                                                                                                           // basic note html for insert
 const notFound    = ref(0)                                                                                                            // status code to show instead of a note, 0 for none
 
+const fullBleed = ref(false)
+
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
 let lastSlug   = null                                                                                                                 // previous slug flag for shader
@@ -313,7 +315,12 @@ watch(                                                                          
       
     }
 
-    } finally { setProcessing(false) }
+    } finally {
+
+      fullBleed.value = store.currentPost?.type === 'diseño'
+      setProcessing(false)
+
+    }
 
   }, { immediate: true }
 
@@ -343,7 +350,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   <div v-if="!isMobile || currentPost" class="notedisplay">
     
-    <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
+    <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen, 'no-aperture': fullBleed }">
 
       <Shader class="shader" ref="shaderRef"/>
       <Typewriter :shader="shaderRef" :container="containerRef" :enabled="!currentPost && !computedFullscreen" />
@@ -356,7 +363,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <NotFound v-else-if="notFound" :code="notFound" :key="route.fullPath" />                    <!-- for anything missing    -->
-          <div v-else :class="computedNoteClass" :data-type="currentPost?.type" v-html="noteContent" />   <!-- for html posts          -->
+          <div v-else :class="computedNoteClass" v-html="noteContent" />   <!-- for html posts          -->
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
             <br><hr><br>
@@ -403,7 +410,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.container:has(> .post .nota-medios[data-type="dise\00f1o"])::after { opacity: 0; }
+.container.no-aperture::after { opacity: 0; }
 
 .container.fs-container::after { display: none; }
 
