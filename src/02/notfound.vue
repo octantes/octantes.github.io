@@ -55,9 +55,6 @@ function scatter(words, el, stage, card) {
     ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
   }
 
-  /* Two of the enormous ones, always. Rolling for them meant a load could come
-     up with one, or none, and the whole field lost its top note. */
-
   const giants = new Set()
   while (giants.size < Math.min(2, thrown.length)) giants.add(Math.floor(Math.random() * thrown.length))
 
@@ -168,9 +165,6 @@ onMounted(() => {
 
 }
 
-/* The scattered words sit under the card and are deliberately quiet - they are
-   texture, and the card is the thing to read. */
-
 .thrown {
 
   /* CURSOR */ user-select: none; pointer-events: none;
@@ -183,7 +177,7 @@ onMounted(() => {
 
   /* LAYOUT */ position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center;
   /* BOX    */ padding: var(--space-xl) var(--space-xxl); gap: var(--space-mm);
-  /* FILL   */ background-color: var(--carbon);                                                                                     /* solid: a hero-sized word landing behind it should not read through */
+  /* FILL   */ background-color: var(--carbon);
   /* BORDER */ border: var(--small-outline) var(--lirio-a40); border-radius: var(--radius-ss);
   /* FILL   */ box-shadow: 0 0 3.2rem -0.4rem var(--lirio-a21), 0 0 1rem -0.45rem var(--lirio-a15);
 

@@ -40,9 +40,6 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
     </div>
 
-    <!-- The mobile transition field. Mounted from the shell because the routed
-         component cannot carry it: see 03/veil.js. -->
-
     <div v-if="veilOn" class="veil" aria-hidden="true"><Shader :ref="registerVeil" /></div>
 
     <div class="footer" role="contentinfo" v-if="route.path !== '/portfolio'">
@@ -108,8 +105,6 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
   .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
 
-  /* no portal on the vertical layout, so no light — the rule stays consistent
-     rather than relocating a glow that has nothing to come from */
   .portal-glow { display: none; }
   .portada { order: 1; } .portada.mobile-gap { margin-bottom: 1rem; border-radius: var(--radius-ss); } .articulos { order: 2; margin-bottom: 1rem; } .navigation { order: 3; }
   

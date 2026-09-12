@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia'
 const store = useStore()                                                                                                              // initializes global store
 
 const { t }           = storeToRefs(store)
-const { subEmail, subHoney, subMessage, subState, subDone } = storeToRefs(store)                                                               // imports refs from main store
+const { subEmail, subHoney, subMessage, subState, subDone } = storeToRefs(store)                                                      // imports refs from main store
 
 const inputPlaceholder = computed(() => subState.value !== 'default' ? subMessage.value : t.value.subscribe.placeholder)
 
