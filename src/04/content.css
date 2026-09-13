@@ -17,8 +17,6 @@
 
 }
 
-/* verso — the default voice */
-
 .nota-verso {
 
   /* LAYOUT */ text-align: center;
@@ -26,8 +24,6 @@
   & img { margin: 0 auto; }
 
 }
-
-/* prosa — running text, held to a readable measure and left aligned. */
 
 .nota-prosa {
 
@@ -39,8 +35,6 @@
 
 .nota.nota-prosa  { padding-top: var(--space-xxl); }
 .nota .nota-prosa { padding: var(--space-ll) 0 0; }
-
-/* medios — the asset block of a diseño note; full bleed, no line breaks */
 
 .nota-medios {
 

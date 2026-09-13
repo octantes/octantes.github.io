@@ -24,10 +24,10 @@ function figlet(code) {
   return [0, 1, 2, 3, 4, 5].map(r => digits.map(d => d[r]).join('')).join('\n')
 }
 
-const THROWS   = 20                                                             // words on screen, whatever the phrase is
-const TRIES    = 14                                                             // rerolls before a word is placed anyway
-const CROWD    = 0.34                                                           // fraction of the smaller word two may share
-const VSPREAD  = 1.22                                                           // the column is taller than it is wide; throw with it
+const THROWS   = 20
+const TRIES    = 14
+const CROWD    = 0.34
+const VSPREAD  = 1.22
 
 function measurer(el) {
   const font = getComputedStyle(el).fontFamily
@@ -48,9 +48,9 @@ function scatter(words, el, stage, card) {
   const px = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
   const width = measurer(el)
 
-  const narrow = window.matchMedia('(max-width: 1080px)').matches                                          // phones render every word small
-  const room   = W * H - card.w * card.h                                                                   // free space around the card
-  const count  = narrow ? Math.max(8, Math.min(THROWS, Math.floor(room * 0.2 / 1100))) : THROWS            // same density on any phone
+  const narrow = window.matchMedia('(max-width: 1080px)').matches
+  const room   = W * H - card.w * card.h
+  const count  = narrow ? Math.max(8, Math.min(THROWS, Math.floor(room * 0.2 / 1100))) : THROWS
 
   const thrown = []
   for (let i = 0; i < count; i++) thrown.push(words[i % words.length])
@@ -75,7 +75,7 @@ function scatter(words, el, stage, card) {
                   : tier === 2 ? 3.6 + Math.random() * 2.4
                   : tier === 1 ? 1.7 + Math.random() * 1.0
                   :              0.85 + Math.random() * 0.55
-    const rem  = narrow ? 0.8 : tierRem                                                                    // measure at the size it will render
+    const rem  = narrow ? 0.8 : tierRem
     const alpha = tier === 3 ? 0.045 + Math.random() * 0.035
                 : tier === 2 ? 0.10  + Math.random() * 0.09
                 : tier === 1 ? 0.24  + Math.random() * 0.22
@@ -91,7 +91,7 @@ function scatter(words, el, stage, card) {
     let box, cx, cy, best = null
 
     for (let n = 0; n < TRIES * 2; n++) {
-      const slice = n < TRIES ? Math.floor(i / 2) : Math.floor(Math.random() * half)                      // own slot first, then any slot
+      const slice = n < TRIES ? Math.floor(i / 2) : Math.floor(Math.random() * half)
       const upper = n < TRIES ? i % 2 === 0 : Math.random() < 0.5
       const angle = ((upper ? 180 : 0) + step * slice + Math.random() * step) * Math.PI / 180
       const reach = tier === 3 ? 0.42 + Math.random() * 0.40
@@ -103,10 +103,10 @@ function scatter(words, el, stage, card) {
       if (shared(box, card) > 0) continue
       const crowd = taken.reduce((m, t) => Math.max(m, shared(box, t)), 0)
       if (crowd <= CROWD) { best = null; break }
-      if (!best || crowd < best.crowd) best = { crowd, box, cx, cy }                                        // off the card but crowded, keep the emptiest
+      if (!best || crowd < best.crowd) best = { crowd, box, cx, cy }
     }
 
-    if (best) ({ box, cx, cy } = best)                                                                     // no good spot: the least crowded one clear of the card
+    if (best) ({ box, cx, cy } = best)
 
     taken.push(box)
     out.push({

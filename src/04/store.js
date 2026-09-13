@@ -410,7 +410,6 @@ export const useStore = defineStore('store', () => {
 
   watch(lang, () => { if (subState.value === 'default') subMessage.value = t.value.subscribe.placeholder })                            // sync placeholder on lang switch
 
-  
   // ASYNCS -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   async function fetchAndParse(slug, post, langCode) {
@@ -721,7 +720,7 @@ export const useStore = defineStore('store', () => {
       displayDescription: (lang.value === 'en' && note.bilingual && note.descriptionEn) ? note.descriptionEn : note.description,
     }))
 
-    const fold  = text => (text || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')                              // ignore accents in search
+    const fold  = text => (text || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
     const query = fold(searchQuery.value).trim()
 
     if (query) { 

@@ -27,11 +27,11 @@ const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } =
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
 
 const shaderRef   = ref(null)                                                                                                         // shader variable for animations
-const containerRef= ref(null)                                                                                                         // ref for the portal box, where pointer effects listen
+const containerRef= ref(null)
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
 const contentRef  = ref(null)                                                                                                         // ref for content element
 const noteContent = ref('')                                                                                                           // basic note html for insert
-const notFound    = ref(0)                                                                                                            // status code to show instead of a note, 0 for none
+const notFound    = ref(0)
 
 const fullBleed = ref(false)
 
@@ -68,8 +68,8 @@ function resetScroll() {
   if (col) col.scrollTop = 0
 }
 
-const VERSO_MAX = 21.6                                                                                                                // 1.35rem, the ceiling the wide layout already uses
-const FIT_STEPS = 7                                                                                                                   // halvings, so the result lands within ~0.1px
+const VERSO_MAX = 21.6
+const FIT_STEPS = 7
 
 const CENTRED = [
   { root: '.nota-verso', parts: [],                            row: false },
@@ -117,7 +117,7 @@ async function fitCentred() {
 
   if (!isMobile.value) return
 
-  if (document.fonts?.ready) await document.fonts.ready                                                                               // metrics change when the webfont lands
+  if (document.fonts?.ready) await document.fonts.ready
 
   for (const t of targets) {
 
@@ -126,7 +126,7 @@ async function fitCentred() {
     if (!blocks.length) continue
 
     const base = parseFloat(getComputedStyle(t.el).fontSize) || 16
-    if (breaks(t.el, blocks, t.row)) continue                                                                                         // already breaking at the column's size, nothing to win
+    if (breaks(t.el, blocks, t.row)) continue
 
     let lo = base, hi = VERSO_MAX
     if (hi <= lo) continue
@@ -146,9 +146,6 @@ async function fitCentred() {
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
   const { html, error } = await fetchPost(slug, route.params.type)
-
-  /* Two failures, told apart: a note that is not there, and a note we could not
-     reach. The first is the reader's mistake and says so; the second is ours. */
 
   notFound.value = !error ? 0 : /not a note page|HTTP error 404/.test(error.message || '') ? 404 : 500
   noteContent.value = error ? '' : html
@@ -203,7 +200,7 @@ async function handleLoadNote(slug) {                                           
 
 watch(isMobile, async (newVal) => { 
 
-  await nextTick(); await fitCentred()                                                                                                        // the breakpoint is what decides whether a note is fitted
+  await nextTick(); await fitCentred()
 
   if (!shaderRef.value || !shaderRef.value.runQueue) return
   if (newVal) {
@@ -255,8 +252,6 @@ watch(                                                                          
         resetSEOTags()
         break
       
-      // an unknown filter is an error, not an empty gallery: no intro, the field
-      // steps aside and the error state takes the column
       case !slug && notFound.value:
         noteLoaded = false
         lastSlug = null
@@ -288,7 +283,6 @@ watch(                                                                          
         await shaderRef.value?.runQueue('hidden')
         break
 
-      // a note that turned out not to exist still needs the field to move
       case slug && notFound.value:
         break
       
@@ -364,7 +358,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
         <div class="content" ref="contentRef" :class="{ 'fs-content': computedFullscreen }">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
-          <NotFound v-else-if="notFound" :code="notFound" :key="route.fullPath" />                    <!-- for anything missing    -->
+          <NotFound v-else-if="notFound" :code="notFound" :key="route.fullPath" />
           <div v-else :class="computedNoteClass" v-html="noteContent" />   <!-- for html posts          -->
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
@@ -393,9 +387,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ position: relative;
 
 }
-
-/* Paint rather than mask: a mask here would make the canvas translucent, and
-   the state machine depends on the field being solid while a note swaps in. */
 
 .container::after {
 
@@ -480,8 +471,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   .notedisplay { height: auto; min-height: auto; }
 
-  /* the column stops being a viewport here and joins the document scroll, so
-     the aperture would clip the page rather than frame it */
   .post { -webkit-mask-image: none; mask-image: none; }
 
   .container::after { display: none; }

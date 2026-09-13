@@ -144,7 +144,6 @@
   --radius-mm: 08px;
   --radius-ss: 05px;
 
-  /* the app's rhythm, so spacing here is chosen from the same ladder */
   --space-xs: 0.40rem; --space-ss: 0.50rem; --space-mm: 0.75rem;
   --space-ll: 1.00rem; --space-xl: 1.50rem; --space-xxl: 2.00rem;
   --leading-base: 1.5;
@@ -170,7 +169,6 @@ body                             {
   /* LAYOUT */ display: grid; min-height: 100vh; padding: 0; margin: 0; grid-template-columns: 260px 1fr; position: relative;
   /* FONT   */ font-family: 'Inconsolata', monospace; font-size: 13px; line-height: 1.4;
   /* FILL   */ background-color: var(--carbon); color: var(--humo);
-  /* the band itself is body::before - see below */
 
 }
 

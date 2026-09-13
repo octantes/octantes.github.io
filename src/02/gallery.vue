@@ -12,21 +12,21 @@ const { noteSortFilter, processing, searchQuery, notesLoaded } = storeToRefs(sto
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
 
-const galleryRef      = ref(null)                                                                                                     // gallery root, to find its scroller
+const galleryRef      = ref(null)
 
-async function revealActive() {                                                                                                       // scroll the open note's card into view inside the gallery only
+async function revealActive() {
 
   await nextTick()
   const card = galleryRef.value?.querySelector('.notecard.active')
   const box  = card?.closest('.nav-views')
-  if (!card || !box || box.scrollHeight <= box.clientHeight) return                                                                   // no inner scroller (mobile): leave the page alone
+  if (!card || !box || box.scrollHeight <= box.clientHeight) return
 
   const c = card.getBoundingClientRect(), b = box.getBoundingClientRect()
-  if (c.top >= b.top && c.bottom <= b.bottom) return                                                                                  // already visible
+  if (c.top >= b.top && c.bottom <= b.bottom) return
 
   const top  = box.scrollTop + (c.top - b.top) - Math.max(0, (box.clientHeight - c.height) / 2)
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  box.scrollTo({ top: Math.max(0, top), behavior: calm ? 'auto' : 'smooth' })                                                         // sets the gallery's own scrollTop, never the page's
+  box.scrollTo({ top: Math.max(0, top), behavior: calm ? 'auto' : 'smooth' })
 
 }
 
@@ -153,8 +153,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
   /* BOX    */ width: 100%; padding-top: 56.25%; overflow: hidden;
   /* FILL   */ background-color: var(--carbon); 
   /* BORDER */ border-bottom: var(--small-outline) var(--humo-a06); border-top-left-radius: var(--radius-ss); border-top-right-radius: var(--radius-ss);
-  
-  
+
   & img {
 
     /* LAYOUT */ position: absolute; top: 0; left: 0;

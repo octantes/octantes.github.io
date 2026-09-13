@@ -94,7 +94,7 @@ watch([currentProject, portfolioProjects], () => {
 }, { immediate: true })
 
 function handleRayClick(proj) {
-  if (proj.slug === WELCOME_SLUG) { currentProject.value = proj; return }                                                              // nothing to open behind it
+  if (proj.slug === WELCOME_SLUG) { currentProject.value = proj; return }
   if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj
 }
 function openGithub()         { window.open('https://github.com/octantes', '_blank', 'noopener noreferrer')                                                }
@@ -392,9 +392,6 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   & .tag  { color: var(--lirio);   }
 
 }
-
-/* The welcome ray borrows the design palette but never behaves like a project:
-   no portal trigger, no note behind it. */
 
 .ray-welcome {
 

@@ -249,7 +249,7 @@ async function convertVideo(inputPath, destPath) {                              
 
 }
 
-const silentVideos = new Set()                                                   // videos in the post being built that carry no audio
+const silentVideos = new Set()
 
 async function isSilent(inputPath) {
 
@@ -263,7 +263,7 @@ async function isSilent(inputPath) {
 
 }
 
-async function convertGif(inputPath, destPath) {                                 // transcodes a gif to h264, or copies it
+async function convertGif(inputPath, destPath) {
 
   try {
 

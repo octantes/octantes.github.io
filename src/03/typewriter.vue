@@ -6,34 +6,34 @@ import { useStore } from '../04/store.js'
 const store = useStore()
 
 const props = defineProps({
-  shader:    { type: Object, default: null },                                   // the Shader component ref
-  container: { type: Object, default: null },                                   // element the pointer events arrive on
-  enabled:   { type: Boolean, default: true },                                  // false while the field is not the thing on screen
+  shader:    { type: Object, default: null },
+  container: { type: Object, default: null },
+  enabled:   { type: Boolean, default: true },
 })
 
 /* TUNING */
 
-const HOVER_COLOR  = '#8AB6BB'                                                  // COLOR_RAIN, the field's own teal
-const RIPPLE_COLOR = '#8AB6BB'                                                  // the same teal, at full strength for the ring's whole life
-const SHADOW_RGB   = '152,108,152'                                              // COLOR_PORTAL, so a dimmed cell reads as the same char
-const RIPPLE_MS    = 70                                                         // one cell of radius per tick
-const RIPPLE_MAX   = 9                                                          // cells of radius, and then it is over
-const RIPPLE_WIDTH = 1                                                          // cells thick
-const RIPPLE_FADE  = 0.35                                                       // fraction of its life spent dissolving
-const SHADOW_MIN   = 0.10                                                       // char alpha at the centre of the shadow
-const STEPS        = 8                                                          // alpha quantisation, see composeRipples
+const HOVER_COLOR  = '#8AB6BB'
+const RIPPLE_COLOR = '#8AB6BB'
+const SHADOW_RGB   = '152,108,152'
+const RIPPLE_MS    = 70
+const RIPPLE_MAX   = 9
+const RIPPLE_WIDTH = 1
+const RIPPLE_FADE  = 0.35
+const SHADOW_MIN   = 0.10
+const STEPS        = 8
 
-const POEM_COLOR   = '#8AB6BB'                                                  // COLOR_RAIN, the same teal the pointer speaks in
-const POEM_TYPE_MS = 55                                                         // per character, typing in and typing away
-const POEM_HOLD_MS = 8500                                                       // how long the finished phrase stands
-const POEM_VOID    = 13                                                         // cells of shadow beyond the composition's edge
-const POEM_VOID_MS = 700                                                        // the void opening, and later closing, on its own
-const POEM_FLOOR   = 0.55                                                       // fraction of the void held at full depth, see buildPoem
-const POEM_LIFT    = 2.5                                                        // cells the closed bottom takes off the visible field, see layout
-const POEM_CLICKS  = 5                                                          // on the home button
-const POEM_WINDOW  = 2500                                                       // ms they have to land in
-const POEM_IDLE_MS = 60000                                                      // of watching the field, and one comes on its own
-const POEM_BEAT_MS = 1000                                                       // how often that is counted
+const POEM_COLOR   = '#8AB6BB'
+const POEM_TYPE_MS = 55
+const POEM_HOLD_MS = 8500
+const POEM_VOID    = 13
+const POEM_VOID_MS = 700
+const POEM_FLOOR   = 0.55
+const POEM_LIFT    = 2.5
+const POEM_CLICKS  = 5
+const POEM_WINDOW  = 2500
+const POEM_IDLE_MS = 60000
+const POEM_BEAT_MS = 1000
 
 const POEMS = {
 
@@ -104,17 +104,17 @@ const SHADOW_STEP  = Array.from({ length: STEPS + 1 }, (_, i) => `rgba(${SHADOW_
 
 /* STATE */
 
-const cells   = new Map()                                                       // the map the shader reads
-const hover   = new Map()                                                       // this effect's own cells
-const ripples = new Map()                                                       // and this one's
-const poem    = new Map()                                                       // and this one's
+const cells   = new Map()
+const hover   = new Map()
+const ripples = new Map()
+const poem    = new Map()
 
-let grid   = null                                                               // { cols, rows, fontSize, rect }
-let at     = null                                                               // pointer, in cells
-let live   = false                                                              // is the pointer layer wanted at all
-let active = []                                                                 // { cx, cy, born }
-let recital = null                                                              // { glyphs, cx, cy, rx, ry, born }
-let recitalKey = null                                                           // last built state, so the void is not rebuilt per frame
+let grid   = null
+let at     = null
+let live   = false
+let active = []
+let recital = null
+let recitalKey = null
 let frame  = 0
 
 function compose() {
@@ -135,9 +135,9 @@ function toCell(ev) {
 }
 
 const HOVER_PLUS    = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]]
-const HOVER_DIAMOND = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1],                // the plus
-                       [-1, -1], [1, -1], [-1, 1], [1, 1],                      // filled to a 3x3
-                       [-2, 0], [2, 0], [0, -2], [0, 2]]                        // arms out one further
+const HOVER_DIAMOND = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1],
+                       [-1, -1], [1, -1], [-1, 1], [1, 1],
+                       [-2, 0], [2, 0], [0, -2], [0, 2]]
 const HOVER_SHAPE   = HOVER_PLUS
 
 function buildHover() {
@@ -151,7 +151,7 @@ function buildHover() {
   }
 }
 
-function dither(x, y) { return ((x * 73856093) ^ (y * 19349663)) >>> 24 }        // 0..255, stable per cell
+function dither(x, y) { return ((x * 73856093) ^ (y * 19349663)) >>> 24 }
 
 function composeRipples(now) {
   ripples.clear()
@@ -167,7 +167,7 @@ function ringGeometry(rp, now) {
   const r = (now - rp.born) / RIPPLE_MS
   return {
     r,
-    fade: Math.min(1, (1 - r / RIPPLE_MAX) / RIPPLE_FADE),                      // 1 until the last stretch, then down
+    fade: Math.min(1, (1 - r / RIPPLE_MAX) / RIPPLE_FADE),
     hi: r + RIPPLE_WIDTH / 2,
     lo: Math.max(0, r - RIPPLE_WIDTH / 2),
   }
@@ -187,7 +187,7 @@ function shadowOf(rp, now) {
     for (let x = x0; x <= x1; x++) {
       const dx = x - rp.cx
       const t = Math.sqrt(dx * dx + dy * dy) / lo
-      const base = SHADOW_MIN + (1 - SHADOW_MIN) * t * t * Math.sqrt(t)          // deepest at the centre
+      const base = SHADOW_MIN + (1 - SHADOW_MIN) * t * t * Math.sqrt(t)
       const a = Math.round((1 - (1 - base) * fade) * STEPS) / STEPS
       if (a < 1) ripples.set(y * cols + x, { color: SHADOW_STEP[Math.round(a * STEPS)] })
     }
@@ -236,7 +236,7 @@ function layout(g, lines) {
 }
 
 let pending = 0
-let lastPoem = -1                                                               // never the same phrase twice running
+let lastPoem = -1
 
 function recite() {
   if (!live) { pending = performance.now(); return }
@@ -257,11 +257,11 @@ function buildPoem(now) {
   const type = n * POEM_TYPE_MS
   const e = now - recital.born
 
-  const tOpen = POEM_VOID_MS                                                    // void alone
-  const tIn   = tOpen + type                                                    // typing in
-  const tHold = tIn + POEM_HOLD_MS                                              // standing
-  const tOut  = tHold + type                                                    // typing away
-  const tEnd  = tOut + POEM_VOID_MS                                             // void alone again
+  const tOpen = POEM_VOID_MS
+  const tIn   = tOpen + type
+  const tHold = tIn + POEM_HOLD_MS
+  const tOut  = tHold + type
+  const tEnd  = tOut + POEM_VOID_MS
 
   if (e >= tEnd) { recital = null; poem.clear(); recitalKey = null; return }
 
@@ -292,7 +292,7 @@ function buildPoem(now) {
       for (let x = x0; x <= x1; x++) {
         const nx = (x - cx) / rx
         const d = Math.sqrt(nx * nx + ny * ny)
-        const k = Math.max(0, (d - POEM_FLOOR) / (1 - POEM_FLOOR))                // flat across the words, falling off outside them
+        const k = Math.max(0, (d - POEM_FLOOR) / (1 - POEM_FLOOR))
         const base = SHADOW_MIN + (1 - SHADOW_MIN) * Math.pow(k, 1.6)
         const a = Math.round((1 - (1 - base) * presence) * STEPS) / STEPS
         if (a < 1) poem.set(y * cols + x, { color: SHADOW_STEP[Math.round(a * STEPS)] })
@@ -325,7 +325,7 @@ function onMove(ev) {
   if (!grid && !readGrid()) return
   const c = toCell(ev)
   if (!c) { if (at) { at = null; buildHover(); compose() } return }
-  if (at && c.cx === at.cx && c.cy === at.cy) return                             // still the same cell, nothing to redraw
+  if (at && c.cx === at.cx && c.cy === at.cy) return
   at = c
   buildHover()
   compose()
