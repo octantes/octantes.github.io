@@ -721,14 +721,15 @@ export const useStore = defineStore('store', () => {
       displayDescription: (lang.value === 'en' && note.bilingual && note.descriptionEn) ? note.descriptionEn : note.description,
     }))
 
-    const query = searchQuery.value.toLowerCase().trim()
+    const fold  = text => (text || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')                              // ignore accents in search
+    const query = fold(searchQuery.value).trim()
 
     if (query) { 
 
       filtered = filtered.filter(note =>
-        note.displayTitle.toLowerCase().includes(query) ||
-        note.displayDescription.toLowerCase().includes(query) ||
-        note.tags?.some(tag => tag.toLowerCase().includes(query)) ||
+        fold(note.displayTitle).includes(query) ||
+        fold(note.displayDescription).includes(query) ||
+        note.tags?.some(tag => fold(tag).includes(query)) ||
         note.date.includes(query)
       )
 
