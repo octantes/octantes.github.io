@@ -13,7 +13,7 @@ export async function throughTheVeil(work, enter = 'intro', exit = 'outro', hold
   if (!ENABLED) { await work(); return }
 
   veilOn.value = true
-  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))  // mounted, and sized
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
 
   await canvas?.runQueue(enter)
   await work()

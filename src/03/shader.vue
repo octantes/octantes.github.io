@@ -66,7 +66,7 @@ let indexToY   = null                                                   // maps 
 let textGroups        = null                                            // map for text drawing
 let isTransparentPath = []                                              // reusable buffer for transparent cells
 
-let overlay         = null                                              // external cell overrides, see attachOverlay
+let overlay         = null
 let noiseMap        = null                                              // static noise map for distortion
 let neighborsMap    = null                                              // stores each cell neighbors
 let frontierMap     = null                                              // mask for cells in borders
@@ -747,9 +747,6 @@ const reduceMotion = typeof window !== 'undefined' ? window.matchMedia('(prefers
 function mainLoop(ts) { if (lastTime === 0) lastTime = ts; const deltaTime = ts - lastTime; lastTime = ts; const prevMode = mode; drawFrame(deltaTime); if (reduceMotion && reduceMotion.matches && mode === 'static') { animationID = null; return } if (mode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else if (prevMode !== 'hidden') { animationID = requestAnimationFrame(mainLoop) } else { animationID = null } }
 
 function attachOverlay(map) { overlay = map || null }
-
-// the grid re-derives on resize (fontSize is clamped 10..24), so anything
-// placed in cell coordinates has to be re-placed; rect is in css pixels
 
 function gridInfo() {
   if (!canvasRef.value) return null
