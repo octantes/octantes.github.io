@@ -1,4 +1,5 @@
 <script setup> 
+import { ref, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
@@ -11,11 +12,31 @@ const { noteSortFilter, processing, searchQuery, notesLoaded } = storeToRefs(sto
 
 function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
 
+const galleryRef      = ref(null)                                                                                                     // gallery root, to find its scroller
+
+async function revealActive() {                                                                                                       // scroll the open note's card into view inside the gallery only
+
+  await nextTick()
+  const card = galleryRef.value?.querySelector('.notecard.active')
+  const box  = card?.closest('.nav-views')
+  if (!card || !box || box.scrollHeight <= box.clientHeight) return                                                                   // no inner scroller (mobile): leave the page alone
+
+  const c = card.getBoundingClientRect(), b = box.getBoundingClientRect()
+  if (c.top >= b.top && c.bottom <= b.bottom) return                                                                                  // already visible
+
+  const top  = box.scrollTop + (c.top - b.top) - Math.max(0, (box.clientHeight - c.height) / 2)
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  box.scrollTo({ top: Math.max(0, top), behavior: calm ? 'auto' : 'smooth' })                                                         // sets the gallery's own scrollTop, never the page's
+
+}
+
+watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { flush: 'post', immediate: true })
+
 </script>
 
 <template> 
     
-  <div class="gallery">
+  <div class="gallery" ref="galleryRef">
 
     <div v-if="!notesLoaded" class="empty-state">{{ store.t.gallery.loading }}</div>
     <div v-else-if="noteSortFilter.length === 0" class="empty-state">{{ store.t.gallery.empty }}{{ searchQuery ? `: "${searchQuery}"` : '' }}</div>
