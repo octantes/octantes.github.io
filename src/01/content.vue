@@ -350,7 +350,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <div v-if="!isMobile || currentPost" class="notedisplay" :class="{ 'no-aperture': fullBleed }">
+  <div v-if="!isMobile || currentPost || notFound" class="notedisplay" :class="{ 'no-aperture': fullBleed }">
     
     <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
 

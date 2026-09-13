@@ -48,8 +48,12 @@ function scatter(words, el, stage, card) {
   const px = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
   const width = measurer(el)
 
+  const narrow = window.matchMedia('(max-width: 1080px)').matches                                          // phones render every word small
+  const room   = W * H - card.w * card.h                                                                   // free space around the card
+  const count  = narrow ? Math.max(8, Math.min(THROWS, Math.floor(room * 0.2 / 1100))) : THROWS            // same density on any phone
+
   const thrown = []
-  for (let i = 0; i < THROWS; i++) thrown.push(words[i % words.length])
+  for (let i = 0; i < count; i++) thrown.push(words[i % words.length])
   for (let i = thrown.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[thrown[i], thrown[j]] = [thrown[j], thrown[i]]
@@ -67,10 +71,11 @@ function scatter(words, el, stage, card) {
 
     const roll = Math.random()
     const tier = giants.has(i) ? 3 : roll < 0.31 ? 2 : roll < 0.66 ? 1 : 0
-    const rem  = tier === 3 ? 7.5 + Math.random() * 3.5
-               : tier === 2 ? 3.6 + Math.random() * 2.4
-               : tier === 1 ? 1.7 + Math.random() * 1.0
-               :              0.85 + Math.random() * 0.55
+    const tierRem = tier === 3 ? 7.5 + Math.random() * 3.5
+                  : tier === 2 ? 3.6 + Math.random() * 2.4
+                  : tier === 1 ? 1.7 + Math.random() * 1.0
+                  :              0.85 + Math.random() * 0.55
+    const rem  = narrow ? 0.8 : tierRem                                                                    // measure at the size it will render
     const alpha = tier === 3 ? 0.045 + Math.random() * 0.035
                 : tier === 2 ? 0.10  + Math.random() * 0.09
                 : tier === 1 ? 0.24  + Math.random() * 0.22
@@ -83,11 +88,11 @@ function scatter(words, el, stage, card) {
     const w = w0 * Math.cos(rad) + h0 * Math.sin(rad)
     const h = w0 * Math.sin(rad) + h0 * Math.cos(rad)
 
-    let box, cx, cy
+    let box, cx, cy, best = null
 
-    for (let n = 0; n < TRIES; n++) {
-      const slice = Math.floor(i / 2)
-      const upper = i % 2 === 0
+    for (let n = 0; n < TRIES * 2; n++) {
+      const slice = n < TRIES ? Math.floor(i / 2) : Math.floor(Math.random() * half)                      // own slot first, then any slot
+      const upper = n < TRIES ? i % 2 === 0 : Math.random() < 0.5
       const angle = ((upper ? 180 : 0) + step * slice + Math.random() * step) * Math.PI / 180
       const reach = tier === 3 ? 0.42 + Math.random() * 0.40
                   : tier === 2 ? 0.34 + Math.random() * 0.44
@@ -96,8 +101,12 @@ function scatter(words, el, stage, card) {
       cy = H / 2 + Math.sin(angle) * reach * VSPREAD * H / 2
       box = { x: cx - w / 2, y: cy - h / 2, w, h }
       if (shared(box, card) > 0) continue
-      if (taken.every(t => shared(box, t) <= CROWD)) break
+      const crowd = taken.reduce((m, t) => Math.max(m, shared(box, t)), 0)
+      if (crowd <= CROWD) { best = null; break }
+      if (!best || crowd < best.crowd) best = { crowd, box, cx, cy }                                        // off the card but crowded, keep the emptiest
     }
+
+    if (best) ({ box, cx, cy } = best)                                                                     // no good spot: the least crowded one clear of the card
 
     taken.push(box)
     out.push({
@@ -208,6 +217,6 @@ onMounted(() => {
 
 }
 
-@media (max-width: 1080px) { .errorstate { min-height: 18rem; } .thrown { font-size: 0.8rem !important; } }
+@media (max-width: 1080px) { .errorstate { min-height: clamp(28rem, 64svh, 38rem); } }
 
 </style>
