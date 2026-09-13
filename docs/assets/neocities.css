@@ -339,7 +339,7 @@ p                                { margin: 0; max-width: none;                  
 img                              { border: 1px solid var(--polvo); margin: none; border-radius: var(--radius-ss); }
 
 .post-content[data-type="dise\00f1o"] img,
-.post-content[data-type="dise\00f1o"] video.gifvideo { border-radius: 0; }
+.post-content[data-type="dise\00f1o"] video.gifvideo { border-radius: 0; width: 100%; }
 
 video.gifvideo                   { display: block; max-width: 100%; width: 100%; height: auto;
                                    border: none; border-radius: var(--radius-ss);                  }
