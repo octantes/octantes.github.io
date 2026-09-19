@@ -269,7 +269,8 @@ watch(                                                                          
         setCurrentPost(null)
         noteContent.value = ''
         resetSEOTags()
-        if (!isMobile.value) await portalRef.value?.runQueue('intro')
+        if (isMobile.value) { await throughTheVeil(() => {}, 'static', 'direct', 500); break }
+        await portalRef.value?.runQueue('intro')
         break
       
       // first note load, OUTRO only on first note load
