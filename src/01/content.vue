@@ -5,8 +5,8 @@ import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
-import Shader from '../03/shader.vue'
-import NotFound from '../02/notfound.vue'
+import Portal from '../03/portal.vue'
+import Status from '../02/status.vue'
 import { throughTheVeil } from '../03/veil.js'
 import Typewriter from '../03/typewriter.vue'
 
@@ -26,7 +26,7 @@ function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => 
 const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
 
-const shaderRef   = ref(null)                                                                                                         // shader variable for animations
+const portalRef   = ref(null)                                                                                                         // shader variable for animations
 const containerRef= ref(null)
 const postRef     = ref(null)                                                                                                         // ref for post scroll container
 const contentRef  = ref(null)                                                                                                         // ref for content element
@@ -47,7 +47,7 @@ const computedComp = computed(() => {                                           
 
 })
 
-async function forceShaderResize() {                                                                                                  // forces shader resize 
+async function forcePortalResize() {                                                                                                  // forces shader resize 
 
   await nextTick()
   window.dispatchEvent(new Event('resize'))
@@ -56,9 +56,9 @@ async function forceShaderResize() {                                            
 }
 
 async function revealError() {
-  if (isMobile.value || !shaderRef.value) return
-  await shaderRef.value.runQueue('outro')
-  await shaderRef.value.runQueue('hidden')
+  if (isMobile.value || !portalRef.value) return
+  await portalRef.value.runQueue('outro')
+  await portalRef.value.runQueue('hidden')
 }
 
 function resetScroll() {
@@ -202,17 +202,17 @@ watch(isMobile, async (newVal) => {
 
   await nextTick(); await fitCentred()
 
-  if (!shaderRef.value || !shaderRef.value.runQueue) return
+  if (!portalRef.value || !portalRef.value.runQueue) return
   if (newVal) {
-    shaderRef.value.runQueue('hidden')
+    portalRef.value.runQueue('hidden')
   } else {
-    if (route.params.slug) { shaderRef.value.runQueue('hidden') }
-    else { shaderRef.value.runQueue('static') }
+    if (route.params.slug) { portalRef.value.runQueue('hidden') }
+    else { portalRef.value.runQueue('static') }
   }
 
 })
 
-watch(computedFullscreen, async () => { await forceShaderResize() })                                                                  // watches for shader resize 
+watch(computedFullscreen, async () => { await forcePortalResize() })                                                                  // watches for shader resize 
 
 const forcedError = Number(new URLSearchParams(window.location.search).get('error')) || 0
 
@@ -246,7 +246,7 @@ watch(                                                                          
         noteLoaded = false
         lastSlug = null
         notFound.value = 0
-        if (!isMobile.value) await shaderRef.value?.runQueue('transition-intro')
+        if (!isMobile.value) await portalRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
         resetSEOTags()
@@ -269,7 +269,7 @@ watch(                                                                          
         setCurrentPost(null)
         noteContent.value = ''
         resetSEOTags()
-        if (!isMobile.value) await shaderRef.value?.runQueue('intro')
+        if (!isMobile.value) await portalRef.value?.runQueue('intro')
         break
       
       // first note load, OUTRO only on first note load
@@ -279,8 +279,8 @@ watch(                                                                          
         lastSlug = slug
         if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'intro', 'outro'); break }
         await handleLoadNote(slug)
-        await shaderRef.value?.runQueue('outro')
-        await shaderRef.value?.runQueue('hidden')
+        await portalRef.value?.runQueue('outro')
+        await portalRef.value?.runQueue('hidden')
         break
 
       case slug && notFound.value:
@@ -292,10 +292,10 @@ watch(                                                                          
         firstLoad = false
         lastSlug = slug
         if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'static', 'direct', 500); break }
-        await shaderRef.value?.runQueue('static')
+        await portalRef.value?.runQueue('static')
         await handleLoadNote(slug)
         await new Promise(resolve => setTimeout(resolve, 500))
-        await shaderRef.value?.runQueue('direct')
+        await portalRef.value?.runQueue('direct')
         break
       
       // loaded note change, TRANSITION when switching note
@@ -304,9 +304,9 @@ watch(                                                                          
         firstLoad = false
         lastSlug = slug
         if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'transition-intro', 'transition-outro'); break }
-        await shaderRef.value?.runQueue('transition-intro')
+        await portalRef.value?.runQueue('transition-intro')
         await handleLoadNote(slug)
-        await shaderRef.value?.runQueue('transition-outro')
+        await portalRef.value?.runQueue('transition-outro')
         break
       
     }
@@ -348,8 +348,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
     
     <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
 
-      <Shader class="shader" ref="shaderRef"/>
-      <Typewriter :shader="shaderRef" :container="containerRef" :enabled="!currentPost && !computedFullscreen" />
+      <Portal class="portal" ref="portalRef"/>
+      <Typewriter :portal="portalRef" :container="containerRef" :enabled="!currentPost && !computedFullscreen" />
 
       <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" :title="store.t.portfolio.closeFullscreen" :aria-label="store.t.portfolio.closeFullscreenAria">X</button>
 
@@ -358,7 +358,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
         <div class="content" ref="contentRef" :class="{ 'fs-content': computedFullscreen }">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
-          <NotFound v-else-if="notFound" :code="notFound" :key="route.fullPath" />
+          <Status v-else-if="notFound" :code="notFound" :key="route.fullPath" />
           <div v-else :class="computedNoteClass" v-html="noteContent" />   <!-- for html posts          -->
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
@@ -437,7 +437,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.shader {
+.portal {
 
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ position: absolute; top: 0; left: 0;

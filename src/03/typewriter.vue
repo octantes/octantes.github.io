@@ -6,7 +6,7 @@ import { useStore } from '../04/store.js'
 const store = useStore()
 
 const props = defineProps({
-  shader:    { type: Object, default: null },
+  portal:    { type: Object, default: null },
   container: { type: Object, default: null },
   enabled:   { type: Boolean, default: true },
 })
@@ -124,7 +124,7 @@ function compose() {
   for (const [k, v] of poem)    cells.set(k, v)
 }
 
-function readGrid() { grid = props.shader?.gridInfo?.() || null; return grid }
+function readGrid() { grid = props.portal?.gridInfo?.() || null; return grid }
 
 function toCell(ev) {
   if (!grid) return null
@@ -380,7 +380,7 @@ function unbind() {
   bound = null
 }
 
-watch(() => props.shader,    s => { if (s?.attachOverlay) s.attachOverlay(cells) }, { immediate: true })
+watch(() => props.portal,    s => { if (s?.attachOverlay) s.attachOverlay(cells) }, { immediate: true })
 watch(() => props.container, el => bind(el), { immediate: true })
 watch(() => props.enabled, () => {
   checkLive()
@@ -411,7 +411,7 @@ onBeforeUnmount(() => {
   if (frame) cancelAnimationFrame(frame)
   active = []; recital = null
   hover.clear(); ripples.clear(); poem.clear(); cells.clear()
-  props.shader?.attachOverlay?.(null)
+  props.portal?.attachOverlay?.(null)
 })
 
 </script>
