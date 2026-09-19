@@ -6,7 +6,7 @@ import { useRoute } from 'vue-router'
 import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'
 import Portada from './02/portada.vue'
-import Shader from './03/shader.vue'
+import Portal from './03/portal.vue'
 import { veilOn, registerVeil } from './03/veil.js'
 
 const store = useStore()
@@ -40,7 +40,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
     </div>
 
-    <div v-if="veilOn" class="veil" aria-hidden="true"><Shader :ref="registerVeil" /></div>
+    <div v-if="veilOn" class="veil" aria-hidden="true"><Portal :ref="registerVeil" /></div>
 
     <div class="footer" role="contentinfo" v-if="route.path !== '/portfolio'">
 
