@@ -389,7 +389,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.container::after {
+.notedisplay > .container::after {
 
   /* CURSOR */ pointer-events: none;
   /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
@@ -404,14 +404,14 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.notedisplay.no-aperture .container::after { opacity: 0; }
+.notedisplay.no-aperture > .container::after { opacity: 0; }
 
 .notedisplay.no-aperture .post {
   -webkit-mask-size: 100% calc(100% + 4rem); mask-size: 100% calc(100% + 4rem);
   -webkit-mask-position: 0 -2rem;            mask-position: 0 -2rem;
 }
 
-.container.fs-container::after { display: none; }
+.notedisplay > .container.fs-container::after { display: none; }
 
 .post {
 
@@ -474,7 +474,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   .post { -webkit-mask-image: none; mask-image: none; }
 
-  .container::after { display: none; }
+  .notedisplay > .container::after { display: none; }
 
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
