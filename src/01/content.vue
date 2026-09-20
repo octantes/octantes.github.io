@@ -35,6 +35,13 @@ const notFound    = ref(0)
 
 const fullBleed = ref(false)
 
+/* the about opens in the note column and behaves as a note: the state machine
+   keys off openKey, so it gets the same field moves, the same direct-from-url
+   beat and the same transitions between it and any note */
+
+const aboutMode = computed(() => route.path.startsWith('/about/') ? route.params.section : null)
+const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
+
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
 let lastSlug   = null                                                                                                                 // previous slug flag for shader
@@ -143,6 +150,22 @@ async function fitCentred() {
 
 }
 
+async function openInColumn(key) {                                                                                                    // a note, or the about for a section
+
+  if (String(key).startsWith('about:')) {
+    notFound.value = 0
+    noteContent.value = ''
+    setCurrentPost(null)
+    resetSEOTags()
+    await nextTick()
+    resetScroll()
+    return
+  }
+
+  return handleLoadNote(key)
+
+}
+
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
   const { html, error } = await fetchPost(slug, route.params.type)
@@ -223,7 +246,7 @@ watch(() => route.params.filterType, ft => {
 
 watch(                                                                                                                                // trigger notes and animations 
   
-  () => route.params.slug,
+  openKey,
   
   async slug => {
     
@@ -278,8 +301,8 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'intro', 'outro'); break }
-        await handleLoadNote(slug)
+        if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'intro', 'outro'); break }
+        await openInColumn(slug)
         await portalRef.value?.runQueue('outro')
         await portalRef.value?.runQueue('hidden')
         break
@@ -292,9 +315,9 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'static', 'direct', 500); break }
+        if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
         await portalRef.value?.runQueue('static')
-        await handleLoadNote(slug)
+        await openInColumn(slug)
         await new Promise(resolve => setTimeout(resolve, 500))
         await portalRef.value?.runQueue('direct')
         break
@@ -304,9 +327,9 @@ watch(                                                                          
         noteLoaded = true
         firstLoad = false
         lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => handleLoadNote(slug), 'transition-intro', 'transition-outro'); break }
+        if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'transition-intro', 'transition-outro'); break }
         await portalRef.value?.runQueue('transition-intro')
-        await handleLoadNote(slug)
+        await openInColumn(slug)
         await portalRef.value?.runQueue('transition-outro')
         break
       
@@ -345,12 +368,12 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <div v-if="!isMobile || currentPost || notFound" class="notedisplay" :class="{ 'no-aperture': fullBleed }">
+  <div v-if="!isMobile || currentPost || notFound || aboutMode" class="notedisplay" :class="{ 'no-aperture': fullBleed }">
     
     <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
 
       <Portal class="portal" ref="portalRef"/>
-      <Typewriter :portal="portalRef" :container="containerRef" :enabled="!currentPost && !computedFullscreen" />
+      <Typewriter :portal="portalRef" :container="containerRef" :enabled="!currentPost && !aboutMode && !computedFullscreen" />
 
       <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" :title="store.t.portfolio.closeFullscreen" :aria-label="store.t.portfolio.closeFullscreenAria">X</button>
 
@@ -360,6 +383,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
+          <About v-else-if="aboutMode" :section="aboutMode" :key="route.fullPath" />                                       <!-- the section's about     -->
           <div v-else :class="computedNoteClass" v-html="noteContent" />   <!-- for html posts          -->
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">

@@ -4,12 +4,14 @@ import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 const authorpic = '/assets/kaste.webp'
 
+const props           = defineProps({ section: { type: String, default: null } })                                                      // set when opened as its own page
+
 const store           = useStore()                                                                                                    // initializes global store
 const { t }           = storeToRefs(store)
 
 const { activeFilter, userStatus, currentPost } = storeToRefs(store)                                                                  // imports refs from main store
 
-const displayFilter = computed(() => currentPost.value?.type || activeFilter.value)                                                   // show note type when reading, else active filter
+const displayFilter = computed(() => props.section || currentPost.value?.type || activeFilter.value)                                                   // show note type when reading, else active filter
 
 const currentTagline  = ref('')
 
