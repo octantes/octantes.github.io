@@ -3,10 +3,12 @@
     /* --font-grotesk  identity: h1-h6 and the wordmark                   */
     /* --font-mono     machine: status bar, dates, tags, rays, about      */
     /* --font-main     reading: body copy, links, descriptions, buttons   */
+    /* --font-display  the note title, and nothing else                   */
 
     --font-main:    'Outfit',        sans-serif;
     --font-mono:    'Inconsolata',   monospace;
     --font-grotesk: 'Space Grotesk', sans-serif;
+    --font-display: 'Jomolhari',     serif;
 
     --carbon-a02:  #1B1C1C05;
     --carbon-a06:  #1B1C1C10;
