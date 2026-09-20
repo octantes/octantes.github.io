@@ -100,14 +100,9 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   .filters { gap: .75rem; }
   .filters > button:not(.logo-xx) { padding: .5rem .6rem; }
   .searchbox { min-width: 3rem; }
-  .tabs button.active { max-width: none; min-width: 0; overflow: visible; text-overflow: clip; font-size: 0; display: flex; align-items: center; justify-content: center; padding: .5rem; width: 2.5rem; }
-  .tabs button.active::before { font-size: 1rem; line-height: 1; font-variant-emoji: text; }
-  .tabs button.active[data-type="full"]::before       { content: '\221E'; }
-  .tabs button.active[data-type="diseño"]::before      { content: '\22A1'; }
-  .tabs button.active[data-type="desarrollo"]::before  { content: '\2699'; }
-  .tabs button.active[data-type="musica"]::before      { content: '\266A'; }
-  .tabs button.active[data-type="textos"]::before      { content: '\270E'; }
-  .tabs button.active[data-type="juegos"]::before      { content: '\2660'; }
+  .tabs button.active { max-width: none; min-width: 0; overflow: visible; text-overflow: clip; display: flex; align-items: center; justify-content: center; padding: .5rem; width: 2.5rem; gap: 0; }
+  .tabs button.active .tab-label, .tabs button.active .tab-divider { display: none; }
+  .tabs button.active .tab-mark { width: 1rem; height: 1rem; transform: none; }
   .logo-xx { font-size: 0; padding: .5rem; width: 2rem; display: flex; align-items: center; justify-content: center; }
   .logo-xx::before { content: '⌂'; font-size: 1rem; font-weight: bold; line-height: 1; }
 }

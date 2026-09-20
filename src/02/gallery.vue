@@ -202,7 +202,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: auto; }
 
-.tag.mark   { cursor: default; display: inline-flex; align-items: center; justify-content: center; }
+.tag.mark   { cursor: default; display: inline-flex; align-items: center; justify-content: center; color: var(--cristal); background-color: var(--cristal-a08); }
 
 .tag {
 

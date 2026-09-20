@@ -175,7 +175,7 @@ export const useStore = defineStore('store', () => {
         adblockMsg: 'blocked by adblocker'
       },
       about: {
-        taglines: ['weaving spells', 'opening windows to alternate universes', 'unfolding portals', 'investigating dualities'],
+        taglines: ['weaving spells', 'opening windows to alternate universes', 'unfolding portals', 'researching dualities'],
         profilePic: 'profile picture',
         sections: {
           full: 'hey! i\'m <i>kaste</i> and what you\'re seeing is my operations base     <br><br>i built <b>octantes</b> to centralize all my production outside social media  <br>getting back to fundamentals, no algorithms, rules or middlemen               <br>you\'ll find projects of all kinds, you choose what you want to see            <br>from music, writing and design to video games and custom software             <br><br>the page lets me adapt the format to whatever content i\'m creating            <br>and thinking about my projects gets easier with defined outputs               <br><br>use the top tabs of the table to filter by section                            <br>when a post catches your attention, click it to load it here                  <br>',
