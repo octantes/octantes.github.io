@@ -86,7 +86,7 @@ export const useStore = defineStore('store', () => {
         desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
         welcomeTitle: 'qu\u00e9 es esto',
         welcomeDesc: 'cada rayo, un proyecto\ntoc\u00e1 una vez para mirar, dos para entrar',
-        close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción', closeFullscreen: 'salir de la vista en pantalla completa', closeFullscreenAria: 'cerrar el contenido en pantalla completa', githubProfile: 'Ver perfil de GitHub', openGithub: 'Abrir GitHub de octantes'
+        close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción', closeFullscreen: 'salir de la vista en pantalla completa', closeFullscreenAria: 'cerrar el contenido en pantalla completa', githubProfile: 'Ver perfil de GitHub', openGithub: 'Abrir GitHub de octantes', openRepo: 'Ver el repositorio de '
       },
       subscribe: {
         cta: 'querés enterarte cuando subo algo nuevo? sumate a la lista de mails!',
@@ -158,7 +158,7 @@ export const useStore = defineStore('store', () => {
         desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',
         welcomeTitle: 'what is this',
         welcomeDesc: 'every ray, a project\ntap once to look, twice to go in',
-        close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description', closeFullscreen: 'exit fullscreen view', closeFullscreenAria: 'close fullscreen content', githubProfile: 'View GitHub profile', openGithub: 'Open octantes GitHub'
+        close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description', closeFullscreen: 'exit fullscreen view', closeFullscreenAria: 'close fullscreen content', githubProfile: 'View GitHub profile', openGithub: 'Open octantes GitHub', openRepo: 'View the repository for '
       },
       subscribe: {
         cta: 'want to know when i upload something new? join the mailing list!',
@@ -220,6 +220,8 @@ export const useStore = defineStore('store', () => {
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   let   notesLoadingPromise        = null                                                                                               // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
+  const sectionMark                = { full: '\u221E', 'dise\u00f1o': '\u22A1', desarrollo: '\u2699', musica: '\u266A', textos: '\u270E', juegos: '\u2660' }   // one glyph per section
+
   const classMap                   = { desarrollo: 'nota nota-verso', textos: 'nota nota-verso', diseño: 'nota-medios', musica: 'nota nota-verso', juegos: 'nota nota-verso'}                      // note type custom class map
   const postHtmlCache              = ref({})
 
@@ -770,7 +772,7 @@ export const useStore = defineStore('store', () => {
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
-    /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
+    /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs, sectionMark,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, hasNotes,
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
