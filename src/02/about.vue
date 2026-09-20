@@ -4,7 +4,7 @@ import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 const authorpic = '/assets/kaste.webp'
 
-const props           = defineProps({ section: { type: String, default: null } })                                                      // set when opened as its own page
+const props           = defineProps({ section: { type: String, default: null } })
 
 const store           = useStore()                                                                                                    // initializes global store
 const { t }           = storeToRefs(store)
@@ -66,10 +66,6 @@ onMounted(() => {
 
   /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 0rem 2rem 0rem 2rem; gap: 1.25rem; overflow-wrap: break-word;
-
-  /* opened on its own it is the whole column, so it needs room to sit in
-     rather than starting against the top edge - padded, not centred, so it
-     holds when the content grows */
 
   &.standalone { padding-block: var(--space-xxl) var(--space-xl); }
   /* FILL   */ color: var(--humo);

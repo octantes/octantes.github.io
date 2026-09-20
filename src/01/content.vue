@@ -36,12 +36,8 @@ const notFound    = ref(0)
 
 const fullBleed = ref(false)
 
-/* the about opens in the note column and behaves as a note: the state machine
-   keys off openKey, so it gets the same field moves, the same direct-from-url
-   beat and the same transitions between it and any note */
-
 const aboutMode = computed(() => route.path.startsWith('/about/') ? route.params.section : null)
-const noteTitle = computed(() => {                                                                                                    // the title as shown, language aware
+const noteTitle = computed(() => {
   const p = currentPost.value
   if (!p) return ''
   return (store.lang === 'en' && p.bilingual && p.titleEn) ? p.titleEn : (p.title || '')
@@ -157,11 +153,11 @@ async function fitCentred() {
 
 }
 
-async function openInColumn(key) {                                                                                                    // a note, or the about for a section
+async function openInColumn(key) {
 
   if (String(key).startsWith('about:')) {
     const section = String(key).slice(6)
-    notFound.value = store.tabs.some(tab => tab.value === section) ? 0 : 404                                                          // a section that is not one is a 404, as a bad slug is
+    notFound.value = store.tabs.some(tab => tab.value === section) ? 0 : 404
     noteContent.value = ''
     setCurrentPost(null)
     resetSEOTags()
@@ -277,7 +273,7 @@ watch(                                                                          
         noteLoaded = false
         lastSlug = null
         notFound.value = 0
-        if (isMobile.value) {                                                                                                         // the field sweeps in, the home page arrives behind it, the field sweeps out
+        if (isMobile.value) {
           await throughTheVeil(() => { setCurrentPost(null); noteContent.value = ''; resetSEOTags() }, 'transition-intro', 'transition-outro')
           break
         }
@@ -395,9 +391,9 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
-          <About v-else-if="aboutMode && !notFound" :section="aboutMode" :key="route.fullPath" />                                       <!-- the section's about     -->
+          <About v-else-if="aboutMode && !notFound" :section="aboutMode" :key="route.fullPath" />
           <template v-else>
-            <NoteTitle v-if="currentPost && currentPost.type !== 'diseño'" :text="noteTitle" />      <!-- design notes open straight into the work -->
+            <NoteTitle v-if="currentPost && currentPost.type !== 'diseño'" :text="noteTitle" />
             <div :class="computedNoteClass" v-html="noteContent" />                                   <!-- for html posts          -->
           </template>
 
