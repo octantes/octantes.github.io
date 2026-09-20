@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia'
 import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
 import Portal from '../03/portal.vue'
-import Status from '../02/status.vue'
+import Notification from '../02/notification.vue'
 import { throughTheVeil } from '../03/veil.js'
 import Typewriter from '../03/typewriter.vue'
 
@@ -359,7 +359,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
         <div class="content" ref="contentRef" :class="{ 'fs-content': computedFullscreen }">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
-          <Status v-else-if="notFound" :code="notFound" :key="route.fullPath" />
+          <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
           <div v-else :class="computedNoteClass" v-html="noteContent" />   <!-- for html posts          -->
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
