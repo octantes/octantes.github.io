@@ -78,7 +78,7 @@ function toggle() { expanded.value = !expanded.value; emit('update:expanded', ex
 
   /* LAYOUT */ display: flex; flex-direction: column;
   /* BOX    */ width: 100%;
-  /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%);
+  /* FILL   */ background: linear-gradient(125deg, var(--cristal) 0%, var(--lirio) 100%); color: var(--carbon);
   /* BORDER */ border-radius: var(--radius-ss) var(--radius-ss) 0 0;
   /* MOTION */ transition: all var(--animate-fast);
 
