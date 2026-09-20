@@ -385,7 +385,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 .container {
 
-  /* LAYOUT */ position: relative;
+  /* LAYOUT */ position: relative; overflow: hidden;
+  /* BOX    */ width: 100%; height: 100%;
 
 }
 
