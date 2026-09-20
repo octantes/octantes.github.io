@@ -1,16 +1,35 @@
 <script setup> 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
 
-const expanded            = ref(typeof window !== 'undefined' && window.innerWidth <= 1080)                                           // description deploy state
+/* open by default on the narrow layout, closed on the wide one - but once the
+   arrow is pressed that is a decision, and it survives the reload */
+
+const REMEMBER            = 'portada_open'
+
+function initial() {
+  if (typeof window === 'undefined') return false
+  const saved = localStorage.getItem(REMEMBER)
+  if (saved === 'yes') return true
+  if (saved === 'no')  return false
+  return window.innerWidth <= 1080
+}
+
+const expanded            = ref(initial())                                                                                            // description deploy state
 const emit                = defineEmits(['update:expanded'])                                                                          // emit expanded state to parent
 
+onMounted(() => emit('update:expanded', expanded.value))                                                                              // the shell seeds its own copy from this
+
 function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link
-function toggle() { expanded.value = !expanded.value; emit('update:expanded', expanded.value) }                                       // toggle and notify parent
+function toggle() {                                                                                                                   // toggle, remember, notify parent
+  expanded.value = !expanded.value
+  try { localStorage.setItem(REMEMBER, expanded.value ? 'yes' : 'no') } catch { /* private mode */ }
+  emit('update:expanded', expanded.value)
+}
 
 </script>
 
