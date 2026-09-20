@@ -277,7 +277,11 @@ watch(                                                                          
         noteLoaded = false
         lastSlug = null
         notFound.value = 0
-        if (!isMobile.value) await portalRef.value?.runQueue('transition-intro')
+        if (isMobile.value) {                                                                                                         // the field sweeps across once, the same single move the wide layout makes
+          await throughTheVeil(() => { setCurrentPost(null); noteContent.value = ''; resetSEOTags() }, 'transition-intro', 'hidden')
+          break
+        }
+        await portalRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         noteContent.value = ''
         resetSEOTags()
