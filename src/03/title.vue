@@ -1,149 +1,70 @@
-<script setup>
+<script setup> 
 
-import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({ text: { type: String, default: '' } })                                                                    // the note's own title
 
-const host   = ref(null)
-const canvas = ref(null)
+/* the size has to know the length, or a long title runs off the column: the
+   count of characters and of the longest word are handed to css, which sizes
+   from them. no measuring, no canvas - the cap still comes from the column */
 
-const CELL     = 6                                                                                                                    // px per character cell
-const LINE     = 15                                                                                                                   // cells per line of title
-const RAMP     = ' ..::--==++**##%%@@'                                                                                                // coverage to character
-const FILL     = 0.92                                                                                                                 // share of the width the title aims for
-const MAX_LINE = 2                                                                                                                    // lines allowed on a wide column
-const MAX_NARROW = 4                                                                                                                  // a phone column is a third as wide, so it takes more
+/* a title like "dinamik - studio dev" is a name and a gloss; the display takes
+   the name. split on a spaced dash only, so hyphenated words survive */
 
-let observer = null
+const shown = computed(() => props.text.split(' - ')[0].trim() || props.text)
 
-function token(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() }
-
-function hash(text) { let h = 2166136261; for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619) } return h >>> 0 }
-
-/* The title is drawn once at cell resolution - one pixel per character - and
-   then read back, so any string in any language lands on the grid without a
-   glyph table to maintain. What the reader sees is the same character field the
-   portal is made of, shaped by the letters of the note's own name. */
-
-function render() {
-
-  const el = canvas.value, box = host.value
-  if (!el || !box || !props.text) return
-
-  const width = Math.floor(box.getBoundingClientRect().width)
-  if (width < 80) return
-
-  const cols = Math.floor(width / CELL)
-  const dpr  = Math.min(window.devicePixelRatio || 1, 2)
-
-  const probe = document.createElement('canvas').getContext('2d')
-  const face  = token('--font-grotesk') || 'sans-serif'
-  const words = props.text.toUpperCase().split(/\s+/).filter(Boolean)
-
-  /* wrap before shrinking: a long title squeezed onto one line stops being a
-     title and becomes a stripe, so it takes a second line first */
-
-  let size = LINE * 0.78, lines = [props.text.toUpperCase()]
-  const widthOf = (str, px) => { probe.font = `700 ${px}px ${face}`; return probe.measureText(str).width }
-
-  const maxLines = cols < 90 ? MAX_NARROW : MAX_LINE
-
-  for (let n = 1; n <= maxLines; n++) {
-    const per = Math.ceil(words.length / n)
-    const test = []
-    for (let i = 0; i < words.length; i += per) test.push(words.slice(i, i + per).join(' '))
-    const widest = Math.max(...test.map(l => widthOf(l, size)))
-    if (widest <= cols * FILL || n === maxLines) {
-      lines = test
-      if (widest > cols * FILL) size *= (cols * FILL) / widest
-      break
-    }
-  }
-
-  const rows = Math.max(4, Math.ceil(size * 1.3 * lines.length))
-
-  const src = document.createElement('canvas')
-  src.width = cols; src.height = rows
-  const sctx = src.getContext('2d', { willReadFrequently: true })
-  sctx.font = `700 ${size}px ${face}`
-  sctx.textBaseline = 'middle'
-  sctx.textAlign = 'center'
-  sctx.fillStyle = '#fff'
-  lines.forEach((l, i) => sctx.fillText(l, cols / 2, (rows / lines.length) * (i + 0.5)))
-
-  const data = sctx.getImageData(0, 0, cols, rows).data
-
-  el.width  = cols * CELL * dpr
-  el.height = rows * CELL * dpr
-  el.style.width  = cols * CELL + 'px'
-  el.style.height = rows * CELL + 'px'
-
-  const ctx = el.getContext('2d')
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-  ctx.clearRect(0, 0, cols * CELL, rows * CELL)
-  ctx.font = `${CELL}px ${token('--font-mono') || 'monospace'}`
-  ctx.textBaseline = 'middle'
-  ctx.textAlign = 'center'
-
-  const ink   = token('--humo')   || '#AAABAC'
-  const accent= token('--lirio')  || '#986C98'
-  const seed  = hash(props.text)
-
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-
-      const a = data[(y * cols + x) * 4 + 3] / 255
-      if (a < 0.08) continue
-
-      const step = Math.min(RAMP.length - 1, Math.floor(a * RAMP.length))
-      const ch   = RAMP[step]
-      if (ch === ' ') continue
-
-      const n = ((x * 73856093) ^ (y * 19349663) ^ seed) >>> 0                                                                        // stable per title, so it never reshuffles
-      ctx.fillStyle = (n % 23 === 0) ? accent : ink
-      ctx.globalAlpha = 0.45 + a * 0.55
-      ctx.fillText(ch, x * CELL + CELL / 2, y * CELL + CELL / 2)
-
-    }
-  }
-
-  ctx.globalAlpha = 1
-
-}
-
-onMounted(async () => {
-  await nextTick()
-  if (document.fonts?.ready) await document.fonts.ready
-  render()
-  if (typeof ResizeObserver !== 'undefined' && host.value) {
-    observer = new ResizeObserver(() => render())
-    observer.observe(host.value)
-  }
-})
-
-onBeforeUnmount(() => { observer?.disconnect(); observer = null })
-
-watch(() => props.text, async () => { await nextTick(); render() })
+const chars = computed(() => Math.max(shown.value.length, 1))
+const word  = computed(() => Math.max(...shown.value.split(/\s+/).map(w => w.length), 1))
 
 </script>
 
-<template>
+<template> 
 
-  <div class="notetitle" ref="host" role="heading" aria-level="2" :aria-label="text">
-    <canvas ref="canvas" aria-hidden="true"></canvas>
-  </div>
+  <h2 class="notetitle" v-if="text" :style="{ '--chars': chars, '--word': word }"><span class="ink">{{ shown }}</span></h2>
 
 </template>
 
-<style scoped>
+<style scoped> 
+
+/* No canvas: the display face carries it. The letters are set tight and
+   stretched on the vertical, and the size follows the column through cqw -
+   .post is the query container - so a phone and a wide desktop get the same
+   proportions without measuring anything. */
 
 .notetitle {
 
-  /* LAYOUT */ display: flex; justify-content: center; width: 100%;
-  /* BOX    */ padding-block: var(--space-ll) var(--space-mm);
+  /* LAYOUT */ display: block; width: 100%; text-align: center;
+  /* BOX    */ margin: 0; padding-block: var(--space-xxl) var(--space-ll); padding-inline: var(--space-xxl);
+  /* FONT   */ font-family: var(--font-display); font-weight: 400;
+               font-size: clamp(1.4rem, min(10cqw, calc(118cqw / var(--word, 8)), calc(355cqw / var(--chars, 16))), 5rem);
+               line-height: 1.04;
+               letter-spacing: -0.055em; text-transform: uppercase;
+               overflow-wrap: break-word;
 
 }
 
-canvas { display: block; }
+/* a phone column is under half the width, so the same cqw sizing lands at under
+   half the size. the cap goes up and the side air comes in, which keeps the
+   title close to the proportions it has on the wide layout */
+
+@media (max-width: 1080px) {
+
+  .notetitle {
+    /* BOX  */ padding-block: var(--space-xl) var(--space-mm); padding-inline: var(--space-ll);
+    /* FONT */ font-size: clamp(1.6rem, min(19cqw, calc(122cqw / var(--word, 8)), calc(420cqw / var(--chars, 16))), 5rem);
+  }
+
+}
+
+.ink {
+
+  /* LAYOUT */ display: inline-block; max-width: 100%; overflow-wrap: anywhere;
+  /* SHAPE  */ transform: scaleY(1.5); transform-origin: center;
+  /* BOX    */ margin-block: 0.24em;                                                                                                  /* a transform reserves no room, so it is reserved here */
+  /* FILL   */ background: linear-gradient(100deg, var(--cristal) 0%, var(--lirio) 100%);
+               -webkit-background-clip: text; background-clip: text;
+               -webkit-text-fill-color: transparent; color: transparent;
+
+}
 
 </style>

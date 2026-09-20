@@ -16,7 +16,7 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
   <div class="filters"> 
 
-    <button class="logo-xx" @click="navHome(router)" :disabled="processing" :title="store.t.nav.home">OCTANTES</button>
+    <button class="logo-xx" @click="navHome(router)" :disabled="processing" :title="store.t.nav.home"><span class="logo-sigil" aria-hidden="true"></span>OCTANTES</button>
 
     <input class="searchbox" type="text" v-model="searchQuery" :placeholder="store.t.nav.search" :disabled="processing" :title="store.t.nav.search" :aria-label="store.t.nav.search"/>
 
@@ -94,7 +94,15 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 .tab-divider { color: var(--carbon-a31); font-weight: normal; }
 .tab-mark    { width: .9em; height: .9em; }
 
-.logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center; }  
+.logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center; }
+
+/* the wordmark is the home button on a wide layout and the sigil on a narrow
+   one - a real element rather than a pseudo, because a masked ::before inside
+   the flex button paints nothing */
+
+.logo-sigil { display: none; flex: none; width: .95rem; height: .95rem; background-color: currentColor;
+              -webkit-mask: url('/assets/favicon.svg') center / contain no-repeat;
+                      mask: url('/assets/favicon.svg') center / contain no-repeat; }  
 
 @media (max-width: 500px) {
   .filters { gap: .75rem; }
@@ -102,9 +110,9 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   .searchbox { min-width: 3rem; }
   .tabs button.active { max-width: none; min-width: 0; overflow: visible; text-overflow: clip; display: flex; align-items: center; justify-content: center; padding: .5rem; width: 2.5rem; gap: 0; }
   .tabs button.active .tab-label, .tabs button.active .tab-divider { display: none; }
-  .tabs button.active .tab-mark { width: 1rem; height: 1rem; transform: none; }
+  .tabs button.active .tab-mark { width: .85rem; height: .85rem; transform: none; }
   .logo-xx { font-size: 0; padding: .5rem; width: 2rem; display: flex; align-items: center; justify-content: center; }
-  .logo-xx::before { content: '⌂'; font-size: 1rem; font-weight: bold; line-height: 1; }
+  .logo-sigil { display: block; }
 }
 
 </style>

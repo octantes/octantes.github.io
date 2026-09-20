@@ -393,7 +393,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
           <About v-else-if="aboutMode && !notFound" :section="aboutMode" :key="route.fullPath" />                                       <!-- the section's about     -->
           <template v-else>
-            <NoteTitle v-if="currentPost" :text="noteTitle" />                                        <!-- the title, drawn       -->
+            <NoteTitle v-if="currentPost && currentPost.type !== 'diseño'" :text="noteTitle" />      <!-- design notes open straight into the work -->
             <div :class="computedNoteClass" v-html="noteContent" />                                   <!-- for html posts          -->
           </template>
 
