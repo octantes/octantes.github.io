@@ -10,6 +10,8 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 
+const mainProjects = [{ name: 'scavenger', url: 'https://github.com/octantes/scavenger' }]                                            // shipped work, links out to the repo
+
 const welcomeRay = computed(() => ({
   slug: WELCOME_SLUG,
   type: 'welcome',
@@ -123,10 +125,8 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
         <div class="stack">
 
-          <span>Figma</span>
-          <span>Vue.js</span>
-          <span>Rust</span>
-          <span>Tauri</span>
+          <a v-for="p in mainProjects" :key="p.url" :href="p.url" target="_blank" rel="noopener noreferrer"
+             :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name">{{ p.name }} &#8599;</a>
 
         </div>
 
@@ -227,12 +227,16 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* LAYOUT */ display: flex; flex-wrap: wrap; justify-content: flex-end;
   /* BOX    */ margin-top: 1rem; gap: 0.5rem;
 
-  & span {
+  & a {
 
+    /* CURSOR */ cursor: pointer;
     /* BOX    */ padding: 0.2rem 0.5rem;
-    /* FILL   */ background-color: var(--carbon-a15); color: var(--cristal);
-    /* BORDER */ border: 1px solid var(--cristal-a31); border-radius: var(--radius-ss);
+    /* FILL   */ background: var(--carbon-a15); color: var(--cristal); -webkit-text-fill-color: var(--cristal);
+    /* BORDER */ border: 1px solid var(--cristal-a31); border-radius: var(--radius-ss); text-decoration: none;
     /* FONT   */ font-family: var(--font-mono); font-size: 0.75rem;
+    /* MOTION */ transition: all var(--animate-fast);
+
+    &:hover { background: var(--cristal); color: var(--carbon); -webkit-text-fill-color: var(--carbon); border-color: var(--cristal); }
 
   }
 
