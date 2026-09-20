@@ -96,10 +96,6 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
 .logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center; }
 
-/* the wordmark is the home button on a wide layout and the sigil on a narrow
-   one - a real element rather than a pseudo, because a masked ::before inside
-   the flex button paints nothing */
-
 .logo-xx     { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; }
 .logo-divider { color: var(--carbon-a31); font-weight: normal; }
 .logo-sigil { display: block; flex: none; width: .78rem; height: .78rem; transform: translateY(-0.6px); background-color: currentColor;

@@ -1,6 +1,6 @@
 <script setup>
 
-defineProps({ type: { type: String, default: 'full' } })                                                                              // section whose mark to draw
+defineProps({ type: { type: String, default: 'full' } })
 
 </script>
 

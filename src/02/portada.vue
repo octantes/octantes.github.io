@@ -6,9 +6,6 @@ import { storeToRefs } from 'pinia'
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
 
-/* open by default on the narrow layout, closed on the wide one - but once the
-   arrow is pressed that is a decision, and it survives the reload */
-
 const REMEMBER            = 'portada_open'
 
 function initial() {
@@ -22,12 +19,12 @@ function initial() {
 const expanded            = ref(initial())                                                                                            // description deploy state
 const emit                = defineEmits(['update:expanded'])                                                                          // emit expanded state to parent
 
-onMounted(() => emit('update:expanded', expanded.value))                                                                              // the shell seeds its own copy from this
+onMounted(() => emit('update:expanded', expanded.value))
 
 function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link
-function toggle() {                                                                                                                   // toggle, remember, notify parent
+function toggle() {                                                                                                                   // toggle and notify parent
   expanded.value = !expanded.value
-  try { localStorage.setItem(REMEMBER, expanded.value ? 'yes' : 'no') } catch { /* private mode */ }
+  try { localStorage.setItem(REMEMBER, expanded.value ? 'yes' : 'no') } catch { }
   emit('update:expanded', expanded.value)
 }
 

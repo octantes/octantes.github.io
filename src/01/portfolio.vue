@@ -10,7 +10,7 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 
-const mainProjects = [{ name: 'scavenger', url: 'https://github.com/octantes/scavenger' }]                                            // shipped work, links out to the repo
+const mainProjects = [{ name: 'scavenger', url: 'https://github.com/octantes/scavenger' }]
 
 const welcomeRay = computed(() => ({
   slug: WELCOME_SLUG,

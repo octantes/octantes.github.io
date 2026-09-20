@@ -220,8 +220,6 @@ export const useStore = defineStore('store', () => {
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   let   notesLoadingPromise        = null                                                                                               // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
-  const sectionMark                = { full: '\u221E', 'dise\u00f1o': '\u22A1', desarrollo: '\u2699', musica: '\u266A', textos: '\u270E', juegos: '\u2660' }   // one glyph per section
-
   const classMap                   = { desarrollo: 'nota nota-verso', textos: 'nota nota-verso', diseño: 'nota-medios', musica: 'nota nota-verso', juegos: 'nota nota-verso'}                      // note type custom class map
   const postHtmlCache              = ref({})
 
@@ -772,7 +770,7 @@ export const useStore = defineStore('store', () => {
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
-    /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs, sectionMark,
+    /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, hasNotes,
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
