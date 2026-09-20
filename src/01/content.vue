@@ -153,7 +153,8 @@ async function fitCentred() {
 async function openInColumn(key) {                                                                                                    // a note, or the about for a section
 
   if (String(key).startsWith('about:')) {
-    notFound.value = 0
+    const section = String(key).slice(6)
+    notFound.value = store.tabs.some(tab => tab.value === section) ? 0 : 404                                                          // a section that is not one is a 404, as a bad slug is
     noteContent.value = ''
     setCurrentPost(null)
     resetSEOTags()
@@ -383,7 +384,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
-          <About v-else-if="aboutMode" :section="aboutMode" :key="route.fullPath" />                                       <!-- the section's about     -->
+          <About v-else-if="aboutMode && !notFound" :section="aboutMode" :key="route.fullPath" />                                       <!-- the section's about     -->
           <div v-else :class="computedNoteClass" v-html="noteContent" />   <!-- for html posts          -->
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
