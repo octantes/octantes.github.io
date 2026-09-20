@@ -9,6 +9,7 @@ import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
 import { throughTheVeil } from '../03/veil.js'
 import Typewriter from '../03/typewriter.vue'
+import NoteTitle from '../03/title.vue'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 
@@ -40,6 +41,12 @@ const fullBleed = ref(false)
    beat and the same transitions between it and any note */
 
 const aboutMode = computed(() => route.path.startsWith('/about/') ? route.params.section : null)
+const noteTitle = computed(() => {                                                                                                    // the title as shown, language aware
+  const p = currentPost.value
+  if (!p) return ''
+  return (store.lang === 'en' && p.bilingual && p.titleEn) ? p.titleEn : (p.title || '')
+})
+
 const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
 
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
@@ -385,7 +392,10 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
           <About v-else-if="aboutMode && !notFound" :section="aboutMode" :key="route.fullPath" />                                       <!-- the section's about     -->
-          <div v-else :class="computedNoteClass" v-html="noteContent" />   <!-- for html posts          -->
+          <template v-else>
+            <NoteTitle v-if="currentPost" :text="noteTitle" />                                        <!-- the title, drawn       -->
+            <div :class="computedNoteClass" v-html="noteContent" />                                   <!-- for html posts          -->
+          </template>
 
           <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
             <br><hr><br>
