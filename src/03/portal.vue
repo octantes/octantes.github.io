@@ -794,5 +794,5 @@ onBeforeUnmount(() => {
 
 </script>
 
-<template> <div ref="containerRef" class="container"> <canvas ref="canvasRef"> </canvas> </div> </template>
-<style> .container { overflow: hidden; width: 100%; height: 100%; } canvas { display: block; width: 100%; height: 100%; } </style>
+<template> <div ref="containerRef" class="field"> <canvas ref="canvasRef"> </canvas> </div> </template>
+<style scoped> .field { overflow: hidden; width: 100%; height: 100%; } canvas { display: block; width: 100%; height: 100%; } </style>
