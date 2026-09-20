@@ -5,7 +5,7 @@ import Portfolio from '../01/portfolio.vue'
 const routes = [
 
   { path: '/portfolio',     component: Portfolio                                                                       }, // opens custom portfolio component
-  { path: '/about/:section', component: Content, props: route => ({ aboutSection: route.params.section })                 }, // the section's about, opened as a note
+  { path: '/about/:section', component: Content, props: route => ({ aboutSection: route.params.section })                 },
   { path: '/:type/:slug',   component: Content, props: route => ({ slug: route.params.slug, type: route.params.type }) }, // sends slug to content as prop
   { path: '/:filterType',   component: Content, props: route => ({ filterType: route.params.filterType })              },
   { path: '/',              component: Content,                                                                        },
