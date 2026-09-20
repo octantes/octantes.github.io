@@ -1,6 +1,7 @@
 <script setup> 
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
+import Mark from './mark.vue'
 import { storeToRefs } from 'pinia'
 
 const router = useRouter()
@@ -25,7 +26,7 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 
       <template v-for="tab in tabs" :key="tab.value">
         <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="router.push('/about/' + tab.value)"
-          :data-type="tab.value" :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"><span class="tab-label">{{ tab.label }}</span><span class="tab-divider" aria-hidden="true">|</span><span class="tab-mark" aria-hidden="true">{{ store.sectionMark[tab.value] || store.sectionMark.full }}</span>
+          :data-type="tab.value" :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"><span class="tab-label">{{ tab.label }}</span><span class="tab-divider" aria-hidden="true">|</span><Mark class="tab-mark" :type="tab.value" />
         </button>
       </template>
       
@@ -91,7 +92,7 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
 .tabs button.active { display: inline-flex; align-items: center; gap: .45rem; }
 .tab-label   { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tab-divider { color: var(--carbon-a31); font-weight: normal; }
-.tab-mark    { font-family: var(--font-mono); line-height: 1; }
+.tab-mark    { width: .9em; height: .9em; }
 
 .logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center; }  
 

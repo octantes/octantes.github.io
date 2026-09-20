@@ -25,7 +25,7 @@ onMounted(() => {
 
 <template> 
 
-  <div class="about">
+  <div class="about" :class="{ standalone: section }">
 
     <div class="profile-head">
 
@@ -66,6 +66,12 @@ onMounted(() => {
 
   /* LAYOUT */ display: flex; flex-direction: column; text-align: center;
   /* BOX    */ z-index: 1; width: 100%; padding: 0rem 2rem 0rem 2rem; gap: 1.25rem; overflow-wrap: break-word;
+
+  /* opened on its own it is the whole column, so it needs room to sit in
+     rather than starting against the top edge - padded, not centred, so it
+     holds when the content grows */
+
+  &.standalone { padding-block: var(--space-xxl) var(--space-xl); }
   /* FILL   */ color: var(--humo);
   /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
 
