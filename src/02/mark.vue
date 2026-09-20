@@ -8,9 +8,9 @@ defineProps({ type: { type: String, default: 'full' } })                        
 
   <svg class="mark-svg" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
 
-    <g v-if="type === 'diseño'" fill="none" stroke="currentColor" stroke-width="1">
-      <rect x="1.5" y="1.5" width="9" height="9" />
-      <rect x="5.5" y="5.5" width="1" height="1" fill="currentColor" stroke="none" />
+    <g v-if="type === 'diseño'" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+      <path d="M6 1.4a3.1 3.1 0 0 1 1.9 5.6c-0.4 0.3-0.6 0.7-0.6 1.1H4.7c0-0.4-0.2-0.8-0.6-1.1A3.1 3.1 0 0 1 6 1.4z" />
+      <path d="M4.9 9.4h2.2M5.3 10.7h1.4" />
     </g>
 
     <g v-else-if="type === 'desarrollo'" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="butt">
@@ -29,8 +29,10 @@ defineProps({ type: { type: String, default: 'full' } })                        
       <path d="M7.4 1.8l1.6 1.6" />
     </g>
 
-    <g v-else-if="type === 'juegos'" fill="currentColor" stroke="none">
-      <path d="M6 1.1c1.4 2 4.2 3.5 4.2 5.5c0 1.3-1 2.1-2.1 2.1c-0.7 0-1.4-0.4-1.7-0.9c0.1 1 0.4 1.7 0.9 2.2H4.7c0.5-0.5 0.8-1.2 0.9-2.2c-0.3 0.5-1 0.9-1.7 0.9c-1.1 0-2.1-0.8-2.1-2.1C1.8 4.6 4.6 3.1 6 1.1z" />
+    <g v-else-if="type === 'juegos'" stroke="currentColor" stroke-width="1" stroke-linecap="round" fill="none">
+      <path d="M6 8.2V4.6" />
+      <circle cx="6" cy="3" r="1.7" fill="currentColor" stroke="none" />
+      <path d="M2.6 10.4c0-1.2 1.5-2.1 3.4-2.1s3.4 0.9 3.4 2.1z" fill="currentColor" stroke="none" />
     </g>
 
     <g v-else fill="none" stroke="currentColor" stroke-width="1">
@@ -47,7 +49,8 @@ defineProps({ type: { type: String, default: 'full' } })                        
 .mark-svg {
 
   /* LAYOUT */ display: block; flex: none;
-  /* BOX    */ width: 1em; height: 1em;
+  /* BOX    */ width: .88em; height: .88em;
+  /* OPTIC  */ transform: translateY(.045em);
   /* FILL   */ color: inherit;
 
 }
