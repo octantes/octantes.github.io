@@ -24,8 +24,8 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
     <div class="tabs"> 
 
       <template v-for="tab in tabs" :key="tab.value">
-        <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="setActiveFilter(router, 'full')"
-          :data-type="tab.value" :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"> {{ tab.label }}
+        <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="router.push('/about/' + tab.value)"
+          :data-type="tab.value" :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"><span class="tab-label">{{ tab.label }}</span><span class="tab-divider" aria-hidden="true">|</span><span class="tab-mark" aria-hidden="true">{{ store.sectionMark[tab.value] || store.sectionMark.full }}</span>
         </button>
       </template>
       
@@ -87,6 +87,11 @@ const { changeFilter, hasNotes, navHome, setActiveFilter } = store
   & button.active { min-width: 4rem; max-width: 8rem; flex: 0 1 auto; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 }
+
+.tabs button.active { display: inline-flex; align-items: center; gap: .45rem; }
+.tab-label   { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tab-divider { color: var(--carbon-a31); font-weight: normal; }
+.tab-mark    { font-family: var(--font-mono); line-height: 1; }
 
 .logo-xx { font-weight: bold; font-family: var(--font-grotesk) !important; text-align: center; }  
 
