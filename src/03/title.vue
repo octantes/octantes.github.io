@@ -81,7 +81,7 @@ const word  = computed(() => Math.max(...shown.value.split(/\s+/).map(w => w.len
 
   .notetitle {
     /* BOX  */ padding-block: var(--space-xxl) var(--space-mm); padding-inline: var(--space-ll);
-    /* FONT */ font-size: clamp(1.6rem, min(19cqw, calc(122cqw / var(--word, 8)), calc(420cqw / var(--chars, 16))), 5rem);
+    /* FONT */ font-size: clamp(1.05rem, min(19cqw, calc(104cqw / var(--word, 8)), calc(380cqw / var(--chars, 16))), 5rem);          /* the floor has to let a long word fit a 320px screen */
   }
 
 }
