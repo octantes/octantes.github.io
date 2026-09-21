@@ -101,7 +101,7 @@ function toggle() {                                                             
   &:not(.expanded):hover { filter: brightness(95%); }
   &.expanded { margin-bottom: 1rem; border-radius: var(--radius-ss); }
 
-  @media (max-width: 1080px) { border-radius: var(--radius-ss); }
+  @media (max-width: 1080px) { border-radius: var(--radius-ss); margin-bottom: 1rem; }
 
 }
 

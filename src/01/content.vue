@@ -43,6 +43,8 @@ const noteTitle = computed(() => {
   return (store.lang === 'en' && p.bilingual && p.titleEn) ? p.titleEn : (p.title || '')
 })
 
+const aboutOpen = ref(null)
+
 const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
 
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
@@ -157,6 +159,7 @@ async function openInColumn(key) {
 
   if (String(key).startsWith('about:')) {
     const section = String(key).slice(6)
+    aboutOpen.value = section
     notFound.value = store.tabs.some(tab => tab.value === section) ? 0 : 404
     noteContent.value = ''
     setCurrentPost(null)
@@ -166,6 +169,7 @@ async function openInColumn(key) {
     return
   }
 
+  aboutOpen.value = null
   return handleLoadNote(key)
 
 }
@@ -274,11 +278,12 @@ watch(                                                                          
         lastSlug = null
         notFound.value = 0
         if (isMobile.value) {
-          await throughTheVeil(() => { setCurrentPost(null); noteContent.value = ''; resetSEOTags() }, 'transition-intro', 'transition-outro')
+          await throughTheVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = ''; resetSEOTags() }, 'transition-intro', 'transition-outro')
           break
         }
         await portalRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
+        aboutOpen.value = null
         noteContent.value = ''
         resetSEOTags()
         break
@@ -287,6 +292,7 @@ watch(                                                                          
         noteLoaded = false
         lastSlug = null
         setCurrentPost(null)
+        aboutOpen.value = null
         noteContent.value = ''
         if (!firstLoad) await revealError()
         firstLoad = false
@@ -298,6 +304,7 @@ watch(                                                                          
         firstLoad = false
         lastSlug = null
         setCurrentPost(null)
+        aboutOpen.value = null
         noteContent.value = ''
         resetSEOTags()
         if (isMobile.value) { await throughTheVeil(() => {}, 'static', 'direct', 500); break }
@@ -391,7 +398,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
-          <About v-else-if="aboutMode && !notFound" :section="aboutMode" :key="route.fullPath" />
+          <About v-else-if="aboutOpen && !notFound" :section="aboutOpen" :key="route.fullPath" />
           <template v-else>
             <NoteTitle v-if="currentPost && currentPost.type !== 'diseño'" :text="noteTitle" />
             <div :class="computedNoteClass" v-html="noteContent" />                                   <!-- for html posts          -->
