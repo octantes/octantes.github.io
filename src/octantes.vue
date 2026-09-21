@@ -95,7 +95,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
 .veil       { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
-.articulos.portada-collapsed .post { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; }
+@media (min-width: 1081px) { .articulos.portada-collapsed .post { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; } }
 
 @media (max-width: 1080px) { 
 
