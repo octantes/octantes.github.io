@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL } from './src/04/site-config.js'
+import { SITE_URL, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -83,7 +83,6 @@ const cacheFile = path.resolve('.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 const webURL = SITE_URL
 
-const GIF_AS_VIDEO = true
 const contentDir = './content'
 const outputDir = './dist'
 
@@ -280,7 +279,7 @@ async function convertGif(inputPath, destPath) {
     await new Promise((resolve, reject) => {
       const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-i', inputPath,
         '-pix_fmt', 'yuv420p', '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-        '-c:v', 'libx264', '-crf', '26', '-preset', 'slow', '-movflags', '+faststart',
+        '-c:v', 'libx264', '-crf', GIF_ENCODE.crf, '-preset', GIF_ENCODE.preset, '-movflags', '+faststart',
         '-an', finalOutputPath])
       let err = ''
       ff.stderr.on('data', d => { err += d })
