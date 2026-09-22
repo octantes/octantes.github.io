@@ -1,21 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { SITE_URL, CONTACT_EMAIL } from '@/04/site-config.js'
+import { SITE_URL, CONTACT_EMAIL, POPUP_LINK, SECTIONS } from '@/04/site-config.js'
 
 export const useStore = defineStore('store', () => {
 
   const webURL = SITE_URL
 
-  const tabs                       = computed(() => [                                                                                 // names for filters 
-
-    { label: t.value.nav.tabs.full,       value: 'full'       },
-    { label: t.value.nav.tabs.diseño,     value: 'diseño'     },
-    { label: t.value.nav.tabs.desarrollo, value: 'desarrollo' },
-    { label: t.value.nav.tabs.musica,     value: 'musica'     },
-    { label: t.value.nav.tabs.textos,     value: 'textos'     },
-    { label: t.value.nav.tabs.juegos,     value: 'juegos'     },
-
-  ])
+  const tabs                       = computed(() => SECTIONS.map(value => ({ label: t.value.nav.tabs[value], value })))          // names for filters 
 
   const authorsMap = {                                                                                                                // author profile pic and link 
 
@@ -226,7 +217,7 @@ export const useStore = defineStore('store', () => {
   // STATES                                                                                                                           // CHANGE STATES
 
   const processing                 = ref(false)                                                                                       // disabled component state
-  const popLink                    = ref('https://www.youtube.com/watch?v=pwzLUeVghDc')                                               // popup go link
+  const popLink                    = ref(POPUP_LINK)                                                                                  // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
   const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
   const mailtoDir                  = ref(CONTACT_EMAIL)                                                                               // contact direction
