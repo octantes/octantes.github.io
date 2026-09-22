@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { SITE_URL, CONTACT_EMAIL } from '@/site-config.js'
+import { SITE_URL, CONTACT_EMAIL } from '@/04/site-config.js'
 
 export const useStore = defineStore('store', () => {
 

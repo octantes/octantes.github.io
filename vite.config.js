@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import devPlugin from './vite.dev-plugin.js'
-import { SITE_URL } from './src/site-config.js'
+import { SITE_URL } from './src/04/site-config.js'
 
 export default defineConfig({
   plugins: [

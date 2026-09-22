@@ -1,7 +1,7 @@
 <script setup> 
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
-import Mark from './mark.vue'
+import Mark from '../03/mark.vue'
 import { storeToRefs } from 'pinia'
 
 const router = useRouter()

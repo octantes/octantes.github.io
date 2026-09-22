@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL } from './src/site-config.js'
+import { SITE_URL } from './src/04/site-config.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
