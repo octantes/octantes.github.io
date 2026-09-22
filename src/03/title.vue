@@ -48,7 +48,7 @@ const word  = computed(() => Math.max(...shown.value.split(/\s+/).map(w => w.len
 .notetitle {
 
   /* LAYOUT */ display: block; width: 100%; text-align: center;
-  /* BOX    */ margin: 0; padding-block: var(--space-xxl); padding-inline: var(--space-xxl);
+  /* BOX    */ margin: 0; padding-block: var(--space-xxl) 0; padding-inline: var(--space-xxl);
   /* FONT   */ font-family: var(--font-display); font-weight: 400;
                font-size: clamp(1.4rem, min(10cqw, calc(118cqw / var(--word, 8)), calc(355cqw / var(--chars, 16))), 5rem);
                line-height: 1.04;
@@ -60,7 +60,7 @@ const word  = computed(() => Math.max(...shown.value.split(/\s+/).map(w => w.len
 @media (max-width: 1080px) {
 
   .notetitle {
-    /* BOX  */ padding-block: var(--space-mm); padding-inline: var(--space-ll);
+    /* BOX  */ padding-block: 1.125rem 0; padding-inline: var(--space-ll);
     /* FONT */ font-size: clamp(1.05rem, min(19cqw, calc(104cqw / var(--word, 8)), calc(380cqw / var(--chars, 16))), 5rem);
   }
 

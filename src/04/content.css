@@ -36,6 +36,14 @@
 .nota.nota-prosa  { padding-top: var(--space-xxl); }
 .nota .nota-prosa { padding: var(--space-ll) 0 0; }
 
+/* under a title the body sets its own top space, so the air above the title
+   and the air under it read the same. prose carries more leading of its own,
+   so it needs less added back than a verso note does */
+.notetitle + .nota,
+.notetitle + .nota > .nota-prosa      { padding-top: 0; }
+.notetitle + .nota:not(:has(.nota-prosa)) { padding-top: var(--space-mm); }
+@media (max-width: 1080px) { .notetitle + .nota:not(:has(.nota-prosa)) { padding-top: var(--space-ss); } }
+
 .nota-medios {
 
   /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
