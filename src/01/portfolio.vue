@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { MAIN_PROJECTS, GITHUB_URL } from '../04/site-config.js'
+import DotGrid from '../03/dotgrid.vue'
 
 const authorpic = '/assets/kaste.webp'
 
@@ -102,154 +103,27 @@ function handleRayClick(proj) {
 function openGithub()         { window.open(GITHUB_URL, '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
 
-const gridRef    = ref(null)
-const gridCanvas = ref(null)
+const rootRef = ref(null)
 
-let gridWatch = null
-let gridGeo   = null
-let gridRaf   = 0
-let gridT0    = 0
+function settle() {
 
-const stillness = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null
-
-function fitGrid() {
-
-  const el = gridRef.value
-  const cv = gridCanvas.value
-  if (!el || !cv) return
-
-  if (el.scrollTop && !/auto|scroll/.test(getComputedStyle(el).overflowY)) el.scrollTop = 0
-
-  const width  = el.clientWidth
-  const height = el.clientHeight
-  if (!width || !height) return
-
-  const css   = getComputedStyle(el)
-  const tile  = parseFloat(css.getPropertyValue('--dot-u')) || 22
-  const rad   = parseFloat(css.getPropertyValue('--dot-r')) || 1.5
-  const ink   = css.getPropertyValue('--niebla').trim() || '#D8DADE'
-  const drift = parseFloat(css.getPropertyValue('--dot-drift-x')) || 0
-  const lift  = parseFloat(css.getPropertyValue('--dot-drift-y')) || 0
-
-  const dpr  = window.devicePixelRatio || 1
-  const cols = Math.max(1, Math.round(width  / tile))
-  const rows = Math.max(1, Math.round(height / tile))
-
-  cv.width  = Math.round(width  * dpr)
-  cv.height = Math.round(height * dpr)
-  cv.style.width  = width  + 'px'
-  cv.style.height = height + 'px'
-
-  const r    = rad * dpr
-  const size = 2 * Math.ceil(r) + 2
-  const half = size / 2
-
-  const sprite = document.createElement('canvas')
-  sprite.width = sprite.height = size
-  const sctx = sprite.getContext('2d')
-  sctx.fillStyle = ink
-  sctx.beginPath()
-  sctx.arc(half, half, r, 0, Math.PI * 2)
-  sctx.fill()
-
-  const xs = [], ys = []
-  for (let i = 0; i < cols; i++) xs.push(Math.round(i * width  / cols * dpr))
-  for (let j = 0; j < rows; j++) ys.push(Math.round(j * height / rows * dpr))
-
-  gridGeo = { xs, ys, sprite, half, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
-              vx: drift * dpr, vy: lift * dpr }
-
-  pinGrid()
-  drawGrid(0, 0)
-  runGrid()
-
-}
-
-function pinGrid() {
-
-  const el = gridRef.value
-  const cv = gridCanvas.value
-  if (el && cv) cv.style.transform = el.scrollTop ? `translateY(${el.scrollTop}px)` : ''
-
-}
-
-function lane(bases, phase, span, half) {
-
-  const out = []
-
-  for (const base of bases) {
-    const v = ((base + phase) % span + span) % span
-    out.push(v)
-    if (v < half) out.push(v + span)
-  }
-
-  return out
-
-}
-
-function drawGrid(px, py) {
-
-  const g = gridGeo
-  if (!g) return
-
-  g.ctx.clearRect(0, 0, g.w, g.h)
-
-  const xs = lane(g.xs, px, g.w, g.half)
-  const ys = lane(g.ys, py, g.h, g.half)
-
-  for (const x of xs) for (const y of ys) g.ctx.drawImage(g.sprite, x - g.half, y - g.half)
-
-}
-
-function stepGrid(now) {
-
-  const g = gridGeo
-  if (!g) return
-
-  if (!gridT0) gridT0 = now
-  const secs = (now - gridT0) / 1000
-
-  drawGrid(Math.round(secs * g.vx), Math.round(secs * g.vy))
-  gridRaf = requestAnimationFrame(stepGrid)
-
-}
-
-function runGrid() {
-
-  cancelAnimationFrame(gridRaf)
-  gridRaf = 0
-  gridT0  = 0
-
-  const g = gridGeo
-  if (!g || (!g.vx && !g.vy) || stillness?.matches) return
-
-  gridRaf = requestAnimationFrame(stepGrid)
+  const el = rootRef.value
+  if (el?.scrollTop && !/auto|scroll/.test(getComputedStyle(el).overflowY)) el.scrollTop = 0
 
 }
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
-onMounted(() => {
-  fitGrid()
-  if (typeof ResizeObserver !== 'undefined' && gridRef.value) { gridWatch = new ResizeObserver(fitGrid); gridWatch.observe(gridRef.value) }
-  window.addEventListener('resize', fitGrid)
-  gridRef.value?.addEventListener('scroll', pinGrid, { passive: true })
-})
-
-onBeforeUnmount(() => {
-  gridWatch?.disconnect(); gridWatch = null
-  cancelAnimationFrame(gridRaf); gridRaf = 0; gridGeo = null
-  window.removeEventListener('resize', fitGrid)
-  gridRef.value?.removeEventListener('scroll', pinGrid)
-})
+onMounted(()       => window.addEventListener('resize', settle))
+onBeforeUnmount(() => window.removeEventListener('resize', settle))
 
 </script>
 
 <template> 
 
-  <div class="portfolio" ref="gridRef">
+  <div class="portfolio" ref="rootRef">
 
-    <canvas class="dotgrid" ref="gridCanvas" aria-hidden="true"></canvas>
+    <DotGrid />
 
     <div class="top-actions">
       <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
@@ -335,11 +209,10 @@ onBeforeUnmount(() => {
                            radial-gradient(circle at center, var(--carbon) 0%, #000000 78%);
                color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* GRID   */ --dot-u: 22px; --dot-r: 1.125px; --dot-drift-x: 40; --dot-drift-y: 60;
 
   & > .dotgrid {
 
-    /* LAYOUT */ position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    /* LAYOUT */ z-index: 0;
     /* FILL   */ opacity: .08;
 
   }
