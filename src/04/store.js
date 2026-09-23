@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { SITE_URL, CONTACT_EMAIL, POPUP_LINK, SECTIONS } from '@/04/site-config.js'
+import { SITE_URL, CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
 
 export const useStore = defineStore('store', () => {
 
@@ -15,17 +15,6 @@ export const useStore = defineStore('store', () => {
     octantes: { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
 
   }
-
-  const statusMap  = {                                                                                                                // status emojis (messages in dict)
-
-    frenzy:   { emoji: '❤️‍🔥' },
-    dominion: { emoji: '🪡' },
-    stuck:    { emoji: '🌀' },
-    default:  { emoji: '🪡' },
-
-  }
-
-  const statusKey = ref('frenzy')                                                                                                      // current status key
 
   // LENGUAJE Y DICCIONARIO
 
@@ -70,7 +59,7 @@ export const useStore = defineStore('store', () => {
         sigilAlt: 'sigilo'
       },
       nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
-      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:', frenzy: 'in a frenzy!', dominion: 'dominando el mundo', stuck: 'stuck in a loop', default: 'dominando el mundo' },
+      status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
       portfolio: {
         subtitle: 'Desarrollador Frontend & Diseñador',
@@ -142,7 +131,7 @@ export const useStore = defineStore('store', () => {
         sigilAlt: 'sigil'
       },
       nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { full: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
-      status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:', frenzy: 'in a frenzy!', dominion: 'dominating the world', stuck: 'stuck in a loop', default: 'dominating the world' },
+      status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
       portfolio: {
         subtitle: 'Frontend Engineer & Designer',
@@ -223,9 +212,8 @@ export const useStore = defineStore('store', () => {
   const mailtoDir                  = ref(CONTACT_EMAIL)                                                                               // contact direction
   const userStatus                 = computed(() => {                                                                                   // current user status (lang-aware)
 
-    const key = statusKey.value
-    const entry = statusMap[key] || statusMap.default
-    return { emoji: entry.emoji, message: t.value.status[key] || t.value.status.default || entry.emoji }
+    const entry = STATUSES[STATUS] || Object.values(STATUSES)[0]
+    return { emoji: entry.emoji, message: entry[lang.value] || entry.es || entry.emoji }
 
   })
 
@@ -391,12 +379,6 @@ export const useStore = defineStore('store', () => {
 
     } else { updateSub('error', t.value.subscribe.adblockMsg, true) }
     
-  }
-
-  function setUserStatus(key) {                                                                                                       // set emoji and status phrase 
-
-    statusKey.value = key
-
   }
 
   watch(lang, () => { if (subState.value === 'default') subMessage.value = t.value.subscribe.placeholder })                            // sync placeholder on lang switch
@@ -754,19 +736,19 @@ export const useStore = defineStore('store', () => {
     /* SITE VAR */ webURL,
     /* SITE CON */ SITE_URL,
 
-    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, subDone, statusMap, userStatus,
-    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, resetSub, updateSub, emitSub, setUserStatus,
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, subDone, userStatus,
+    /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, emitSub,
     /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
-    /* NAVIG VAR */ activeFilter, sortKey, sortOrder, searchQuery, tabs,
-    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, navSort, changeFilter, hasNotes,
+    /* NAVIG VAR */ activeFilter, searchQuery, tabs,
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes,
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
     /* LANG FUN  */ toggleLang,
-    /* SEO  FUN  */ updateSEOTags, resetSEOTags,
+    /* SEO  FUN  */ resetSEOTags,
 
   }
 
