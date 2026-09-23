@@ -30,11 +30,9 @@ portada: portada.png
 date: YYYY-MM-DD
 handle: kaste OR [kaste, octantes] if multi-author
 vuecomp: nombre-componente (sin el .vue)
-fullscreen: nombre-componente (sin el .vue)
 mostrar: si/no (si la propiedad no existe se considera como "si")
 ---
 
-FULLSCREEN:   add "fullscreen: componente" to metadata to mount component in fullscreen layout (add imports to fullscreen.vue)
 CUSTOM:       add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
 TEXTOS:       add "style: trad" in metadata to remove the softbreaks rule from that specific note and set left alignment
 JUEGOS:       just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
@@ -620,7 +618,6 @@ async function processPosts() {                                                 
         isoDate: isoDate,
         url: `/posts/${postType}/${slug}/`,
         vuecomp: attributes.vuecomp || null,
-        fullscreen: attributes.fullscreen || null,
         bilingual: isBilingual,
         titleEn: enAttributes.title || null,
         descriptionEn: enAttributes.description || null

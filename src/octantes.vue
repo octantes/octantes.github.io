@@ -12,7 +12,7 @@ import { veilOn, registerVeil } from './03/veil.js'
 
 const store = useStore()
 const route = useRoute()
-const { computedFullscreen, currentPost } = storeToRefs(store)
+const { currentPost } = storeToRefs(store)
 const portadaExpanded = ref(window.innerWidth <= 1080)
 
 </script>
@@ -25,9 +25,9 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
     <h1 class="a11y-only">octantes</h1>
 
-    <div class="layout" :class="{ fullscreen: computedFullscreen || route.path === '/portfolio' }" >
+    <div class="layout" :class="{ fullscreen: route.path === '/portfolio' }" >
 
-      <template v-if="!computedFullscreen && route.path !== '/portfolio'">
+      <template v-if="route.path !== '/portfolio'">
 
         <div class="portal-glow" aria-hidden="true" />
         <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" />

@@ -66,7 +66,7 @@ export const useStore = defineStore('store', () => {
         desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
         welcomeTitle: 'qu\u00e9 es esto',
         welcomeDesc: 'cada rayo, un proyecto\ntoc\u00e1 una vez para mirar, dos para entrar',
-        close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción', closeFullscreen: 'salir de la vista en pantalla completa', closeFullscreenAria: 'cerrar el contenido en pantalla completa', githubProfile: 'Ver perfil de GitHub', openGithub: 'Abrir GitHub de octantes', openRepo: 'Ver el repositorio de '
+        close: 'volver al inicio', select: 'seleccionar proyecto ', open: 'abrir nota de ', noDesc: 'sin descripción', githubProfile: 'Ver perfil de GitHub', openGithub: 'Abrir GitHub de octantes', openRepo: 'Ver el repositorio de '
       },
       subscribe: {
         cta: 'querés enterarte cuando subo algo nuevo? sumate a la lista de mails!',
@@ -138,7 +138,7 @@ export const useStore = defineStore('store', () => {
         desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',
         welcomeTitle: 'what is this',
         welcomeDesc: 'every ray, a project\ntap once to look, twice to go in',
-        close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description', closeFullscreen: 'exit fullscreen view', closeFullscreenAria: 'close fullscreen content', githubProfile: 'View GitHub profile', openGithub: 'Open octantes GitHub', openRepo: 'View the repository for '
+        close: 'back to home', select: 'select project ', open: 'open note for ', noDesc: 'no description', githubProfile: 'View GitHub profile', openGithub: 'Open octantes GitHub', openRepo: 'View the repository for '
       },
       subscribe: {
         cta: 'want to know when i upload something new? join the mailing list!',
@@ -472,6 +472,33 @@ export const useStore = defineStore('store', () => {
 
   }
 
+  const seoTags = {
+    description: 'meta[name="description"]',
+    ogTitle:     'meta[property="og:title"]',
+    ogDesc:      'meta[property="og:description"]',
+    ogUrl:       'meta[property="og:url"]',
+    ogImage:     'meta[property="og:image"]',
+    twTitle:     'meta[name="twitter:title"]',
+    twDesc:      'meta[name="twitter:description"]',
+    twImage:     'meta[name="twitter:image"]',
+    twCreator:   'meta[name="twitter:creator"]',
+    published:   'meta[property="article:published_time"]',
+    modified:    'meta[property="article:modified_time"]',
+    canonical:   ['link[rel="canonical"]', 'href'],
+  }
+
+  function setSEOTags(values) {
+
+    for (const [key, value] of Object.entries(values)) {
+      const [selector, attr = 'content'] = [].concat(seoTags[key])
+      const el = document.querySelector(selector)
+      if (!el) continue
+      if (value === null) el.remove()
+      else el[attr] = value
+    }
+
+  }
+
   function updateSEOTags(post) {
 
     if (!post) { resetSEOTags(); return }
@@ -480,49 +507,24 @@ export const useStore = defineStore('store', () => {
 
     const title = ((isEn && post.bilingual && post.titleEn) ? post.titleEn : post.title) || post.slug
     const description = (isEn && post.bilingual && post.descriptionEn) ? post.descriptionEn : post.description
-    const slug = post.slug
+    const url = `${webURL}/${post.type}/${post.slug}/`
+    const handle = Array.isArray(post.handle) ? post.handle[0] : (post.handle || 'kaste')
 
     document.title = `${title} - octantes.ar`
 
-    const descMeta = document.querySelector('meta[name="description"]')
-    if (descMeta) descMeta.content = description
-
-    const ogTitle = document.querySelector('meta[property="og:title"]')
-    if (ogTitle) ogTitle.content = title
-
-    const ogDesc = document.querySelector('meta[property="og:description"]')
-    if (ogDesc) ogDesc.content = description
-
-    const ogUrl = document.querySelector('meta[property="og:url"]')
-    if (ogUrl) ogUrl.content = `${webURL}/${post.type}/${slug}/`
-
-    const ogImage = document.querySelector('meta[property="og:image"]')
-    if (ogImage && post.portada) ogImage.content = post.portada
-
-    const twTitle = document.querySelector('meta[name="twitter:title"]')
-    if (twTitle) twTitle.content = title
-
-    const twDesc = document.querySelector('meta[name="twitter:description"]')
-    if (twDesc) twDesc.content = description
-
-    const twImage = document.querySelector('meta[name="twitter:image"]')
-    if (twImage && post.portada) twImage.content = post.portada
-
-    const twCreator = document.querySelector('meta[name="twitter:creator"]')
-    if (twCreator) {
-      const handle = Array.isArray(post.handle) ? post.handle[0] : (post.handle || 'kaste')
-      twCreator.content = `@${handle.replace(/^@/, '')}`
-    }
-
-    const canonical = document.querySelector('link[rel="canonical"]')
-    if (canonical) canonical.href = `${webURL}/${post.type}/${slug}/`
+    setSEOTags({
+      description, ogTitle: title, ogDesc: description, ogUrl: url,
+      twTitle: title, twDesc: description, twCreator: `@${handle.replace(/^@/, '')}`, canonical: url,
+      published: post.isoDate, modified: post.isoDate,
+      ...(post.portada && { ogImage: post.portada, twImage: post.portada }),
+    })
 
     const ldScript = document.querySelector('script[type="application/ld+json"]')
     if (ldScript) {
       ldScript.textContent = JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BlogPosting",
-        "mainEntityOfPage": { "@type": "WebPage", "@id": `${webURL}/${post.type}/${slug}/` },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": url },
         "headline": title,
         "image": post.portada || `${webURL}/assets/portada.webp`,
         "author": { "@type": "Person", "name": (Array.isArray(post.handle) ? post.handle[0] : post.handle) || 'kaste' },
@@ -534,53 +536,20 @@ export const useStore = defineStore('store', () => {
       })
     }
 
-    const ogPublished = document.querySelector('meta[property="article:published_time"]')
-    if (ogPublished) ogPublished.content = post.isoDate
-    const ogModified = document.querySelector('meta[property="article:modified_time"]')
-    if (ogModified) ogModified.content = post.isoDate
-
   }
 
   function resetSEOTags() {
 
     const isEn = lang.value === 'en'
+    const tagline = isEn ? 'weaving spells' : 'tejiendo hechizos'
 
     document.title = isEn ? 'octantes.ar - multimedia portal' : 'octantes.ar - portal multimedia'
 
-    const descMeta = document.querySelector('meta[name="description"]')
-    if (descMeta) descMeta.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
-
-    const ogTitle = document.querySelector('meta[property="og:title"]')
-    if (ogTitle) ogTitle.content = 'octantes.ar'
-
-    const ogDesc = document.querySelector('meta[property="og:description"]')
-    if (ogDesc) ogDesc.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
-
-    const ogUrl = document.querySelector('meta[property="og:url"]')
-    if (ogUrl) ogUrl.content = webURL + '/'
-
-    const ogImage = document.querySelector('meta[property="og:image"]')
-    if (ogImage) ogImage.content = webURL + '/assets/portada.webp'
-
-    const twTitle = document.querySelector('meta[name="twitter:title"]')
-    if (twTitle) twTitle.content = 'octantes.ar'
-
-    const twDesc = document.querySelector('meta[name="twitter:description"]')
-    if (twDesc) twDesc.content = isEn ? 'weaving spells' : 'tejiendo hechizos'
-
-    const twImage = document.querySelector('meta[name="twitter:image"]')
-    if (twImage) twImage.content = webURL + '/assets/portada.webp'
-
-    const twCreator = document.querySelector('meta[name="twitter:creator"]')
-    if (twCreator) twCreator.content = '@octantes'
-
-    const canonical = document.querySelector('link[rel="canonical"]')
-    if (canonical) canonical.href = webURL + '/'
-
-    const ogPublished = document.querySelector('meta[property="article:published_time"]')
-    if (ogPublished) ogPublished.remove()
-    const ogModified = document.querySelector('meta[property="article:modified_time"]')
-    if (ogModified) ogModified.remove()
+    setSEOTags({
+      description: tagline, ogTitle: 'octantes.ar', ogDesc: tagline, ogUrl: webURL + '/',
+      ogImage: webURL + '/assets/portada.webp', twTitle: 'octantes.ar', twDesc: tagline, twImage: webURL + '/assets/portada.webp',
+      twCreator: '@octantes', canonical: webURL + '/', published: null, modified: null,
+    })
 
     const ldScript = document.querySelector('script[type="application/ld+json"]')
     if (ldScript) {
@@ -589,7 +558,7 @@ export const useStore = defineStore('store', () => {
         "@type": "WebSite",
         "name": "octantes.ar",
         "url": webURL + "/",
-        "description": isEn ? 'weaving spells' : 'tejiendo hechizos',
+        "description": tagline,
         "author": { "@type": "Person", "name": "kaste" }
       })
     }
@@ -606,12 +575,6 @@ export const useStore = defineStore('store', () => {
     }
 
     return null
-
-  })
-
-  const computedFullscreen = computed(() => {                                                                                         // return fullscreen component if exists 
-    
-    if (currentPost.value && currentPost.value.fullscreen) { return currentPost.value.fullscreen } return null
 
   })
 
@@ -730,7 +693,7 @@ export const useStore = defineStore('store', () => {
 
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, subDone, userStatus,
     /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, emitSub,
-    /* NOTES COM */ computedNoteComp, computedFullscreen, computedNoteClass, computedPortada, loadLatestPost,
+    /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,

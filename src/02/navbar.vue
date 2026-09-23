@@ -8,7 +8,7 @@ const router = useRouter()
 const store = useStore()
 
 const { processing, searchQuery, activeFilter, tabs } = storeToRefs(store)
-const { changeFilter, hasNotes, navHome, setActiveFilter } = store
+const { changeFilter, hasNotes, navHome } = store
 
 </script>
 
