@@ -65,6 +65,18 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
   /* LAYOUT */ display: grid; grid-template-columns: 4fr 4fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
   /* BOX    */ width: 100%; min-height: 0; padding: 1rem; column-gap: 1rem; row-gap: 0;
+  /* GLOW   */ --portal-glow: radial-gradient(ellipse 46% 44% at 50% 49%,
+      color-mix(in srgb, var(--lirio) 13.0%, transparent) 0%,
+      color-mix(in srgb, var(--lirio) 12.7%, transparent) 10%,
+      color-mix(in srgb, var(--lirio) 12.0%, transparent) 20%,
+      color-mix(in srgb, var(--lirio) 10.8%, transparent) 30%,
+      color-mix(in srgb, var(--lirio) 9.2%, transparent) 40%,
+      color-mix(in srgb, var(--lirio) 7.3%, transparent) 50%,
+      color-mix(in srgb, var(--lirio) 5.3%, transparent) 60%,
+      color-mix(in srgb, var(--lirio) 3.4%, transparent) 70%,
+      color-mix(in srgb, var(--lirio) 1.7%, transparent) 80%,
+      color-mix(in srgb, var(--lirio) 0.5%, transparent) 90%,
+      transparent 100%);
 
   &.fullscreen { display: flex;  flex-direction: column; overflow-y: hidden; width: 100%; height: 100%; gap: 0; }
 
@@ -77,22 +89,13 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 .portada    { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 1; position: relative; z-index: 1; }
 .articulos  { grid-column: 2; overflow-y: auto; min-height: 0; grid-row: 2; position: relative; z-index: 1; }
 
+.layout:not(.fullscreen) > .articulos { background: var(--portal-glow) -1rem -2rem / calc(100% + 2rem) calc(100% + 4rem) no-repeat, var(--carbon); }
+
 .portal-glow {
 
   /* LAYOUT */ grid-column: 2; grid-row: 2; z-index: 0; pointer-events: none;
   /* BOX    */ margin: -2rem -1rem;
-  /* FILL   */ background: radial-gradient(ellipse 46% 44% at 50% 49%,
-      color-mix(in srgb, var(--lirio) 13.0%, transparent) 0%,
-      color-mix(in srgb, var(--lirio) 12.7%, transparent) 10%,
-      color-mix(in srgb, var(--lirio) 12.0%, transparent) 20%,
-      color-mix(in srgb, var(--lirio) 10.8%, transparent) 30%,
-      color-mix(in srgb, var(--lirio) 9.2%, transparent) 40%,
-      color-mix(in srgb, var(--lirio) 7.3%, transparent) 50%,
-      color-mix(in srgb, var(--lirio) 5.3%, transparent) 60%,
-      color-mix(in srgb, var(--lirio) 3.4%, transparent) 70%,
-      color-mix(in srgb, var(--lirio) 1.7%, transparent) 80%,
-      color-mix(in srgb, var(--lirio) 0.5%, transparent) 90%,
-      transparent 100%);
+  /* FILL   */ background: var(--portal-glow);
 
 }
 
@@ -111,6 +114,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
   .navigation, .portada, .articulos  { overflow-y: visible; min-height: auto; height: auto; }
 
   .portal-glow { display: none; }
+  .layout:not(.fullscreen) > .articulos { background: var(--carbon); }
   .portada { order: 1; } .portada.mobile-gap { margin-bottom: 1rem; border-radius: var(--radius-ss); } .articulos { order: 2; margin-bottom: 1rem; } .navigation { order: 3; }
   
   .footer  { padding: 1rem; }
