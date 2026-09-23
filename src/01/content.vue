@@ -425,6 +425,31 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 .notedisplay { display: flex; flex-direction: column; height: 100%; gap: 1rem; }
 
+@property --vig { syntax: '<number>'; inherits: false; initial-value: 1; }
+
+.notedisplay {
+
+  /* STATE  */ --vig: 1;
+  /* MASK   */
+  -webkit-mask-image:
+    radial-gradient(ellipse 50% 70% at 50% 30%, #000 100%, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 127%, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 152%),
+    linear-gradient(to right, rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem),
+    linear-gradient(to left, rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem),
+    linear-gradient(to top, rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem);
+  mask-image:
+    radial-gradient(ellipse 50% 70% at 50% 30%, #000 100%, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 127%, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 152%),
+    linear-gradient(to right, rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem),
+    linear-gradient(to left, rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem),
+    linear-gradient(to top, rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+  /* MOTION */ transition: --vig var(--animate-fast);
+
+}
+
+.notedisplay.no-aperture { --vig: 0; }
+
+.notedisplay:has(> .container.fs-container) { -webkit-mask-image: none; mask-image: none; }
+
 .container {
 
   /* LAYOUT */ position: relative; overflow: hidden;
@@ -432,29 +457,12 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.notedisplay > .container::after {
-
-  /* CURSOR */ pointer-events: none;
-  /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 11;
-  /* STATE  */ opacity: 1;
-  /* FILL   */
-  background:
-    radial-gradient(ellipse 50% 70% at 50% 30%, transparent 100%, var(--carbon-a31) 127%, var(--carbon-a56) 152%),
-    linear-gradient(to right, var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
-    linear-gradient(to left,  var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem),
-    linear-gradient(to top,   var(--carbon) 0, var(--carbon-a56) 1.2rem, var(--carbon-a31) 3rem, var(--carbon-a15) 5rem, transparent 8rem);
-  /* MOTION */ transition: opacity var(--animate-fast);
-
-}
-
-.notedisplay.no-aperture > .container::after { opacity: 0; }
 
 .notedisplay.no-aperture .post {
   -webkit-mask-size: 100% calc(100% + 4rem); mask-size: 100% calc(100% + 4rem);
   -webkit-mask-position: 0 -2rem;            mask-position: 0 -2rem;
 }
 
-.notedisplay > .container.fs-container::after { display: none; }
 
 .post {
 
@@ -517,7 +525,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   .post { -webkit-mask-image: none; mask-image: none; }
 
-  .notedisplay > .container::after { display: none; }
+  .notedisplay { -webkit-mask-image: none; mask-image: none; }
 
   .post::-webkit-scrollbar-thumb { background-color: var(--cristal) !important; }
 
