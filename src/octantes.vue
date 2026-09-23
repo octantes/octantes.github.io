@@ -117,7 +117,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
   .layout:not(.fullscreen) > .articulos { background: var(--carbon); }
   .portada { order: 1; } .portada.mobile-gap { margin-bottom: 1rem; border-radius: var(--radius-ss); } .articulos { order: 2; margin-bottom: 1rem; } .navigation { order: 3; }
   
-  .footer  { padding: 1rem; }
+  .footer  { padding: 0 1rem 1rem; }
   .content { height: auto; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
 
 }
