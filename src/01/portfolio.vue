@@ -1,5 +1,5 @@
 <script setup> 
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { MAIN_PROJECTS, GITHUB_URL } from '../04/site-config.js'
@@ -102,13 +102,42 @@ function handleRayClick(proj) {
 function openGithub()         { window.open(GITHUB_URL, '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
 
+const gridRef = ref(null)
+
+let gridWatch = null
+
+function fitGrid() {
+
+  const el = gridRef.value
+  if (!el) return
+
+  const width  = el.offsetWidth
+  const height = el.offsetHeight
+  if (!width || !height) return
+
+  const tile = parseFloat(getComputedStyle(el).getPropertyValue('--dot-u')) || 22
+  const cols = Math.max(1, Math.round(width  / tile))
+  const rows = Math.max(1, Math.round(height / tile))
+
+  el.style.setProperty('--dot-x', (width  / cols) + 'px')
+  el.style.setProperty('--dot-y', (height / rows) + 'px')
+
+}
+
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
+
+onMounted(() => {
+  fitGrid()
+  if (typeof ResizeObserver !== 'undefined' && gridRef.value) { gridWatch = new ResizeObserver(fitGrid); gridWatch.observe(gridRef.value) }
+})
+
+onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null })
 
 </script>
 
 <template> 
 
-  <div class="portfolio">
+  <div class="portfolio" ref="gridRef">
 
     <div class="top-actions">
       <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
@@ -186,10 +215,13 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   &::before {
 
     /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    /* FILL   */ background-image: url('/assets/dotgrid.svg');
-                 background-size: var(--dot-u) var(--dot-u);
-                 background-position: calc(var(--dot-u) / -2 + .5px) calc(var(--dot-u) / -2 + .5px);
-                 opacity: .4;
+    /* FILL   */ background-color: var(--niebla); opacity: 1;
+    /* MASK   */ -webkit-mask-image: url('/assets/dotgrid.svg'); mask-image: url('/assets/dotgrid.svg');
+                 -webkit-mask-size: var(--dot-x, var(--dot-u)) var(--dot-y, var(--dot-u));
+                 mask-size: var(--dot-x, var(--dot-u)) var(--dot-y, var(--dot-u));
+                 -webkit-mask-position: calc(var(--dot-x, var(--dot-u)) / -2) calc(var(--dot-y, var(--dot-u)) / -2);
+                 mask-position: calc(var(--dot-x, var(--dot-u)) / -2) calc(var(--dot-y, var(--dot-u)) / -2);
+                 -webkit-mask-repeat: repeat; mask-repeat: repeat;
 
   }
 
