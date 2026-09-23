@@ -492,7 +492,11 @@ export const useStore = defineStore('store', () => {
 
     for (const [key, value] of Object.entries(values)) {
       const [selector, attr = 'content'] = [].concat(seoTags[key])
-      const el = document.querySelector(selector)
+      let el = document.querySelector(selector)
+      if (!el && value !== null) {
+        const [, kind, name] = selector.match(/^meta\[(name|property)="([^"]+)"\]$/) || []
+        if (kind) { el = document.createElement('meta'); el.setAttribute(kind, name); document.head.appendChild(el) }
+      }
       if (!el) continue
       if (value === null) el.remove()
       else el[attr] = value
