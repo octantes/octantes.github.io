@@ -118,6 +118,8 @@ function fitGrid() {
   const cv = gridCanvas.value
   if (!el || !cv) return
 
+  if (el.scrollTop && !/auto|scroll/.test(getComputedStyle(el).overflowY)) el.scrollTop = 0
+
   const width  = el.clientWidth
   const height = el.clientHeight
   if (!width || !height) return
