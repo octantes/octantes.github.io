@@ -7,6 +7,7 @@ import Navigation from './01/navigation.vue'
 import Status from './01/status.vue'
 import Portada from './02/portada.vue'
 import Portal from './03/portal.vue'
+import DotGrid from './03/dotgrid.vue'
 import { veilOn, registerVeil } from './03/veil.js'
 
 const store = useStore()
@@ -19,6 +20,8 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 <template> 
 
   <div class="pagina">
+
+    <DotGrid />
 
     <h1 class="a11y-only">octantes</h1>
 
@@ -54,7 +57,9 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
 <style> 
 
-.pagina { display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; max-width: 1600px; max-height: 2000px; margin: 0 auto; }
+.pagina { display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; max-width: 1600px; max-height: 2000px; margin: 0 auto; position: relative; isolation: isolate; }
+
+.pagina > .dotgrid { z-index: -1; opacity: .08; }
 
 .layout { 
 
