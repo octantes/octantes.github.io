@@ -59,7 +59,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
 .pagina { display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; max-width: 1600px; max-height: 2000px; margin: 0 auto; position: relative; isolation: isolate; }
 
-.pagina > .dotgrid { z-index: -1; opacity: .08; }
+.pagina > .dotgrid { z-index: -1; opacity: .1; }
 
 .layout { 
 
