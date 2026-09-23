@@ -273,7 +273,7 @@ onBeforeUnmount(() => {
         <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)`, '--i': i, '--n': portfolioProjects.length }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
           
           <div class="ray-line"></div>
-          <span class="ray-text">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span>
+          <span class="ray-text"><span class="ray-label">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span></span>
 
           <div v-if="currentProject && currentProject.slug === proj.slug && proj.slug !== WELCOME_SLUG" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
             <div class="portal-line"></div>
@@ -616,7 +616,14 @@ onBeforeUnmount(() => {
   .stack          { align-items: flex-start;                                                                                                                                                   }
   .stack a        { flex-wrap: wrap; justify-content: flex-start;                                                                                                                             }
   .stack a .chip-sep  { display: none;                                                                                                                                                        }
-  .stack a .chip-desc { flex: 1 1 100%;                                                                                                                                                        }
+  .stack a .chip-name { order: 0;                                                                                                                                                              }
+  .stack a .chip-go   { order: 1; margin-left: auto;                                                                                                                                           }
+  .stack a .chip-desc { order: 2; flex: 1 1 100%;                                                                                                                                              }
+
+  .ray-text                                  { min-width: 0; max-width: calc(100% - 2.1rem); overflow: hidden;                                                                                 }
+  .ray-label                                 { min-width: 0; overflow: hidden; text-overflow: ellipsis;                                                                                        }
+  .portal-line,
+  .ray-box:hover .ray-portal .portal-line    { width: .6rem;                                                                                                                                   }
 
 }
 
