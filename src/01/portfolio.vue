@@ -618,6 +618,8 @@ onBeforeUnmount(() => {
                     transform: rotate(calc((var(--i) - (var(--n) - 1) / 2) * 1.9deg)) !important;
                     transform-origin: left center;                                                                                                 }
   .ray-data       { position: relative; top: auto; display: flex; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                           }
+  .ray-data .meta { flex-wrap: wrap; row-gap: .15rem; white-space: normal; overflow: visible;                                                                                                      }
+  .ray-data .desc { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible;                                                                                                 }
   .ray-line       { display: none;                                                                                                                                                                 }
   .stack          { align-items: flex-start;                                                                                                                                                   }
   .stack a        { flex-wrap: wrap; justify-content: flex-start;                                                                                                                             }
