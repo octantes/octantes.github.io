@@ -189,7 +189,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
     /* FILL   */ background-image: url('/assets/dotgrid.svg');
                  background-size: var(--dot-u) var(--dot-u);
                  background-position: calc(var(--dot-u) / -2 + .5px) calc(var(--dot-u) / -2 + .5px);
-                 opacity: .12;
+                 opacity: .4;
 
   }
 
