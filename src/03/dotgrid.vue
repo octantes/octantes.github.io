@@ -39,6 +39,8 @@ function fit() {
   sig = next
 
   const ink    = getComputedStyle(cv).getPropertyValue('--niebla').trim() || '#D8DADE'
+  pin()
+
   const step   = Math.max(1, Math.round(props.tile * dpr))
   const period = step / dpr
   const cols   = Math.ceil(width  * dpr / step) + 1
@@ -75,7 +77,6 @@ function fit() {
   for (let j = 0; j <= rows + 1; j++) ctx.drawImage(row, 0, j * step - half)
 
   drift(step, period, dpr)
-  pin()
 
 }
 
@@ -112,8 +113,8 @@ function pin() {
 
 onMounted(() => {
   host = root.value?.parentElement || null
-  fit()
-  if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(queue); watch.observe(props.viewport ? document.documentElement : host) }
+  if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(() => fit()); watch.observe(props.viewport ? document.documentElement : host) }
+  else fit()
   window.addEventListener('resize', queue)
   host?.addEventListener('scroll', pin, { passive: true })
 })
