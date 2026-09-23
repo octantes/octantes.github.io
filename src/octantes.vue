@@ -21,7 +21,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
   <div class="pagina">
 
-    <DotGrid />
+    <DotGrid viewport />
 
     <h1 class="a11y-only">octantes</h1>
 
