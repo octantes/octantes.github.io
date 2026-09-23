@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
+import { MAIN_PROJECTS, GITHUB_URL } from '../04/site-config.js'
 
 const authorpic = '/assets/kaste.webp'
 
@@ -10,7 +11,6 @@ const store             = useStore()
 
 const WELCOME_SLUG  = '__welcome'
 
-const mainProjects = [{ name: 'scavenger', url: 'https://github.com/octantes/scavenger' }]
 
 const welcomeRay = computed(() => ({
   slug: WELCOME_SLUG,
@@ -99,7 +99,7 @@ function handleRayClick(proj) {
   if (proj.slug === WELCOME_SLUG) { currentProject.value = proj; return }
   if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj
 }
-function openGithub()         { window.open('https://github.com/octantes', '_blank', 'noopener noreferrer')                                                }
+function openGithub()         { window.open(GITHUB_URL, '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
 
 onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
@@ -125,7 +125,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
         <div class="stack">
 
-          <a v-for="p in mainProjects" :key="p.url" :href="p.url" target="_blank" rel="noopener noreferrer"
+          <a v-for="p in MAIN_PROJECTS" :key="p.url" :href="p.url" target="_blank" rel="noopener noreferrer"
              :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name">{{ p.name }} &#8599;</a>
 
         </div>

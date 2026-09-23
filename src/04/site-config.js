@@ -4,6 +4,20 @@ export const POPUP_LINK = 'https://www.youtube.com/watch?v=pwzLUeVghDc'
 
 export const SECTIONS = ['full', 'dise\u00f1o', 'desarrollo', 'musica', 'textos', 'juegos']
 
+export const GITHUB_URL = 'https://github.com/octantes'
+
+export const MAIN_PROJECTS = [
+  { name: 'scavenger', url: 'https://github.com/octantes/scavenger' },
+]
+
+export const STATUS = 'frenzy'
+
+export const STATUSES = {
+  frenzy:   { emoji: '❤️‍🔥', es: 'in a frenzy!',        en: 'in a frenzy!' },
+  dominion: { emoji: '🪡',   es: 'dominando el mundo', en: 'dominating the world' },
+  stuck:    { emoji: '🌀',   es: 'stuck in a loop',    en: 'stuck in a loop' },
+}
+
 export const GIF_AS_VIDEO = true
 export const GIF_ENCODE   = { crf: '26', preset: 'slow' }
 
