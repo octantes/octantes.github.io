@@ -1,7 +1,7 @@
 <script setup>
 
 import { POEM, POEMS } from '../04/site-config.js'
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { watch, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from '../04/store.js'
 
 const store = useStore()

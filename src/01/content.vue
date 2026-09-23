@@ -24,7 +24,7 @@ function checkViewport() { isMobile.value = window.innerWidth <= 1080 }         
 
 function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitCentred() }, 150) }                                       // use resize timer
 
-const { currentPost, computedNoteComp, computedNoteClass, computedFullscreen } = storeToRefs(store)                                   // imports refs from main store
+const { currentPost, computedNoteComp, computedNoteClass } = storeToRefs(store)                                   // imports refs from main store
 const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
 
 const portalRef   = ref(null)                                                                                                         // shader variable for animations
@@ -53,19 +53,10 @@ let lastSlug   = null                                                           
 
 const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
 
-  if (computedFullscreen.value) { return compMap[computedFullscreen.value] || null }
   if (computedNoteComp.value) { return compMap[computedNoteComp.value] || null }
   return null
 
 })
-
-async function forcePortalResize() {                                                                                                  // forces shader resize 
-
-  await nextTick()
-  window.dispatchEvent(new Event('resize'))
-  await new Promise(resolve => requestAnimationFrame(resolve))
-
-}
 
 async function revealError() {
   if (isMobile.value || !portalRef.value) return
@@ -243,8 +234,6 @@ watch(isMobile, async (newVal) => {
 
 })
 
-watch(computedFullscreen, async () => { await forcePortalResize() })                                                                  // watches for shader resize 
-
 const forcedError = Number(new URLSearchParams(window.location.search).get('error')) || 0
 
 watch(() => route.params.filterType, ft => {
@@ -385,18 +374,16 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
   <div v-if="!isMobile || currentPost || notFound || aboutMode" class="notedisplay" :class="{ 'no-aperture': fullBleed }">
     
-    <div class="container" ref="containerRef" :class="{ 'fs-container': computedFullscreen }">
+    <div class="container" ref="containerRef">
 
       <Portal class="portal" ref="portalRef"/>
-      <Typewriter :portal="portalRef" :container="containerRef" :enabled="!currentPost && !aboutMode && !computedFullscreen" />
+      <Typewriter :portal="portalRef" :container="containerRef" :enabled="!currentPost && !aboutMode" />
 
-      <button v-if="computedFullscreen" class="fs-close" @click="store.navHome(router)" :title="store.t.portfolio.closeFullscreen" :aria-label="store.t.portfolio.closeFullscreenAria">X</button>
+      <div class="post" ref="postRef" :class="{ 'is-error': notFound }">
 
-      <div class="post" ref="postRef" :class="{ 'fs-mode': computedFullscreen, 'is-error': notFound }">
+        <div class="content" ref="contentRef">
 
-        <div class="content" ref="contentRef" :class="{ 'fs-content': computedFullscreen }">
-
-          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp/fullscreen  -->
+          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp            -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
           <About v-else-if="aboutOpen && !notFound" :section="aboutOpen" :key="route.fullPath" />
           <template v-else>
@@ -404,7 +391,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
             <div :class="computedNoteClass" v-html="noteContent" />                                   <!-- for html posts          -->
           </template>
 
-          <template v-if="currentPost && !notFound && !computedNoteComp && !computedFullscreen">
+          <template v-if="currentPost && !notFound && !computedNoteComp">
             <br><hr><br>
             <Subscribe />
             <br><hr><br>
@@ -440,7 +427,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 .notedisplay.no-aperture { --vig: 0; }
 
-.notedisplay:has(> .container.fs-container) { -webkit-mask-image: none; mask-image: none; }
 
 .container {
 
@@ -477,7 +463,6 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 &::-webkit-scrollbar { display: none; }
 
   &.is-error .content { height: 100%; }
-  &.fs-mode { background: none; overflow: hidden; -webkit-mask-image: none; mask-image: none; &::after { display: none } }
 
 }
 
@@ -489,25 +474,10 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-.fs-close {
-  
-  /* CURSOR */ user-select: none;
-  /* LAYOUT */ position: absolute; top: 1rem; right: 2rem; z-index: 20;
-  /* BORDER */ border: none; border-radius: 9999px;
-  /* BOX    */ padding: .8rem 1rem .8rem 1rem;
-  /* FILL   */ background-color: var(--niebla-a31); color: var(--carbon);
-  /* MOTION */ transition: all var(--animate-fast);
-
-  &:hover { cursor: pointer; background-color: var(--niebla-a60); }
-
-}
-
 .content { 
 
   /* LAYOUT */ position: relative; top: 0; left: 0;
   /* BOX    */ width: 100%;
-
-  &.fs-content { height: 100%; }
 
 }
 
