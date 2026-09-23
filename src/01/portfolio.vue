@@ -311,6 +311,24 @@ onBeforeUnmount(() => {
   /* BORDER */ border: none; border-radius: var(--radius-ss);
   /* GRID   */ --dot-u: 22px; --dot-r: 1.125px; --dot-drift-x: 40; --dot-drift-y: 60;
 
+  &::before {
+
+    /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    /* FILL   */ background: radial-gradient(ellipse 46% 44% at 50% 50%,
+        color-mix(in srgb, var(--lirio) 13.0%, transparent) 0%,
+        color-mix(in srgb, var(--lirio) 12.7%, transparent) 10%,
+        color-mix(in srgb, var(--lirio) 12.0%, transparent) 20%,
+        color-mix(in srgb, var(--lirio) 10.8%, transparent) 30%,
+        color-mix(in srgb, var(--lirio) 9.2%, transparent) 40%,
+        color-mix(in srgb, var(--lirio) 7.3%, transparent) 50%,
+        color-mix(in srgb, var(--lirio) 5.3%, transparent) 60%,
+        color-mix(in srgb, var(--lirio) 3.4%, transparent) 70%,
+        color-mix(in srgb, var(--lirio) 1.7%, transparent) 80%,
+        color-mix(in srgb, var(--lirio) 0.5%, transparent) 90%,
+        transparent 100%);
+
+  }
+
   & > .dotgrid {
 
     /* LAYOUT */ position: absolute; inset: 0; z-index: 0; pointer-events: none;
