@@ -1,4 +1,5 @@
 export const SITE_URL = 'https://octantes.github.io'
+export const TAGLINE = { es: 'tejiendo hechizos', en: 'weaving spells' }
 export const CONTACT_EMAIL = 'facugerbino@gmail.com'
 export const POPUP_LINK = 'https://www.youtube.com/watch?v=pwzLUeVghDc'
 
