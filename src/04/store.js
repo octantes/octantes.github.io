@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { SITE_URL, CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
+import { SITE_URL, TAGLINE, CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
 import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
@@ -84,7 +84,7 @@ export const useStore = defineStore('store', () => {
         adblockMsg: 'prevenido por adblocker'
       },
       about: {
-        taglines: ['tejiendo hechizos', 'abriendo ventanas a universos alternativos', 'desplegando portales', 'investigando dualidades'],
+        taglines: [TAGLINE.es, 'abriendo ventanas a universos alternativos', 'desplegando portales', 'investigando dualidades'],
         profilePic: 'foto de perfil',
         sections: {
           full: 'buenas! soy <i>kaste</i> y lo que estás viendo es mi base de operaciones     <br><br>armé <b>octantes</b> para centralizar toda mi producción fuera de las redes  <br>recuperando los fundamentos, sin algoritmos, reglas o intermediarios         <br>vas a encontrar proyectos de todo tipo, vos elegís lo que querés ver         <br>desde música, textos y diseño hasta videojuegos y software propio            <br><br>la página me permite adaptar el formato al contenido que voy creando         <br>y pensar mis proyectos se vuelve más fácil con outputs definidos             <br><br>usá las pestañas superiores de la tabla para filtrar por sección             <br>cuando un posteo te llame la atención, clickealo para cargarlo acá           <br>',
@@ -156,7 +156,7 @@ export const useStore = defineStore('store', () => {
         adblockMsg: 'blocked by adblocker'
       },
       about: {
-        taglines: ['weaving spells', 'opening windows to alternate universes', 'unfolding portals', 'researching dualities'],
+        taglines: [TAGLINE.en, 'opening windows to alternate universes', 'unfolding portals', 'researching dualities'],
         profilePic: 'profile picture',
         sections: {
           full: 'hey! i\'m <i>kaste</i> and what you\'re seeing is my operations base     <br><br>i built <b>octantes</b> to centralize all my production outside social media  <br>getting back to fundamentals, no algorithms, rules or middlemen               <br>you\'ll find projects of all kinds, you choose what you want to see            <br>from music, writing and design to video games and custom software             <br><br>the page lets me adapt the format to whatever content i\'m creating            <br>and thinking about my projects gets easier with defined outputs               <br><br>use the top tabs of the table to filter by section                            <br>when a post catches your attention, click it to load it here                  <br>',
@@ -542,7 +542,7 @@ export const useStore = defineStore('store', () => {
   function resetSEOTags() {
 
     const isEn = lang.value === 'en'
-    const tagline = isEn ? 'weaving spells' : 'tejiendo hechizos'
+    const tagline = isEn ? TAGLINE.en : TAGLINE.es
 
     document.title = isEn ? 'octantes.ar - multimedia portal' : 'octantes.ar - portal multimedia'
 
