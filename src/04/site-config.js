@@ -7,7 +7,7 @@ export const SECTIONS = ['full', 'dise\u00f1o', 'desarrollo', 'musica', 'textos'
 export const GITHUB_URL = 'https://github.com/octantes'
 
 export const MAIN_PROJECTS = [
-  { name: 'scavenger', url: 'https://github.com/octantes/scavenger' },
+  { name: 'scavenger', desc: 'four tools to hotwire the entire web!', url: 'https://github.com/octantes/scavenger' },
 ]
 
 export const STATUS = 'frenzy'
