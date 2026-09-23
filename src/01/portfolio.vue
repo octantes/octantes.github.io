@@ -216,7 +216,7 @@ onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null })
 
     /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
     /* FILL   */ background-color: var(--niebla); opacity: 1;
-    /* MASK   */ -webkit-mask-image: url('/assets/dotgrid.svg'); mask-image: url('/assets/dotgrid.svg');
+    /* MASK   */ -webkit-mask-image: url('/assets/dotgrid.svg?v=2'); mask-image: url('/assets/dotgrid.svg?v=2');
                  -webkit-mask-size: var(--dot-x, var(--dot-u)) var(--dot-y, var(--dot-u));
                  mask-size: var(--dot-x, var(--dot-u)) var(--dot-y, var(--dot-u));
                  -webkit-mask-position: calc(var(--dot-x, var(--dot-u)) / -2) calc(var(--dot-y, var(--dot-u)) / -2);
