@@ -106,6 +106,11 @@ const gridRef    = ref(null)
 const gridCanvas = ref(null)
 
 let gridWatch = null
+let gridGeo   = null
+let gridRaf   = 0
+let gridT0    = 0
+
+const stillness = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null
 
 function fitGrid() {
 
@@ -117,10 +122,12 @@ function fitGrid() {
   const height = el.offsetHeight
   if (!width || !height) return
 
-  const css  = getComputedStyle(el)
-  const tile = parseFloat(css.getPropertyValue('--dot-u')) || 22
-  const rad  = parseFloat(css.getPropertyValue('--dot-r')) || 1.5
-  const ink  = css.getPropertyValue('--niebla').trim() || '#D8DADE'
+  const css   = getComputedStyle(el)
+  const tile  = parseFloat(css.getPropertyValue('--dot-u')) || 22
+  const rad   = parseFloat(css.getPropertyValue('--dot-r')) || 1.5
+  const ink   = css.getPropertyValue('--niebla').trim() || '#D8DADE'
+  const drift = parseFloat(css.getPropertyValue('--dot-drift-x')) || 0
+  const lift  = parseFloat(css.getPropertyValue('--dot-drift-y')) || 0
 
   const dpr  = window.devicePixelRatio || 1
   const cols = Math.max(1, Math.round(width  / tile))
@@ -131,26 +138,81 @@ function fitGrid() {
   cv.style.width  = width  + 'px'
   cv.style.height = height + 'px'
 
-  const ctx = cv.getContext('2d')
-  ctx.clearRect(0, 0, cv.width, cv.height)
-  ctx.fillStyle = ink
+  const r    = rad * dpr
+  const size = 2 * Math.ceil(r) + 2
+  const half = size / 2
 
-  const r = rad * dpr
+  const sprite = document.createElement('canvas')
+  sprite.width = sprite.height = size
+  const sctx = sprite.getContext('2d')
+  sctx.fillStyle = ink
+  sctx.beginPath()
+  sctx.arc(half, half, r, 0, Math.PI * 2)
+  sctx.fill()
 
-  for (let i = 0; i <= cols; i++) {
+  const xs = [], ys = []
+  for (let i = 0; i < cols; i++) xs.push(Math.round(i * width  / cols * dpr))
+  for (let j = 0; j < rows; j++) ys.push(Math.round(j * height / rows * dpr))
 
-    const cx = Math.round(i * width / cols * dpr)
+  gridGeo = { xs, ys, sprite, half, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
+              vx: drift * dpr, vy: lift * dpr }
 
-    for (let j = 0; j <= rows; j++) {
+  drawGrid(0, 0)
+  runGrid()
 
-      const cy = Math.round(j * height / rows * dpr)
-      ctx.beginPath()
-      ctx.arc(cx, cy, r, 0, Math.PI * 2)
-      ctx.fill()
+}
 
-    }
+function lane(bases, phase, span, half) {
 
+  const out = []
+
+  for (const base of bases) {
+    const v = ((base - phase) % span + span) % span
+    out.push(v)
+    if (v < half) out.push(v + span)
   }
+
+  return out
+
+}
+
+function drawGrid(px, py) {
+
+  const g = gridGeo
+  if (!g) return
+
+  g.ctx.clearRect(0, 0, g.w, g.h)
+
+  const xs = lane(g.xs, px, g.w, g.half)
+  const ys = lane(g.ys, py, g.h, g.half)
+
+  for (const x of xs) for (const y of ys) g.ctx.drawImage(g.sprite, x - g.half, y - g.half)
+
+}
+
+function stepGrid(now) {
+
+  const g = gridGeo
+  if (!g) return
+
+  if (!gridT0) gridT0 = now
+  const secs = (now - gridT0) / 1000
+
+  drawGrid(Math.round(secs * g.vx), Math.round(secs * g.vy))
+  gridRaf = requestAnimationFrame(stepGrid)
+
+}
+
+function runGrid() {
+
+  cancelAnimationFrame(gridRaf)
+  gridRaf = 0
+  gridT0  = 0
+
+  const g = gridGeo
+  if (!g || (!g.vx && !g.vy) || stillness?.matches) return
+
+  gridRaf = requestAnimationFrame(stepGrid)
 
 }
 
@@ -162,7 +224,11 @@ onMounted(() => {
   window.addEventListener('resize', fitGrid)
 })
 
-onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null; window.removeEventListener('resize', fitGrid) })
+onBeforeUnmount(() => {
+  gridWatch?.disconnect(); gridWatch = null
+  cancelAnimationFrame(gridRaf); gridRaf = 0; gridGeo = null
+  window.removeEventListener('resize', fitGrid)
+})
 
 </script>
 
@@ -243,12 +309,12 @@ onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null; window.remove
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
   /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 100%); color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* GRID   */ --dot-u: 22px; --dot-r: 1.125px;
+  /* GRID   */ --dot-u: 22px; --dot-r: 1.125px; --dot-drift-x: 80; --dot-drift-y: 120;
 
   & > .dotgrid {
 
     /* LAYOUT */ position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    /* FILL   */ opacity: .5;
+    /* FILL   */ opacity: .15;
 
   }
 
