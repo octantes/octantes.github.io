@@ -9,11 +9,12 @@ import Portada from './02/portada.vue'
 import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
 import { veilOn, registerVeil } from './03/veil.js'
+import { MOBILE_MAX } from './04/site-config.js'
 
 const store = useStore()
 const route = useRoute()
 const { currentPost } = storeToRefs(store)
-const portadaExpanded = ref(window.innerWidth <= 1080)
+const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
 
 </script>
 
@@ -103,9 +104,9 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
 .veil       { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
-@media (min-width: 1081px) { .articulos.portada-collapsed .post { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; } }
+@media (--desktop) { .articulos.portada-collapsed .post { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; } }
 
-@media (max-width: 1080px) { 
+@media (--mobile) { 
 
   .pagina { max-width: 100%; }
 

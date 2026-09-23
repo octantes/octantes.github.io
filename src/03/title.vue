@@ -57,7 +57,7 @@ const word  = computed(() => Math.max(...shown.value.split(/\s+/).map(w => w.len
 
 }
 
-@media (max-width: 1080px) {
+@media (--mobile) {
 
   .notetitle {
     /* BOX  */ padding-block: 1.125rem 0; padding-inline: var(--space-ll);

@@ -78,6 +78,6 @@ watch(() => route.params.filterType, (newFilterType) => {                       
   
 }
 
-@media (max-width: 1080px) { .navigation { min-height: 40rem; overflow: hidden; } }
+@media (--mobile) { .navigation { min-height: 40rem; overflow: hidden; } }
 
 </style>
