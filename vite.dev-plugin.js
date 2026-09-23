@@ -117,7 +117,6 @@ async function scanContentDir() {
               isoDate: attributes.date || dateObj.toISOString(),
               url: `/posts/${attributes.type || tdir.name}/${pdir.name}/`,
               vuecomp: attributes.vuecomp || null,
-              fullscreen: attributes.fullscreen || null,
               bilingual: isBilingual,
               titleEn: enAttributes.title || null,
               descriptionEn: enAttributes.description || null

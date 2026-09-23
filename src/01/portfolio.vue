@@ -480,7 +480,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 
 @media (max-width: 1000px) { 
 
-  .fullscreen     { padding-bottom: 1rem !important;                                                                                                                                               }
   .portfolio      { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5rem 1.5rem 4rem 1.5rem !important; overflow-y: auto; scrollbar-width: none; }
   .profile-group  { display: flex; flex-direction: column-reverse; align-items: center; width: 100%; max-width: 25rem; margin-bottom: 1.5rem; gap: 2rem;                                           }
   .message-box    { position: relative; right: auto; width: 100%; margin: 0; text-align: left;                                                                                                     }
