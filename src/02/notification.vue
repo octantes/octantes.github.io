@@ -3,6 +3,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
+import { MOBILE_MAX } from '../04/site-config.js'
 
 const props = defineProps({ code: { type: [Number, String], default: 404 } })
 
@@ -48,7 +49,7 @@ function scatter(words, el, stage, card) {
   const px = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
   const width = measurer(el)
 
-  const narrow = window.matchMedia('(max-width: 1080px)').matches
+  const narrow = window.matchMedia(`(max-width: ${MOBILE_MAX}px)`).matches
   const room   = W * H - card.w * card.h
   const count  = narrow ? Math.max(8, Math.min(THROWS, Math.floor(room * 0.2 / 1100))) : THROWS
 
@@ -217,6 +218,6 @@ onMounted(() => {
 
 }
 
-@media (max-width: 1080px) { .errorstate { min-height: clamp(28rem, 64svh, 38rem); } }
+@media (--mobile) { .errorstate { min-height: clamp(28rem, 64svh, 38rem); } }
 
 </style>

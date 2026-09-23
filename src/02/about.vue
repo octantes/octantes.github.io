@@ -116,7 +116,7 @@ onMounted(() => {
   
 }
 
-@media (max-width: 1080px) { .about { padding-bottom: 4rem; } }
+@media (--mobile) { .about { padding-bottom: 4rem; } }
 
 @media (max-width: 500px) { .about { padding-left: 0.4rem; padding-right: 0.4rem; padding-bottom: 0.8rem; } .about hr, .about br { display: none; } }
 

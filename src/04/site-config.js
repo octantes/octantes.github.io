@@ -4,6 +4,8 @@ export const POPUP_LINK = 'https://www.youtube.com/watch?v=pwzLUeVghDc'
 
 export const SECTIONS = ['full', 'dise\u00f1o', 'desarrollo', 'musica', 'textos', 'juegos']
 
+export const MOBILE_MAX = 1080
+
 export const GITHUB_URL = 'https://github.com/octantes'
 
 export const MAIN_PROJECTS = [

@@ -1,6 +1,6 @@
 <script setup>
 
-import { POEM, POEMS } from '../04/site-config.js'
+import { POEM, POEMS, MOBILE_MAX } from '../04/site-config.js'
 import { watch, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from '../04/store.js'
 
@@ -280,7 +280,7 @@ function onDocClick(ev) {
 
 const stillness = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null
 
-function checkLive() { live = props.enabled && window.innerWidth > 1080 && !(stillness && stillness.matches) }
+function checkLive() { live = props.enabled && window.innerWidth > MOBILE_MAX && !(stillness && stillness.matches) }
 
 let bound = null
 
