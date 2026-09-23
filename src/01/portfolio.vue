@@ -229,7 +229,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
   & a {
 
-    /* CURSOR */ cursor: pointer;
+    /* CURSOR */ cursor: pointer; pointer-events: auto;
     /* BOX    */ padding: 0.2rem 0.5rem;
     /* FILL   */ background: var(--carbon-a15); color: var(--cristal); -webkit-text-fill-color: var(--cristal);
     /* BORDER */ border: 1px solid var(--cristal-a31); border-radius: var(--radius-ss); text-decoration: none;

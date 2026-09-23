@@ -287,14 +287,6 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function navSort(key) {                                                                                                             // change sort order 
-
-    if (processing.value) return
-    if (sortKey.value === key) { sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc' } 
-    else { sortKey.value = key; sortOrder.value = 'asc' }
-
-  }
-
   function setActiveFilter(routerInstance, filter) {                                                                                  // set active note filter
 
     activeFilter.value = filter
