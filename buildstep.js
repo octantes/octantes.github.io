@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
+import { SITE_URL, TAGLINE, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -571,7 +571,7 @@ async function processPosts() {                                                 
         .replace(/{{htmlContent}}/g, htmlContent)
         .replace(/{{webURL}}/g, webURL)
         .replace(/{{sidebarLinks}}/g, sidebarLinks)
-        .replace(/{{subtitle}}/g, 'tejiendo hechizos')
+        .replace(/{{subtitle}}/g, TAGLINE.es)
         .replace(/{{bio}}/g, 'm\u00fasica, dise\u00f1o, desarrollo y escritura')
         .replace(/{{postType}}/g, postType)
         .replace(/{{navArchive}}/g, '[ARCHIVO]')
@@ -602,7 +602,7 @@ async function processPosts() {                                                 
           .replace(/{{webURL}}/g, webURL)
           .replace(/{{sidebarLinks}}/g, sidebarLinks)
           .replace(/{{articleJson}}/g, finalArticleJsonEn)
-          .replace(/{{subtitle}}/g, 'weaving spells')
+          .replace(/{{subtitle}}/g, TAGLINE.en)
           .replace(/{{bio}}/g, 'music, design, dev &amp; writing')
           .replace(/{{postType}}/g, postType)
           .replace(/{{navArchive}}/g, '[ARTICLES]')
@@ -750,7 +750,7 @@ async function writeBilingualArchive() {                                   // cr
       pageTitle: 'octantes.ar - archivo',
       title: 'abriendo portales a universos alternativos',
       desc: 'archivo plano // octantes.ar',
-      subtitle: 'tejiendo hechizos',
+      subtitle: '${TAGLINE.es}',
       instruct: 'seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.',
       latest: '\u00faltimas actualizaciones',
       articles: 'art\u00edculos',
@@ -764,7 +764,7 @@ async function writeBilingualArchive() {                                   // cr
       pageTitle: 'octantes.ar - archive',
       title: 'opening portals to alternative universes',
       desc: 'flat archive // octantes.ar',
-      subtitle: 'weaving spells',
+      subtitle: '${TAGLINE.en}',
       instruct: 'select a note from the left menu to start reading.',
       latest: 'latest updates',
       articles: 'articles',
@@ -808,7 +808,7 @@ async function writeBilingualArchive() {                                   // cr
     <div class="sidebar-content">
     
       <div class="site-logo">OCTANTES</div>
-      <div class="site-subtitle" data-key="subtitle">tejiendo hechizos</div>
+      <div class="site-subtitle" data-key="subtitle">${TAGLINE.es}</div>
       
       <div class="profile-box">
         <a href="https://x.com/octantes" target="_blank" class="profile-link">
