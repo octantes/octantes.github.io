@@ -102,25 +102,55 @@ function handleRayClick(proj) {
 function openGithub()         { window.open(GITHUB_URL, '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
 
-const gridRef = ref(null)
+const gridRef    = ref(null)
+const gridCanvas = ref(null)
 
 let gridWatch = null
 
 function fitGrid() {
 
   const el = gridRef.value
-  if (!el) return
+  const cv = gridCanvas.value
+  if (!el || !cv) return
 
   const width  = el.offsetWidth
   const height = el.offsetHeight
   if (!width || !height) return
 
-  const tile = parseFloat(getComputedStyle(el).getPropertyValue('--dot-u')) || 22
+  const css  = getComputedStyle(el)
+  const tile = parseFloat(css.getPropertyValue('--dot-u')) || 22
+  const rad  = parseFloat(css.getPropertyValue('--dot-r')) || 1.5
+  const ink  = css.getPropertyValue('--niebla').trim() || '#D8DADE'
+
+  const dpr  = window.devicePixelRatio || 1
   const cols = Math.max(1, Math.round(width  / tile))
   const rows = Math.max(1, Math.round(height / tile))
 
-  el.style.setProperty('--dot-x', (width  / cols) + 'px')
-  el.style.setProperty('--dot-y', (height / rows) + 'px')
+  cv.width  = Math.round(width  * dpr)
+  cv.height = Math.round(height * dpr)
+  cv.style.width  = width  + 'px'
+  cv.style.height = height + 'px'
+
+  const ctx = cv.getContext('2d')
+  ctx.clearRect(0, 0, cv.width, cv.height)
+  ctx.fillStyle = ink
+
+  const r = rad * dpr
+
+  for (let i = 0; i <= cols; i++) {
+
+    const cx = Math.round(i * width / cols * dpr)
+
+    for (let j = 0; j <= rows; j++) {
+
+      const cy = Math.round(j * height / rows * dpr)
+      ctx.beginPath()
+      ctx.arc(cx, cy, r, 0, Math.PI * 2)
+      ctx.fill()
+
+    }
+
+  }
 
 }
 
@@ -129,15 +159,18 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 onMounted(() => {
   fitGrid()
   if (typeof ResizeObserver !== 'undefined' && gridRef.value) { gridWatch = new ResizeObserver(fitGrid); gridWatch.observe(gridRef.value) }
+  window.addEventListener('resize', fitGrid)
 })
 
-onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null })
+onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null; window.removeEventListener('resize', fitGrid) })
 
 </script>
 
 <template> 
 
   <div class="portfolio" ref="gridRef">
+
+    <canvas class="dotgrid" ref="gridCanvas" aria-hidden="true"></canvas>
 
     <div class="top-actions">
       <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
@@ -210,18 +243,12 @@ onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null })
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
   /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 100%); color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* GRID   */ --dot-u: 22px;
+  /* GRID   */ --dot-u: 22px; --dot-r: 1.5px;
 
-  &::before {
+  & > .dotgrid {
 
-    /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    /* FILL   */ background-color: var(--niebla); opacity: 1;
-    /* MASK   */ -webkit-mask-image: url('/assets/dotgrid.svg?v=2'); mask-image: url('/assets/dotgrid.svg?v=2');
-                 -webkit-mask-size: var(--dot-x, var(--dot-u)) var(--dot-y, var(--dot-u));
-                 mask-size: var(--dot-x, var(--dot-u)) var(--dot-y, var(--dot-u));
-                 -webkit-mask-position: calc(var(--dot-x, var(--dot-u)) / -2) calc(var(--dot-y, var(--dot-u)) / -2);
-                 mask-position: calc(var(--dot-x, var(--dot-u)) / -2) calc(var(--dot-y, var(--dot-u)) / -2);
-                 -webkit-mask-repeat: repeat; mask-repeat: repeat;
+    /* LAYOUT */ position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    /* FILL   */ opacity: 1;
 
   }
 
