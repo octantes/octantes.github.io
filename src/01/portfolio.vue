@@ -254,7 +254,7 @@ onBeforeUnmount(() => {
         <div class="stack">
 
           <a v-for="p in MAIN_PROJECTS" :key="p.url" :href="p.url" target="_blank" rel="noopener noreferrer"
-             :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name"><span class="chip-name">{{ p.name }}</span><span class="chip-sep">:</span><span class="chip-desc">{{ p.desc }}</span><span class="chip-go" aria-hidden="true">&#8599;</span></a>
+             :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name"><span class="chip-name">{{ p.name }}</span><span class="chip-sep">:</span><span class="chip-desc">{{ p.desc[store.lang] || p.desc.es }}</span><span class="chip-go" aria-hidden="true">&#8599;</span></a>
 
         </div>
 
@@ -315,16 +315,16 @@ onBeforeUnmount(() => {
 
     /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
     /* FILL   */ background: radial-gradient(circle closest-side at 50% 50%,
-        color-mix(in srgb, var(--lirio) 13.0%, transparent) 0%,
-        color-mix(in srgb, var(--lirio) 12.7%, transparent) 10%,
-        color-mix(in srgb, var(--lirio) 12.0%, transparent) 20%,
-        color-mix(in srgb, var(--lirio) 10.8%, transparent) 30%,
-        color-mix(in srgb, var(--lirio) 9.2%, transparent) 40%,
-        color-mix(in srgb, var(--lirio) 7.3%, transparent) 50%,
-        color-mix(in srgb, var(--lirio) 5.3%, transparent) 60%,
-        color-mix(in srgb, var(--lirio) 3.4%, transparent) 70%,
-        color-mix(in srgb, var(--lirio) 1.7%, transparent) 80%,
-        color-mix(in srgb, var(--lirio) 0.5%, transparent) 90%,
+        color-mix(in srgb, var(--lirio) 9.1%, transparent) 0%,
+        color-mix(in srgb, var(--lirio) 8.9%, transparent) 10%,
+        color-mix(in srgb, var(--lirio) 8.4%, transparent) 20%,
+        color-mix(in srgb, var(--lirio) 7.6%, transparent) 30%,
+        color-mix(in srgb, var(--lirio) 6.4%, transparent) 40%,
+        color-mix(in srgb, var(--lirio) 5.1%, transparent) 50%,
+        color-mix(in srgb, var(--lirio) 3.7%, transparent) 60%,
+        color-mix(in srgb, var(--lirio) 2.4%, transparent) 70%,
+        color-mix(in srgb, var(--lirio) 1.2%, transparent) 80%,
+        color-mix(in srgb, var(--lirio) 0.3%, transparent) 90%,
         transparent 100%);
 
   }
@@ -332,7 +332,7 @@ onBeforeUnmount(() => {
   & > .dotgrid {
 
     /* LAYOUT */ position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    /* FILL   */ opacity: .15;
+    /* FILL   */ opacity: .08;
 
   }
 
