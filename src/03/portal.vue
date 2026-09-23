@@ -5,9 +5,9 @@ const GRAIN_TARGET = 55
 
 const canvasRef    = ref(null)                                          // dom << canvas >> ref
 const containerRef = ref(null)                                          // container div ref
-const COLOR_BACKGR = '#1B1C1C'                                          // solid background color
-const COLOR_BORDER = '#AAABAC'                                          // solid frontier color
-const COLOR_PORTAL = '#986C98'                                          // solid portal color
+let   COLOR_BACKGR = '#1B1C1C'                                          // solid background color
+let   COLOR_BORDER = '#AAABAC'                                          // solid frontier color
+let   COLOR_PORTAL = '#986C98'                                          // solid portal color
 const COLOR_RAIN   = '#8AB6BB'                                          // solid rain color
 const charRangeStart    = 33                                            // unicode starting character
 const charRangeCount    = 126 - charRangeStart + 1                      // max possible characters
@@ -67,6 +67,20 @@ let textGroups        = null                                            // map f
 let isTransparentPath = []                                              // reusable buffer for transparent cells
 
 let overlay         = null
+
+let cellText   = null
+let cellColor  = null
+let prevText   = null
+let prevColor  = null
+let paintAll   = true
+let hadCuts    = false
+let hadAwkward = false
+let outCh      = null
+let outColor   = null
+let outClear   = false
+
+const inkCache    = new Map()
+const dirtyGroups = new Map()
 let noiseMap        = null                                              // static noise map for distortion
 let neighborsMap    = null                                              // stores each cell neighbors
 let frontierMap     = null                                              // mask for cells in borders
@@ -137,9 +151,11 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
 
   }
   
-  if (overlay) { const ov = overlay.get(idx); if (ov) return [ov.ch ?? drawCh, ov.color ?? color, false] }
+  if (overlay && overlay.size) { const ov = overlay.get(idx); if (ov) { outCh = ov.ch ?? drawCh; outColor = ov.color ?? color; outClear = false; return } }
 
-  return [drawCh, color, isTransparent]
+  outCh = drawCh
+  outColor = color
+  outClear = isTransparent
 
 }
 
@@ -149,6 +165,7 @@ function drawFrame(deltaTime) {                                         // draw 
 
   if (mode === 'hidden') {
     context.clearRect(0, 0, width, height)
+    paintAll = true
     if (taskPromise) { const r = taskResolve; taskPromise = null; taskResolve = null; if (r) r() }
     return
   }
@@ -171,25 +188,22 @@ function drawFrame(deltaTime) {                                         // draw 
 
   if (mode === 'hidden') {
     context.clearRect(0, 0, width, height)
+    paintAll = true
     if (taskPromise) { const r = taskResolve; taskPromise = null; taskResolve = null; if (r) r() }
     return
   }
 
   const steps = Math.min(outroFramesMax, Math.floor((mode === 'intro' ? clampValue(germFrame / germFramesMax, 0, 1) : 1) * outroFramesMax))
   let resultMask = (mode === 'direct' || mode === 'static' || mode === 'outro') ? logicMask : (mode === 'transition') ? visualMask : expandMask(logicMask, steps)
-  if (mode !== 'outro') computeFrontier(resultMask)
+  if (mode !== 'outro' && mode !== 'static') computeFrontier(resultMask)
   
   if (!textGroups) textGroups = new Map()
   for (const arr of textGroups.values()) arr.length = 0
 
-  context.clearRect(0, 0, width, height)
-  context.fillStyle = COLOR_BACKGR
-  context.fillRect(0, 0, width, height)
+  const canDirty = mode === 'static' && !paintAll && !hadCuts && !hadAwkward && Number.isInteger(fontSize * dpr)
+  let cuts = false
+  let awkward = false
 
-  context.globalCompositeOperation = 'destination-out'
-  context.fillStyle = '#000'
-  context.beginPath()
-  
   isTransparentPath.length = 0
 
   for (let y = 0; y < rows; y++) {
@@ -198,31 +212,31 @@ function drawFrame(deltaTime) {                                         // draw 
 
     for (let x = 0; x < cols; x++) {
 
-      const headPos = rainColumn[x]
-      const colBuf = rainBuffer[x]
-      const [drawCh, color, isTransparent] = cellRender(x, y, headPos, colBuf, resultMask)
-      
-      if (isTransparent) { isTransparentPath.push(x, py) }
+      const idx = y * cols + x
+      cellRender(x, y, rainColumn[x], rainBuffer[x], resultMask)
+      cellText[idx] = outCh
+      cellColor[idx] = outColor
 
-      if (drawCh != null) {
-        let group = textGroups.get(color)
-        if (!group) { group = []; textGroups.set(color, group) }
-        group.push(drawCh, x, py)
+      if (outClear) { cuts = true; isTransparentPath.push(x, py) }
+
+      if (outCh != null) {
+        let group = textGroups.get(outColor)
+        if (!group) { group = []; textGroups.set(outColor, group) }
+        if (!canDirty) group.push(outCh, x, py)
+        if (inkOf(outCh) === 2) awkward = true
       }
 
     }
   }
-  
-  for (let i = 0; i < isTransparentPath.length; i += 2) { context.rect(isTransparentPath[i] * fontSize, isTransparentPath[i + 1], fontSize + 1, fontSize + 1) }
-  context.fill()
 
-  context.globalCompositeOperation = 'source-over'
+  if (canDirty && !cuts && !awkward) paintChanged()
+  else { if (canDirty) fillGroups(); paintFull() }
 
-  for (const [color, chars] of textGroups) {
-    if (!chars.length) continue
-    context.fillStyle = color
-    for (let i = 0; i < chars.length; i += 3) { context.fillText(chars[i], chars[i + 1] * fontSize, chars[i + 2]) }
-  }
+  hadCuts = cuts
+  hadAwkward = awkward
+  paintAll = false
+  let swap = prevText; prevText = cellText; cellText = swap
+  swap = prevColor; prevColor = cellColor; cellColor = swap
   
   const frameAdvancement = 1 * frameFactor
 
@@ -244,6 +258,106 @@ function drawFrame(deltaTime) {                                         // draw 
         if (r) r()
       }
     } catch (err) { taskPromise = null; taskResolve = null }
+  }
+
+}
+
+function paintFull() {
+
+  context.clearRect(0, 0, width, height)
+  context.fillStyle = COLOR_BACKGR
+  context.fillRect(0, 0, width, height)
+
+  context.globalCompositeOperation = 'destination-out'
+  context.fillStyle = '#000'
+  context.beginPath()
+  for (let i = 0; i < isTransparentPath.length; i += 2) { context.rect(isTransparentPath[i] * fontSize, isTransparentPath[i + 1], fontSize + 1, fontSize + 1) }
+  context.fill()
+
+  context.globalCompositeOperation = 'source-over'
+
+  for (const [color, chars] of textGroups) {
+    if (!chars.length) continue
+    context.fillStyle = color
+    for (let i = 0; i < chars.length; i += 3) { context.fillText(chars[i], chars[i + 1] * fontSize, chars[i + 2]) }
+  }
+
+}
+
+function fillGroups() {
+
+  const total = rows * cols
+  for (let idx = 0; idx < total; idx++) {
+    const ch = cellText[idx]
+    if (ch != null) textGroups.get(cellColor[idx]).push(ch, idx % cols, ((idx / cols) | 0) * fontSize)
+  }
+
+}
+
+function inkOf(ch) {
+
+  let ink = inkCache.get(ch)
+  if (ink === undefined) {
+    const m = context.measureText(ch)
+    if (m.actualBoundingBoxLeft > 0 || m.actualBoundingBoxAscent > 0 || m.actualBoundingBoxRight > fontSize || m.actualBoundingBoxDescent > 2 * fontSize) ink = 2
+    else ink = m.actualBoundingBoxDescent > fontSize ? 1 : 0
+    inkCache.set(ch, ink)
+  }
+  return ink
+
+}
+
+function spills(ch) { return ch != null && inkOf(ch) === 1 }
+
+function queueGlyph(color, owner, clip) {
+
+  let list = dirtyGroups.get(color)
+  if (!list) { list = []; dirtyGroups.set(color, list) }
+  list.push(owner, clip)
+
+}
+
+function paintChanged() {
+
+  const total = rows * cols
+  context.fillStyle = COLOR_BACKGR
+
+  for (let idx = 0; idx < total; idx++) {
+
+    const up = idx - cols
+    const moved = cellText[idx] !== prevText[idx] || cellColor[idx] !== prevColor[idx]
+    const upMoved = up >= 0 && (cellText[up] !== prevText[up] || cellColor[up] !== prevColor[up]) && (spills(prevText[up]) || spills(cellText[up]))
+    if (!moved && !upMoved) continue
+
+    context.fillRect((idx % cols) * fontSize, ((idx / cols) | 0) * fontSize, fontSize, fontSize)
+    if (up >= 0 && spills(cellText[up])) queueGlyph(cellColor[up], up, idx)
+    const ch = cellText[idx]
+    if (ch != null) queueGlyph(cellColor[idx], idx, spills(ch) ? idx : -1)
+
+  }
+
+  for (const color of textGroups.keys()) {
+
+    const list = dirtyGroups.get(color)
+    if (!list || !list.length) continue
+    context.fillStyle = color
+
+    for (let k = 0; k < list.length; k += 2) {
+      const owner = list[k]
+      const clip = list[k + 1]
+      const ox = (owner % cols) * fontSize
+      const oy = ((owner / cols) | 0) * fontSize
+      if (clip < 0) { context.fillText(cellText[owner], ox, oy); continue }
+      context.save()
+      context.beginPath()
+      context.rect((clip % cols) * fontSize, ((clip / cols) | 0) * fontSize, fontSize, fontSize)
+      context.clip()
+      context.fillText(cellText[owner], ox, oy)
+      context.restore()
+    }
+
+    list.length = 0
+
   }
 
 }
@@ -274,6 +388,10 @@ function initMasks() {                                                  // initi
   if (!portalSine       || portalSine.length        !== rows)  portalSine        = new Float32Array(rows)
   if (!swipeSine        || swipeSine.length         !== rows)  swipeSine         = new Float32Array(rows)
   if (!swipeCosine      || swipeCosine.length       !== rows)  swipeCosine       = new Float32Array(rows)
+  if (!cellText         || cellText.length          !== total) cellText          = new Array(total)
+  if (!cellColor        || cellColor.length         !== total) cellColor         = new Array(total)
+  if (!prevText         || prevText.length          !== total) prevText          = new Array(total)
+  if (!prevColor        || prevColor.length         !== total) prevColor         = new Array(total)
 
 }
 
@@ -336,6 +454,14 @@ function initGrid() {                                                   // creat
   context.font = `${fontSize}px monospace`
   context.textBaseline = 'top'
   context.textAlign = 'left'
+
+  const css = getComputedStyle(document.documentElement)
+  COLOR_BACKGR = css.getPropertyValue('--carbon').trim() || COLOR_BACKGR
+  COLOR_BORDER = css.getPropertyValue('--humo').trim()   || COLOR_BORDER
+  COLOR_PORTAL = css.getPropertyValue('--lirio').trim()  || COLOR_PORTAL
+
+  inkCache.clear()
+  paintAll = true
 
   // set final sizes
   const total = cols * rows
