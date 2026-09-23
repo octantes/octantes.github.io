@@ -21,7 +21,7 @@ const isMobile        = ref(false)                                              
 
 let resizeTimer = null                                                                                                                // save resize timer
 
-function checkViewport() { isMobile.value = window.innerWidth <= MOBILE_MAX }                                                               // detect mobile
+function checkViewport() { isMobile.value = window.innerWidth <= MOBILE_MAX }                                                         // detect mobile
 
 function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitCentred() }, 150) }                                       // use resize timer
 
