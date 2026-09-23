@@ -243,12 +243,12 @@ onBeforeUnmount(() => { gridWatch?.disconnect(); gridWatch = null; window.remove
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
   /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 100%); color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* GRID   */ --dot-u: 22px; --dot-r: 1.5px;
+  /* GRID   */ --dot-u: 22px; --dot-r: 1.125px;
 
   & > .dotgrid {
 
     /* LAYOUT */ position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    /* FILL   */ opacity: 1;
+    /* FILL   */ opacity: .5;
 
   }
 
