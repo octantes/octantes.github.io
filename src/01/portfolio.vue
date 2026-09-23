@@ -118,8 +118,8 @@ function fitGrid() {
   const cv = gridCanvas.value
   if (!el || !cv) return
 
-  const width  = el.offsetWidth
-  const height = el.offsetHeight
+  const width  = el.clientWidth
+  const height = el.clientHeight
   if (!width || !height) return
 
   const css   = getComputedStyle(el)
@@ -157,8 +157,17 @@ function fitGrid() {
   gridGeo = { xs, ys, sprite, half, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
               vx: drift * dpr, vy: lift * dpr }
 
+  pinGrid()
   drawGrid(0, 0)
   runGrid()
+
+}
+
+function pinGrid() {
+
+  const el = gridRef.value
+  const cv = gridCanvas.value
+  if (el && cv) cv.style.transform = el.scrollTop ? `translateY(${el.scrollTop}px)` : ''
 
 }
 
@@ -222,12 +231,14 @@ onMounted(() => {
   fitGrid()
   if (typeof ResizeObserver !== 'undefined' && gridRef.value) { gridWatch = new ResizeObserver(fitGrid); gridWatch.observe(gridRef.value) }
   window.addEventListener('resize', fitGrid)
+  gridRef.value?.addEventListener('scroll', pinGrid, { passive: true })
 })
 
 onBeforeUnmount(() => {
   gridWatch?.disconnect(); gridWatch = null
   cancelAnimationFrame(gridRaf); gridRaf = 0; gridGeo = null
   window.removeEventListener('resize', fitGrid)
+  gridRef.value?.removeEventListener('scroll', pinGrid)
 })
 
 </script>
@@ -307,27 +318,22 @@ onBeforeUnmount(() => {
   /* CURSOR */ user-select: none;
   /* LAYOUT */ position: relative; display: flex; align-items: center; justify-content: center;
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
-  /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 78%); color: var(--humo);
+  /* FILL   */ background: radial-gradient(circle closest-side at 50% 50%,
+                   color-mix(in srgb, var(--lirio) 9.1%, transparent) 0%,
+                   color-mix(in srgb, var(--lirio) 8.9%, transparent) 10%,
+                   color-mix(in srgb, var(--lirio) 8.4%, transparent) 20%,
+                   color-mix(in srgb, var(--lirio) 7.6%, transparent) 30%,
+                   color-mix(in srgb, var(--lirio) 6.4%, transparent) 40%,
+                   color-mix(in srgb, var(--lirio) 5.1%, transparent) 50%,
+                   color-mix(in srgb, var(--lirio) 3.7%, transparent) 60%,
+                   color-mix(in srgb, var(--lirio) 2.4%, transparent) 70%,
+                   color-mix(in srgb, var(--lirio) 1.2%, transparent) 80%,
+                   color-mix(in srgb, var(--lirio) 0.3%, transparent) 90%,
+                   transparent 100%),
+                           radial-gradient(circle at center, var(--carbon) 0%, #000000 78%);
+               color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
   /* GRID   */ --dot-u: 22px; --dot-r: 1.125px; --dot-drift-x: 40; --dot-drift-y: 60;
-
-  &::before {
-
-    /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    /* FILL   */ background: radial-gradient(circle closest-side at 50% 50%,
-        color-mix(in srgb, var(--lirio) 9.1%, transparent) 0%,
-        color-mix(in srgb, var(--lirio) 8.9%, transparent) 10%,
-        color-mix(in srgb, var(--lirio) 8.4%, transparent) 20%,
-        color-mix(in srgb, var(--lirio) 7.6%, transparent) 30%,
-        color-mix(in srgb, var(--lirio) 6.4%, transparent) 40%,
-        color-mix(in srgb, var(--lirio) 5.1%, transparent) 50%,
-        color-mix(in srgb, var(--lirio) 3.7%, transparent) 60%,
-        color-mix(in srgb, var(--lirio) 2.4%, transparent) 70%,
-        color-mix(in srgb, var(--lirio) 1.2%, transparent) 80%,
-        color-mix(in srgb, var(--lirio) 0.3%, transparent) 90%,
-        transparent 100%);
-
-  }
 
   & > .dotgrid {
 
