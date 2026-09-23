@@ -65,7 +65,7 @@ const portadaExpanded = ref(window.innerWidth <= 1080)
 
   /* LAYOUT */ display: grid; grid-template-columns: 4fr 4fr; flex: 1 1 auto; grid-template-rows: auto 1fr;
   /* BOX    */ width: 100%; min-height: 0; padding: 1rem; column-gap: 1rem; row-gap: 0;
-  /* GLOW   */ --portal-glow: radial-gradient(ellipse 46% 44% at 50% 49%,
+  /* FILL   */ --portal-glow: radial-gradient(ellipse 46% 44% at 50% 49%,
       color-mix(in srgb, var(--lirio) 13.0%, transparent) 0%,
       color-mix(in srgb, var(--lirio) 12.7%, transparent) 10%,
       color-mix(in srgb, var(--lirio) 12.0%, transparent) 20%,
