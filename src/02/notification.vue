@@ -1,13 +1,11 @@
 <script setup>
 
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { MOBILE_MAX } from '../04/site-config.js'
 
 const props = defineProps({ code: { type: [Number, String], default: 404 } })
 
-const router = useRouter()
 const store  = useStore()
 
 const GLYPHS = {
@@ -157,7 +155,7 @@ onMounted(() => {
 
       <pre class="errorart" aria-hidden="true">{{ art }}</pre>
       <p class="errorline">{{ copy.byCode[String(code)] || copy.byCode.default }}</p>
-      <button class="errorback" @click="store.navHome(router)" :title="copy.back" :aria-label="copy.back">{{ copy.back }}</button>
+      <button class="errorback" @click="store.navHome()" :title="copy.back" :aria-label="copy.back">{{ copy.back }}</button>
 
     </div>
 
