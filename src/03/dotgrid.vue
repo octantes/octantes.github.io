@@ -10,22 +10,23 @@ const props = defineProps({
   viewport: { type: Boolean, default: false },
 })
 
+const root   = ref(null)
+const slide  = ref(null)
 const canvas = ref(null)
 
 let host  = null
 let watch = null
-let geo   = null
-let raf   = 0
-let t0    = 0
+let sig   = ''
 let refit = 0
-let last  = ''
+let anims = []
 
 const stillness = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null
 
 function fit() {
 
+  const el = root.value
   const cv = canvas.value
-  if (!host || !cv) return
+  if (!host || !el || !cv) return
 
   const box    = props.viewport ? document.documentElement : host
   const width  = box.clientWidth
@@ -33,17 +34,23 @@ function fit() {
   if (!width || !height) return
 
   const dpr  = window.devicePixelRatio || 1
-  const sig  = width + 'x' + height + '@' + dpr
-  if (geo && geo.sig === sig) { pin(); return }
+  const next = width + 'x' + height + '@' + dpr
+  if (next === sig) { pin(); return }
+  sig = next
 
-  const ink  = getComputedStyle(cv).getPropertyValue('--niebla').trim() || '#D8DADE'
-  const cols = Math.max(1, Math.round(width  / props.tile))
-  const rows = Math.max(1, Math.round(height / props.tile))
+  const ink    = getComputedStyle(cv).getPropertyValue('--niebla').trim() || '#D8DADE'
+  const step   = Math.max(1, Math.round(props.tile * dpr))
+  const period = step / dpr
+  const cols   = Math.ceil(width  * dpr / step) + 1
+  const rows   = Math.ceil(height * dpr / step) + 1
 
-  cv.width  = Math.round(width  * dpr)
-  cv.height = Math.round(height * dpr)
-  cv.style.width  = width  + 'px'
-  cv.style.height = height + 'px'
+  if (!props.viewport) { el.style.width = width + 'px'; el.style.height = height + 'px' }
+
+  cv.width  = (cols + 1) * step
+  cv.height = (rows + 1) * step
+  cv.style.width  = cv.width  / dpr + 'px'
+  cv.style.height = cv.height / dpr + 'px'
+  slide.value.style.left = slide.value.style.top = -period + 'px'
 
   const r    = props.radius * dpr
   const size = 2 * Math.ceil(r) + 2
@@ -57,30 +64,35 @@ function fit() {
   sctx.arc(half, half, r, 0, Math.PI * 2)
   sctx.fill()
 
-  const xs = [], ys = []
-  for (let i = 0; i < cols; i++) xs.push(Math.round(i * width  / cols * dpr))
-  for (let j = 0; j < rows; j++) ys.push(Math.round(j * height / rows * dpr))
-
-  const frame = document.createElement('canvas')
-  frame.width  = cv.width
-  frame.height = cv.height
-  const fctx = frame.getContext('2d')
-
   const row = document.createElement('canvas')
-  row.width  = frame.width
-  row.height = sprite.height
+  row.width  = cv.width
+  row.height = size
   const rctx = row.getContext('2d')
+  for (let i = 0; i <= cols + 1; i++) rctx.drawImage(sprite, i * step - half, 0)
 
-  for (const x of lane(xs, 0, frame.width, half)) rctx.drawImage(sprite, x - half, 0)
-  for (const y of lane(ys, 0, frame.height, half)) fctx.drawImage(row, 0, y - half)
+  const ctx = cv.getContext('2d')
+  ctx.clearRect(0, 0, cv.width, cv.height)
+  for (let j = 0; j <= rows + 1; j++) ctx.drawImage(row, 0, j * step - half)
 
-  geo = { sig, frame, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
-          vx: props.driftX * dpr, vy: props.driftY * dpr }
-
-  last = ''
+  drift(step, period, dpr)
   pin()
-  draw(0, 0)
-  run()
+
+}
+
+function drift(step, period, dpr) {
+
+  for (const a of anims) a.cancel()
+  anims = []
+  if (stillness?.matches) return
+
+  const axis = (el, speed, prop) => {
+    if (!speed) return
+    anims.push(el.animate([{ transform: `${prop}(0px)` }, { transform: `${prop}(${period}px)` }],
+      { duration: step / (speed * dpr) * 1000, iterations: Infinity, easing: `steps(${step}, jump-end)` }))
+  }
+
+  axis(slide.value,  props.driftX, 'translateX')
+  axis(canvas.value, props.driftY, 'translateY')
 
 }
 
@@ -93,73 +105,13 @@ function queue() {
 
 function pin() {
 
-  const cv = canvas.value
-  if (host && cv && !props.viewport) cv.style.transform = host.scrollTop ? `translateY(${host.scrollTop}px)` : ''
-
-}
-
-function lane(bases, phase, span, half) {
-
-  const out = []
-
-  for (const base of bases) {
-    const v = ((base + phase) % span + span) % span
-    out.push(v)
-    if (v < half) out.push(v + span)
-  }
-
-  return out
-
-}
-
-function draw(px, py) {
-
-  const g = geo
-  if (!g) return
-
-  const x = (px % g.w + g.w) % g.w
-  const y = (py % g.h + g.h) % g.h
-
-  const key = x + ',' + y
-  if (key === last) return
-  last = key
-
-  g.ctx.clearRect(0, 0, g.w, g.h)
-  g.ctx.drawImage(g.frame, x - g.w, y - g.h)
-  g.ctx.drawImage(g.frame, x,       y - g.h)
-  g.ctx.drawImage(g.frame, x - g.w, y)
-  g.ctx.drawImage(g.frame, x,       y)
-
-}
-
-function step(now) {
-
-  const g = geo
-  if (!g) return
-
-  if (!t0) t0 = now
-  const secs = (now - t0) / 1000
-
-  draw(Math.round(secs * g.vx), Math.round(secs * g.vy))
-  raf = requestAnimationFrame(step)
-
-}
-
-function run() {
-
-  cancelAnimationFrame(raf)
-  raf = 0
-  t0  = 0
-
-  const g = geo
-  if (!g || (!g.vx && !g.vy) || stillness?.matches) return
-
-  raf = requestAnimationFrame(step)
+  const el = root.value
+  if (host && el && !props.viewport) el.style.transform = host.scrollTop ? `translateY(${host.scrollTop}px)` : ''
 
 }
 
 onMounted(() => {
-  host = canvas.value?.parentElement || null
+  host = root.value?.parentElement || null
   fit()
   if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(queue); watch.observe(props.viewport ? document.documentElement : host) }
   window.addEventListener('resize', queue)
@@ -168,7 +120,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   watch?.disconnect(); watch = null
-  cancelAnimationFrame(raf); raf = 0; geo = null
+  for (const a of anims) a.cancel()
+  anims = []
   cancelAnimationFrame(refit); refit = 0
   window.removeEventListener('resize', queue)
   host?.removeEventListener('scroll', pin)
@@ -179,7 +132,9 @@ onBeforeUnmount(() => {
 
 <template>
 
-  <canvas ref="canvas" class="dotgrid" :class="{ viewport }" aria-hidden="true"></canvas>
+  <div ref="root" class="dotgrid" :class="{ viewport }" aria-hidden="true">
+    <div ref="slide" class="slide"><canvas ref="canvas"></canvas></div>
+  </div>
 
 </template>
 
@@ -187,10 +142,14 @@ onBeforeUnmount(() => {
 
 .dotgrid {
 
-  /* LAYOUT */ position: absolute; top: 0; left: 0; pointer-events: none;
+  /* LAYOUT */ position: absolute; top: 0; left: 0; overflow: hidden; pointer-events: none;
 
-  &.viewport { position: fixed; }
+  &.viewport { position: fixed; inset: 0; }
 
 }
+
+.slide  { position: absolute; will-change: transform; }
+
+canvas  { display: block; will-change: transform; }
 
 </style>
