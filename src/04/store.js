@@ -278,7 +278,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function navHome() {                                                                                                  // navigates to root and reloads  
+  function navHome() {                                                                                                                // navigates to root and reloads  
 
     if (processing.value) return
     searchQuery.value = ''
@@ -288,7 +288,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function setActiveFilter(filter) {                                                                                  // set active note filter
+  function setActiveFilter(filter) {                                                                                                  // set active note filter
 
     activeFilter.value = filter
     searchQuery.value  = ''
@@ -308,7 +308,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function changeFilter(direction) {                                                                                  // advance or reduce filters 
+  function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
     if (processing.value) return
     
