@@ -17,6 +17,8 @@ let watch = null
 let geo   = null
 let raf   = 0
 let t0    = 0
+let refit = 0
+let last  = ''
 
 const stillness = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null
 
@@ -30,8 +32,11 @@ function fit() {
   const height = box.clientHeight
   if (!width || !height) return
 
-  const ink  = getComputedStyle(cv).getPropertyValue('--niebla').trim() || '#D8DADE'
   const dpr  = window.devicePixelRatio || 1
+  const sig  = width + 'x' + height + '@' + dpr
+  if (geo && geo.sig === sig) { pin(); return }
+
+  const ink  = getComputedStyle(cv).getPropertyValue('--niebla').trim() || '#D8DADE'
   const cols = Math.max(1, Math.round(width  / props.tile))
   const rows = Math.max(1, Math.round(height / props.tile))
 
@@ -61,14 +66,28 @@ function fit() {
   frame.height = cv.height
   const fctx = frame.getContext('2d')
 
-  for (const x of lane(xs, 0, frame.width, half)) for (const y of lane(ys, 0, frame.height, half)) fctx.drawImage(sprite, x - half, y - half)
+  const row = document.createElement('canvas')
+  row.width  = frame.width
+  row.height = sprite.height
+  const rctx = row.getContext('2d')
 
-  geo = { frame, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
+  for (const x of lane(xs, 0, frame.width, half)) rctx.drawImage(sprite, x - half, 0)
+  for (const y of lane(ys, 0, frame.height, half)) fctx.drawImage(row, 0, y - half)
+
+  geo = { sig, frame, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
           vx: props.driftX * dpr, vy: props.driftY * dpr }
 
+  last = ''
   pin()
   draw(0, 0)
   run()
+
+}
+
+function queue() {
+
+  if (refit) return
+  refit = requestAnimationFrame(() => { refit = 0; fit() })
 
 }
 
@@ -100,6 +119,10 @@ function draw(px, py) {
 
   const x = (px % g.w + g.w) % g.w
   const y = (py % g.h + g.h) % g.h
+
+  const key = x + ',' + y
+  if (key === last) return
+  last = key
 
   g.ctx.clearRect(0, 0, g.w, g.h)
   g.ctx.drawImage(g.frame, x - g.w, y - g.h)
@@ -138,15 +161,16 @@ function run() {
 onMounted(() => {
   host = canvas.value?.parentElement || null
   fit()
-  if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(fit); watch.observe(props.viewport ? document.documentElement : host) }
-  window.addEventListener('resize', fit)
+  if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(queue); watch.observe(props.viewport ? document.documentElement : host) }
+  window.addEventListener('resize', queue)
   host?.addEventListener('scroll', pin, { passive: true })
 })
 
 onBeforeUnmount(() => {
   watch?.disconnect(); watch = null
   cancelAnimationFrame(raf); raf = 0; geo = null
-  window.removeEventListener('resize', fit)
+  cancelAnimationFrame(refit); refit = 0
+  window.removeEventListener('resize', queue)
   host?.removeEventListener('scroll', pin)
   host = null
 })
