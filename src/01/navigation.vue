@@ -1,12 +1,11 @@
 <script setup> 
 import { onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import Navbar from '../02/navbar.vue'
 import Gallery from '../02/gallery.vue'
 import Popup from '../02/popup.vue'
 
-const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
@@ -17,13 +16,13 @@ onMounted(async () => {                                                         
   const urlFilter = route.params.filterType
   const initialFilter = urlFilter || 'full'
 
-  if (initialFilter !== store.activeFilter) { store.setActiveFilter(router, initialFilter) }
+  if (initialFilter !== store.activeFilter) { store.setActiveFilter(initialFilter) }
 
 })
 
 watch(() => route.params.filterType, (newFilterType) => {                                                                             // syncs filter on back/forward nav
 
-  if (newFilterType !== undefined && newFilterType !== store.activeFilter) { store.setActiveFilter(router, newFilterType) }
+  if (newFilterType !== undefined && newFilterType !== store.activeFilter) { store.setActiveFilter(newFilterType) }
 
 })
 

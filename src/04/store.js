@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { SITE_URL, CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
+import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
 
@@ -277,37 +278,37 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function navHome(routerInstance) {                                                                                                  // navigates to root and reloads  
+  function navHome() {                                                                                                  // navigates to root and reloads  
 
     if (processing.value) return
     searchQuery.value = ''
-    routerInstance.push({ path: '/' })
+    router.push({ path: '/' })
     activeFilter.value = 'full'
     document.title = t.value.nav.siteTitle
 
   }
 
-  function setActiveFilter(routerInstance, filter) {                                                                                  // set active note filter
+  function setActiveFilter(filter) {                                                                                  // set active note filter
 
     activeFilter.value = filter
     searchQuery.value  = ''
 
-    if (routerInstance && !currentPost.value) {
+    if (!currentPost.value) {
 
-      const currentRoute = routerInstance.currentRoute.value
+      const currentRoute = router.currentRoute.value
       const isNote = currentRoute.params.slug
       const isPortfolio = currentRoute.path === '/portfolio'
       
       if (isNote || isPortfolio) return // block redirect
 
       let path = (filter === 'full') ? `/` : `/${filter}`
-      if (currentRoute.path !== path) { routerInstance.push({ path: path }) }
+      if (currentRoute.path !== path) { router.push({ path: path }) }
 
     }
 
   }
 
-  function changeFilter(routerInstance, direction) {                                                                                  // advance or reduce filters 
+  function changeFilter(direction) {                                                                                  // advance or reduce filters 
 
     if (processing.value) return
     
@@ -320,7 +321,7 @@ export const useStore = defineStore('store', () => {
       let nextIndex = ((currentTabIndex + direction * i) % numTabs + numTabs) % numTabs
       const nextTabValue = tabs.value[nextIndex].value
 
-      if (hasNotes(nextTabValue)) { setActiveFilter(routerInstance, nextTabValue); return }
+      if (hasNotes(nextTabValue)) { setActiveFilter(nextTabValue); return }
 
     }
 
