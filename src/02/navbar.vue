@@ -16,11 +16,11 @@ const { changeFilter, hasNotes, navHome } = store
 
   <div class="filters"> 
 
-    <button class="logo-xx" @click="navHome(router)" :disabled="processing" :title="store.t.nav.home"><span class="logo-sigil" aria-hidden="true"></span><span class="logo-divider" aria-hidden="true">|</span><span class="logo-word">OCTANTES</span></button>
+    <button class="logo-xx" @click="navHome()" :disabled="processing" :title="store.t.nav.home"><span class="logo-sigil" aria-hidden="true"></span><span class="logo-divider" aria-hidden="true">|</span><span class="logo-word">OCTANTES</span></button>
 
     <input class="searchbox" type="text" v-model="searchQuery" :placeholder="store.t.nav.search" :disabled="processing" :title="store.t.nav.search" :aria-label="store.t.nav.search"/>
 
-    <button @click="changeFilter(router, -1)" :disabled="processing" :title="store.t.nav.prev" :aria-label="store.t.nav.prev"> < </button>
+    <button @click="changeFilter(-1)" :disabled="processing" :title="store.t.nav.prev" :aria-label="store.t.nav.prev"> < </button>
 
     <div class="tabs"> 
 
@@ -32,7 +32,7 @@ const { changeFilter, hasNotes, navHome } = store
       
     </div>
 
-    <button @click="changeFilter(router, +1)" :disabled="processing" :title="store.t.nav.next" :aria-label="store.t.nav.next"> > </button>
+    <button @click="changeFilter(+1)" :disabled="processing" :title="store.t.nav.next" :aria-label="store.t.nav.next"> > </button>
 
   </div>
 
