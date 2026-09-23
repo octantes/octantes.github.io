@@ -10,6 +10,7 @@ import Notification from '../02/notification.vue'
 import { throughTheVeil } from '../03/veil.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
+import { MOBILE_MAX } from '../04/site-config.js'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 
@@ -20,7 +21,7 @@ const isMobile        = ref(false)                                              
 
 let resizeTimer = null                                                                                                                // save resize timer
 
-function checkViewport() { isMobile.value = window.innerWidth <= 1080 }                                                               // detect mobile
+function checkViewport() { isMobile.value = window.innerWidth <= MOBILE_MAX }                                                               // detect mobile
 
 function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitCentred() }, 150) }                                       // use resize timer
 
@@ -481,7 +482,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 }
 
-@media (max-width: 1080px) { 
+@media (--mobile) { 
 
   .notedisplay { height: auto; min-height: auto; }
 

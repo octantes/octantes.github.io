@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
+import { MOBILE_MAX } from '../04/site-config.js'
 
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
@@ -13,7 +14,7 @@ function initial() {
   const saved = localStorage.getItem(REMEMBER)
   if (saved === 'yes') return true
   if (saved === 'no')  return false
-  return window.innerWidth <= 1080
+  return window.innerWidth <= MOBILE_MAX
 }
 
 const expanded            = ref(initial())                                                                                            // description deploy state
@@ -101,7 +102,7 @@ function toggle() {                                                             
   &:not(.expanded):hover { filter: brightness(95%); }
   &.expanded { margin-bottom: 1rem; border-radius: var(--radius-ss); }
 
-  @media (max-width: 1080px) { border-radius: var(--radius-ss); margin-bottom: 1rem; }
+  @media (--mobile) { border-radius: var(--radius-ss); margin-bottom: 1rem; }
 
 }
 
