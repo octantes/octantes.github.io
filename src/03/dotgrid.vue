@@ -54,7 +54,14 @@ function fit() {
   for (let i = 0; i < cols; i++) xs.push(Math.round(i * width  / cols * dpr))
   for (let j = 0; j < rows; j++) ys.push(Math.round(j * height / rows * dpr))
 
-  geo = { xs, ys, sprite, half, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
+  const frame = document.createElement('canvas')
+  frame.width  = cv.width
+  frame.height = cv.height
+  const fctx = frame.getContext('2d')
+
+  for (const x of lane(xs, 0, frame.width, half)) for (const y of lane(ys, 0, frame.height, half)) fctx.drawImage(sprite, x - half, y - half)
+
+  geo = { frame, w: cv.width, h: cv.height, ctx: cv.getContext('2d'),
           vx: props.driftX * dpr, vy: props.driftY * dpr }
 
   pin()
@@ -89,12 +96,14 @@ function draw(px, py) {
   const g = geo
   if (!g) return
 
+  const x = (px % g.w + g.w) % g.w
+  const y = (py % g.h + g.h) % g.h
+
   g.ctx.clearRect(0, 0, g.w, g.h)
-
-  const xs = lane(g.xs, px, g.w, g.half)
-  const ys = lane(g.ys, py, g.h, g.half)
-
-  for (const x of xs) for (const y of ys) g.ctx.drawImage(g.sprite, x - g.half, y - g.half)
+  g.ctx.drawImage(g.frame, x - g.w, y - g.h)
+  g.ctx.drawImage(g.frame, x,       y - g.h)
+  g.ctx.drawImage(g.frame, x - g.w, y)
+  g.ctx.drawImage(g.frame, x,       y)
 
 }
 
