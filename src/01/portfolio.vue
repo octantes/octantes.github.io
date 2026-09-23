@@ -181,6 +181,17 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
   /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 100%); color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
+  /* GRID   */ --dot-u: 22px;
+
+  &::before {
+
+    /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    /* FILL   */ background-image: url('/assets/dotgrid.svg');
+                 background-size: var(--dot-u) var(--dot-u);
+                 background-position: calc(var(--dot-u) / -2 + .5px) calc(var(--dot-u) / -2 + .5px);
+                 opacity: .12;
+
+  }
 
 }
 
@@ -237,7 +248,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
     /* FONT   */ font-family: var(--font-mono); font-size: 0.75rem; text-align: left;
     /* MOTION */ transition: all var(--animate-fast);
 
-    & .chip-name, & .chip-sep, & .chip-desc { position: relative; top: -1px; }                                                    /* optical centering, the mono descenders sit low */
+    & .chip-name, & .chip-sep, & .chip-desc { position: relative; top: -1px; }
 
     & .chip-name { flex-shrink: 0; color: var(--cristal); -webkit-text-fill-color: var(--cristal); }
     & .chip-sep  { flex-shrink: 0; margin-left: -0.25rem; color: var(--humo-a40); -webkit-text-fill-color: var(--humo-a40); }
