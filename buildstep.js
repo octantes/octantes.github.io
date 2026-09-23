@@ -77,7 +77,7 @@ setCustomSoftbreak()
 
 // VARIABLES
 
-const cacheFile = path.resolve('.build-cache.json')
+const cacheFile = path.resolve(process.env.BUILD_CACHE || '.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
 const webURL = SITE_URL
 
@@ -206,11 +206,19 @@ function processAssets(tag, attrs, type, slug, portada, silent = new Set()) {   
 
 // ASSET CONVERSION UTILITIES
 
+async function fresh(inputPath, outputPath) {
+
+  try { return (await fs.stat(outputPath)).mtimeMs >= (await fs.stat(inputPath)).mtimeMs }
+  catch { return false }
+
+}
+
 async function convertImage(inputPath, destPath, width = 1200, quality = 80) {   // convert input image files to WEBP 
 
   try {
 
     const finalOutputPath = destPath.replace(/\.(jpe?g|png)$/i, '.webp')
+    if (await fresh(inputPath, finalOutputPath)) return finalOutputPath
     await sharp(inputPath).resize({ width: width, withoutEnlargement: true }).webp({ quality: quality }).toFile(finalOutputPath)
     return finalOutputPath
 
@@ -220,9 +228,11 @@ async function convertImage(inputPath, destPath, width = 1200, quality = 80) {  
 
 async function convertAudio(inputPath, destPath) {                               // convert input audio files to OGG 
 
+  const finalOutputPath = destPath.replace(/\.(mp3|wav)$/i, '.ogg')
+  if (await fresh(inputPath, finalOutputPath)) return finalOutputPath
+
   return new Promise((resolve, reject) => {
     
-    const finalOutputPath = destPath.replace(/\.(mp3|wav)$/i, '.ogg');
     const args = [ '-i', inputPath, '-c:a', 'libopus', '-b:a', '96k', '-y', finalOutputPath ]
     const ffmpegProcess = spawn('ffmpeg', args)
 
@@ -238,6 +248,7 @@ async function convertVideo(inputPath, destPath) {                              
   try {
 
     const finalOutputPath = destPath
+    if (await fresh(inputPath, finalOutputPath)) return finalOutputPath
     const data = await fs.readFile(inputPath)
     await fs.writeFile(finalOutputPath, data)
     return finalOutputPath
@@ -266,6 +277,7 @@ async function convertGif(inputPath, destPath) {
 
     if (!GIF_AS_VIDEO) {
 
+      if (await fresh(inputPath, destPath)) return destPath
       const data = await fs.readFile(inputPath)
       await fs.writeFile(destPath, data)
       return destPath
@@ -273,6 +285,7 @@ async function convertGif(inputPath, destPath) {
     }
 
     const finalOutputPath = destPath.replace(/\.gif$/i, '.mp4')
+    if (await fresh(inputPath, finalOutputPath)) return finalOutputPath
 
     await new Promise((resolve, reject) => {
       const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-i', inputPath,
