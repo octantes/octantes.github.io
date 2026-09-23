@@ -126,7 +126,7 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
         <div class="stack">
 
           <a v-for="p in MAIN_PROJECTS" :key="p.url" :href="p.url" target="_blank" rel="noopener noreferrer"
-             :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name">{{ p.name }} &#8599;</a>
+             :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name"><span class="chip-name">{{ p.name }}</span><span class="chip-sep">:</span><span class="chip-desc">{{ p.desc }}</span><span class="chip-go" aria-hidden="true">&#8599;</span></a>
 
         </div>
 
@@ -224,19 +224,31 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
 
 .stack { 
 
-  /* LAYOUT */ display: flex; flex-wrap: wrap; justify-content: flex-end;
-  /* BOX    */ margin-top: 1rem; gap: 0.5rem;
+  /* LAYOUT */ display: flex; flex-direction: column; align-items: stretch;
+  /* BOX    */ margin-top: 1rem; gap: 0.35rem;
 
   & a {
 
     /* CURSOR */ cursor: pointer; pointer-events: auto;
-    /* BOX    */ padding: 0.2rem 0.5rem;
+    /* LAYOUT */ display: flex; align-items: baseline; justify-content: flex-end; gap: 0.3rem;
+    /* BOX    */ padding: 0.3rem 0.5rem;
     /* FILL   */ background: var(--carbon-a15); color: var(--cristal); -webkit-text-fill-color: var(--cristal);
     /* BORDER */ border: 1px solid var(--cristal-a31); border-radius: var(--radius-ss); text-decoration: none;
-    /* FONT   */ font-family: var(--font-mono); font-size: 0.75rem;
+    /* FONT   */ font-family: var(--font-mono); font-size: 0.75rem; text-align: left;
     /* MOTION */ transition: all var(--animate-fast);
 
-    &:hover { background: var(--cristal); color: var(--carbon); -webkit-text-fill-color: var(--carbon); border-color: var(--cristal); }
+    & .chip-name { flex-shrink: 0; color: var(--cristal); -webkit-text-fill-color: var(--cristal); }
+    & .chip-sep  { flex-shrink: 0; margin-left: -0.25rem; color: var(--humo-a40); -webkit-text-fill-color: var(--humo-a40); }
+    & .chip-desc { flex: 1; color: var(--humo); -webkit-text-fill-color: var(--humo); }
+    & .chip-go   { flex-shrink: 0; margin-left: auto; color: var(--humo-a40); -webkit-text-fill-color: var(--humo-a40); }
+
+    &:hover {
+
+      background: var(--cristal); color: var(--carbon); -webkit-text-fill-color: var(--carbon); border-color: var(--cristal);
+
+      & .chip-name, & .chip-sep, & .chip-desc, & .chip-go { color: var(--carbon); -webkit-text-fill-color: var(--carbon); }
+
+    }
 
   }
 
@@ -445,7 +457,10 @@ onMounted(()   => { if (!store.notesLoaded) store.loadNotesIndex() })
                     transform-origin: left center;                                                                                                 }
   .ray-data       { position: relative; top: auto; display: flex; width: 100%; padding: 1rem 1rem .5rem 1rem; margin: 0;                                                                           }
   .ray-line       { display: none;                                                                                                                                                                 }
-  .stack          { justify-content: flex-start;                                                                                                                                                   }
+  .stack          { align-items: stretch;                                                                                                                                                   }
+  .stack a        { flex-wrap: wrap; justify-content: flex-start;                                                                                                                             }
+  .stack a .chip-sep  { display: none;                                                                                                                                                        }
+  .stack a .chip-desc { flex: 1 1 100%;                                                                                                                                                        }
 
 }
 
