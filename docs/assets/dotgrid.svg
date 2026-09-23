@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
   <defs>
-    <radialGradient id="dot" gradientUnits="userSpaceOnUse" cx="11" cy="11" r="0.75">
+    <radialGradient id="dot" gradientUnits="userSpaceOnUse" cx="11" cy="11" r="1.5">
       <stop offset="0.8" stop-color="#ffffff" stop-opacity="1" />
       <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
     </radialGradient>
