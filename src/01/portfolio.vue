@@ -307,14 +307,14 @@ onBeforeUnmount(() => {
   /* CURSOR */ user-select: none;
   /* LAYOUT */ position: relative; display: flex; align-items: center; justify-content: center;
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
-  /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 100%); color: var(--humo);
+  /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 78%); color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
   /* GRID   */ --dot-u: 22px; --dot-r: 1.125px; --dot-drift-x: 40; --dot-drift-y: 60;
 
   &::before {
 
     /* LAYOUT */ content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    /* FILL   */ background: radial-gradient(ellipse 46% 44% at 50% 50%,
+    /* FILL   */ background: radial-gradient(circle closest-side at 50% 50%,
         color-mix(in srgb, var(--lirio) 13.0%, transparent) 0%,
         color-mix(in srgb, var(--lirio) 12.7%, transparent) 10%,
         color-mix(in srgb, var(--lirio) 12.0%, transparent) 20%,
