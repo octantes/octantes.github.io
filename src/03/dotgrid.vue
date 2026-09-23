@@ -3,10 +3,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
-  tile:   { type: Number, default: 22 },
-  radius: { type: Number, default: 1.125 },
-  driftX: { type: Number, default: 40 },
-  driftY: { type: Number, default: 60 },
+  tile:     { type: Number,  default: 22 },
+  radius:   { type: Number,  default: 1.125 },
+  driftX:   { type: Number,  default: 40 },
+  driftY:   { type: Number,  default: 60 },
+  viewport: { type: Boolean, default: false },
 })
 
 const canvas = ref(null)
@@ -24,8 +25,9 @@ function fit() {
   const cv = canvas.value
   if (!host || !cv) return
 
-  const width  = host.clientWidth
-  const height = host.clientHeight
+  const box    = props.viewport ? document.documentElement : host
+  const width  = box.clientWidth
+  const height = box.clientHeight
   if (!width || !height) return
 
   const ink  = getComputedStyle(cv).getPropertyValue('--niebla').trim() || '#D8DADE'
@@ -73,7 +75,7 @@ function fit() {
 function pin() {
 
   const cv = canvas.value
-  if (host && cv) cv.style.transform = host.scrollTop ? `translateY(${host.scrollTop}px)` : ''
+  if (host && cv && !props.viewport) cv.style.transform = host.scrollTop ? `translateY(${host.scrollTop}px)` : ''
 
 }
 
@@ -136,7 +138,7 @@ function run() {
 onMounted(() => {
   host = canvas.value?.parentElement || null
   fit()
-  if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(fit); watch.observe(host) }
+  if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(fit); watch.observe(props.viewport ? document.documentElement : host) }
   window.addEventListener('resize', fit)
   host?.addEventListener('scroll', pin, { passive: true })
 })
@@ -153,7 +155,7 @@ onBeforeUnmount(() => {
 
 <template>
 
-  <canvas ref="canvas" class="dotgrid" aria-hidden="true"></canvas>
+  <canvas ref="canvas" class="dotgrid" :class="{ viewport }" aria-hidden="true"></canvas>
 
 </template>
 
@@ -162,6 +164,8 @@ onBeforeUnmount(() => {
 .dotgrid {
 
   /* LAYOUT */ position: absolute; top: 0; left: 0; pointer-events: none;
+
+  &.viewport { position: fixed; }
 
 }
 
