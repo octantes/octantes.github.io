@@ -167,7 +167,7 @@ function lane(bases, phase, span, half) {
   const out = []
 
   for (const base of bases) {
-    const v = ((base - phase) % span + span) % span
+    const v = ((base + phase) % span + span) % span
     out.push(v)
     if (v < half) out.push(v + span)
   }
@@ -309,7 +309,7 @@ onBeforeUnmount(() => {
   /* BOX    */ width: 100%; height: 100%; overflow: hidden;
   /* FILL   */ background: radial-gradient(circle at center, var(--carbon) 0%, #000000 100%); color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
-  /* GRID   */ --dot-u: 22px; --dot-r: 1.125px; --dot-drift-x: 80; --dot-drift-y: 120;
+  /* GRID   */ --dot-u: 22px; --dot-r: 1.125px; --dot-drift-x: 40; --dot-drift-y: 60;
 
   & > .dotgrid {
 
