@@ -4,12 +4,12 @@ export const CONTACT_EMAIL = 'facugerbino@gmail.com'
 export const POPUP_LINK = 'https://www.youtube.com/watch?v=pwzLUeVghDc'
 
 export const SECTIONS = [
-  { id: 'portal',          es: 'portal',          en: 'portal'  },
-  { id: 'dise\u00f1o',    es: 'dise\u00f1o',    en: 'design'  },
-  { id: 'desarrollo',      es: 'desarrollo',      en: 'dev'     },
-  { id: 'musica',          es: 'musica',          en: 'music'   },
-  { id: 'textos',          es: 'textos',          en: 'writing' },
-  { id: 'juegos',          es: 'juegos',          en: 'games'   },
+  { id: 'portal',        es: 'portal',        en: 'portal'  },
+  { id: 'dise\u00f1o',   es: 'dise\u00f1o',   en: 'design'  },
+  { id: 'desarrollo',    es: 'desarrollo',    en: 'dev'     },
+  { id: 'musica',        es: 'musica',        en: 'music'   },
+  { id: 'textos',        es: 'textos',        en: 'writing' },
+  { id: 'juegos',        es: 'juegos',        en: 'games'   },
 ]
 
 export const ABOUT_PATH = { es: '/info', en: '/about' }

@@ -25,6 +25,7 @@ export const useStore = defineStore('store', () => {
   }
 
   const lang = ref(localStorage.getItem('lang') || detectLang())
+  document.documentElement.lang = lang.value
 
   function setLang(value) {
     lang.value = value
@@ -50,8 +51,7 @@ export const useStore = defineStore('store', () => {
 
   function langOf(route) {
 
-    if (route.path === ABOUT_PATH.es) return 'es'
-    if (route.path === ABOUT_PATH.en) return 'en'
+    if (isAbout(route)) return route.path === ABOUT_PATH.es ? 'es' : 'en'
     const word = route.params.type || route.params.filterType
     const section = sectionNamed(word)
     if (!section || section.es === section.en) return null
@@ -366,13 +366,12 @@ export const useStore = defineStore('store', () => {
     landed = true
     const language = langOf(route)
     if (language) setLang(language)
-    else document.documentElement.lang = lang.value
     const section = sectionOf(route.params.filterType)
     aboutSection.value = aboutOf(route) || (section && section !== 'portal' ? section : null)
 
   }
 
-  watch(() => { const route = router.currentRoute.value; return pathOf(route, 'es') + JSON.stringify(route.query) }, () => { aboutSection.value = aboutOf(router.currentRoute.value) })
+  watch(() => pathOf(router.currentRoute.value, 'es'), () => { aboutSection.value = aboutOf(router.currentRoute.value) })
 
   function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
@@ -581,6 +580,7 @@ export const useStore = defineStore('store', () => {
     const description = (isEn && post.bilingual && post.descriptionEn) ? post.descriptionEn : post.description
     const shown = isEn && post.bilingual ? 'en' : 'es'
     const urlIn = language => `${webURL}/${wordOf(post.type, language)}/${post.slug}/`
+    const altIn = language => post.bilingual ? urlIn(language) : null
     const url = urlIn(shown)
     const handle = Array.isArray(post.handle) ? post.handle[0] : (post.handle || 'kaste')
 
@@ -589,7 +589,7 @@ export const useStore = defineStore('store', () => {
     setSEOTags({
       description, ogTitle: title, ogDesc: description, ogUrl: url,
       twTitle: title, twDesc: description, twCreator: `@${handle.replace(/^@/, '')}`, canonical: url,
-      altEs: post.bilingual ? urlIn('es') : null, altEn: post.bilingual ? urlIn('en') : null, altDefault: post.bilingual ? urlIn('es') : null,
+      altEs: altIn('es'), altEn: altIn('en'), altDefault: altIn('es'),
       published: post.isoDate, modified: post.isoDate,
       ...(post.portada && { ogImage: post.portada, twImage: post.portada }),
     })
