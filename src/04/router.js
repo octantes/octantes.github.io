@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Content from '../01/content.vue'
-import Portfolio from '../01/portfolio.vue'
+import Portfolio from '../00/portfolio.vue'
 
 const routes = [
 
