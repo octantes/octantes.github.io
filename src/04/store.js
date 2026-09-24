@@ -59,7 +59,7 @@ export const useStore = defineStore('store', () => {
         popupText: "p\u00e1sate a escuchar<br>mi \u00faltimo disco",
         sigilAlt: 'sigilo'
       },
-      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { portal: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
+      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { portal: 'portal', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
       status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
       portfolio: {
@@ -131,7 +131,7 @@ export const useStore = defineStore('store', () => {
         popupText: "come listen to<br>my latest album",
         sigilAlt: 'sigil'
       },
-      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { portal: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
+      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { portal: 'portal', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
       status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
       portfolio: {
@@ -310,18 +310,25 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function openAbout(section) { aboutSection.value = section }
+  function aboutOf(route) { return route.path === '/about' ? 'portal' : null }
+
+  function openAbout(section) {
+
+    if (section === 'portal') router.push({ path: '/about' })
+    else aboutSection.value = section
+
+  }
 
   function openAboutOnLanding(route) {
 
     if (landed) return
     landed = true
     const section = route.params.filterType
-    if (section && section !== 'portal' && tabs.value.some(tab => tab.value === section)) aboutSection.value = section
+    aboutSection.value = aboutOf(route) || (section && section !== 'portal' && tabs.value.some(tab => tab.value === section) ? section : null)
 
   }
 
-  watch(() => router.currentRoute.value.fullPath, () => { aboutSection.value = null })
+  watch(() => router.currentRoute.value.fullPath, () => { aboutSection.value = aboutOf(router.currentRoute.value) })
 
   function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
