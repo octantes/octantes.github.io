@@ -206,7 +206,7 @@ export const useStore = defineStore('store', () => {
 
   // STATES                                                                                                                           // CHANGE STATES
 
-  const processing                 = ref(false)                                                                                       // disabled component state
+  const processing                 = ref(false)                                                                                       // navigation lock state
   const popLink                    = ref(POPUP_LINK)                                                                                  // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
   const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
@@ -245,7 +245,7 @@ export const useStore = defineStore('store', () => {
 
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // apply disabled component state
+  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // lock or unlock navigation
   function togglePopup()                { showPopup.value = !showPopup.value; if (!showPopup.value) localStorage.setItem('popup_seen', popLink.value) } // toggle popup for notifications
   function setSearchQuery(query)        { searchQuery.value = query }                                          // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug

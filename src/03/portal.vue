@@ -8,7 +8,6 @@ const containerRef = ref(null)                                          // conta
 let   COLOR_BACKGR = '#1B1C1C'                                          // solid background color
 let   COLOR_BORDER = '#AAABAC'                                          // solid frontier color
 let   COLOR_PORTAL = '#986C98'                                          // solid portal color
-const COLOR_RAIN   = '#8AB6BB'                                          // solid rain color
 const charRangeStart    = 33                                            // unicode starting character
 const charRangeCount    = 126 - charRangeStart + 1                      // max possible characters
 const germFramesMax     = 160                                           // intro total frames counter

@@ -58,11 +58,7 @@ function toCell(ev) {
   return { cx: x, cy: y }
 }
 
-const HOVER_PLUS    = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]]
-const HOVER_DIAMOND = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1],
-                       [-1, -1], [1, -1], [-1, 1], [1, 1],
-                       [-2, 0], [2, 0], [0, -2], [0, 2]]
-const HOVER_SHAPE   = HOVER_PLUS
+const HOVER_SHAPE = [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1]]
 
 function buildHover() {
   hover.clear()

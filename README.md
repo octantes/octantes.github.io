@@ -19,4 +19,4 @@ Content is written in plain text and an automated action processes assets, hidra
 * **yaml injection**: system reads md frontmatter to mount specific components
 * **flat archive**: parallel generation of a static [archive](https://octantes.github.io/archivo) geocities style version
 * **single command build**: npm run build && npm run deploy — full rebuild and rsync to docs/
-* **centralized config**: site url and contact email live in a single src/site-config.js file
+* **centralized config**: site url and contact email live in a single src/04/site-config.js file
