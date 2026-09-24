@@ -9,6 +9,8 @@ import Popup from '../02/popup.vue'
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
+defineProps({ locked: Boolean })
+
 onMounted(async () => {                                                                                                               // searches notes on mount
 
   await store.loadNotesIndex()
@@ -34,9 +36,9 @@ watch(() => route.params.filterType, (newFilterType) => {                       
 
     <div class="nav-content">
 
-      <Navbar :inert="store.processing" />
+      <Navbar :inert="locked" />
       
-      <div class="nav-views" :inert="store.processing"> <Gallery /> </div>
+      <div class="nav-views" :inert="locked"> <Gallery /> </div>
       
       <Popup v-if="store.showPopup" />
 
