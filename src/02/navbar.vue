@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia'
 const router = useRouter()
 const store = useStore()
 
-const { processing, searchQuery, activeFilter, tabs } = storeToRefs(store)
+const { searchQuery, activeFilter, tabs } = storeToRefs(store)
 const { changeFilter, hasNotes, navHome } = store
 
 </script>
@@ -16,23 +16,23 @@ const { changeFilter, hasNotes, navHome } = store
 
   <div class="filters"> 
 
-    <button class="logo-xx" @click="navHome()" :disabled="processing" :title="store.t.nav.home"><span class="logo-sigil" aria-hidden="true"></span><span class="logo-divider" aria-hidden="true">|</span><span class="logo-word">OCTANTES</span></button>
+    <button class="logo-xx" @click="navHome()" :title="store.t.nav.home"><span class="logo-sigil" aria-hidden="true"></span><span class="logo-divider" aria-hidden="true">|</span><span class="logo-word">OCTANTES</span></button>
 
-    <input class="searchbox" type="text" v-model="searchQuery" :placeholder="store.t.nav.search" :disabled="processing" :title="store.t.nav.search" :aria-label="store.t.nav.search"/>
+    <input class="searchbox" type="text" v-model="searchQuery" :placeholder="store.t.nav.search" :title="store.t.nav.search" :aria-label="store.t.nav.search"/>
 
-    <button @click="changeFilter(-1)" :disabled="processing" :title="store.t.nav.prev" :aria-label="store.t.nav.prev"> < </button>
+    <button @click="changeFilter(-1)" :title="store.t.nav.prev" :aria-label="store.t.nav.prev"> < </button>
 
     <div class="tabs"> 
 
       <template v-for="tab in tabs" :key="tab.value">
         <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="router.push('/about/' + tab.value)"
-          :data-type="tab.value" :class="{ active: activeFilter === tab.value }" :disabled="processing" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"><span class="tab-label">{{ tab.label }}</span><span class="tab-divider" aria-hidden="true">|</span><Mark class="tab-mark" :type="tab.value" />
+          :data-type="tab.value" :class="{ active: activeFilter === tab.value }" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"><span class="tab-label">{{ tab.label }}</span><span class="tab-divider" aria-hidden="true">|</span><Mark class="tab-mark" :type="tab.value" />
         </button>
       </template>
       
     </div>
 
-    <button @click="changeFilter(+1)" :disabled="processing" :title="store.t.nav.next" :aria-label="store.t.nav.next"> > </button>
+    <button @click="changeFilter(+1)" :title="store.t.nav.next" :aria-label="store.t.nav.next"> > </button>
 
   </div>
 
@@ -57,7 +57,6 @@ const { changeFilter, hasNotes, navHome } = store
     /* MOTION */ transition: all var(--animate-faster);
     &:active   { transform: var(--scale-min); }
     &:hover    { background-color: var(--carbon-a08); color: var(--carbon); }
-    &:disabled { cursor: not-allowed; opacity: var(--alpha-disabled);     }
 
     &.active   { background-color: var(--carbon-a15); color: var(--carbon); box-shadow: var(--shadow-border) var(--carbon-a06); }
     

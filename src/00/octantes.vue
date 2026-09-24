@@ -19,17 +19,17 @@ const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
 
     <div class="portal-glow" aria-hidden="true" />
     <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" />
-    <Navigation role="navigation" :aria-label="store.t.nav.search" class="navigation" :disabled="store.processing" />
+    <Navigation role="navigation" :aria-label="store.t.nav.search" class="navigation" />
 
     <RouterView v-slot="{ Component }" >
 
-      <component role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" :is="Component" @updateProcessing="store.setProcessing" />
+      <component role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" :is="Component" />
 
     </RouterView>
 
   </div>
 
-  <div class="footer" role="contentinfo">
+  <div class="footer" role="contentinfo" :inert="store.processing">
 
       <Status />
 
