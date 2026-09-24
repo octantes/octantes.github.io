@@ -91,6 +91,4 @@ const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
 
 }
 
-@media (max-width: 1400px) { .layout { grid-template-columns: 4fr 4fr; } }
-
 </style>
