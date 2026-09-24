@@ -121,66 +121,70 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 
 <template> 
 
-  <div class="portfolio" ref="rootRef">
+  <div class="frame page">
 
-    <DotGrid />
+    <div class="portfolio" ref="rootRef" role="main">
 
-    <div class="top-actions">
-      <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
-      <button class="close-btn" @click="closePortfolio" :title="store.t.portfolio.close" :aria-label="store.t.portfolio.close">✘</button>
-    </div>
+      <DotGrid />
 
-    <div class="profile-group"> 
+      <div class="top-actions">
+        <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
+        <button class="close-btn" @click="closePortfolio" :title="store.t.portfolio.close" :aria-label="store.t.portfolio.close">✘</button>
+      </div>
 
-      <div class="message-box">
+      <div class="profile-group"> 
 
-        <h2>Facundo Gerbino</h2>
+        <div class="message-box">
 
-        <p class="subtitle">{{ store.t.portfolio.subtitle }}</p>
+          <h2>Facundo Gerbino</h2>
 
-        <div class="stack">
+          <p class="subtitle">{{ store.t.portfolio.subtitle }}</p>
 
-          <a v-for="p in MAIN_PROJECTS" :key="p.url" :href="p.url" target="_blank" rel="noopener noreferrer"
-             :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name"><span class="chip-name">{{ p.name }}</span><span class="chip-sep">:</span><span class="chip-desc">{{ p.desc[store.lang] || p.desc.es }}</span><span class="chip-go" aria-hidden="true">&#8599;</span></a>
+          <div class="stack">
+
+            <a v-for="p in MAIN_PROJECTS" :key="p.url" :href="p.url" target="_blank" rel="noopener noreferrer"
+               :title="store.t.portfolio.openRepo + p.name" :aria-label="store.t.portfolio.openRepo + p.name"><span class="chip-name">{{ p.name }}</span><span class="chip-sep">:</span><span class="chip-desc">{{ p.desc[store.lang] || p.desc.es }}</span><span class="chip-go" aria-hidden="true">&#8599;</span></a>
+
+          </div>
+
+          <p v-html="store.t.portfolio.desc"></p>
 
         </div>
 
-        <p v-html="store.t.portfolio.desc"></p>
-
-      </div>
-
-      <img class="avatar" tabindex="0" @click="openGithub" @keydown.enter="openGithub" role="button" :title="store.t.portfolio.githubProfile" :aria-label="store.t.portfolio.openGithub" :src="authorpic" :alt="store.t.portfolio.githubProfile" />    
+        <img class="avatar" tabindex="0" @click="openGithub" @keydown.enter="openGithub" role="button" :title="store.t.portfolio.githubProfile" :aria-label="store.t.portfolio.openGithub" :src="authorpic" :alt="store.t.portfolio.githubProfile" />    
     
-    </div>
+      </div>
 
-    <div class="rays-wrapper">
+      <div class="rays-wrapper">
 
-      <div class="rays-container">
+        <div class="rays-container">
         
-        <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)`, '--i': i, '--n': portfolioProjects.length }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
+          <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)`, '--i': i, '--n': portfolioProjects.length }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
           
-          <div class="ray-line"></div>
-          <span class="ray-text"><span class="ray-label">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span></span>
+            <div class="ray-line"></div>
+            <span class="ray-text"><span class="ray-label">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span></span>
 
-          <div v-if="currentProject && currentProject.slug === proj.slug && proj.slug !== WELCOME_SLUG" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
-            <div class="portal-line"></div>
-            <div class="portal-trigger"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.6 L9.4 6 L4.2 9.4 Z" /></svg></div>
-          </div>
+            <div v-if="currentProject && currentProject.slug === proj.slug && proj.slug !== WELCOME_SLUG" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
+              <div class="portal-line"></div>
+              <div class="portal-trigger"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.6 L9.4 6 L4.2 9.4 Z" /></svg></div>
+            </div>
 
-          <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
-            <p v-if="proj.slug !== WELCOME_SLUG" class="meta">
-              <span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span><span class="sep">//</span>
-              <span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span>
-              <span class="tag">{{ (proj.tags || []).slice(0, 3).join(', ') }}</span>
-            </p>
-            <p v-else class="legend"><span class="key dis"></span>{{ store.t.nav.tabs['diseño'] }}<span class="key dev"></span>{{ store.t.nav.tabs['desarrollo'] }}</p>
-            <p class="desc" :class="{ welcome: proj.slug === WELCOME_SLUG }">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
+            <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
+              <p v-if="proj.slug !== WELCOME_SLUG" class="meta">
+                <span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span><span class="sep">//</span>
+                <span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span>
+                <span class="tag">{{ (proj.tags || []).slice(0, 3).join(', ') }}</span>
+              </p>
+              <p v-else class="legend"><span class="key dis"></span>{{ store.t.nav.tabs['diseño'] }}<span class="key dev"></span>{{ store.t.nav.tabs['desarrollo'] }}</p>
+              <p class="desc" :class="{ welcome: proj.slug === WELCOME_SLUG }">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
+            </div>
+
           </div>
 
         </div>
-
-      </div>
       
+      </div>
+
     </div>
 
   </div>
@@ -188,6 +192,8 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 </template>
 
 <style scoped> 
+
+.frame { display: flex; flex-direction: column; height: 100%; overflow-y: hidden; padding: 1rem; }
 
 .portfolio { 
 
@@ -209,6 +215,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
                            radial-gradient(circle at center, var(--carbon) 0%, #000000 78%);
                color: var(--humo);
   /* BORDER */ border: none; border-radius: var(--radius-ss);
+  /* STATE  */ z-index: 1;
 
   & > .dotgrid {
 
@@ -477,6 +484,8 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 }
 
 @keyframes spawnData { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+@media (--mobile) { .portfolio { margin-bottom: 1rem; } }
 
 @media (max-width: 1000px) { 
 
