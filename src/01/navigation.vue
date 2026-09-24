@@ -15,14 +15,14 @@ onMounted(async () => {                                                         
 
   await store.loadNotesIndex()
 
-  const urlFilter = route.params.filterType
+  const urlFilter = route.params.filterType && (store.sectionOf(route.params.filterType) ?? route.params.filterType)
   const initialFilter = urlFilter || 'portal'
 
   if (initialFilter !== store.activeFilter) { store.setActiveFilter(initialFilter) }
 
 })
 
-watch(() => route.params.filterType, (newFilterType) => {                                                                             // syncs filter on back/forward nav
+watch(() => route.params.filterType && (store.sectionOf(route.params.filterType) ?? route.params.filterType), (newFilterType) => {    // syncs filter on back/forward nav
 
   if (newFilterType !== undefined && newFilterType !== store.activeFilter) { store.setActiveFilter(newFilterType) }
 

@@ -43,7 +43,7 @@ onMounted(() => {
 
     </div>
 
-    <template v-for="section in SECTIONS" :key="section">
+    <template v-for="{ id: section } in SECTIONS" :key="section">
 
       <div v-if="displayFilter === section">
 
