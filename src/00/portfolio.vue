@@ -29,9 +29,7 @@ const portfolioProjects = computed(() => {
   return [...list.filter(n => n.type === 'diseño'), welcomeRay.value, ...list.filter(n => n.type === 'desarrollo')]
 })
 
-const welcomeIndex = computed(() => portfolioProjects.value.findIndex(p => p.slug === WELCOME_SLUG))
 const currentProject    = ref(null)
-const prevSelectedIdx   = ref(-1)
 const rayAngles         = ref([])
 const absIndices        = ref([])
 
@@ -91,8 +89,6 @@ watch([currentProject, portfolioProjects], () => {
     const slotIdx = ((absIndex % length) + length) % length
     return slots[slotIdx] + Math.floor(absIndex / length) * 360
   })
-
-  prevSelectedIdx.value = selectedIdx
 
 }, { immediate: true })
 

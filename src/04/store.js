@@ -297,9 +297,8 @@ export const useStore = defineStore('store', () => {
 
       const currentRoute = router.currentRoute.value
       const isNote = currentRoute.params.slug
-      const isPortfolio = currentRoute.path === '/portfolio'
       
-      if (isNote || isPortfolio) return // block redirect
+      if (isNote) return // block redirect
 
       let path = (filter === 'full') ? `/` : `/${filter}`
       if (currentRoute.path !== path) { router.push({ path: path }) }
@@ -310,8 +309,6 @@ export const useStore = defineStore('store', () => {
 
   function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
-    if (processing.value) return
-    
     const currentTabValue = activeFilter.value
     const currentTabIndex = tabs.value.findIndex(tab => tab.value === currentTabValue)
     const numTabs = tabs.value.length
