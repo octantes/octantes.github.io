@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL, TAGLINE, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
+import { SITE_URL, TAGLINE, SECTIONS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -887,13 +887,12 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
   const order = ['musica', 'diseño', 'juegos', 'desarrollo', 'textos']
   Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
 
-  const catDict = lang === 'en' ? { diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' } : {}
 
   let html = ''
 
   order.forEach(type => {
     if (groups[type]) {
-      const typeLabel = catDict[type] || type
+      const typeLabel = SECTIONS.find(s => s.id === type)?.[lang] ?? type
       html += `<li class="cat-header">${esc(typeLabel)}</li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
         const fileTarget = (lang === 'en' && p.bilingual) ? 'ingles.html' : ''

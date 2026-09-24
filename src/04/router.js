@@ -7,6 +7,7 @@ const routes = [
   { path: '/portfolio',      component: Portfolio }, // opens the portfolio page
   { path: '/portal',         component: Octantes  }, // opens the portal
   { path: '/about',          component: Octantes  }, // opens the portal's about
+  { path: '/info',           component: Octantes  }, // opens the portal's about in spanish
   { path: '/:type/:slug',    component: Octantes  }, // opens a specific note
   { path: '/:filterType',    component: Octantes  }, // opens a section - direct load opens its about
   { path: '/',               component: Octantes  }, // opens the portal page

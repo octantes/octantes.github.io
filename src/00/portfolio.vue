@@ -94,7 +94,7 @@ watch([currentProject, portfolioProjects], () => {
 
 function handleRayClick(proj) {
   if (proj.slug === WELCOME_SLUG) { currentProject.value = proj; return }
-  if (currentProject.value?.slug === proj.slug) router.push(`/${proj.type}/${proj.slug}`); else currentProject.value = proj
+  if (currentProject.value?.slug === proj.slug) router.push(`/${store.wordOf(proj.type)}/${proj.slug}`); else currentProject.value = proj
 }
 function openGithub()         { window.open(GITHUB_URL, '_blank', 'noopener noreferrer')                                                }
 function closePortfolio()     { router.push('/')                                                                                                           }
