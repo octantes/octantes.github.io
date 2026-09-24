@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { SITE_URL, TAGLINE, CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
+import { SITE_URL, TAGLINE, CONTACT_EMAIL, POPUP_LINK, SECTIONS, ABOUT_PATH, STATUS, STATUSES } from '@/04/site-config.js'
 import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
 
   const webURL = SITE_URL
 
-  const tabs                       = computed(() => SECTIONS.map(value => ({ label: t.value.nav.tabs[value], value })))          // names for filters 
+  const tabs                       = computed(() => SECTIONS.map(({ id }) => ({ label: t.value.nav.tabs[id], value: id })))      // names for filters 
 
   const authorsMap = {                                                                                                                // author profile pic and link 
 
@@ -26,10 +26,51 @@ export const useStore = defineStore('store', () => {
 
   const lang = ref(localStorage.getItem('lang') || detectLang())
 
-  function toggleLang() {
-    lang.value = lang.value === 'es' ? 'en' : 'es'
-    localStorage.setItem('lang', lang.value)
+  function setLang(value) {
+    lang.value = value
+    localStorage.setItem('lang', value)
+    document.documentElement.lang = value
   }
+
+  function toggleLang() {
+    setLang(lang.value === 'es' ? 'en' : 'es')
+    const route = router.currentRoute.value
+    router.replace({ path: pathOf(route, lang.value), query: route.query, hash: route.hash })
+  }
+
+  // ROUTE WORDS
+
+  function sectionNamed(word) { return SECTIONS.find(s => s.es === word || s.en === word) }
+
+  function sectionOf(word) { return sectionNamed(word)?.id }
+
+  function isAbout(route) { return route.path === ABOUT_PATH.es || route.path === ABOUT_PATH.en }
+
+  function wordOf(id, language = lang.value) { return SECTIONS.find(s => s.id === id)?.[language] ?? id }
+
+  function langOf(route) {
+
+    if (route.path === ABOUT_PATH.es) return 'es'
+    if (route.path === ABOUT_PATH.en) return 'en'
+    const word = route.params.type || route.params.filterType
+    const section = sectionNamed(word)
+    if (!section || section.es === section.en) return null
+    return word === section.en ? 'en' : 'es'
+
+  }
+
+  function pathOf(route, language) {
+
+    const type = sectionOf(route.params.type)
+    const filter = sectionOf(route.params.filterType)
+    if (isAbout(route)) return ABOUT_PATH[language]
+    if (type) return `/${wordOf(type, language)}/${route.params.slug}`
+    if (filter) return `/${wordOf(filter, language)}`
+    return route.path
+
+  }
+
+  router.afterEach(to => { const language = langOf(to); if (language && language !== lang.value) setLang(language) })
 
   const dict = {
     es: {
@@ -303,32 +344,35 @@ export const useStore = defineStore('store', () => {
       
       if (isNote) return // block redirect
 
-      let path = (filter === 'portal') ? `/` : `/${filter}`
+      let path = (filter === 'portal') ? `/` : `/${wordOf(filter)}`
       if (currentRoute.path !== path) { router.push({ path: path }) }
 
     }
 
   }
 
-  function aboutOf(route) { return route.path === '/about' ? 'portal' : null }
+  function aboutOf(route) { return isAbout(route) ? 'portal' : null }
 
   function openAbout(section) {
 
-    if (section === 'portal') router.push({ path: '/about' })
+    if (section === 'portal') router.push({ path: ABOUT_PATH[lang.value] })
     else aboutSection.value = section
 
   }
 
-  function openAboutOnLanding(route) {
+  function land(route) {
 
     if (landed) return
     landed = true
-    const section = route.params.filterType
-    aboutSection.value = aboutOf(route) || (section && section !== 'portal' && tabs.value.some(tab => tab.value === section) ? section : null)
+    const language = langOf(route)
+    if (language) setLang(language)
+    else document.documentElement.lang = lang.value
+    const section = sectionOf(route.params.filterType)
+    aboutSection.value = aboutOf(route) || (section && section !== 'portal' ? section : null)
 
   }
 
-  watch(() => router.currentRoute.value.fullPath, () => { aboutSection.value = aboutOf(router.currentRoute.value) })
+  watch(() => { const route = router.currentRoute.value; return pathOf(route, 'es') + JSON.stringify(route.query) }, () => { aboutSection.value = aboutOf(router.currentRoute.value) })
 
   function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
@@ -446,7 +490,6 @@ export const useStore = defineStore('store', () => {
       }
 
       updateSEOTags(currentPost.value)
-      document.title = currentPost.value.title || document.title
 
       return { html, error: null }
 
@@ -506,6 +549,9 @@ export const useStore = defineStore('store', () => {
     published:   'meta[property="article:published_time"]',
     modified:    'meta[property="article:modified_time"]',
     canonical:   ['link[rel="canonical"]', 'href'],
+    altEs:       ['link[rel="alternate"][hreflang="es"]', 'href'],
+    altEn:       ['link[rel="alternate"][hreflang="en"]', 'href'],
+    altDefault:  ['link[rel="alternate"][hreflang="x-default"]', 'href'],
   }
 
   function setSEOTags(values) {
@@ -514,8 +560,9 @@ export const useStore = defineStore('store', () => {
       const [selector, attr = 'content'] = [].concat(seoTags[key])
       let el = document.querySelector(selector)
       if (!el && value !== null) {
-        const [, kind, name] = selector.match(/^meta\[(name|property)="([^"]+)"\]$/) || []
-        if (kind) { el = document.createElement('meta'); el.setAttribute(kind, name); document.head.appendChild(el) }
+        el = document.createElement(selector.match(/^\w+/)[0])
+        for (const [, name, val] of selector.matchAll(/\[([\w-]+)="([^"]+)"\]/g)) el.setAttribute(name, val)
+        document.head.appendChild(el)
       }
       if (!el) continue
       if (value === null) el.remove()
@@ -532,7 +579,9 @@ export const useStore = defineStore('store', () => {
 
     const title = ((isEn && post.bilingual && post.titleEn) ? post.titleEn : post.title) || post.slug
     const description = (isEn && post.bilingual && post.descriptionEn) ? post.descriptionEn : post.description
-    const url = `${webURL}/${post.type}/${post.slug}/`
+    const shown = isEn && post.bilingual ? 'en' : 'es'
+    const urlIn = language => `${webURL}/${wordOf(post.type, language)}/${post.slug}/`
+    const url = urlIn(shown)
     const handle = Array.isArray(post.handle) ? post.handle[0] : (post.handle || 'kaste')
 
     document.title = `${title} - octantes.ar`
@@ -540,6 +589,7 @@ export const useStore = defineStore('store', () => {
     setSEOTags({
       description, ogTitle: title, ogDesc: description, ogUrl: url,
       twTitle: title, twDesc: description, twCreator: `@${handle.replace(/^@/, '')}`, canonical: url,
+      altEs: post.bilingual ? urlIn('es') : null, altEn: post.bilingual ? urlIn('en') : null, altDefault: post.bilingual ? urlIn('es') : null,
       published: post.isoDate, modified: post.isoDate,
       ...(post.portada && { ogImage: post.portada, twImage: post.portada }),
     })
@@ -573,7 +623,7 @@ export const useStore = defineStore('store', () => {
     setSEOTags({
       description: tagline, ogTitle: 'octantes.ar', ogDesc: tagline, ogUrl: webURL + '/',
       ogImage: webURL + '/assets/portada.webp', twTitle: 'octantes.ar', twDesc: tagline, twImage: webURL + '/assets/portada.webp',
-      twCreator: '@octantes', canonical: webURL + '/', published: null, modified: null,
+      twCreator: '@octantes', canonical: webURL + '/', published: null, modified: null, altEs: null, altEn: null, altDefault: null,
     })
 
     const ldScript = document.querySelector('script[type="application/ld+json"]')
@@ -652,11 +702,10 @@ export const useStore = defineStore('store', () => {
 
     if (notesIndex.value.length === 0) return { title: t.value.gallery.loading, url: '' }
     const latest = notesIndex.value[0]
-    const cleanUrl = latest.url.replace(/^\/posts/, '') 
 
     return {
       title: (lang.value === 'en' && latest.bilingual && latest.titleEn) ? latest.titleEn : latest.title,
-      url: cleanUrl
+      url: `/${wordOf(latest.type)}/${latest.slug}`
     }
 
   })
@@ -724,7 +773,7 @@ export const useStore = defineStore('store', () => {
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, aboutSection, searchQuery, tabs,
-    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, openAboutOnLanding,
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, wordOf,
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
     /* LANG FUN  */ toggleLang,

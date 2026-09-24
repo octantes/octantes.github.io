@@ -36,7 +36,7 @@ const notFound    = ref(0)
 
 const fullBleed = ref(false)
 
-store.openAboutOnLanding(route)
+store.land(route)
 
 const aboutMode = computed(() => store.aboutSection)
 const noteTitle = computed(() => {
@@ -169,7 +169,7 @@ async function openInColumn(key) {
 
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
-  const { html, error } = await fetchPost(slug, route.params.type)
+  const { html, error } = await fetchPost(slug, store.sectionOf(route.params.type) ?? route.params.type)
 
   notFound.value = !error ? 0 : /not a note page|HTTP error 404/.test(error.message || '') ? 404 : 500
   noteContent.value = error ? '' : html
@@ -240,7 +240,7 @@ const forcedError = Number(new URLSearchParams(window.location.search).get('erro
 
 watch(() => route.params.filterType, ft => {
   if (ft === undefined) { if (!route.params.slug) notFound.value = forcedError; return }
-  notFound.value = forcedError || (store.tabs.some(tab => tab.value === ft) ? 0 : 404)
+  notFound.value = forcedError || (store.sectionOf(ft) ? 0 : 404)
 }, { immediate: true })
 
 watch(                                                                                                                                // trigger notes and animations 
@@ -252,7 +252,7 @@ watch(                                                                          
     if (store.processing) return
     setProcessing(true)
 
-    if (route.params.type !== 'diseño') fullBleed.value = false
+    if (store.sectionOf(route.params.type) !== 'diseño') fullBleed.value = false
 
     try {
 
