@@ -59,7 +59,7 @@ export const useStore = defineStore('store', () => {
         popupText: "p\u00e1sate a escuchar<br>mi \u00faltimo disco",
         sigilAlt: 'sigilo'
       },
-      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { full: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
+      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { portal: 'completo', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
       status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
       portfolio: {
@@ -87,7 +87,7 @@ export const useStore = defineStore('store', () => {
         taglines: [TAGLINE.es, 'abriendo ventanas a universos alternativos', 'desplegando portales', 'investigando dualidades'],
         profilePic: 'foto de perfil',
         sections: {
-          full: 'buenas! soy <i>kaste</i> y lo que estás viendo es mi base de operaciones     <br><br>armé <b>octantes</b> para centralizar toda mi producción fuera de las redes  <br>recuperando los fundamentos, sin algoritmos, reglas o intermediarios         <br>vas a encontrar proyectos de todo tipo, vos elegís lo que querés ver         <br>desde música, textos y diseño hasta videojuegos y software propio            <br><br>la página me permite adaptar el formato al contenido que voy creando         <br>y pensar mis proyectos se vuelve más fácil con outputs definidos             <br><br>usá las pestañas superiores de la tabla para filtrar por sección             <br>cuando un posteo te llame la atención, clickealo para cargarlo acá           <br>',
+          portal: 'buenas! soy <i>kaste</i> y lo que estás viendo es mi base de operaciones     <br><br>armé <b>octantes</b> para centralizar toda mi producción fuera de las redes  <br>recuperando los fundamentos, sin algoritmos, reglas o intermediarios         <br>vas a encontrar proyectos de todo tipo, vos elegís lo que querés ver         <br>desde música, textos y diseño hasta videojuegos y software propio            <br><br>la página me permite adaptar el formato al contenido que voy creando         <br>y pensar mis proyectos se vuelve más fácil con outputs definidos             <br><br>usá las pestañas superiores de la tabla para filtrar por sección             <br>cuando un posteo te llame la atención, clickealo para cargarlo acá           <br>',
           diseño: 'estás viendo la sección de <i>diseño</i>, acá viven mis proyectos multimedia <br><br>disfruto mucho armar <b>identidades</b> y pensar assets que las acompañen    <br>algunos de estos trabajos son solo de práctica, excusas para aprender        <br>otros son encargos reales, puestos a prueba en distintos entornos            <br>mi foco es la multimedialidad, lograr una fusión interesante de medios       <br><br>vas a encontrar trabajos de branding, diseño web y piezas editoriales        <br>desde interfaces hasta logotipos, fanzines, stickers y otros objetos         <br><br>si te interesa algún proyecto, clickealo para ver el desglose completo       <br>vas a encontrar la galería, el proceso, las herramientas e influencias       <br>',
           desarrollo: 'estás viendo la sección de <i>desarrollo</i>, acá armo mis herramientas    <br><br>desde que aprendí a <b>programar</b>, se me abrieron muchas posibilidades  <br>ahora cuando no encuentro algo que necesito, puedo armarlo de cero         <br>también me permite implementar diseños propios en entornos reales          <br>esta sección muestra la parte que ya es pública de esos desarrollos        <br><br>vas a encontrar software, experimentos gráficos y otras utilidades         <br>desde herramientas de producción y productividad hasta shaders             <br><br>si te interesa algún proyecto, clickealo para ver el desglose completo     <br>vas a encontrar el repositorio, el proceso, las herramientas e imágenes    <br>',
           musica: 'estás viendo la sección de <i>música</i>, acá es donde tejo hechizos          <br><br>desde el primer tema que hice, <b>producir</b> se volvió una necesidad total  <br>cuando no entro seguido en ese estado de trance, pierdo la templanza          <br>armar canciones en el sentido tradicional no es mi principal interés          <br>me llama mucho más crear paisajes que transmitan una emoción                  <br><br>vas a ver álbumes, acompañados por experimentos audiovisuales                 <br>desde proyectos terminados hasta descartes y demos sin mezclar                <br><br>si te interesa escuchar algo, clickealo para ver el video en youtube          <br>también vas a encontrar el disco en spotify y otras plataformas               <br>',
@@ -95,7 +95,7 @@ export const useStore = defineStore('store', () => {
           juegos: 'estás viendo la sección de <i>videojuegos</i>, mi principal laboratorio       <br><br>diseñar <b>fichines</b> siempre ha sido mi endgame, el objetivo final         <br>participé en gamejams y armé prototipos para practicar un poco                <br>pero siempre quise desarrollar cosas jugables desde el navegador              <br>porque la web es de los pocos lugares donde aún hay límites técnicos          <br><br>vas a encontrar juegos centrados en lo mecánico y otros en lo narrativo       <br>lo que más me interesa es pensar el juego como sistema y ver qué sale         <br><br>si querés probar algún prototipo, simplemente cargalo desde la tabla          <br>la mayoría corren en el navegador y otros pueden ser descargables             <br>'
         },
         footers: {
-          full: 'si querés saber más <i>sobre el proyecto</i> podes leer estos posteos',
+          portal: 'si querés saber más <i>sobre el proyecto</i> podes leer estos posteos',
           diseño: 'si querés saber más <i>sobre mis diseños</i> podes leer estos posteos',
           desarrollo: 'si querés saber más <i>sobre mi desarrollo</i> podes leer estos posteos',
           musica: 'si querés saber más <i>sobre mi música</i> podes leer estos posteos',
@@ -131,7 +131,7 @@ export const useStore = defineStore('store', () => {
         popupText: "come listen to<br>my latest album",
         sigilAlt: 'sigil'
       },
-      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { full: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
+      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { portal: 'all', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
       status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
       portfolio: {
@@ -159,7 +159,7 @@ export const useStore = defineStore('store', () => {
         taglines: [TAGLINE.en, 'opening windows to alternate universes', 'unfolding portals', 'researching dualities'],
         profilePic: 'profile picture',
         sections: {
-          full: 'hey! i\'m <i>kaste</i> and what you\'re seeing is my operations base     <br><br>i built <b>octantes</b> to centralize all my production outside social media  <br>getting back to fundamentals, no algorithms, rules or middlemen               <br>you\'ll find projects of all kinds, you choose what you want to see            <br>from music, writing and design to video games and custom software             <br><br>the page lets me adapt the format to whatever content i\'m creating            <br>and thinking about my projects gets easier with defined outputs               <br><br>use the top tabs of the table to filter by section                            <br>when a post catches your attention, click it to load it here                  <br>',
+          portal: 'hey! i\'m <i>kaste</i> and what you\'re seeing is my operations base     <br><br>i built <b>octantes</b> to centralize all my production outside social media  <br>getting back to fundamentals, no algorithms, rules or middlemen               <br>you\'ll find projects of all kinds, you choose what you want to see            <br>from music, writing and design to video games and custom software             <br><br>the page lets me adapt the format to whatever content i\'m creating            <br>and thinking about my projects gets easier with defined outputs               <br><br>use the top tabs of the table to filter by section                            <br>when a post catches your attention, click it to load it here                  <br>',
           diseño: 'you\'re viewing the <i>design</i> section, where my multimedia projects live <br><br>i really enjoy building <b>identities</b> and designing assets to go with them<br>some of these works are just practice, excuses to learn                       <br>others are real commissions, tested in different environments                 <br>my focus is multimediality, achieving an interesting fusion of media          <br><br>you\'ll find branding work, web design and editorial pieces                    <br>from interfaces to logos, fanzines, stickers and other objects                <br><br>if you\'re interested in a project, click it to see the full breakdown         <br>you\'ll find the gallery, the process, tools and influences                    <br>',
           desarrollo: 'you\'re viewing the <i>dev</i> section, where i build my tools              <br><br>ever since i learned to <b>code</b>, a lot of possibilities opened up       <br>now when i can\'t find something i need, i can build it from scratch         <br>it also lets me implement my own designs in real environments                <br>this section shows the part that\'s already public from those developments   <br><br>you\'ll find software, graphical experiments and other utilities             <br>from production and productivity tools to shaders                           <br><br>if you\'re interested in a project, click it to see the full breakdown       <br>you\'ll find the repo, the process, tools and images                         <br>',
           musica: 'you\'re viewing the <i>music</i> section, this is where i weave spells          <br><br>since the first track i made, <b>producing</b> became a total necessity        <br>when i don\'t enter that trance state often enough, i lose my composure         <br>making songs in the traditional sense isn\'t my main interest                    <br>i\'m much more drawn to creating soundscapes that convey an emotion              <br><br>you\'ll see albums, accompanied by audiovisual experiments                       <br>from finished projects to scraps and unmixed demos                             <br><br>if you want to listen to something, click it to see the video on youtube        <br>you\'ll also find the album on spotify and other platforms                       <br>',
@@ -167,7 +167,7 @@ export const useStore = defineStore('store', () => {
           juegos: 'you\'re viewing the <i>games</i> section, my main laboratory                  <br><br>designing <b>games</b> has always been my endgame, the final goal            <br>i\'ve participated in game jams and built prototypes to practice a bit        <br>but i\'ve always wanted to develop playable things from the browser           <br>because the web is one of the few places where there are still technical limits<br><br>you\'ll find games focused on mechanics and others on narrative               <br>what interests me most is thinking about the game as a system and seeing what comes out<br><br>if you want to try a prototype, just load it from the table                  <br>most run in the browser and others can be downloaded                         <br>'
         },
         footers: {
-          full: 'if you want to know more <i>about the project</i> you can read these posts',
+          portal: 'if you want to know more <i>about the project</i> you can read these posts',
           diseño: 'if you want to know more <i>about my designs</i> you can read these posts',
           desarrollo: 'if you want to know more <i>about my development</i> you can read these posts',
           musica: 'if you want to know more <i>about my music</i> you can read these posts',
@@ -238,9 +238,11 @@ export const useStore = defineStore('store', () => {
 
   // NAVIGATION                                                                                                                       // NOTE TABLE
 
-  const activeFilter               = ref('full')                                                                                      // active tab filter name
+  const activeFilter               = ref('portal')                                                                                    // active tab filter name
   const sortKey                    = ref('isoDate')                                                                                   // current sort column
   const sortOrder                  = ref('desc')                                                                                      // current sort order
+  const aboutSection               = ref(null)
+  let landed                       = false
   const searchQuery                = ref('')                                                                                          // searchbox current search
 
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -283,7 +285,8 @@ export const useStore = defineStore('store', () => {
     if (processing.value) return
     searchQuery.value = ''
     router.push({ path: '/' })
-    activeFilter.value = 'full'
+    activeFilter.value = 'portal'
+    aboutSection.value = null
     document.title = t.value.nav.siteTitle
 
   }
@@ -300,12 +303,25 @@ export const useStore = defineStore('store', () => {
       
       if (isNote) return // block redirect
 
-      let path = (filter === 'full') ? `/` : `/${filter}`
+      let path = (filter === 'portal') ? `/` : `/${filter}`
       if (currentRoute.path !== path) { router.push({ path: path }) }
 
     }
 
   }
+
+  function openAbout(section) { aboutSection.value = section }
+
+  function openAboutOnLanding(route) {
+
+    if (landed) return
+    landed = true
+    const section = route.params.filterType
+    if (section && section !== 'portal' && tabs.value.some(tab => tab.value === section)) aboutSection.value = section
+
+  }
+
+  watch(() => router.currentRoute.value.fullPath, () => { aboutSection.value = null })
 
   function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
@@ -326,7 +342,7 @@ export const useStore = defineStore('store', () => {
 
   function hasNotes(type) {                                                                                                        // check if filter has notes
 
-    if (type === 'full') return true
+    if (type === 'portal') return true
     return notesIndex.value.some(note => note.type === type)
 
   }
@@ -642,7 +658,7 @@ export const useStore = defineStore('store', () => {
 
     if (!notesIndex.value || notesIndex.value.length === 0) { return [] }
     const filterType = activeFilter.value
-    let filtered = activeFilter.value === 'full' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
+    let filtered = activeFilter.value === 'portal' ? notesIndex.value : notesIndex.value.filter(note => note.type === filterType)
 
     filtered = filtered.map(note => ({                                                                                               // add lang-aware display fields
       ...note,
@@ -700,8 +716,8 @@ export const useStore = defineStore('store', () => {
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
-    /* NAVIG VAR */ activeFilter, searchQuery, tabs,
-    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes,
+    /* NAVIG VAR */ activeFilter, aboutSection, searchQuery, tabs,
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, openAboutOnLanding,
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
     /* LANG FUN  */ toggleLang,

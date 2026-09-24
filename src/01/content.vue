@@ -1,6 +1,6 @@
 <script setup> 
 import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import About from '../02/about.vue'
@@ -14,7 +14,6 @@ import { MOBILE_MAX } from '../04/site-config.js'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 
-const router          = useRouter()                                                                                                   // handles note open route
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 const isMobile        = ref(false)                                                                                                    // mobile state
@@ -37,7 +36,9 @@ const notFound    = ref(0)
 
 const fullBleed = ref(false)
 
-const aboutMode = computed(() => route.path.startsWith('/about/') ? route.params.section : null)
+store.openAboutOnLanding(route)
+
+const aboutMode = computed(() => store.aboutSection)
 const noteTitle = computed(() => {
   const p = currentPost.value
   if (!p) return ''

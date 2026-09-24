@@ -5,9 +5,8 @@ import Portfolio from '../00/portfolio.vue'
 const routes = [
 
   { path: '/portfolio',      component: Portfolio }, // opens custom portfolio component
-  { path: '/about/:section', component: Octantes  },
   { path: '/:type/:slug',    component: Octantes  }, // opens a note
-  { path: '/:filterType',    component: Octantes  },
+  { path: '/:filterType',    component: Octantes  }, // opens a section, a direct load opens its about
   { path: '/',               component: Octantes  },
   { path: '/:catchAll(.*)',  component: Octantes  }  // keep at the end
 
