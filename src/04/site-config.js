@@ -3,7 +3,7 @@ export const TAGLINE = { es: 'tejiendo hechizos', en: 'weaving spells' }
 export const CONTACT_EMAIL = 'facugerbino@gmail.com'
 export const POPUP_LINK = 'https://www.youtube.com/watch?v=pwzLUeVghDc'
 
-export const SECTIONS = ['full', 'dise\u00f1o', 'desarrollo', 'musica', 'textos', 'juegos']
+export const SECTIONS = ['portal', 'dise\u00f1o', 'desarrollo', 'musica', 'textos', 'juegos']
 
 export const MOBILE_MAX = 1080
 

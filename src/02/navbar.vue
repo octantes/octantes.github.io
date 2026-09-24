@@ -1,10 +1,8 @@
 <script setup> 
-import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import Mark from '../03/mark.vue'
 import { storeToRefs } from 'pinia'
 
-const router = useRouter()
 const store = useStore()
 
 const { searchQuery, activeFilter, tabs } = storeToRefs(store)
@@ -25,7 +23,7 @@ const { changeFilter, hasNotes, navHome } = store
     <div class="tabs"> 
 
       <template v-for="tab in tabs" :key="tab.value">
-        <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="router.push('/about/' + tab.value)"
+        <button v-if="activeFilter === tab.value && hasNotes(tab.value)" @click="store.openAbout(tab.value)"
           :data-type="tab.value" :class="{ active: activeFilter === tab.value }" :title="store.t.nav.filterBy + tab.label" :aria-label="store.t.nav.filterByContent + tab.label"><span class="tab-label">{{ tab.label }}</span><span class="tab-divider" aria-hidden="true">|</span><Mark class="tab-mark" :type="tab.value" />
         </button>
       </template>

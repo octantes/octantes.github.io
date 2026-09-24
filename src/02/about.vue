@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
+import { SECTIONS } from '../04/site-config.js'
 const authorpic = '/assets/kaste.webp'
 
 const props           = defineProps({ section: { type: String, default: null } })
@@ -42,7 +43,7 @@ onMounted(() => {
 
     </div>
 
-    <template v-for="section in ['full', 'diseño', 'desarrollo', 'musica', 'textos', 'juegos']" :key="section">
+    <template v-for="section in SECTIONS" :key="section">
 
       <div v-if="displayFilter === section">
 

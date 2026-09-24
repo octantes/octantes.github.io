@@ -1,6 +1,6 @@
 <script setup>
 
-defineProps({ type: { type: String, default: 'full' } })
+defineProps({ type: { type: String, default: 'portal' } })
 
 </script>
 
