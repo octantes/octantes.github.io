@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import Navigation from '../01/navigation.vue'
+import Content from '../01/content.vue'
 import Status from '../01/status.vue'
 import Portada from '../02/portada.vue'
 import { MOBILE_MAX } from '../04/site-config.js'
@@ -21,11 +22,7 @@ const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
     <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" :inert="store.processing" />
     <Navigation role="navigation" :aria-label="store.t.nav.search" class="navigation" :locked="store.processing" />
 
-    <RouterView v-slot="{ Component }" >
-
-      <component role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" :is="Component" />
-
-    </RouterView>
+    <Content role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" />
 
   </div>
 
