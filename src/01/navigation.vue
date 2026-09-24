@@ -1,5 +1,5 @@
 <script setup> 
-import { onMounted, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
 import Navbar from '../02/navbar.vue'
@@ -11,18 +11,19 @@ const store           = useStore()                                              
 
 defineProps({ locked: Boolean })
 
+const urlFilter = computed(() => route.params.filterType && (store.sectionOf(route.params.filterType) ?? route.params.filterType))
+
 onMounted(async () => {                                                                                                               // searches notes on mount
 
   await store.loadNotesIndex()
 
-  const urlFilter = route.params.filterType && (store.sectionOf(route.params.filterType) ?? route.params.filterType)
-  const initialFilter = urlFilter || 'portal'
+  const initialFilter = urlFilter.value || 'portal'
 
   if (initialFilter !== store.activeFilter) { store.setActiveFilter(initialFilter) }
 
 })
 
-watch(() => route.params.filterType && (store.sectionOf(route.params.filterType) ?? route.params.filterType), (newFilterType) => {    // syncs filter on back/forward nav
+watch(urlFilter, (newFilterType) => {                                                                                                 // syncs filter on back/forward nav
 
   if (newFilterType !== undefined && newFilterType !== store.activeFilter) { store.setActiveFilter(newFilterType) }
 
