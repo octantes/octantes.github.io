@@ -1,15 +1,15 @@
 <script setup> 
 import { ref } from 'vue'
-import { useStore } from './04/store.js'
+import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
-import Navigation from './01/navigation.vue'
-import Status from './01/status.vue'
-import Portada from './02/portada.vue'
-import Portal from './03/portal.vue'
-import DotGrid from './03/dotgrid.vue'
-import { veilOn, registerVeil } from './03/veil.js'
-import { MOBILE_MAX } from './04/site-config.js'
+import Navigation from '../01/navigation.vue'
+import Status from '../01/status.vue'
+import Portada from '../02/portada.vue'
+import Portal from '../03/portal.vue'
+import DotGrid from '../03/dotgrid.vue'
+import { veilOn, registerVeil } from '../03/veil.js'
+import { MOBILE_MAX } from '../04/site-config.js'
 
 const store = useStore()
 const route = useRoute()
