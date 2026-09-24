@@ -34,9 +34,9 @@ watch(() => route.params.filterType, (newFilterType) => {                       
 
     <div class="nav-content">
 
-      <Navbar/>
+      <Navbar :inert="store.processing" />
       
-      <div class="nav-views"> <Gallery /> </div>
+      <div class="nav-views" :inert="store.processing"> <Gallery /> </div>
       
       <Popup v-if="store.showPopup" />
 
