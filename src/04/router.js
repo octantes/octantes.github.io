@@ -1,21 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Octantes from '../00/octantes.vue'
 import Portfolio from '../00/portfolio.vue'
-import Content from '../01/content.vue'
 
 const routes = [
 
-  { path: '/portfolio', component: Portfolio }, // opens custom portfolio component
-
-  { path: '/', component: Octantes, children: [
-
-    { path: 'about/:section', component: Content, props: route => ({ aboutSection: route.params.section })                 },
-    { path: ':type/:slug',    component: Content, props: route => ({ slug: route.params.slug, type: route.params.type }) }, // sends slug to content as prop
-    { path: ':filterType',    component: Content, props: route => ({ filterType: route.params.filterType })              },
-    { path: '',               component: Content,                                                                        },
-    { path: ':catchAll(.*)',  component: Content, props: { slug: '404' }                                                 }  // keep at the end
-
-  ] },
+  { path: '/portfolio',      component: Portfolio }, // opens custom portfolio component
+  { path: '/about/:section', component: Octantes  },
+  { path: '/:type/:slug',    component: Octantes  }, // opens a note
+  { path: '/:filterType',    component: Octantes  },
+  { path: '/',               component: Octantes  },
+  { path: '/:catchAll(.*)',  component: Octantes  }  // keep at the end
 
 ]
 
