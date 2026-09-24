@@ -9,9 +9,9 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { noteSortFilter, processing, searchQuery, notesLoaded } = storeToRefs(store)                                                                // imports refs from main store
+const { noteSortFilter, searchQuery, notesLoaded } = storeToRefs(store)                                                                            // imports refs from main store
 
-function noteOpen(type, slug) { if (!processing.value) router.push({ path: `/${type}/${slug}` }) }                                    // change route and open post
+function noteOpen(type, slug) { router.push({ path: `/${type}/${slug}` }) }                                                           // change route and open post
 
 const galleryRef      = ref(null)
 
@@ -46,7 +46,6 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
 
       :class="{ 
 
-        disabled: processing, 
         expanded: route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery),
         active: route.params.slug === note.slug
 
@@ -144,8 +143,6 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
 
   &:focus { outline: none; }
   &:focus-visible { outline: var(--small-outline) var(--cristal); outline-offset: 2px; }
-
-  &.disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
 
 }
 
