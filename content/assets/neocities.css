@@ -317,6 +317,7 @@ body::after {
 .article-list a:hover::before    { color: var(--lirio);                                  }
 
 .project-list                    { gap: 0; }
+.project-row a                   { display: inline; }
 
 .projects.lirio h2,
 .projects.lirio .project-list a,
