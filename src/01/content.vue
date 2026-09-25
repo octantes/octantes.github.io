@@ -390,7 +390,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
             <div :class="computedNoteClass" v-html="noteContent" />                                   <!-- for html posts          -->
           </template>
 
-          <template v-if="currentPost && !notFound && !computedNoteComp">
+          <template v-if="currentPost && noteContent && !notFound && !computedNoteComp">
             <br><hr><br>
             <Subscribe />
             <br><hr><br>
