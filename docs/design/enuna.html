@@ -12,19 +12,15 @@
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="alternate" type="application/rss+xml" title="octantes.ar rss feed" href="/feed.xml" />
-    
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap">
-    </noscript>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" crossorigin src="/assets/index-Q5_9cR-E.js"></script>
-    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-ySQLXI0k.css">
+    <script type="module" crossorigin src="/assets/index-DBcxNmHZ.js"></script>
+    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-B8hb_fCz.css">
 
-    <link rel="stylesheet" href="/assets/neocities.css">
+    <noscript><link rel="stylesheet" href="/assets/neocities.css"><style>noscript.archive { display: contents }</style></noscript>
 
-    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.documentElement.classList.add(archive ? 'archive' : 'portal'); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (/neocities\.css$/.test(l.href)) l.disabled = !archive; else if (archive) l.disabled = true; else l.media = 'all' }) })()</script>
+    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
 
     <title>en una - digital publication - octantes.ar</title>
     <meta name="description" content="branding and motion graphics project for a digital music magazine" data-head>
@@ -59,6 +55,7 @@
 
   <body>
 
+    <noscript class="archive">
     <aside class="static-nav">
       
       <div class="sidebar-content">
@@ -106,7 +103,7 @@
         <div class="meta">06/09/2023 // kaste</div>
       </header>
       
-      <video src="/posts/diseño/enuna/header.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="project header"></video><video src="/posts/diseño/enuna/explainer.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="brand concept explained"></video><video src="/posts/diseño/enuna/marquee.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="presentation divider"></video><video src="/posts/diseño/enuna/iconography.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="icon presentation"></video><video src="/posts/diseño/enuna/identity.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="identity assets for social media"></video><img src="/posts/diseño/enuna/break.webp" width="600" height="400" loading="lazy" alt="presentation break"><img src="/posts/diseño/enuna/credits.webp" width="600" height="400" loading="lazy" alt="branding project credits"><div class="nota nota-verso"><p><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/dINpNVg0hiw?rel=0" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe></p>
+      <video src="/posts/diseño/enuna/header.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="project header"></video><video src="/posts/diseño/enuna/explainer.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="brand concept explained"></video><video src="/posts/diseño/enuna/marquee.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="presentation divider"></video><video src="/posts/diseño/enuna/iconography.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="icon presentation"></video><video src="/posts/diseño/enuna/identity.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="identity assets for social media"></video><img src="/posts/diseño/enuna/break.webp" width="600" height="292" loading="lazy" alt="presentation break"><img src="/posts/diseño/enuna/credits.webp" width="600" height="235" loading="lazy" alt="branding project credits"><div class="nota nota-verso"><p><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/dINpNVg0hiw?rel=0" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe></p>
 <p>this was my first <em>design</em> project, after years of not diving too deep<br />I came up with fictional brand concepts as an excuse to practice</p>
 <p>in this case, the goal was to design assets and <strong>animate</strong> them using after effects<br />for that, the excuse was a digital publication magazine with very few colors<br />today I see spacing issues, and the copy text feels basic to me<br />I'd like to revisit this <em>aesthetic</em> with a real project that makes use of it</p>
 <p>the work was done using figma, photoshop and after effects, among others</p>
@@ -114,6 +111,10 @@
 </div>
 
     </main>
+
+    </noscript>
+
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
 
     <div id="octantes"></div>
 

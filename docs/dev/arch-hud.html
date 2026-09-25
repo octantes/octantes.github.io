@@ -12,19 +12,15 @@
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="alternate" type="application/rss+xml" title="octantes.ar rss feed" href="/feed.xml" />
-    
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap">
-    </noscript>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" crossorigin src="/assets/index-Q5_9cR-E.js"></script>
-    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-ySQLXI0k.css">
+    <script type="module" crossorigin src="/assets/index-DBcxNmHZ.js"></script>
+    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-B8hb_fCz.css">
 
-    <link rel="stylesheet" href="/assets/neocities.css">
+    <noscript><link rel="stylesheet" href="/assets/neocities.css"><style>noscript.archive { display: contents }</style></noscript>
 
-    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.documentElement.classList.add(archive ? 'archive' : 'portal'); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (/neocities\.css$/.test(l.href)) l.disabled = !archive; else if (archive) l.disabled = true; else l.media = 'all' }) })()</script>
+    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
 
     <title>arch-hud - octantes.ar</title>
     <meta name="description" content="suckless tool pack to turn arch linux into a heads up display" data-head>
@@ -59,6 +55,7 @@
 
   <body>
 
+    <noscript class="archive">
     <aside class="static-nav">
       
       <div class="sidebar-content">
@@ -109,12 +106,16 @@
       <p><em>You can find the project repo in my <a href="https://github.com/octantes/arch-hud">Github</a></em></p>
 <p>arch-hud is a personal build of <a href="https://suckless.org/">suckless</a> tools for daily use on arch</p>
 <p>the tools were implemented thinking of building a <em>heads up display</em><br />aiming to make the computer a tool again instead of a cognitive black hole<br />several DWM patches were implemented along with a retro-style aesthetic<br />no gaps, no transparency, no compositor by default; <strong>no unnecessary distractions</strong></p>
-<p><img src="/posts/desarrollo/arch-hud/screenshot.webp" width="600" height="400" loading="lazy" alt="screenshot"></p>
+<p><img src="/posts/desarrollo/arch-hud/screenshot.webp" width="600" height="338" loading="lazy" alt="screenshot"></p>
 <p>to compile, enter each dir and run <em>sudo make clean install</em> or use build.sh</p>
 <p><a href="https://dwm.suckless.org/">dwm</a> - tiling windows manager<br /><a href="https://tools.suckless.org/dmenu/">dmenu</a> - dynamic script menu<br /><a href="https://st.suckless.org/">st</a> - simple terminal emulator<br /><a href="https://surf.suckless.org/">surf</a> - very minimal browser<br /><a href="https://tools.suckless.org/tabbed/">tabbed</a> - window tabbing for st and surf<br /><a href="https://github.com/dunst-project/dunst">dunst</a> - notification daemon</p>
 <p>you can add the <a href="https://github.com/yshui/picom">picom</a> compositor if you experience screen tearing or glitches</p>
 
     </main>
+
+    </noscript>
+
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
 
     <div id="octantes"></div>
 
