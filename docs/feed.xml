@@ -2,183 +2,184 @@
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>octantes.ar</title>
-    <link>https://octantes.github.io</link>
-    <description>a multimedia web portal, no algorithms or middlemen</description>
-    <lastBuildDate>Thu, 24 Sep 2026 19:14:38 GMT</lastBuildDate>
+    <link>https://octantes.github.io/</link>
+    <description>weaving spells - a multimedia web portal, no algorithms or middlemen</description>
+    <language>en</language>
+    <lastBuildDate>Fri, 25 Sep 2026 03:38:57 GMT</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="https://octantes.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
       <title>culto</title>
-      <link>https://octantes.github.io/posts/musica/culto/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/culto/</guid>
+      <link>https://octantes.github.io/music/culto</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/culto</guid>
       <pubDate>Sat, 08 Aug 2026 00:00:00 GMT</pubDate>
       <description>empty rituals, altars of asphalt, and a faith in suspension</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>nubenueve - record store</title>
-      <link>https://octantes.github.io/posts/diseño/nubenueve/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/diseño/nubenueve/</guid>
+      <link>https://octantes.github.io/design/nubenueve</link>
+      <guid isPermaLink="true">https://octantes.github.io/design/nubenueve</guid>
       <pubDate>Sat, 20 Jun 2026 00:00:00 GMT</pubDate>
       <description>record store website, cd&apos;s, vinyls and cassette tapes</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>bocetos</title>
-      <link>https://octantes.github.io/posts/musica/bocetos/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/bocetos/</guid>
+      <link>https://octantes.github.io/music/bocetos</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/bocetos</guid>
       <pubDate>Mon, 08 Jun 2026 00:00:00 GMT</pubDate>
       <description>discarded presents, possible memories, and residual symbols</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>órbitas</title>
-      <link>https://octantes.github.io/posts/musica/orbitas/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/orbitas/</guid>
+      <link>https://octantes.github.io/music/orbitas</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/orbitas</guid>
       <pubDate>Wed, 08 Apr 2026 00:00:00 GMT</pubDate>
       <description>loops that come full circle, pyramids from the drawer</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>browsewithscroll</title>
-      <link>https://octantes.github.io/posts/desarrollo/browsewithscroll/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/desarrollo/browsewithscroll/</guid>
+      <link>https://octantes.github.io/dev/browsewithscroll</link>
+      <guid isPermaLink="true">https://octantes.github.io/dev/browsewithscroll</guid>
       <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
       <description>tool to preview fonts and multimedia with scroll directly in the browser</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>arch-hud</title>
-      <link>https://octantes.github.io/posts/desarrollo/arch-hud/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/desarrollo/arch-hud/</guid>
+      <link>https://octantes.github.io/dev/arch-hud</link>
+      <guid isPermaLink="true">https://octantes.github.io/dev/arch-hud</guid>
       <pubDate>Sun, 14 Sep 2025 00:00:00 GMT</pubDate>
       <description>suckless tool pack to turn arch linux into a heads up display</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>shadewithseal</title>
-      <link>https://octantes.github.io/posts/desarrollo/shadewithseal/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/desarrollo/shadewithseal/</guid>
+      <link>https://octantes.github.io/dev/shadewithseal</link>
+      <guid isPermaLink="true">https://octantes.github.io/dev/shadewithseal</guid>
       <pubDate>Thu, 03 Jul 2025 00:00:00 GMT</pubDate>
       <description>playground to program and record GLSL fragment shaders directly in the browser</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>trackwithslate</title>
-      <link>https://octantes.github.io/posts/desarrollo/trackwithslate/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/desarrollo/trackwithslate/</guid>
+      <link>https://octantes.github.io/dev/trackwithslate</link>
+      <guid isPermaLink="true">https://octantes.github.io/dev/trackwithslate</guid>
       <pubDate>Mon, 23 Jun 2025 00:00:00 GMT</pubDate>
       <description>simple tool to edit and organize CSV tabular data directly in the browser</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>geminis</title>
-      <link>https://octantes.github.io/posts/musica/geminis/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/geminis/</guid>
+      <link>https://octantes.github.io/music/geminis</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/geminis</guid>
       <pubDate>Fri, 06 Jun 2025 00:00:00 GMT</pubDate>
       <description>my brother&apos;s music, alongside one of my own at the end</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>viñetas</title>
-      <link>https://octantes.github.io/posts/musica/viñetas/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/viñetas/</guid>
+      <link>https://octantes.github.io/music/vi%C3%B1etas</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/vi%C3%B1etas</guid>
       <pubDate>Sun, 22 Dec 2024 00:00:00 GMT</pubDate>
       <description>instrumental album with experimental visualizer</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>dinamik - studio dev</title>
-      <link>https://octantes.github.io/posts/diseño/dinamik/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/diseño/dinamik/</guid>
+      <link>https://octantes.github.io/design/dinamik</link>
+      <guid isPermaLink="true">https://octantes.github.io/design/dinamik</guid>
       <pubDate>Sat, 30 Nov 2024 00:00:00 GMT</pubDate>
       <description>branding and motion graphics project for a productivity software development company</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>cruzar - crypto cordillera</title>
-      <link>https://octantes.github.io/posts/diseño/cruzar/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/diseño/cruzar/</guid>
+      <link>https://octantes.github.io/design/cruzar</link>
+      <guid isPermaLink="true">https://octantes.github.io/design/cruzar</guid>
       <pubDate>Thu, 19 Sep 2024 00:00:00 GMT</pubDate>
       <description>branding and motion graphics project for a datacenter service across the mountain range</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>en una - digital publication</title>
-      <link>https://octantes.github.io/posts/diseño/enuna/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/diseño/enuna/</guid>
+      <link>https://octantes.github.io/design/enuna</link>
+      <guid isPermaLink="true">https://octantes.github.io/design/enuna</guid>
       <pubDate>Wed, 06 Sep 2023 00:00:00 GMT</pubDate>
       <description>branding and motion graphics project for a digital music magazine</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>virtual reality - the best applications</title>
-      <link>https://octantes.github.io/posts/textos/pof-softwarevr/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/pof-softwarevr/</guid>
+      <link>https://octantes.github.io/writing/pof-softwarevr</link>
+      <guid isPermaLink="true">https://octantes.github.io/writing/pof-softwarevr</guid>
       <pubDate>Thu, 21 Jul 2022 00:00:00 GMT</pubDate>
       <description>In conversations about virtual reality, software often takes a back seat. Let&apos;s review some interesting uses.</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>virtual reality - a contemporary future</title>
-      <link>https://octantes.github.io/posts/textos/poe-futurovr/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/poe-futurovr/</guid>
+      <link>https://octantes.github.io/writing/poe-futurovr</link>
+      <guid isPermaLink="true">https://octantes.github.io/writing/poe-futurovr</guid>
       <pubDate>Tue, 10 May 2022 00:00:00 GMT</pubDate>
       <description>Virtual reality is in a remarkably interesting place, we invite you to discover it.</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>seance</title>
-      <link>https://octantes.github.io/posts/musica/seance/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/seance/</guid>
+      <link>https://octantes.github.io/music/seance</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/seance</guid>
       <pubDate>Sun, 08 May 2022 00:00:00 GMT</pubDate>
       <description>first album with the guitar plugged in and an experimental visualizer</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>abandonware - the permanence of the author</title>
-      <link>https://octantes.github.io/posts/textos/pod-abandonware/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/pod-abandonware/</guid>
+      <link>https://octantes.github.io/writing/pod-abandonware</link>
+      <guid isPermaLink="true">https://octantes.github.io/writing/pod-abandonware</guid>
       <pubDate>Thu, 31 Mar 2022 00:00:00 GMT</pubDate>
       <description>Abandonware occurs when art becomes tied to the advancement of technology, intensifying the difficulties of properly preserving it.</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>intellectual properties - do we need new IPs?</title>
-      <link>https://octantes.github.io/posts/textos/poc-propiedades/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/poc-propiedades/</guid>
+      <link>https://octantes.github.io/writing/poc-propiedades</link>
+      <guid isPermaLink="true">https://octantes.github.io/writing/poc-propiedades</guid>
       <pubDate>Mon, 07 Feb 2022 00:00:00 GMT</pubDate>
       <description>Nowadays, interest in intellectual properties has less to do with the particularities of the authors and more with hype.</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>microtransactions and their future</title>
-      <link>https://octantes.github.io/posts/textos/pob-microtransacciones/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/pob-microtransacciones/</guid>
+      <link>https://octantes.github.io/writing/pob-microtransacciones</link>
+      <guid isPermaLink="true">https://octantes.github.io/writing/pob-microtransacciones</guid>
       <pubDate>Mon, 13 Dec 2021 00:00:00 GMT</pubDate>
       <description>We explain the role of microtransactions within the industry and analyze the possible future of in-game monetization systems</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>six minutes older</title>
-      <link>https://octantes.github.io/posts/musica/sixminutesolder/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/sixminutesolder/</guid>
+      <link>https://octantes.github.io/music/sixminutesolder</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/sixminutesolder</guid>
       <pubDate>Wed, 08 Dec 2021 00:00:00 GMT</pubDate>
       <description>six one-minute midi experiments</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>kena - is it ok for aesthetics to be everything?</title>
-      <link>https://octantes.github.io/posts/textos/poa-kena/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/textos/poa-kena/</guid>
+      <link>https://octantes.github.io/writing/poa-kena</link>
+      <guid isPermaLink="true">https://octantes.github.io/writing/poa-kena</guid>
       <pubDate>Fri, 10 Sep 2021 00:00:00 GMT</pubDate>
       <description>Within the framework Kena offers us, we bring up the debate between graphics versus content. Is it wrong for a game to be just pretty?</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
       <title>mood worktapes</title>
-      <link>https://octantes.github.io/posts/musica/moodworktapes/</link>
-      <guid isPermaLink="true">https://octantes.github.io/posts/musica/moodworktapes/</guid>
+      <link>https://octantes.github.io/music/moodworktapes</link>
+      <guid isPermaLink="true">https://octantes.github.io/music/moodworktapes</guid>
       <pubDate>Thu, 11 Apr 2019 00:00:00 GMT</pubDate>
       <description>my first album, learning to use ableton live</description>
       <author>kaste@octantes.ar (kaste)</author>
