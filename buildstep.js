@@ -465,20 +465,20 @@ function composeHead(page, lang, item) {
 
   const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
   const archiveCss = '<link rel="stylesheet" href="/assets/neocities.css">'
-  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('${archiveCss}') } })()</script>`
+  const view = `<script>(function () { var archive = location.search.match(${ARCHIVE_FLAG}); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.documentElement.dataset.view = archive[1]; document.write('${archiveCss}') } })()</script>`
   const note = page.kind === 'note' ? `<script type="application/json" id="note">${JSON.stringify(item).replace(/</g, '\\u003c')}</script>` : ''
   return [app, `<noscript>${archiveCss}<style>noscript.archive { display: contents }</style></noscript>`, view, renderHead(headFor(page, lang, item)), note].filter(Boolean).join('\n\n    ')
 
 }
 
-function fillTemplate({ page, lang, item, title, meta, type, toggleHref, content }) {
+function fillTemplate({ page, lang, item, title, meta, type, toggleHref, sidebar = '', content }) {
 
   return template
     .replace(/{{head}}/g, () => composeHead(page, lang, item))
     .replace(/{{langTag}}/g, lang)
     .replace(/{{title}}/g, () => title)
     .replace(/{{meta}}/g, () => meta)
-    .replace(/{{sidebarLinks}}/g, '')
+    .replace(/{{sidebarLinks}}/g, () => sidebar)
     .replace(/{{subtitle}}/g, TAGLINE[lang])
     .replace(/{{bio}}/g, chrome[lang].bio)
     .replace(/{{postType}}/g, type)
@@ -487,6 +487,7 @@ function fillTemplate({ page, lang, item, title, meta, type, toggleHref, content
     .replace(/{{navArticles}}/g, chrome[lang].navArticles)
     .replace(/{{toggleLabel}}/g, chrome[lang].toggleLabel)
     .replace(/{{toggleHref}}/g, toggleHref)
+    .replace(/{{portfolioHref}}/g, archiveHref({ kind: 'portfolio' }, lang))
     .replace(/{{htmlContent}}/g, () => content)
 
 }
@@ -857,6 +858,9 @@ async function writeBilingualArchive() {                                   // cr
           <a href="/feed.xml" data-key="navRss">[RSS]</a>
           <button onclick="toggleLang()" data-key="toggleTo">[ENG]</button>
         </div>
+        <div class="nav-row">
+          <a href="${archiveHref({ kind: 'portfolio' }, 'es')}" data-es-href="${archiveHref({ kind: 'portfolio' }, 'es')}" data-en-href="${archiveHref({ kind: 'portfolio' }, 'en')}">[PORTFOLIO]</a>
+        </div>
       </nav>
       
       <div class="separator-nomargin" data-key="articles">art\u00edculos</div>
@@ -904,21 +908,32 @@ async function writeBilingualArchive() {                                   // cr
 async function writePortfolio() {
 
   const page = { kind: 'portfolio' }
-  const text = DICT.es.portfolio
   const tones = { 'dise\u00f1o': 'lirio', desarrollo: 'cristal' }
-  const item = (link, desc) => `<li>${link}${esc(desc)}<br><br></li>`
   const list = (items, shape = '') => `<ul class="article-list project-list${shape}">${items.join('')}</ul>`
 
-  const content = [
-    `<p>${text.desc}</p>`,
-    `<section class="projects cristal">${list(MAIN_PROJECTS.map(p => `<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a>: ${esc(p.desc.es)}</li>`), ' project-row')}</section>`,
-    ...Object.entries(tones).map(([id, tone]) => `<section class="projects ${tone}"><h2>${esc(labelOf(id, 'es'))}</h2>\n` +
-      list(indexItems.filter(p => p.type === id).map(p => item(`<a href="${archiveHref({ kind: 'note', id, slug: p.slug }, 'es')}">${esc(p.title)}</a>`, p.description))) + '</section>'),
+  const item = (p, lang) => {
+    const en = lang === 'en'
+    const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, en && p.bilingual ? 'en' : 'es')
+    return `<li><a href="${href}">${esc(en && p.titleEn || p.title)}</a>${esc(en && p.descriptionEn || p.description)}<br><br></li>`
+  }
+
+  const content = lang => [
+    `<p>${DICT[lang].portfolio.desc}</p>`,
+    `<section class="projects cristal">${list(MAIN_PROJECTS.map(p => `<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a>: ${esc(p.desc[lang])}</li>`), ' project-row')}</section>`,
+    ...Object.entries(tones).map(([id, tone]) => `<section class="projects ${tone}"><h2>${esc(labelOf(id, lang))}</h2>\n` +
+      list(indexItems.filter(p => p.type === id).map(p => item(p, lang))) + '</section>'),
   ].join('\n')
 
-  const file = pageFile(page, 'es')
-  await fs.writeFile(file, fillTemplate({ page, lang: 'es', title: AUTHOR_NAME.toLowerCase(), meta: text.subtitle.toLowerCase(), type: 'portfolio', toggleHref: '/archive.html', content }))
-  writtenPages.push({ file, lang: 'es' })
+  const fill = lang => fillTemplate({
+    page, lang, title: AUTHOR_NAME.toLowerCase(), meta: DICT[lang].portfolio.subtitle.toLowerCase(), type: 'portfolio',
+    toggleHref: archiveHref(page, lang === 'es' ? 'en' : 'es'), sidebar: generateMonolingualSidebar(lang), content: content(lang),
+  })
+
+  const open = '<noscript class="archive">', close = '</noscript>'
+  const [es, en] = [fill('es'), fill('en')]
+  const english = `<template data-view="${ARCHIVE_VIEW.en}" lang="en">${en.slice(en.indexOf(open) + open.length, en.lastIndexOf(close))}</template>`
+  const end = es.lastIndexOf(close) + close.length
+  await fs.writeFile(pageFile(page, 'es'), `${es.slice(0, end)}\n\n    ${english}${es.slice(end)}`)
 
 }
 
