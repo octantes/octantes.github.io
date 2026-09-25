@@ -907,11 +907,11 @@ async function writePortfolio() {
   const text = DICT.es.portfolio
   const tones = { 'dise\u00f1o': 'lirio', desarrollo: 'cristal' }
   const item = (link, desc) => `<li>${link}${esc(desc)}<br><br></li>`
-  const list = items => `<ul class="article-list project-list">${items.join('')}</ul>`
+  const list = (items, shape = '') => `<ul class="article-list project-list${shape}">${items.join('')}</ul>`
 
   const content = [
     `<p>${text.desc}</p>`,
-    list(MAIN_PROJECTS.map(p => item(`<a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a>`, p.desc.es))),
+    `<section class="projects cristal">${list(MAIN_PROJECTS.map(p => `<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a>: ${esc(p.desc.es)}</li>`), ' project-row')}</section>`,
     ...Object.entries(tones).map(([id, tone]) => `<section class="projects ${tone}"><h2>${esc(labelOf(id, 'es'))}</h2>\n` +
       list(indexItems.filter(p => p.type === id).map(p => item(`<a href="${archiveHref({ kind: 'note', id, slug: p.slug }, 'es')}">${esc(p.title)}</a>`, p.description))) + '</section>'),
   ].join('\n')
