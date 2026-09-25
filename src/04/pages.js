@@ -9,7 +9,7 @@ const HOME_TITLE = { es: `${SITE_NAME} - portal multimedia`, en: `${SITE_NAME} -
 const ABOUT_NAME = { es: 'info', en: 'about' }
 const SITE_SHARE = `${SITE_URL}/assets/share.jpg`
 
-const other = lang => lang === 'es' ? 'en' : 'es'
+export const other = lang => lang === 'es' ? 'en' : 'es'
 
 function plainOf(html) { return html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() }
 

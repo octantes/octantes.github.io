@@ -270,7 +270,6 @@ body::after {
 .separator-nomargin[aria-current] { color: var(--cristal); }
 
 .errorart                        { color: var(--lirio); font-family: monospace; font-size: 10px; line-height: 1.1; margin: 0; overflow-x: auto; }
-.post-content .nav-links         { align-items: flex-start; }
 .post-content[data-type=notfound] { justify-content: center; align-items: center; text-align: center; }
 
 .nota-prosa, .nota-prosa p, .nota-prosa li, .nota-prosa blockquote,
