@@ -373,7 +373,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <div v-if="!isMobile || openKey || currentPost || notFound || aboutMode" class="notedisplay" :class="{ 'no-aperture': fullBleed, pending: openKey && !noteContent && !aboutOpen && !notFound }">
+  <div v-if="!isMobile || openKey || currentPost || notFound" class="notedisplay" :class="{ 'no-aperture': fullBleed, pending: openKey && !noteContent && !aboutOpen && !notFound }">
     
     <div class="container" ref="containerRef">
 
