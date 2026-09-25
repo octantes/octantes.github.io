@@ -449,6 +449,8 @@ function pageFile(page, lang) {
 
 function archiveHref(page, lang) { return `${pathOf(page, lang)}?${ARCHIVE_VIEW[lang]}` }
 
+function markCurrent(html, href) { return html.replace(`<a href="${href}">`, () => `<a href="${href}" aria-current="page">`) }
+
 async function readShell() {
 
   try {
@@ -473,7 +475,7 @@ function composeHead(page, lang, item) {
 
 function fillTemplate({ page, lang, item, title, meta, type, toggleHref, sidebar = '', content }) {
 
-  return template
+  return markCurrent(template
     .replace(/{{head}}/g, () => composeHead(page, lang, item))
     .replace(/{{langTag}}/g, lang)
     .replace(/{{title}}/g, () => title)
@@ -488,7 +490,7 @@ function fillTemplate({ page, lang, item, title, meta, type, toggleHref, sidebar
     .replace(/{{toggleLabel}}/g, chrome[lang].toggleLabel)
     .replace(/{{toggleHref}}/g, toggleHref)
     .replace(/{{portfolioHref}}/g, archiveHref({ kind: 'portfolio' }, lang))
-    .replace(/{{htmlContent}}/g, () => content)
+    .replace(/{{htmlContent}}/g, () => content), archiveHref(page, lang))
 
 }
 
@@ -665,7 +667,7 @@ async function processPosts() {                                                 
 
     } else { console.log(`skipping ${slug}/index.md (unchanged)`) }
 
-    writtenPages.push({ file: pageFile(page, 'es'), lang: 'es' }, { file: pageFile(page, 'en'), lang: isBilingual ? 'en' : 'es' })
+    writtenPages.push({ page, file: pageFile(page, 'es'), lang: 'es' }, { page, file: pageFile(page, 'en'), lang: isBilingual ? 'en' : 'es' })
 
     if (showNote) indexItems.push(item)
 
@@ -851,7 +853,7 @@ async function writeBilingualArchive() {                                   // cr
       
       <nav class="nav-links">
         <div class="nav-row">
-          <a href="/archive.html" data-key="navArticles" data-es-href="/archivo.html" data-en-href="/archive.html">[ART\u00cdCULOS]</a>
+          <a href="/archive.html" data-key="navArticles" aria-current="page" data-es-href="/archivo.html" data-en-href="/archive.html">[ART\u00cdCULOS]</a>
           <a href="/" data-key="navPortal">[PORTAL]</a>
         </div>
         <div class="nav-row">
@@ -996,12 +998,12 @@ async function updateSidebars() {                                               
 
   const sidebars = { es: generateMonolingualSidebar('es'), en: generateMonolingualSidebar('en') }
 
-  for (const { file, lang } of writtenPages) {
+  for (const { page, file, lang } of writtenPages) {
 
     try {
 
       const html = await fs.readFile(file, 'utf-8')
-      await fs.writeFile(file, html.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, () => `<ul class="article-list">${sidebars[lang]}</ul>`))
+      await fs.writeFile(file, html.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, () => `<ul class="article-list">${markCurrent(sidebars[lang], archiveHref(page, lang))}</ul>`))
 
     } catch (e) { console.error(`Error updating sidebar for ${file}`, e) }
 
