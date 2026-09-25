@@ -41,6 +41,9 @@
             <a href="/feed.xml">[RSS]</a>
             <a href="{{toggleHref}}">{{toggleLabel}}</a>
           </div>
+          <div class="nav-row">
+            <a href="{{portfolioHref}}">[PORTFOLIO]</a>
+          </div>
         </nav>
 
         <div class="separator-nomargin">{{navArticles}}</div>
@@ -64,7 +67,7 @@
 
     </noscript>
 
-    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'), view = document.querySelector('template[data-view="' + document.documentElement.dataset.view + '"]'); if (view) document.documentElement.lang = view.lang; archive.outerHTML = view ? view.innerHTML : archive.textContent }</script>
 
     <div id="octantes"></div>
 
