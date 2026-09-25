@@ -3,25 +3,11 @@
 import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { MOBILE_MAX } from '../04/site-config.js'
+import { figlet } from '../04/figlet.js'
 
 const props = defineProps({ code: { type: [Number, String], default: 404 } })
 
 const store  = useStore()
-
-const GLYPHS = {
-  '0': [' ██████╗ ', '██╔═████╗', '██║██╔██║', '████╔╝██║', '╚██████╔╝', ' ╚═════╝ '],
-  '1': [' ██╗', '███║', '╚██║', ' ██║', ' ██║', ' ╚═╝'],
-  '2': ['██████╗ ', '╚════██╗', ' █████╔╝', '██╔═══╝ ', '███████╗', '╚══════╝'],
-  '3': ['██████╗ ', '╚════██╗', ' █████╔╝', ' ╚═══██╗', '██████╔╝', '╚═════╝ '],
-  '4': ['██╗  ██╗', '██║  ██║', '███████║', '╚════██║', '     ██║', '     ╚═╝'],
-  '5': ['███████╗', '██╔════╝', '███████╗', '╚════██║', '███████║', '╚══════╝'],
-}
-
-function figlet(code) {
-  const digits = String(code).split('').map(d => GLYPHS[d]).filter(Boolean)
-  if (!digits.length) return String(code)
-  return [0, 1, 2, 3, 4, 5].map(r => digits.map(d => d[r]).join('')).join('\n')
-}
 
 const THROWS   = 20
 const TRIES    = 14

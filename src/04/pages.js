@@ -65,6 +65,7 @@ export function pathOf(page, lang) {
     case 'portal':    return '/portal'
     case 'portfolio': return '/portfolio'
     case 'about':     return ABOUT_PATH[lang]
+    case 'archive':   return `/${ARCHIVE_VIEW[lang]}.html`
     case 'section':   return `/${wordOf(page.id, lang)}`
     case 'note':      return `/${wordOf(page.id, lang)}/${page.slug}`
     default:          return page.path
@@ -85,9 +86,9 @@ export function headFor(page, lang, post) {
     ld: { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/`, description, inLanguage: lang, author: { '@type': 'Person', name: 'kaste' } },
   }
 
-  if (page.kind === 'section' || page.kind === 'about' || page.kind === 'portfolio') {
-    const name = page.kind === 'section' ? labelOf(page.id, lang) : page.kind === 'about' ? ABOUT_NAME[lang] : 'portfolio'
-    const text = page.kind === 'portfolio' ? plainOf(DICT[lang].portfolio.desc) : summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
+  if (page.kind === 'section' || page.kind === 'about' || page.kind === 'portfolio' || page.kind === 'archive') {
+    const name = { section: labelOf(page.id, lang), about: ABOUT_NAME[lang], portfolio: 'portfolio', archive: ARCHIVE_VIEW[lang] }[page.kind]
+    const text = page.kind === 'portfolio' ? plainOf(DICT[lang].portfolio.desc) : page.kind === 'archive' ? description : summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
     const paired = page.kind !== 'portfolio'
     Object.assign(head, { title: `${name} - ${SITE_NAME}`, name, description: text, canonical: urlOf(page, lang), alternates: paired ? pair : null, localeAlt: paired ? LOCALE[other(lang)] : null, ld: null })
   }
