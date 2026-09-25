@@ -12,19 +12,15 @@
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="alternate" type="application/rss+xml" title="octantes.ar rss feed" href="/feed.xml" />
-    
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap">
-    </noscript>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" crossorigin src="/assets/index-Q5_9cR-E.js"></script>
-    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-ySQLXI0k.css">
+    <script type="module" crossorigin src="/assets/index-DBcxNmHZ.js"></script>
+    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-B8hb_fCz.css">
 
-    <link rel="stylesheet" href="/assets/neocities.css">
+    <noscript><link rel="stylesheet" href="/assets/neocities.css"><style>noscript.archive { display: contents }</style></noscript>
 
-    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.documentElement.classList.add(archive ? 'archive' : 'portal'); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (/neocities\.css$/.test(l.href)) l.disabled = !archive; else if (archive) l.disabled = true; else l.media = 'all' }) })()</script>
+    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
 
     <title>six minutes older - octantes.ar</title>
     <meta name="description" content="six one-minute midi experiments" data-head>
@@ -59,6 +55,7 @@
 
   <body>
 
+    <noscript class="archive">
     <aside class="static-nav">
       
       <div class="sidebar-content">
@@ -113,6 +110,10 @@
 <p>it ended up working as a quick excuse to practice some mixing<br />the number of archived tracks didn't decrease at all, I'd have to reiterate</p>
 
     </main>
+
+    </noscript>
+
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
 
     <div id="octantes"></div>
 
