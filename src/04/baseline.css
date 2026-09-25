@@ -203,7 +203,6 @@ html, body, #octantes {
 
 }
 
-.portal body > .static-nav, .portal body > .post-content { display: none !important; }
 .post .post-header { display: none !important; }
 
 *, *::before, *::after { box-sizing: inherit; }
