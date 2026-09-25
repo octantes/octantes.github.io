@@ -7,7 +7,7 @@ import fm from 'front-matter'
 import sharp from 'sharp'
 import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
 import { DICT } from './src/04/dict.js'
-import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf } from './src/04/pages.js'
+import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, other } from './src/04/pages.js'
 import { figlet } from './src/04/figlet.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
@@ -438,8 +438,6 @@ const chrome = {
   en: { bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navPosts: 'posts', toggleLabel: '[ESP]', archiveMeta: 'flat archive // octantes.ar' },
 }
 
-const otherLang = lang => lang === 'es' ? 'en' : 'es'
-
 let shell = null
 const writtenPages = []
 
@@ -664,7 +662,7 @@ async function processPosts() {                                                 
           return match
       })
 
-      const toggleHref = lang => isBilingual ? archiveHref(page, otherLang(lang)) : archiveHref({ kind: 'archive' }, 'en')
+      const toggleHref = lang => isBilingual ? archiveHref(page, other(lang)) : archiveHref({ kind: 'archive' }, 'en')
       const fill = (lang, title, content) => fillTemplate({ page, lang, item, title, meta: `${formatted} // ${primaryHandle}`, type: postType, toggleHref: toggleHref(lang), content })
 
       const pageEs = fill('es', attributes.title || slug, htmlContent)
@@ -718,12 +716,7 @@ function projectList(items, shape = '') { return `<ul class="article-list projec
 
 function noteItem(p, lang) { return `<li><a href="${noteHref(p, lang)}">${esc(noteTitle(p, lang))}</a>${esc(lang === 'en' && p.descriptionEn || p.description)}<br><br></li>` }
 
-function latestList(lang) {
-
-  const latest = [...indexItems].sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate)).slice(0, 15)
-  return `<ul class="article-list">${latest.map(p => `<li><a href="${noteHref(p, lang)}"><span class="list-span">[${p.date}]</span> ${esc(noteTitle(p, lang))}</a></li>`).join('')}</ul>`
-
-}
+function latestList(lang) { return `<ul class="article-list">${indexItems.slice(0, 15).map(p => `<li><a href="${noteHref(p, lang)}"><span class="list-span">[${p.date}]</span> ${esc(noteTitle(p, lang))}</a></li>`).join('')}</ul>` }
 
 function withEnglish(es, en) {
 
@@ -748,7 +741,7 @@ async function writePortfolio() {
 
   const fill = lang => fillTemplate({
     page, lang, title: AUTHOR_NAME.toLowerCase(), meta: DICT[lang].portfolio.subtitle.toLowerCase(), type: 'portfolio',
-    toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content: content(lang),
+    toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang), content: content(lang),
   })
 
   await fs.writeFile(pageFile(page, 'es'), withEnglish(fill('es'), fill('en')))
@@ -766,7 +759,7 @@ async function writeShells() {
   ]
 
   for (const [page, lang] of pages) {
-    const html = page.kind === 'portal' ? shell.html.replace('<html lang="es">', `<html lang="${lang}">`).replace(shell.home, () => renderHead(headFor(page, lang))) : aboutPage(page, lang)
+    const html = page.kind === 'portal' ? shell.html.replace(shell.home, () => renderHead(headFor(page, lang))) : aboutPage(page, lang)
     await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
     await fs.writeFile(pageFile(page, lang), html)
     if (page.kind === 'section') await fs.writeFile(path.join(outputDir, pathOf(page, lang).slice(1) + '.html'), html)
@@ -784,7 +777,7 @@ function aboutPage(page, lang) {
 
   return fillTemplate({
     page, lang, title: headFor(page, lang).name, meta: chrome[lang].archiveMeta, type: page.kind,
-    toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content,
+    toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang), content,
   })
 
 }
@@ -802,7 +795,7 @@ async function writeArchive() {                                                 
     const content = [`<p>${intro[lang].instruct}</p>`, `<div class="separator-margin">${intro[lang].latest}</div>`, latestList(lang)].join('\n')
     await fs.writeFile(pageFile(page, lang), fillTemplate({
       page, lang, title: intro[lang].title, meta: chrome[lang].archiveMeta, type: 'archive',
-      toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content,
+      toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang), content,
     }))
   }
 
@@ -829,7 +822,7 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
     if (groups[type]) {
       const typeLabel = labelOf(type, lang)
       html += `<li class="cat-header"><a href="${archiveHref({ kind: 'section', id: type }, lang)}">${esc(typeLabel)}</a></li>`
-      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
+      groups[type].forEach(p => {
         html += `<li><a href="${noteHref(p, lang)}">${esc(noteTitle(p, lang))}</a></li>`
       })
     }
@@ -872,7 +865,7 @@ async function writeSitemap() {                                                 
       const page = { kind: 'note', id: p.type, slug: p.slug }
       return p.bilingual ? paired(page, p.modified || p.isoDate) : [{ url: urlOf(page, 'es'), lastmod: p.modified || p.isoDate }]
     }),
-    ...['archivo.html', 'archive.html'].map(file => ({ url: `${webURL}/${file}`, lastmod: latest, alternates: { es: `${webURL}/archivo.html`, en: `${webURL}/archive.html`, 'x-default': `${webURL}/archivo.html` } })),
+    ...paired({ kind: 'archive' }, latest),
   ]
 
   const loc = url => encodeURI(url).replace(/&/g, '&amp;')
@@ -968,7 +961,7 @@ async function finalizeBuild() {                                                
   const fill = lang => {
     const copy = DICT[lang].notFound
     const content = `<pre class="errorart">${figlet(404)}</pre>\n<p>${copy.byCode['404']}</p>\n<nav class="nav-links"><a href="${archiveHref({ kind: 'archive' }, lang)}">[${copy.back}]</a></nav>`
-    return fillTemplate({ page, lang, title: '', meta: '', type: 'notfound', toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content })
+    return fillTemplate({ page, lang, title: '', meta: '', type: 'notfound', toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang), content })
   }
   await fs.writeFile(path.join(outputDir, '404.html'), withEnglish(fill('es'), fill('en')))
   console.log('404.html generated')
