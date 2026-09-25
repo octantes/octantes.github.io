@@ -780,8 +780,7 @@ function aboutPage(page, lang) {
 
   const id = page.id ?? 'portal'
   const about = DICT[lang].about
-  const notes = page.kind === 'about' ? latestList(lang) : projectList(indexItems.filter(p => p.type === id).map(p => noteItem(p, lang)))
-  const content = [`<p>${about.sections[id]}</p>`, '<hr>', `<p>${about.footers[id]}</p>`, notes].join('\n')
+  const content = [`<p>${about.sections[id]}</p>`, '<hr>', `<p>${about.footers[id]}</p>`].join('\n')
 
   return fillTemplate({
     page, lang, title: headFor(page, lang).name, meta: chrome[lang].archiveMeta, type: page.kind,
