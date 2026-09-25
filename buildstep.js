@@ -5,7 +5,8 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
+import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
+import { DICT } from './src/04/dict.js'
 import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf } from './src/04/pages.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
@@ -144,6 +145,8 @@ function processAssets(tag, attrs, type, slug, portada) {                       
   const isSpotify = /(spotify\.com\/(track|album|playlist|episode)\/|spotify:)/i.test(filename)
 
   const size = mediaSizes.get(filename)
+  const sized = size ? ` width="${size.width}" height="${size.height}"` : ''
+  const poster = mediaPosters.has(filename) ? ` poster="/posts/${type}/${slug}/${mediaPosters.get(filename)}"${sized}` : ''
 
   if (isImage) {
 
@@ -158,18 +161,17 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
     if (GIF_AS_VIDEO) {
       const absUrl = `/posts/${type}/${slug}/${filename.replace(/\.gif$/i, '.mp4')}`
-      return `<video src="${absUrl}" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
+      return `<video src="${absUrl}"${poster} class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
     }
 
     const absUrl = `/posts/${type}/${slug}/${filename}`
-    const sized = size ? ` width="${size.width}" height="${size.height}"` : ''
     return `<img src="${absUrl}"${sized} loading="lazy" alt="${altText}">`
 
   } else if (isVideo) {
     
     const absUrl = `/posts/${type}/${slug}/${filename}`
     if (silentVideos.has(filename)) {
-      return `<video src="${absUrl}" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
+      return `<video src="${absUrl}"${poster} class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
     }
     return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" aria-label="${altText}"></video>`
 
@@ -271,6 +273,21 @@ async function convertVideo(inputPath, destPath) {                              
 
 const silentVideos = new Set()
 const mediaSizes = new Map()
+const mediaPosters = new Map()
+
+async function makePoster(videoPath) {
+
+  const posterPath = videoPath.replace(/\.[^.]+$/, '-poster.jpg')
+  if (!(await fresh(videoPath, posterPath))) {
+    await new Promise(resolve => {
+      const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-i', videoPath, '-frames:v', '1', '-q:v', '3', posterPath])
+      ff.on('error', resolve)
+      ff.on('close', resolve)
+    })
+  }
+  return fs.access(posterPath).then(() => path.basename(posterPath), () => null)
+
+}
 
 async function isSilent(inputPath) {
 
@@ -449,7 +466,28 @@ function composeHead(page, lang, item) {
   const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
   const archiveCss = '<link rel="stylesheet" href="/assets/neocities.css">'
   const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('${archiveCss}') } })()</script>`
-  return [app, `<noscript>${archiveCss}<style>noscript.archive { display: contents }</style></noscript>`, view, renderHead(headFor(page, lang, item))].join('\n\n    ')
+  const note = page.kind === 'note' ? `<script type="application/json" id="note">${JSON.stringify(item).replace(/</g, '\\u003c')}</script>` : ''
+  return [app, `<noscript>${archiveCss}<style>noscript.archive { display: contents }</style></noscript>`, view, renderHead(headFor(page, lang, item)), note].filter(Boolean).join('\n\n    ')
+
+}
+
+function fillTemplate({ page, lang, item, title, meta, type, toggleHref, content }) {
+
+  return template
+    .replace(/{{head}}/g, () => composeHead(page, lang, item))
+    .replace(/{{langTag}}/g, lang)
+    .replace(/{{title}}/g, () => title)
+    .replace(/{{meta}}/g, () => meta)
+    .replace(/{{sidebarLinks}}/g, '')
+    .replace(/{{subtitle}}/g, TAGLINE[lang])
+    .replace(/{{bio}}/g, chrome[lang].bio)
+    .replace(/{{postType}}/g, type)
+    .replace(/{{navArchive}}/g, chrome[lang].navArchive)
+    .replace(/{{navArchiveHref}}/g, chrome[lang].navArchiveHref)
+    .replace(/{{navArticles}}/g, chrome[lang].navArticles)
+    .replace(/{{toggleLabel}}/g, chrome[lang].toggleLabel)
+    .replace(/{{toggleHref}}/g, toggleHref)
+    .replace(/{{htmlContent}}/g, () => content)
 
 }
 
@@ -488,6 +526,7 @@ async function processPosts() {                                                 
       const assets = await fs.readdir(postFolder, { withFileTypes: true })
       silentVideos.clear()
       mediaSizes.clear()
+      mediaPosters.clear()
 
       for (const asset of assets) {
 
@@ -536,7 +575,9 @@ async function processPosts() {                                                 
 
         }
 
-        const size = isImage || (isGif && !GIF_AS_VIDEO) ? await sharp(finalOutputPath).metadata().catch(() => null) : null
+        const poster = (isGif && GIF_AS_VIDEO) || silentVideos.has(asset.name) ? await makePoster(finalOutputPath) : null
+        if (poster) mediaPosters.set(asset.name, poster)
+        const size = isImage || (isGif && !GIF_AS_VIDEO) ? await sharp(finalOutputPath).metadata().catch(() => null) : poster ? await sharp(path.join(noteOutputDir, poster)).metadata().catch(() => null) : null
         if (size?.width && size?.height) mediaSizes.set(asset.name, { width: size.width, height: size.height })
 
         const finalData = await fs.readFile(finalOutputPath)
@@ -601,22 +642,8 @@ async function processPosts() {                                                 
           return match
       })
 
-      const fill = (lang, title, content) => template
-        .replace(/{{head}}/g, () => composeHead(page, lang, item))
-        .replace(/{{langTag}}/g, lang)
-        .replace(/{{title}}/g, () => title)
-        .replace(/{{handle}}/g, primaryHandle)
-        .replace(/{{date}}/g, formatted)
-        .replace(/{{sidebarLinks}}/g, '')
-        .replace(/{{subtitle}}/g, TAGLINE[lang])
-        .replace(/{{bio}}/g, chrome[lang].bio)
-        .replace(/{{postType}}/g, postType)
-        .replace(/{{navArchive}}/g, chrome[lang].navArchive)
-        .replace(/{{navArchiveHref}}/g, chrome[lang].navArchiveHref)
-        .replace(/{{navArticles}}/g, chrome[lang].navArticles)
-        .replace(/{{toggleLabel}}/g, chrome[lang].toggleLabel)
-        .replace(/{{toggleHref}}/g, isBilingual ? archiveHref(page, lang === 'es' ? 'en' : 'es') : '/archive.html')
-        .replace(/{{htmlContent}}/g, () => content)
+      const toggleHref = lang => isBilingual ? archiveHref(page, lang === 'es' ? 'en' : 'es') : '/archive.html'
+      const fill = (lang, title, content) => fillTemplate({ page, lang, item, title, meta: `${formatted} // ${primaryHandle}`, type: postType, toggleHref: toggleHref(lang), content })
 
       const pageEs = fill('es', attributes.title || slug, htmlContent)
       let pageEn = pageEs
@@ -874,6 +901,27 @@ async function writeBilingualArchive() {                                   // cr
 
 }
 
+async function writePortfolio() {
+
+  const page = { kind: 'portfolio' }
+  const text = DICT.es.portfolio
+  const tones = { 'dise\u00f1o': 'lirio', desarrollo: 'cristal' }
+  const item = (link, desc) => `<li>${link}${esc(desc)}<br><br></li>`
+  const list = items => `<ul class="article-list">${items.join('')}</ul>`
+
+  const content = [
+    `<p>${text.desc}</p>`,
+    list(MAIN_PROJECTS.map(p => item(`<a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a>`, p.desc.es))),
+    ...Object.entries(tones).map(([id, tone]) => `<h2 style="color: var(--${tone})">${esc(labelOf(id, 'es'))}</h2>\n` +
+      list(indexItems.filter(p => p.type === id).map(p => item(`<a href="${archiveHref({ kind: 'note', id, slug: p.slug }, 'es')}">${esc(p.title)}</a>`, p.description)))),
+  ].join('\n')
+
+  const file = pageFile(page, 'es')
+  await fs.writeFile(file, fillTemplate({ page, lang: 'es', title: AUTHOR_NAME.toLowerCase(), meta: text.subtitle.toLowerCase(), type: 'portfolio', toggleHref: '/archive.html', content }))
+  writtenPages.push({ file, lang: 'es' })
+
+}
+
 async function writeShells() {
 
   if (!shell) { console.warn('no built index.html, skipping page shells'); return }
@@ -882,7 +930,6 @@ async function writeShells() {
     ...['es', 'en'].map(lang => [{ kind: 'about' }, lang]),
     ...SECTIONS.filter(s => s.id !== 'portal').flatMap(s => ['es', 'en'].map(lang => [{ kind: 'section', id: s.id }, lang])),
     [{ kind: 'portal' }, 'es'],
-    [{ kind: 'portfolio' }, 'es'],
   ]
 
   for (const [page, lang] of pages) {
@@ -1058,8 +1105,8 @@ async function finalizeBuild() {                                                
 
   try {
     const notFoundPath = path.join(outputDir, '404.html')
-    const indexHtmlPath = path.join(outputDir, 'index.html') 
-    await fs.copyFile(indexHtmlPath, notFoundPath)
+    const html = await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')
+    await fs.writeFile(notFoundPath, html.replace(renderHead(headFor({ kind: 'home' }, 'es')), () => renderHead(headFor({ kind: 'notfound' }, 'es'))))
     console.log('404.html generated from index.html')
   } catch (e) { console.warn('could not generate 404.html (index.html missing, did vite build?):', e.message) }
 
@@ -1081,6 +1128,7 @@ async function main() {                                                         
   await cleanOrphans()
   await processPosts()
   await writeIndex()
+  await writePortfolio()
   await updateSidebars()
   await writeBasicIndex()
   await writeShells()

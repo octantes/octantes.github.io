@@ -1,4 +1,5 @@
 import { SITE_URL, SITE_NAME, TAGLINE, SITE_DESCRIPTION, SECTIONS, ABOUT_PATH, ARCHIVE_VIEW, TWITTER } from './site-config.js'
+import { DICT } from './dict.js'
 
 export const SHARE_SIZE = { width: 1200, height: 675 }
 export const ARCHIVE_FLAG = new RegExp(`[?&](${Object.values(ARCHIVE_VIEW).join('|')})(&|=|$)`)
@@ -9,6 +10,19 @@ const ABOUT_NAME = { es: 'info', en: 'about' }
 const SITE_SHARE = `${SITE_URL}/assets/share.jpg`
 
 const other = lang => lang === 'es' ? 'en' : 'es'
+
+function plainOf(html) { return html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() }
+
+function summaryOf(html) {
+
+  let text = ''
+  for (const line of html.split('<br>').map(plainOf).filter(Boolean)) {
+    text = text ? `${text}${/[.!?:,]$/.test(text) ? '' : '.'} ${line}` : line
+    if (text.length >= 120) break
+  }
+  return text.length > 160 ? text.slice(0, text.lastIndexOf(' ', 157)) + '...' : text
+
+}
 
 function sectionNamed(word) { return SECTIONS.find(s => s.es === word || s.en === word) }
 
@@ -32,7 +46,7 @@ export function pageOf(route) {
   if (slug && sectionOf(type)) return { kind: 'note', id: sectionOf(type), slug, lang: langOfWord(type) }
   if (filterType && sectionOf(filterType)) return { kind: 'section', id: sectionOf(filterType), lang: langOfWord(filterType) }
   if (path === '/') return { kind: 'home' }
-  return { kind: 'other', path }
+  return { kind: 'notfound', path }
 
 }
 
@@ -66,15 +80,20 @@ export function headFor(page, lang, post) {
   const pair = { es: urlOf(page, 'es'), en: urlOf(page, 'en'), 'x-default': urlOf(page, 'es') }
 
   const head = {
-    lang, title: HOME_TITLE[lang], name: SITE_NAME, description, canonical: `${SITE_URL}/`, alternates: null,
+    lang, title: HOME_TITLE[lang], name: SITE_NAME, description, canonical: `${SITE_URL}/`, alternates: null, robots: null,
     type: 'website', image: SITE_SHARE, imageAlt: SITE_NAME, locale: LOCALE[lang], localeAlt: null, published: null, modified: null,
     ld: { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/`, description, inLanguage: lang, author: { '@type': 'Person', name: 'kaste' } },
   }
 
   if (page.kind === 'section' || page.kind === 'about' || page.kind === 'portfolio') {
     const name = page.kind === 'section' ? labelOf(page.id, lang) : page.kind === 'about' ? ABOUT_NAME[lang] : 'portfolio'
+    const text = page.kind === 'portfolio' ? plainOf(DICT[lang].portfolio.desc) : summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
     const paired = page.kind !== 'portfolio'
-    Object.assign(head, { title: `${name} - ${SITE_NAME}`, name, canonical: urlOf(page, lang), alternates: paired ? pair : null, localeAlt: paired ? LOCALE[other(lang)] : null, ld: null })
+    Object.assign(head, { title: `${name} - ${SITE_NAME}`, name, description: text, canonical: urlOf(page, lang), alternates: paired ? pair : null, localeAlt: paired ? LOCALE[other(lang)] : null, ld: null })
+  }
+
+  if (page.kind === 'notfound') {
+    Object.assign(head, { title: `404 - ${SITE_NAME}`, name: '404', description: DICT[lang].notFound.byCode['404'], canonical: null, robots: 'noindex', ld: null })
   }
 
   if (page.kind === 'note' && post) {
@@ -109,7 +128,8 @@ function headTags(head) {
 
   return [
     ...meta('name', 'description', head.description),
-    `<link rel="canonical" href="${esc(head.canonical)}" data-head>`,
+    ...meta('name', 'robots', head.robots),
+    ...(head.canonical ? [`<link rel="canonical" href="${esc(head.canonical)}" data-head>`] : []),
     ...Object.entries(head.alternates || {}).map(([code, href]) => `<link rel="alternate" hreflang="${code}" href="${esc(href)}" data-head>`),
     ...meta('property', 'og:type', head.type),
     ...meta('property', 'og:site_name', SITE_NAME),
