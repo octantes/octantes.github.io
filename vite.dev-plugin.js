@@ -71,13 +71,17 @@ function devPlugin() {
         let file = path.join(outputDir, url)
         if (!file.startsWith(outputDir + path.sep)) return next()
 
-        try {
-          let info = await stat(file).catch(() => null)
-          if (!info && ARCHIVE_FLAG.test(req.url)) { file += '.html'; info = await stat(file) }
-          if (!info?.isFile()) return next()
-        } catch { return next() }
+        let status = 200
+        let info = await stat(file).catch(() => null)
+        if (!info?.isFile() && ARCHIVE_FLAG.test(req.url)) {
+          info = await stat(file + '.html').catch(() => null)
+          if (info) file += '.html'
+          else { file = path.join(outputDir, '404.html'); status = 404; info = await stat(file).catch(() => null) }
+        }
+        if (!info?.isFile()) return next()
 
         const ext = path.extname(file).toLowerCase()
+        res.statusCode = status
         res.setHeader('Content-Type', types[ext] || 'application/octet-stream')
 
         if (text.has(ext)) res.end((await readFile(file, 'utf-8')).split(SITE_URL).join(`http://${req.headers.host}`))

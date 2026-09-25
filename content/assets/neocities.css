@@ -234,6 +234,7 @@ body::after {
 
 .separator-nomargin              { 
 
+  /* LAYOUT */ display: block;
   /* BOX    */ padding-bottom: .25rem; margin-bottom: -0.5rem;
   /* BORDER */ border-bottom: 1px dashed var(--polvo); border-top: none;
   /* FONT   */ font-size: .9rem; font-weight: 700; text-transform: lowercase; letter-spacing: 1px; text-align: left;
@@ -266,6 +267,10 @@ body::after {
 .nav-links a:hover,
 .nav-links button:hover          { font-weight: 700; text-decoration: none; border-color: var(--cristal);                          }
 .nav-links [aria-current]        { color: var(--lirio);                                                                            }
+.separator-nomargin[aria-current] { color: var(--cristal); }
+
+.errorart                        { color: var(--lirio); font-family: monospace; font-size: 10px; line-height: 1.1; margin: 0; overflow-x: auto; }
+.post-content .nav-links         { align-items: flex-start; }
 
 .nota-prosa, .nota-prosa p, .nota-prosa li, .nota-prosa blockquote,
 .nota-verso, .nota-verso p, .nota-verso li       { font-family: var(--font-main); line-height: var(--leading-base); }
