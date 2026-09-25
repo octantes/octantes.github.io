@@ -1,12 +1,12 @@
 <script setup>
 import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
-import { veilOn, registerVeil } from './03/veil.js'
+import { veilOn, veilHides, registerVeil } from './03/veil.js'
 </script>
 
 <template>
 
-  <div class="pagina">
+  <div class="pagina" :class="{ veiled: veilHides }">
 
     <DotGrid viewport />
 
@@ -29,6 +29,8 @@ import { veilOn, registerVeil } from './03/veil.js'
 .page       { flex: 1 1 auto; width: 100%; min-height: 0; }
 
 .veil       { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
+
+.pagina.veiled > .veil { background: var(--carbon); }
 
 @media (--mobile) { .pagina { max-width: 100%; } }
 
