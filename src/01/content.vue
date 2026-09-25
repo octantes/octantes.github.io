@@ -7,7 +7,7 @@ import About from '../02/about.vue'
 import Subscribe from '../02/subscribe.vue'
 import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
-import { throughTheVeil } from '../03/veil.js'
+import { throughTheVeil, veilFromStart } from '../03/veil.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
 import { MOBILE_MAX } from '../04/site-config.js'
@@ -16,7 +16,7 @@ const compMap = { }                                                             
 
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
-const isMobile        = ref(false)                                                                                                    // mobile state
+const isMobile        = ref(window.innerWidth <= MOBILE_MAX)                                                                          // mobile state
 
 let resizeTimer = null                                                                                                                // save resize timer
 
@@ -48,6 +48,8 @@ const noteTitle = computed(() => {
 const aboutOpen = ref(null)
 
 const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
+
+if (isMobile.value && openKey.value) veilFromStart()
 
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
@@ -371,7 +373,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <div v-if="!isMobile || currentPost || notFound || aboutMode" class="notedisplay" :class="{ 'no-aperture': fullBleed }">
+  <div v-if="!isMobile || openKey || currentPost || notFound || aboutMode" class="notedisplay" :class="{ 'no-aperture': fullBleed, pending: openKey && !noteContent && !aboutOpen && !notFound }">
     
     <div class="container" ref="containerRef">
 
@@ -483,6 +485,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 @media (--mobile) { 
 
   .notedisplay { height: auto; min-height: auto; }
+  .notedisplay.pending { min-height: 100svh; }
 
   .post { -webkit-mask-image: none; mask-image: none; }
 

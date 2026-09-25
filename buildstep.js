@@ -143,10 +143,14 @@ function processAssets(tag, attrs, type, slug, portada, silent = new Set()) {   
   const isYoutube = /(youtube\.com|youtu\.be)\/(embed\/|v\/|watch\?v=|\/)/i.test(filename)
   const isSpotify = /(spotify\.com\/(track|album|playlist|episode)\/|spotify:)/i.test(filename)
 
+  const size = mediaSizes.get(filename)
+  const sized = size ? ` width="${size.width}" height="${size.height}"` : ''
+
   if (isImage) {
 
     let dimensions = { width: 600, height: 400 }
     if (filename === portada) dimensions = { width: 1200, height: 630 }
+    if (size) dimensions.height = Math.round(dimensions.width * size.height / size.width)
     filename = filename.replace(/\.(jpe?g|png)$/i, '.webp') 
     const absUrl = `/posts/${type}/${slug}/${filename}`
     return `<img src="${absUrl}" width="${dimensions.width}" height="${dimensions.height}" loading="lazy" alt="${altText}">`
@@ -159,7 +163,7 @@ function processAssets(tag, attrs, type, slug, portada, silent = new Set()) {   
     }
 
     const absUrl = `/posts/${type}/${slug}/${filename}`
-    return `<img src="${absUrl}" loading="lazy" alt="${altText}">`
+    return `<img src="${absUrl}"${sized} loading="lazy" alt="${altText}">`
 
   } else if (isVideo) {
     
@@ -266,6 +270,7 @@ async function convertVideo(inputPath, destPath) {                              
 }
 
 const silentVideos = new Set()
+const mediaSizes = new Map()
 
 async function isSilent(inputPath) {
 
@@ -433,7 +438,7 @@ async function readShell() {
     const html = await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')
     const home = renderHead(headFor({ kind: 'home' }, 'es'))
     if (!html.includes(home)) return null
-    const top = html.slice(html.indexOf('<head>') + 6, html.indexOf('</head>')).replace(home, '').replace(/\n\s*\n\s*\n/g, '\n\n').trim()
+    const top = html.slice(html.indexOf('<head>') + 6, html.indexOf('</head>')).replace(home, '').replace(/\s*<noscript>[\s\S]*?<\/noscript>/, '').replace(/\n\s*\n\s*\n/g, '\n\n').trim()
     return { html, home, top }
   } catch { return null }
 
@@ -482,6 +487,7 @@ async function processPosts() {                                                 
 
       const assets = await fs.readdir(postFolder, { withFileTypes: true })
       silentVideos.clear()
+      mediaSizes.clear()
 
       for (const asset of assets) {
 
@@ -529,6 +535,9 @@ async function processPosts() {                                                 
           continue
 
         }
+
+        const size = isImage || (isGif && !GIF_AS_VIDEO) ? await sharp(finalOutputPath).metadata().catch(() => null) : null
+        if (size?.width && size?.height) mediaSizes.set(asset.name, { width: size.width, height: size.height })
 
         const finalData = await fs.readFile(finalOutputPath)
         hash.update(finalData)
@@ -615,7 +624,7 @@ async function processPosts() {                                                 
       if (isBilingual) {
         const { attributes: attrEn, body: bodyEn } = fm(rawEn)
         let htmlContentEn = renderType(bodyEn, attrEn).trim()
-        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada, silentVideos))
         pageEn = fill('en', attrEn.title || slug, htmlContentEn)
       }
 
