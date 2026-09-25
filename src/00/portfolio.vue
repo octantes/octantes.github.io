@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
-import { MAIN_PROJECTS, GITHUB_URL } from '../04/site-config.js'
+import { MAIN_PROJECTS, GITHUB_URL, AUTHOR_NAME } from '../04/site-config.js'
 import DotGrid from '../03/dotgrid.vue'
 
 const authorpic = '/assets/kaste.webp'
@@ -132,7 +132,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 
         <div class="message-box">
 
-          <h2>Facundo Gerbino</h2>
+          <h2>{{ AUTHOR_NAME }}</h2>
 
           <p class="subtitle">{{ store.t.portfolio.subtitle }}</p>
 
