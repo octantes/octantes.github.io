@@ -10,6 +10,7 @@
 
   <body>
 
+    <noscript class="archive">
     <aside class="static-nav">
       
       <div class="sidebar-content">
@@ -60,6 +61,10 @@
       {{htmlContent}}
 
     </main>
+
+    </noscript>
+
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
 
     <div id="octantes"></div>
 

@@ -58,7 +58,7 @@ export function pathOf(page, lang) {
 
 }
 
-export function urlOf(page, lang) { return `${SITE_URL}${page.kind === 'home' ? '' : pathOf(page, lang)}${page.kind === 'home' || page.kind === 'section' ? '/' : ''}` }
+export function urlOf(page, lang) { return page.kind === 'home' ? `${SITE_URL}/` : `${SITE_URL}${pathOf(page, lang)}` }
 
 export function headFor(page, lang, post) {
 

@@ -442,8 +442,8 @@ async function readShell() {
 function composeHead(page, lang, item) {
 
   const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
-  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); document.documentElement.classList.add(archive ? 'archive' : 'portal'); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (/neocities\\.css$/.test(l.href)) l.disabled = !archive; else if (archive) l.disabled = true; else l.media = 'all' }) })()</script>`
-  return [app, '<link rel="stylesheet" href="/assets/neocities.css">', view, renderHead(headFor(page, lang, item))].join('\n\n    ')
+  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); if (archive) document.documentElement.classList.add('archive'); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (/neocities\\.css$/.test(l.href)) l.disabled = !archive; else if (archive) l.disabled = true; else l.media = 'all' }) })()</script>`
+  return [app, '<link rel="stylesheet" href="/assets/neocities.css">', '<style>@media (scripting: none) { noscript.archive { display: contents } }</style>', view, renderHead(headFor(page, lang, item))].join('\n\n    ')
 
 }
 
