@@ -203,15 +203,8 @@ html, body, #octantes {
 
 }
 
-#octantes > .root {
-
-  /* LAYOUT */ display: flex; flex-direction: column;
-  /* BOX    */ width: 100%; height: 100%;
-  
-}
-
-:root:has(#octantes > .root) .static-nav, :root:has(#octantes > .root) .post-header { display: none !important; }
-.post .static-nav, .post .post-header { display: none !important; }
+.portal body > .static-nav, .portal body > .post-content { display: none !important; }
+.post .post-header { display: none !important; }
 
 *, *::before, *::after { box-sizing: inherit; }
 

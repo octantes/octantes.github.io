@@ -3,6 +3,7 @@ import { readFile, stat } from 'fs/promises'
 import { spawn } from 'child_process'
 import path from 'path'
 import { SITE_URL } from './src/04/site-config.js'
+import { ARCHIVE_FLAG } from './src/04/pages.js'
 
 const outputDir  = path.resolve('dist')
 const contentDir = path.resolve('content')
@@ -71,9 +72,9 @@ function devPlugin() {
         if (!file.startsWith(outputDir + path.sep)) return next()
 
         try {
-          let info = await stat(file)
-          if (info.isDirectory()) { file = path.join(file, 'index.html'); info = await stat(file) }
-          if (!info.isFile()) return next()
+          let info = await stat(file).catch(() => null)
+          if (!info && ARCHIVE_FLAG.test(req.url)) { file += '.html'; info = await stat(file) }
+          if (!info?.isFile()) return next()
         } catch { return next() }
 
         const ext = path.extname(file).toLowerCase()

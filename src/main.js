@@ -11,4 +11,4 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 
-app.mount('#octantes')
+if (!document.documentElement.classList.contains('archive')) app.mount('#octantes')

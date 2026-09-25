@@ -2,7 +2,8 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import devPlugin from './vite.dev-plugin.js'
-import { SITE_URL, TAGLINE, MOBILE_MAX } from './src/04/site-config.js'
+import { MOBILE_MAX } from './src/04/site-config.js'
+import { headFor, renderHead } from './src/04/pages.js'
 
 export default defineConfig({
   plugins: [
@@ -17,9 +18,9 @@ export default defineConfig({
       }
     },
     {
-      name: 'site-url-replace',
+      name: 'head',
       transformIndexHtml(html) {
-        return html.replace(/__SITE_URL__/g, SITE_URL).replace(/__TAGLINE_ES__/g, TAGLINE.es).replace(/__TAGLINE_EN__/g, TAGLINE.en)
+        return html.replace('__HEAD__', renderHead(headFor({ kind: 'home' }, 'es')))
       }
     }
   ],
