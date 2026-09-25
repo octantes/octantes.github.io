@@ -11,7 +11,7 @@ const store           = useStore()                                              
 
 const { noteSortFilter, searchQuery, notesLoaded } = storeToRefs(store)                                                                            // imports refs from main store
 
-function noteOpen(type, slug) { router.push({ path: `/${store.wordOf(type)}/${slug}` }) }                                             // change route and open post
+function noteOpen(type, slug) { router.push({ path: store.notePath(type, slug) }) }                                                   // change route and open post
 
 const galleryRef      = ref(null)
 

@@ -14,18 +14,21 @@ function sectionNamed(word) { return SECTIONS.find(s => s.es === word || s.en ==
 
 export function sectionOf(word) { return sectionNamed(word)?.id }
 
-export function wordOf(id, lang) { return SECTIONS.find(s => s.id === id)?.[lang] ?? id }
+function sectionById(id) { return SECTIONS.find(s => s.id === id) }
 
-export function labelOf(id, lang) { return SECTIONS.find(s => s.id === id)?.label[lang] ?? id }
+function wordOf(id, lang) { return sectionById(id)?.[lang] ?? id }
+
+export function labelOf(id, lang) { return sectionById(id)?.label[lang] ?? id }
 
 export function pageOf(route) {
 
   const path = route.path.length > 1 ? route.path.replace(/\/$/, '') : route.path
   const { type, slug, filterType } = route.params
+  const aboutLang = Object.keys(ABOUT_PATH).find(lang => ABOUT_PATH[lang] === path)
 
   if (path === '/portfolio') return { kind: 'portfolio' }
   if (path === '/portal') return { kind: 'portal' }
-  if (path === ABOUT_PATH.es || path === ABOUT_PATH.en) return { kind: 'about', lang: path === ABOUT_PATH.es ? 'es' : 'en' }
+  if (aboutLang) return { kind: 'about', lang: aboutLang }
   if (slug && sectionOf(type)) return { kind: 'note', id: sectionOf(type), slug, lang: langOfWord(type) }
   if (filterType && sectionOf(filterType)) return { kind: 'section', id: sectionOf(filterType), lang: langOfWord(filterType) }
   if (path === '/') return { kind: 'home' }
@@ -134,9 +137,9 @@ function headTags(head) {
 
 }
 
-export function renderHead(head, indent = '    ') {
+export function renderHead(head) {
 
-  return [`<title>${esc(head.title)}</title>`, ...headTags(head)].map(tag => indent + tag).join('\n').trimStart()
+  return [`<title>${esc(head.title)}</title>`, ...headTags(head)].join('\n    ')
 
 }
 
