@@ -265,6 +265,7 @@ body::after {
                                    font: inherit; line-height: inherit;                                                            }
 .nav-links a:hover,
 .nav-links button:hover          { font-weight: 700; text-decoration: none; border-color: var(--cristal);                          }
+.nav-links [aria-current]        { color: var(--lirio);                                                                            }
 
 .nota-prosa, .nota-prosa p, .nota-prosa li, .nota-prosa blockquote,
 .nota-verso, .nota-verso p, .nota-verso li       { font-family: var(--font-main); line-height: var(--leading-base); }
@@ -315,6 +316,7 @@ body::after {
 .article-list a:hover            { color: var(--cristal);                                }
 .article-list a::before          { content: ">"; margin-right: 8px; color: var(--polvo); }
 .article-list a:hover::before    { color: var(--lirio);                                  }
+.article-list [aria-current]     { color: var(--lirio);                                  }
 
 .project-list                    { gap: 0; }
 .project-row a                   { display: inline; }
