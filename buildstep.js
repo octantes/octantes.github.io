@@ -442,8 +442,9 @@ async function readShell() {
 function composeHead(page, lang, item) {
 
   const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
-  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); if (archive) document.documentElement.classList.add('archive'); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (/neocities\\.css$/.test(l.href)) l.disabled = !archive; else if (archive) l.disabled = true; else l.media = 'all' }) })()</script>`
-  return [app, '<link rel="stylesheet" href="/assets/neocities.css">', '<style>@media (scripting: none) { noscript.archive { display: contents } }</style>', view, renderHead(headFor(page, lang, item))].join('\n\n    ')
+  const archive = '<link rel="stylesheet" href="/assets/neocities.css">'
+  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('${archive}') } })()</script>`
+  return [app, `<noscript>${archive}<style>noscript.archive { display: contents }</style></noscript>`, view, renderHead(headFor(page, lang, item))].join('\n\n    ')
 
 }
 
@@ -907,7 +908,7 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
 
   order.forEach(type => {
     if (groups[type]) {
-      const typeLabel = SECTIONS.find(s => s.id === type)?.[lang] ?? type
+      const typeLabel = labelOf(type, lang)
       html += `<li class="cat-header">${esc(typeLabel)}</li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
         const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, lang === 'en' && p.bilingual ? 'en' : 'es')
