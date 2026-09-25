@@ -12,62 +12,13 @@
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="alternate" type="application/rss+xml" title="octantes.ar rss feed" href="/feed.xml" />
-    <link rel="alternate" hreflang="es" href="__SITE_URL__/">
-    <link rel="alternate" hreflang="en" href="__SITE_URL__/">
-    <link rel="alternate" hreflang="x-default" href="__SITE_URL__/">
     
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap">
     </noscript>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>octantes.ar - portal multimedia</title>
-    <meta name="description" content="__TAGLINE_ES__">
-    <link rel="canonical" href="__SITE_URL__/">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "octantes.ar",
-      "url": "__SITE_URL__/",
-      "description": "__TAGLINE_ES__",
-      "author": { "@type": "Person", "name": "kaste" }
-    }
-    </script>
-
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="octantes.ar">
-    <meta property="og:description" content="__TAGLINE_ES__">
-    <meta property="og:url" content="__SITE_URL__/">
-    <meta property="og:image" content="__SITE_URL__/assets/portada.webp">
-    <meta property="og:site_name" content="octantes.ar">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="octantes.ar">
-    <meta name="twitter:description" content="__TAGLINE_ES__">
-    <meta name="twitter:image" content="__SITE_URL__/assets/portada.webp">
-    <meta name="twitter:creator" content="@octantes">
-
-    <script>
-    (function() {
-      var lang = localStorage.getItem('lang')
-      if (!lang) {
-        var nav = (navigator.language || '').toLowerCase().split('-')[0]
-        lang = nav === 'es' ? 'es' : 'en'
-        localStorage.setItem('lang', lang)
-      }
-      if (lang === 'en') {
-        document.documentElement.lang = 'en'
-        document.title = 'octantes.ar - multimedia portal'
-        document.querySelector('meta[name="description"]').content = '__TAGLINE_EN__'
-        document.querySelector('meta[property="og:description"]').content = '__TAGLINE_EN__'
-        document.querySelector('meta[name="twitter:description"]').content = '__TAGLINE_EN__'
-        var ld = document.querySelector('script[type="application/ld+json"]')
-        if (ld) { try { var obj = JSON.parse(ld.textContent); obj.description = '__TAGLINE_EN__'; ld.textContent = JSON.stringify(obj) } catch(e) {} }
-      }
-    })()
-    </script>
+    __HEAD__
 
   </head>
 

@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { SITE_URL, TAGLINE, CONTACT_EMAIL, POPUP_LINK, SECTIONS, ABOUT_PATH, STATUS, STATUSES } from '@/04/site-config.js'
+import { TAGLINE, CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
+import { sectionOf, wordOf, labelOf, pageOf, pathOf, headFor, applyHead } from '@/04/pages.js'
 import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
 
-  const webURL = SITE_URL
-
-  const tabs                       = computed(() => SECTIONS.map(({ id }) => ({ label: t.value.nav.tabs[id], value: id })))      // names for filters 
+  const tabs                       = computed(() => SECTIONS.map(({ id }) => ({ label: labelOf(id, lang.value), value: id })))    // names for filters 
 
   const authorsMap = {                                                                                                                // author profile pic and link 
 
@@ -36,41 +35,10 @@ export const useStore = defineStore('store', () => {
   function toggleLang() {
     setLang(lang.value === 'es' ? 'en' : 'es')
     const route = router.currentRoute.value
-    router.replace({ path: pathOf(route, lang.value), query: route.query, hash: route.hash })
+    router.replace({ path: pathOf(pageOf(route), lang.value), query: route.query, hash: route.hash })
   }
 
-  // ROUTE WORDS
-
-  function sectionNamed(word) { return SECTIONS.find(s => s.es === word || s.en === word) }
-
-  function sectionOf(word) { return sectionNamed(word)?.id }
-
-  function isAbout(route) { return route.path === ABOUT_PATH.es || route.path === ABOUT_PATH.en }
-
-  function wordOf(id, language = lang.value) { return SECTIONS.find(s => s.id === id)?.[language] ?? id }
-
-  function langOf(route) {
-
-    if (isAbout(route)) return route.path === ABOUT_PATH.es ? 'es' : 'en'
-    const word = route.params.type || route.params.filterType
-    const section = sectionNamed(word)
-    if (!section || section.es === section.en) return null
-    return word === section.en ? 'en' : 'es'
-
-  }
-
-  function pathOf(route, language) {
-
-    const type = sectionOf(route.params.type)
-    const filter = sectionOf(route.params.filterType)
-    if (isAbout(route)) return ABOUT_PATH[language]
-    if (type) return `/${wordOf(type, language)}/${route.params.slug}`
-    if (filter) return `/${wordOf(filter, language)}`
-    return route.path
-
-  }
-
-  router.afterEach(to => { const language = langOf(to); if (language && language !== lang.value) setLang(language) })
+  router.afterEach(to => { const language = pageOf(to).lang; if (language && language !== lang.value) setLang(language) })
 
   const dict = {
     es: {
@@ -100,7 +68,7 @@ export const useStore = defineStore('store', () => {
         popupText: "p\u00e1sate a escuchar<br>mi \u00faltimo disco",
         sigilAlt: 'sigilo'
       },
-      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', tabs: { portal: 'portal', diseño: 'diseño', desarrollo: 'desarrollo', musica: 'música', textos: 'textos', juegos: 'juegos' }, siteTitle: 'octantes.ar - portal multimedia', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
+      nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
       status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
       portfolio: {
@@ -172,7 +140,7 @@ export const useStore = defineStore('store', () => {
         popupText: "come listen to<br>my latest album",
         sigilAlt: 'sigil'
       },
-      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', tabs: { portal: 'portal', diseño: 'design', desarrollo: 'dev', musica: 'music', textos: 'writing', juegos: 'games' }, siteTitle: 'octantes.ar - multimedia portal', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
+      nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
       status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
       gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
       portfolio: {
@@ -328,7 +296,6 @@ export const useStore = defineStore('store', () => {
     router.push({ path: '/' })
     activeFilter.value = 'portal'
     aboutSection.value = null
-    document.title = t.value.nav.siteTitle
 
   }
 
@@ -344,18 +311,18 @@ export const useStore = defineStore('store', () => {
       
       if (isNote) return // block redirect
 
-      let path = (filter === 'portal') ? `/` : `/${wordOf(filter)}`
+      let path = (filter === 'portal') ? `/` : pathOf({ kind: 'section', id: filter }, lang.value)
       if (currentRoute.path !== path) { router.push({ path: path }) }
 
     }
 
   }
 
-  function aboutOf(route) { return isAbout(route) ? 'portal' : null }
+  function aboutOf(route) { return pageOf(route).kind === 'about' ? 'portal' : null }
 
   function openAbout(section) {
 
-    if (section === 'portal') router.push({ path: ABOUT_PATH[lang.value] })
+    if (section === 'portal') router.push({ path: pathOf({ kind: 'about' }, lang.value) })
     else aboutSection.value = section
 
   }
@@ -364,14 +331,13 @@ export const useStore = defineStore('store', () => {
 
     if (landed) return
     landed = true
-    const language = langOf(route)
-    if (language) setLang(language)
-    const section = sectionOf(route.params.filterType)
-    aboutSection.value = aboutOf(route) || (section && section !== 'portal' ? section : null)
+    const page = pageOf(route)
+    if (page.lang) setLang(page.lang)
+    aboutSection.value = aboutOf(route) || (page.kind === 'section' ? page.id : null)
 
   }
 
-  watch(() => pathOf(router.currentRoute.value, 'es'), () => { aboutSection.value = aboutOf(router.currentRoute.value) })
+  watch(() => pathOf(pageOf(router.currentRoute.value), 'es'), () => { aboutSection.value = aboutOf(router.currentRoute.value) })
 
   function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
@@ -447,8 +413,7 @@ export const useStore = defineStore('store', () => {
     const cached = postHtmlCache.value[cacheKey]
     if (cached) return cached
 
-    const fileName = langCode === 'en' ? 'ingles.html' : 'index.html'
-    const fetchPath = `${base}/posts/${post.type || 'textos'}/${slug}/${fileName}`
+    const fetchPath = `${base}${pathOf({ kind: 'note', id: post.type || 'textos', slug }, langCode)}.html`
     const res = await fetch(fetchPath)
     if (!res.ok) throw new Error(`HTTP error ${res.status}`)
 
@@ -456,11 +421,10 @@ export const useStore = defineStore('store', () => {
     const parser = new DOMParser()
     const doc = parser.parseFromString(rawText, 'text/html')
 
-    const staticNav = doc.querySelector('.static-nav')
-    if (!staticNav) throw new Error('not a note page')
-    staticNav.remove()
+    const article = doc.querySelector('main.post-content')
+    if (!article) throw new Error('not a note page')
 
-    const html = doc.body.innerHTML
+    const html = article.outerHTML
     postHtmlCache.value[cacheKey] = html
     return html
 
@@ -488,7 +452,6 @@ export const useStore = defineStore('store', () => {
         }
       }
 
-      updateSEOTags(currentPost.value)
 
       return { html, error: null }
 
@@ -535,110 +498,15 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  const seoTags = {
-    description: 'meta[name="description"]',
-    ogTitle:     'meta[property="og:title"]',
-    ogDesc:      'meta[property="og:description"]',
-    ogUrl:       'meta[property="og:url"]',
-    ogImage:     'meta[property="og:image"]',
-    twTitle:     'meta[name="twitter:title"]',
-    twDesc:      'meta[name="twitter:description"]',
-    twImage:     'meta[name="twitter:image"]',
-    twCreator:   'meta[name="twitter:creator"]',
-    published:   'meta[property="article:published_time"]',
-    modified:    'meta[property="article:modified_time"]',
-    canonical:   ['link[rel="canonical"]', 'href'],
-    altEs:       ['link[rel="alternate"][hreflang="es"]', 'href'],
-    altEn:       ['link[rel="alternate"][hreflang="en"]', 'href'],
-    altDefault:  ['link[rel="alternate"][hreflang="x-default"]', 'href'],
-  }
+  function syncHead() {
 
-  function setSEOTags(values) {
-
-    for (const [key, value] of Object.entries(values)) {
-      const [selector, attr = 'content'] = [].concat(seoTags[key])
-      let el = document.querySelector(selector)
-      if (!el && value !== null) {
-        el = document.createElement(selector.match(/^\w+/)[0])
-        for (const [, name, val] of selector.matchAll(/\[([\w-]+)="([^"]+)"\]/g)) el.setAttribute(name, val)
-        document.head.appendChild(el)
-      }
-      if (!el) continue
-      if (value === null) el.remove()
-      else el[attr] = value
-    }
+    const page = pageOf(router.currentRoute.value)
+    const post = page.kind === 'note' ? notesIndex.value.find(p => p.slug === page.slug) : null
+    if (page.kind !== 'note' || post) applyHead(headFor(page, lang.value, post))
 
   }
 
-  function updateSEOTags(post) {
-
-    if (!post) { resetSEOTags(); return }
-
-    const isEn = lang.value === 'en'
-
-    const title = ((isEn && post.bilingual && post.titleEn) ? post.titleEn : post.title) || post.slug
-    const description = (isEn && post.bilingual && post.descriptionEn) ? post.descriptionEn : post.description
-    const shown = isEn && post.bilingual ? 'en' : 'es'
-    const urlIn = language => `${webURL}/${wordOf(post.type, language)}/${post.slug}/`
-    const altIn = language => post.bilingual ? urlIn(language) : null
-    const url = urlIn(shown)
-    const handle = Array.isArray(post.handle) ? post.handle[0] : (post.handle || 'kaste')
-
-    document.title = `${title} - octantes.ar`
-
-    setSEOTags({
-      description, ogTitle: title, ogDesc: description, ogUrl: url,
-      twTitle: title, twDesc: description, twCreator: `@${handle.replace(/^@/, '')}`, canonical: url,
-      altEs: altIn('es'), altEn: altIn('en'), altDefault: altIn('es'),
-      published: post.isoDate, modified: post.isoDate,
-      ...(post.portada && { ogImage: post.portada, twImage: post.portada }),
-    })
-
-    const ldScript = document.querySelector('script[type="application/ld+json"]')
-    if (ldScript) {
-      ldScript.textContent = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "mainEntityOfPage": { "@type": "WebPage", "@id": url },
-        "headline": title,
-        "image": post.portada || `${webURL}/assets/portada.webp`,
-        "author": { "@type": "Person", "name": (Array.isArray(post.handle) ? post.handle[0] : post.handle) || 'kaste' },
-        "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
-        "datePublished": post.isoDate,
-        "dateModified": post.isoDate,
-        "description": description,
-        "keywords": (Array.isArray(post.tags) ? post.tags.join(', ') : '')
-      })
-    }
-
-  }
-
-  function resetSEOTags() {
-
-    const isEn = lang.value === 'en'
-    const tagline = isEn ? TAGLINE.en : TAGLINE.es
-
-    document.title = isEn ? 'octantes.ar - multimedia portal' : 'octantes.ar - portal multimedia'
-
-    setSEOTags({
-      description: tagline, ogTitle: 'octantes.ar', ogDesc: tagline, ogUrl: webURL + '/',
-      ogImage: webURL + '/assets/portada.webp', twTitle: 'octantes.ar', twDesc: tagline, twImage: webURL + '/assets/portada.webp',
-      twCreator: '@octantes', canonical: webURL + '/', published: null, modified: null, altEs: null, altEn: null, altDefault: null,
-    })
-
-    const ldScript = document.querySelector('script[type="application/ld+json"]')
-    if (ldScript) {
-      ldScript.textContent = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "octantes.ar",
-        "url": webURL + "/",
-        "description": tagline,
-        "author": { "@type": "Person", "name": "kaste" }
-      })
-    }
-
-  }
+  watch([() => router.currentRoute.value.fullPath, lang, notesIndex], syncHead, { immediate: true })
 
   // COMPUTEDS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -705,7 +573,7 @@ export const useStore = defineStore('store', () => {
 
     return {
       title: (lang.value === 'en' && latest.bilingual && latest.titleEn) ? latest.titleEn : latest.title,
-      url: `/${wordOf(latest.type)}/${latest.slug}`
+      url: pathOf({ kind: 'note', id: latest.type, slug: latest.slug }, lang.value)
     }
 
   })
@@ -762,9 +630,6 @@ export const useStore = defineStore('store', () => {
 
   return { 
 
-    /* SITE VAR */ webURL,
-    /* SITE CON */ SITE_URL,
-
     /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, subDone, userStatus,
     /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, emitSub,
     /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
@@ -773,11 +638,10 @@ export const useStore = defineStore('store', () => {
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, aboutSection, searchQuery, tabs,
-    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, wordOf,
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, wordOf: id => wordOf(id, lang.value), labelOf: id => labelOf(id, lang.value),
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
     /* LANG FUN  */ toggleLang,
-    /* SEO  FUN  */ resetSEOTags,
 
   }
 

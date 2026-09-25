@@ -25,7 +25,7 @@ function checkViewport() { isMobile.value = window.innerWidth <= MOBILE_MAX }   
 function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitCentred() }, 150) }                                       // use resize timer
 
 const { currentPost, computedNoteComp, computedNoteClass } = storeToRefs(store)                                   // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost, resetSEOTags } = store                                          // imports variables from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                        // imports variables from main store
 
 const portalRef   = ref(null)                                                                                                         // shader variable for animations
 const containerRef= ref(null)
@@ -156,7 +156,6 @@ async function openInColumn(key) {
     notFound.value = store.tabs.some(tab => tab.value === section) ? 0 : 404
     noteContent.value = ''
     setCurrentPost(null)
-    resetSEOTags()
     await nextTick()
     resetScroll()
     return
@@ -269,14 +268,13 @@ watch(                                                                          
         lastSlug = null
         notFound.value = 0
         if (isMobile.value) {
-          await throughTheVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = ''; resetSEOTags() }, 'transition-intro', 'transition-outro')
+          await throughTheVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }, 'transition-intro', 'transition-outro')
           break
         }
         await portalRef.value?.runQueue('transition-intro')
         setCurrentPost(null)
         aboutOpen.value = null
         noteContent.value = ''
-        resetSEOTags()
         break
       
       case !slug && notFound.value:
@@ -297,7 +295,6 @@ watch(                                                                          
         setCurrentPost(null)
         aboutOpen.value = null
         noteContent.value = ''
-        resetSEOTags()
         if (isMobile.value) { await throughTheVeil(() => {}, 'static', 'direct', 500); break }
         await portalRef.value?.runQueue('intro')
         break

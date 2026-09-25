@@ -5,7 +5,8 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL, TAGLINE, SECTIONS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
+import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
+import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf } from './src/04/pages.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -213,6 +214,13 @@ async function fresh(inputPath, outputPath) {
 
 }
 
+async function makeShare(inputPath, destPath) {
+
+  if (await fresh(inputPath, destPath)) return
+  await sharp(inputPath).resize(SHARE_SIZE.width, SHARE_SIZE.height, { fit: 'cover' }).flatten({ background: '#1B1C1C' }).jpeg({ quality: 82, mozjpeg: true }).toFile(destPath)
+
+}
+
 async function convertImage(inputPath, destPath, width = 1200, quality = 80) {   // convert input image files to WEBP 
 
   try {
@@ -353,6 +361,7 @@ async function copyAssets() {                                                   
         await convertImage(assetPath, destPath, 1200, 80)
         const thumbPath = destPath.replace(/\.(jpe?g|png)$/i, '-thumb.png') 
         await convertImage(assetPath, thumbPath, 400, 60)
+        if (/^portada\.(jpe?g|png)$/i.test(asset)) await makeShare(assetPath, path.join(assetsDest, 'share.jpg'))
 
       } else { await fs.copyFile(assetPath, destPath) }
 
@@ -391,7 +400,50 @@ async function cleanOrphans() {                                                 
     }
   } catch (e) { console.warn('error limpiando carpetas huérfanas:', e) }
 
+  for (const word of new Set(SECTIONS.flatMap(s => [s.es, s.en]))) {
+    let children = []
+    try { children = await fs.readdir(path.join(outputDir, word), { withFileTypes: true }) } catch { continue }
+    for (const child of children) if (child.name !== 'index.html' && !postDirs.some(p => `${p.slug}.html` === child.name)) await fs.rm(path.join(outputDir, word, child.name), { recursive: true, force: true })
+  }
+
   for (const key of Object.keys(cache)) { const isPostActive = postDirs.some(p => key.startsWith(`${p.typeDir}/${p.slug}/`)); if (!isPostActive) delete cache[key] }
+
+}
+
+const chrome = {
+  es: { bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navArchiveHref: 'archivo.html', navArticles: 'art\u00edculos', toggleLabel: '[ENG]' },
+  en: { bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navArchiveHref: 'archive.html', navArticles: 'articles', toggleLabel: '[ESP]' },
+}
+
+let shell = null
+const writtenPages = []
+
+function pageFile(page, lang) {
+
+  const parts = pathOf(page, lang).split('/').filter(Boolean)
+  return page.kind === 'section' ? path.join(outputDir, ...parts, 'index.html') : path.join(outputDir, ...parts) + '.html'
+
+}
+
+function archiveHref(page, lang) { return `${pathOf(page, lang)}?${ARCHIVE_VIEW[lang]}` }
+
+async function readShell() {
+
+  try {
+    const html = await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')
+    const home = renderHead(headFor({ kind: 'home' }, 'es'))
+    if (!html.includes(home)) return null
+    const top = html.slice(html.indexOf('<head>') + 6, html.indexOf('</head>')).replace(home, '').replace(/\n\s*\n\s*\n/g, '\n\n').trim()
+    return { html, home, top }
+  } catch { return null }
+
+}
+
+function composeHead(page, lang, item) {
+
+  const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
+  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); document.documentElement.classList.add(archive ? 'archive' : 'portal'); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (/neocities\\.css$/.test(l.href)) l.disabled = !archive; else if (archive) l.disabled = true; else l.media = 'all' }) })()</script>`
+  return [app, '<link rel="stylesheet" href="/assets/neocities.css">', view, renderHead(headFor(page, lang, item))].join('\n\n    ')
 
 }
 
@@ -419,11 +471,11 @@ async function processPosts() {                                                 
     const showNote = attributes.mostrar !== 'no' && attributes.mostrar !== false
     const postType = attributes.type || typeFolder
     const noteOutputDir = path.join(outputDir, 'posts', postType, slug)
-    const sidebarLinks = postDirs.map(p => `<li><a href="${webURL}/posts/${p.typeDir}/${p.slug}/">${p.slug.replace(/-/g, ' ')}</a></li>`).join('\n')
 
     await fs.mkdir(noteOutputDir, { recursive: true })
 
     const hash = crypto.createHash('sha256').update(raw)
+    if (rawEn) hash.update(rawEn)
 
     try {
 
@@ -432,7 +484,7 @@ async function processPosts() {                                                 
 
       for (const asset of assets) {
 
-        if (!asset.isFile() || asset.name === 'index.md') continue
+        if (!asset.isFile() || asset.name === 'index.md' || asset.name === 'ingles.md') continue
 
         const assetPath = path.join(postFolder, asset.name)
         const destPath  = path.join(noteOutputDir, asset.name)
@@ -491,52 +543,35 @@ async function processPosts() {                                                 
     const modifiedDate = attributes.modified ? new Date(attributes.modified).toISOString() : isoDate
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
     const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
-    const canonicalUrl = `${webURL}/posts/${postType}/${slug}/`
-    const canonicalUrlEn = `${webURL}/posts/${postType}/${slug}/ingles.html`
-
-    const hreflangTags = isBilingual ? `
-      <link rel="alternate" hreflang="es" href="${canonicalUrl}">
-      <link rel="alternate" hreflang="en" href="${canonicalUrlEn}">
-      <link rel="alternate" hreflang="x-default" href="${canonicalUrl}">
-    `.trim() : ''
 
     const rawHandle = attributes.handle
     const handles = (Array.isArray(rawHandle) ? rawHandle : (rawHandle ? [rawHandle] : ['kaste'])).map(h => String(h).replace(/^@/, ''))
     const primaryHandle = handles[0] // only one handle in html for SEO
-    const articleJson = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
-      "headline": attributes.title || slug,
-      "image": portadaUrl || `${webURL}/assets/portada.webp`,
-      "author": { "@type": "Person", "name": primaryHandle, "url": primaryHandle ? `https://x.com/${primaryHandle}` : `${webURL}/about` },
-      "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
-      "datePublished": isoDate,
-      "dateModified": modifiedDate,
-      "description": attributes.description || 'descripción corta de la nota',
-      "keywords": (attributes.tags || []).join(', ')
-    });
 
-    const finalArticleJson = articleJson
+    if (rawPortada) await makeShare(path.join(postFolder, rawPortada), path.join(noteOutputDir, 'share.jpg'))
 
-    const enDesc = (isBilingual && enAttributes.description) || 'short note description'
-    const articleJsonEn = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrlEn },
-      "headline": enAttributes.title || attributes.title || slug,
-      "image": portadaUrl || `${webURL}/assets/portada.webp`,
-      "author": { "@type": "Person", "name": primaryHandle, "url": primaryHandle ? `https://x.com/${primaryHandle}` : `${webURL}/about` },
-      "publisher": { "@type": "Organization", "name": "octantes.ar", "logo": { "@type": "ImageObject", "@id": `${webURL}/assets/logo.webp`, "url": `${webURL}/assets/logo.webp` } },
-      "datePublished": isoDate,
-      "dateModified": modifiedDate,
-      "description": enDesc,
-      "keywords": (attributes.tags || []).join(', ')
-    });
-    const finalArticleJsonEn = articleJsonEn
-        .replace(/'/g, '&#39;');
+    const item = {
+      slug,
+      title: attributes.title || slug,
+      description: attributes.description || '',
+      type: postType || 'textos',
+      tags: attributes.tags || [],
+      portada: portadaUrl,
+      share: rawPortada ? `${webURL}/posts/${postType}/${slug}/share.jpg` : null,
+      handle: handles,
+      date: formatted,
+      isoDate: isoDate,
+      modified: modifiedDate,
+      vuecomp: attributes.vuecomp || null,
+      bilingual: isBilingual,
+      titleEn: enAttributes.title || null,
+      descriptionEn: enAttributes.description || null
+    }
 
-    if (fullRebuild || cache[`${postType}/${slug}/index.md`] !== finalHash) {
+    const page = { kind: 'note', id: postType, slug }
+    const written = await Promise.all(['es', 'en'].map(lang => fs.access(pageFile(page, lang)).then(() => true, () => false)))
+
+    if (fullRebuild || written.includes(false) || cache[`${postType}/${slug}/index.md`] !== finalHash) {
 
       const isTradStyle = attributes.style === 'trad'
 
@@ -556,86 +591,45 @@ async function processPosts() {                                                 
           return match
       })
 
-      let fullHtml = template
-        .replace(/{{langTag}}/g, 'es')
-        .replace(/{{title}}/g, attributes.title || slug)
-        .replace(/{{description}}/g, attributes.description || '')
-        .replace(/{{portada}}/g, portadaUrl)
-        .replace(/{{canonicalUrl}}/g, canonicalUrl)
-        .replace(/{{hreflangTags}}/g, hreflangTags)
-        .replace(/{{articlePublishedTime}}/g, isoDate)
-        .replace(/{{articleModifiedTime}}/g, modifiedDate)
+      const fill = (lang, title, content) => template
+        .replace(/{{head}}/g, () => composeHead(page, lang, item))
+        .replace(/{{langTag}}/g, lang)
+        .replace(/{{title}}/g, () => title)
         .replace(/{{handle}}/g, primaryHandle)
         .replace(/{{date}}/g, formatted)
-        .replace(/{{articleJson}}/g, finalArticleJson)
-        .replace(/{{htmlContent}}/g, htmlContent)
-        .replace(/{{webURL}}/g, webURL)
-        .replace(/{{sidebarLinks}}/g, sidebarLinks)
-        .replace(/{{subtitle}}/g, TAGLINE.es)
-        .replace(/{{bio}}/g, 'm\u00fasica, dise\u00f1o, desarrollo y escritura')
+        .replace(/{{sidebarLinks}}/g, '')
+        .replace(/{{subtitle}}/g, TAGLINE[lang])
+        .replace(/{{bio}}/g, chrome[lang].bio)
         .replace(/{{postType}}/g, postType)
-        .replace(/{{navArchive}}/g, '[ARCHIVO]')
-        .replace(/{{navArchiveHref}}/g, 'archivo.html')
-        .replace(/{{navArticles}}/g, 'art\u00edculos')
-        .replace(/{{toggleLabel}}/g, '[ENG]')
-        .replace(/{{toggleHref}}/g, 'ingles.html?lang=en')
+        .replace(/{{navArchive}}/g, chrome[lang].navArchive)
+        .replace(/{{navArchiveHref}}/g, chrome[lang].navArchiveHref)
+        .replace(/{{navArticles}}/g, chrome[lang].navArticles)
+        .replace(/{{toggleLabel}}/g, chrome[lang].toggleLabel)
+        .replace(/{{toggleHref}}/g, isBilingual ? archiveHref(page, lang === 'es' ? 'en' : 'es') : '/archive.html')
+        .replace(/{{htmlContent}}/g, () => content)
 
-      await fs.writeFile(path.join(noteOutputDir, 'index.html'), fullHtml)
+      const pageEs = fill('es', attributes.title || slug, htmlContent)
+      let pageEn = pageEs
 
       if (isBilingual) {
         const { attributes: attrEn, body: bodyEn } = fm(rawEn)
         let htmlContentEn = renderType(bodyEn, attrEn).trim()
         htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+        pageEn = fill('en', attrEn.title || slug, htmlContentEn)
+      }
 
-        let fullHtmlEn = template
-          .replace(/{{langTag}}/g, 'en')
-          .replace(/{{title}}/g, attrEn.title || slug)
-          .replace(/{{description}}/g, attrEn.description || '')
-          .replace(/{{portada}}/g, portadaUrl)
-          .replace(/{{canonicalUrl}}/g, canonicalUrlEn)
-          .replace(/{{hreflangTags}}/g, hreflangTags)
-          .replace(/{{articlePublishedTime}}/g, isoDate)
-          .replace(/{{articleModifiedTime}}/g, modifiedDate)
-          .replace(/{{handle}}/g, primaryHandle)
-          .replace(/{{date}}/g, formatted)
-          .replace(/{{htmlContent}}/g, htmlContentEn)
-          .replace(/{{webURL}}/g, webURL)
-          .replace(/{{sidebarLinks}}/g, sidebarLinks)
-          .replace(/{{articleJson}}/g, finalArticleJsonEn)
-          .replace(/{{subtitle}}/g, TAGLINE.en)
-          .replace(/{{bio}}/g, 'music, design, dev &amp; writing')
-          .replace(/{{postType}}/g, postType)
-          .replace(/{{navArchive}}/g, '[ARTICLES]')
-          .replace(/{{navArchiveHref}}/g, 'archive.html')
-          .replace(/{{navArticles}}/g, 'articles')
-          .replace(/{{toggleLabel}}/g, '[ESP]')
-          .replace(/{{toggleHref}}/g, 'index.html?lang=es')
-
-        await fs.writeFile(path.join(noteOutputDir, 'ingles.html'), fullHtmlEn)
+      for (const [lang, html] of [['es', pageEs], ['en', pageEn]]) {
+        await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
+        await fs.writeFile(pageFile(page, lang), html)
       }
 
       cache[`${postType}/${slug}/index.md`] = finalHash
 
     } else { console.log(`skipping ${slug}/index.md (unchanged)`) }
 
-    if (showNote) {
-      indexItems.push({
-        slug,
-        title: attributes.title || slug,
-        description: attributes.description || '',
-        type: postType || 'textos',
-        tags: attributes.tags || [],
-        portada: portadaUrl,
-        handle: handles,
-        date: formatted,
-        isoDate: isoDate,
-        url: `/posts/${postType}/${slug}/`,
-        vuecomp: attributes.vuecomp || null,
-        bilingual: isBilingual,
-        titleEn: enAttributes.title || null,
-        descriptionEn: enAttributes.description || null
-      })
-    }
+    writtenPages.push({ file: pageFile(page, 'es'), lang: 'es' }, { file: pageFile(page, 'en'), lang: isBilingual ? 'en' : 'es' })
+
+    if (showNote) indexItems.push(item)
 
   }
 
@@ -669,17 +663,14 @@ function generateBilingualSidebar() {                                        // 
   const order = ['musica', 'diseño', 'juegos', 'desarrollo', 'textos']
   Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
 
-  const catLabels = { diseño: ['diseño', 'design'], desarrollo: ['desarrollo', 'dev'], musica: ['música', 'music'], textos: ['textos', 'writing'], juegos: ['juegos', 'games'] }
-
   let html = ''
 
   order.forEach(type => {
     if (groups[type]) {
-      const labels = catLabels[type] || [type, type]
-      html += `<li class="cat-header" data-es-text="${esc(labels[0])}" data-en-text="${esc(labels[1])}">${esc(labels[0])}</li>`
+      html += `<li class="cat-header" data-es-text="${esc(labelOf(type, 'es'))}" data-en-text="${esc(labelOf(type, 'en'))}">${esc(labelOf(type, 'es'))}</li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
-        const esUrl = `${webURL}${p.url}`
-        const enUrl = p.bilingual ? `${webURL}${p.url}ingles.html` : esUrl
+        const esUrl = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, 'es')
+        const enUrl = p.bilingual ? archiveHref({ kind: 'note', id: p.type, slug: p.slug }, 'en') : esUrl
         const esTitle = p.title
         const enTitle = p.titleEn || p.title
         html += `<li><a href="${esc(esUrl)}" data-es-href="${esc(esUrl)}" data-en-href="${esc(enUrl)}"><span data-es-text="${esc(esTitle)}" data-en-text="${esc(enTitle)}">${esc(esTitle)}</span></a></li>`
@@ -700,8 +691,8 @@ async function writeBilingualArchive() {                                   // cr
   const sortedItems = [...indexItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
 
   const latestHTML = sortedItems.slice(0, 15).map(i => {
-    const esUrl = `${i.url}`
-    const enUrl = i.bilingual ? `${i.url}ingles.html` : esUrl
+    const esUrl = archiveHref({ kind: 'note', id: i.type, slug: i.slug }, 'es')
+    const enUrl = i.bilingual ? archiveHref({ kind: 'note', id: i.type, slug: i.slug }, 'en') : esUrl
     const esTitle = i.title
     const enTitle = i.titleEn || i.title
     return `<li><a href="${esc(esUrl)}" data-es-href="${esc(esUrl)}" data-en-href="${esc(enUrl)}"><span class="list-span">[${i.date}]</span> <span data-es-text="${esc(esTitle)}" data-en-text="${esc(enTitle)}">${esc(esTitle)}</span></a></li>`
@@ -714,20 +705,20 @@ async function writeBilingualArchive() {                                   // cr
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-key="pageTitle">octantes.ar - archive</title>
   <meta name="description" content="archivo plano // octantes.ar" data-key="desc">
-  <link rel="canonical" href="https://octantes.github.io/archivo.html">
-  <link rel="alternate" hreflang="es" href="https://octantes.github.io/archivo.html">
-  <link rel="alternate" hreflang="en" href="https://octantes.github.io/archive.html">
-  <link rel="alternate" hreflang="x-default" href="https://octantes.github.io/archivo.html">
+  <link rel="canonical" href="${webURL}/archivo.html">
+  <link rel="alternate" hreflang="es" href="${webURL}/archivo.html">
+  <link rel="alternate" hreflang="en" href="${webURL}/archive.html">
+  <link rel="alternate" hreflang="x-default" href="${webURL}/archivo.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="octantes.ar - archivo" data-key="pageTitle">
   <meta property="og:description" content="archivo plano // octantes.ar" data-key="desc">
-  <meta property="og:url" content="https://octantes.github.io/archivo.html">
-  <meta property="og:image" content="https://octantes.github.io/assets/portada.webp">
+  <meta property="og:url" content="${webURL}/archivo.html">
+  <meta property="og:image" content="${webURL}/assets/share.jpg">
   <meta property="og:site_name" content="octantes.ar">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="octantes.ar - archivo" data-key="pageTitle">
   <meta name="twitter:description" content="archivo plano // octantes.ar" data-key="desc">
-  <meta name="twitter:image" content="https://octantes.github.io/assets/portada.webp">
+  <meta name="twitter:image" content="${webURL}/assets/share.jpg">
   <meta name="twitter:creator" content="@octantes">
   <script type="application/ld+json">
   {
@@ -735,7 +726,7 @@ async function writeBilingualArchive() {                                   // cr
     "@type": "WebPage",
     "name": "octantes.ar - archivo",
     "description": "archivo plano // octantes.ar",
-    "url": "https://octantes.github.io/archivo.html",
+    "url": "${webURL}/archivo.html",
     "author": { "@type": "Person", "name": "kaste" },
     "publisher": { "@type": "Organization", "name": "octantes.ar" }
   }
@@ -859,7 +850,9 @@ async function writeBilingualArchive() {                                   // cr
 
   const pageHtmlEn = pageHtml
     .replace('lang="es"', 'lang="en"')
-    .replace(/https:\/\/octantes\.github\.io\/archivo\.html/g, 'https://octantes.github.io/archive.html')
+    .replace(`<link rel="canonical" href="${webURL}/archivo.html">`, `<link rel="canonical" href="${webURL}/archive.html">`)
+    .replace(`<meta property="og:url" content="${webURL}/archivo.html">`, `<meta property="og:url" content="${webURL}/archive.html">`)
+    .replace(`"url": "${webURL}/archivo.html"`, `"url": "${webURL}/archive.html"`)
     .replace('"name": "octantes.ar - archivo"', '"name": "octantes.ar - archive"')
     .replace('"description": "archivo plano // octantes.ar"', '"description": "flat archive // octantes.ar"')
     .replaceAll('content="octantes.ar - archivo"', 'content="octantes.ar - archive"')
@@ -868,6 +861,28 @@ async function writeBilingualArchive() {                                   // cr
   await fs.writeFile(path.join(outputDir, 'archivo.html'), pageHtml)
   await fs.writeFile(path.join(outputDir, 'archive.html'), pageHtmlEn)
   console.log('archivo.html / archive.html generated (bilingual)')
+
+}
+
+async function writeShells() {
+
+  if (!shell) { console.warn('no built index.html, skipping page shells'); return }
+
+  const pages = [
+    ...['es', 'en'].map(lang => [{ kind: 'about' }, lang]),
+    ...SECTIONS.filter(s => s.id !== 'portal').flatMap(s => ['es', 'en'].map(lang => [{ kind: 'section', id: s.id }, lang])),
+    [{ kind: 'portal' }, 'es'],
+    [{ kind: 'portfolio' }, 'es'],
+  ]
+
+  for (const [page, lang] of pages) {
+    const html = shell.html.replace('<html lang="es">', `<html lang="${lang}">`).replace(shell.home, () => renderHead(headFor(page, lang)))
+    await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
+    await fs.writeFile(pageFile(page, lang), html)
+    if (page.kind === 'section') await fs.writeFile(path.join(outputDir, pathOf(page, lang).slice(1) + '.html'), html)
+  }
+
+  console.log(`${pages.length} page shells written`)
 
 }
 
@@ -895,9 +910,9 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
       const typeLabel = SECTIONS.find(s => s.id === type)?.[lang] ?? type
       html += `<li class="cat-header">${esc(typeLabel)}</li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
-        const fileTarget = (lang === 'en' && p.bilingual) ? 'ingles.html' : ''
+        const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, lang === 'en' && p.bilingual ? 'en' : 'es')
         const title = lang === 'en' ? (p.titleEn || p.title) : p.title
-        html += `<li><a href="${webURL}${p.url}${fileTarget}">${esc(title)}</a></li>`
+        html += `<li><a href="${href}">${esc(title)}</a></li>`
       })
     }
   })
@@ -907,26 +922,16 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
 
 async function updateSidebars() {                                                // update old archive website sidebars 
 
-  const sidebarES = generateMonolingualSidebar('es')
-  const sidebarEN = generateMonolingualSidebar('en')
-  
-  for (const item of indexItems) {
+  const sidebars = { es: generateMonolingualSidebar('es'), en: generateMonolingualSidebar('en') }
 
-    const basePath = path.join(outputDir, 'posts', item.type, item.slug)
+  for (const { file, lang } of writtenPages) {
 
     try {
 
-      let html = await fs.readFile(path.join(basePath, 'index.html'), 'utf-8')
-      html = html.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, `<ul class="article-list">${sidebarES}</ul>`)
-      await fs.writeFile(path.join(basePath, 'index.html'), html)
+      const html = await fs.readFile(file, 'utf-8')
+      await fs.writeFile(file, html.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, () => `<ul class="article-list">${sidebars[lang]}</ul>`))
 
-      if (item.bilingual) {
-        let htmlEn = await fs.readFile(path.join(basePath, 'ingles.html'), 'utf-8')
-        htmlEn = htmlEn.replace(/<ul class="article-list">[\s\S]*?<\/ul>/, `<ul class="article-list">${sidebarEN}</ul>`)
-        await fs.writeFile(path.join(basePath, 'ingles.html'), htmlEn)
-      }
-
-    } catch (e) { console.error(`Error updating sidebar for ${item.slug}`, e) }
+    } catch (e) { console.error(`Error updating sidebar for ${file}`, e) }
 
   }
 
@@ -936,41 +941,41 @@ async function updateSidebars() {                                               
 
 async function writeSitemap() {                                                  // create sitemap and robots.txt 
 
-  const staticPages = [
-    { url: '/', lastmod: new Date().toISOString() },
-    { url: '/archivo.html', lastmod: new Date().toISOString() },
-    { url: '/archive.html', lastmod: new Date().toISOString() }
+  const newest = items => items.reduce((a, p) => (p.modified || p.isoDate) > a ? (p.modified || p.isoDate) : a, '')
+  const latest = newest(indexItems)
+  const paired = (page, lastmod) => ['es', 'en'].map(lang => ({ url: urlOf(page, lang), lastmod, alternates: { es: urlOf(page, 'es'), en: urlOf(page, 'en'), 'x-default': urlOf(page, 'es') } }))
+
+  const entries = [
+    { url: urlOf({ kind: 'home' }), lastmod: latest },
+    ...SECTIONS.filter(s => s.id !== 'portal').flatMap(s => paired({ kind: 'section', id: s.id }, newest(indexItems.filter(p => p.type === s.id)) || latest)),
+    ...paired({ kind: 'about' }, latest),
+    { url: urlOf({ kind: 'portfolio' }), lastmod: latest },
+    ...indexItems.flatMap(p => {
+      const page = { kind: 'note', id: p.type, slug: p.slug }
+      return p.bilingual ? paired(page, p.modified || p.isoDate) : [{ url: urlOf(page, 'es'), lastmod: p.modified || p.isoDate }]
+    }),
+    ...['archivo.html', 'archive.html'].map(file => ({ url: `${webURL}/${file}`, lastmod: latest, alternates: { es: `${webURL}/archivo.html`, en: `${webURL}/archive.html`, 'x-default': `${webURL}/archivo.html` } })),
   ]
 
-  const postPages = indexItems.map( post => ({ url: `/posts/${post.type}/${post.slug}/`, lastmod: post.isoDate }) )
-  const allPages = [...staticPages,...postPages]
-  const sitemapItems = allPages.map( p =>
-    `<url>
-      <loc>${webURL}${p.url}</loc>
-      <lastmod>${p.lastmod}</lastmod>
-    </url>`
-  ).join('\n')
+  const loc = url => encodeURI(url).replace(/&/g, '&amp;')
+  const sitemap = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    ...entries.map(e => [
+      '  <url>',
+      `    <loc>${loc(e.url)}</loc>`,
+      ...Object.entries(e.alternates || {}).map(([code, href]) => `    <xhtml:link rel="alternate" hreflang="${code}" href="${loc(href)}"/>`),
+      `    <lastmod>${e.lastmod}</lastmod>`,
+      '  </url>',
+    ].join('\n')),
+    '</urlset>',
+    '',
+  ].join('\n')
 
-  const sitemap = 
-  `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${sitemapItems}
-  </urlset>`
-
-  await fs.writeFile(path.join(outputDir,'sitemap.xml'),sitemap)
+  await fs.writeFile(path.join(outputDir, 'sitemap.xml'), sitemap)
   console.log('sitemap.xml updated')
 
-  const sitemapTxt = allPages.map(p => `${webURL}${p.url}`).join('\n')
-  await fs.writeFile(path.join(outputDir,'sitemap.txt'), sitemapTxt)
-  console.log('sitemap.txt updated')
-
-  const robots = `User-agent: *
-  Disallow:
-
-  Sitemap: ${webURL}/sitemap.xml
-  Sitemap: ${webURL}/sitemap.txt
-  `
-  await fs.writeFile(path.join(outputDir,'robots.txt'),robots)
+  await fs.writeFile(path.join(outputDir, 'robots.txt'), `User-agent: *\nDisallow:\n\nSitemap: ${webURL}/sitemap.xml\n`)
   console.log('robots.txt generated')
 
 }
@@ -983,10 +988,10 @@ async function writeFeed() {                                                    
   const now = new Date().toUTCString()
   const feedTitle = 'octantes.ar'
   const feedUrl = `${webURL}/feed.xml`
-  const feedDescription = 'a multimedia web portal, no algorithms or middlemen'
+  const feedDescription = `${TAGLINE.en} - ${SITE_DESCRIPTION.en}`
 
   const channelItems = indexItems.map(post => {
-    const postUrl = `${webURL}${post.url}`
+    const postUrl = encodeURI(urlOf({ kind: 'note', id: post.type, slug: post.slug }, post.bilingual ? 'en' : 'es'))
     const postDate = new Date(post.isoDate).toUTCString()
     const rssTitle = post.titleEn || post.title
     const rssDesc = post.titleEn ? (post.descriptionEn || post.description) : post.description
@@ -1018,8 +1023,9 @@ async function writeFeed() {                                                    
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${feedTitle}</title>
-    <link>${webURL}</link>
+    <link>${webURL}/</link>
     <description>${feedDescription}</description>
+    <language>en</language>
     <lastBuildDate>${now}</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
@@ -1060,12 +1066,14 @@ async function finalizeBuild() {                                                
 async function main() {                                                          // main build process 
 
   await setupBuild()
+  shell = await readShell()
   await copyAssets()
   await cleanOrphans()
   await processPosts()
   await writeIndex()
   await updateSidebars()
   await writeBasicIndex()
+  await writeShells()
   await writeSitemap()
   await writeFeed()
   await finalizeBuild()

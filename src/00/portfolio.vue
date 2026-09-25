@@ -168,10 +168,10 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
             <div v-if="currentProject && currentProject.slug === proj.slug" class="ray-data">
               <p v-if="proj.slug !== WELCOME_SLUG" class="meta">
                 <span class="year">{{ String(proj.date || proj.isoDate || '').slice(-4) }}</span><span class="sep">//</span>
-                <span class="role">{{ store.t.nav.tabs[proj.type] || proj.type }}</span><span class="sep">//</span>
+                <span class="role">{{ store.labelOf(proj.type) }}</span><span class="sep">//</span>
                 <span class="tag">{{ (proj.tags || []).slice(0, 3).join(', ') }}</span>
               </p>
-              <p v-else class="legend"><span class="key dis"></span>{{ store.t.nav.tabs['diseño'] }}<span class="key dev"></span>{{ store.t.nav.tabs['desarrollo'] }}</p>
+              <p v-else class="legend"><span class="key dis"></span>{{ store.labelOf('diseño') }}<span class="key dev"></span>{{ store.labelOf('desarrollo') }}</p>
               <p class="desc" :class="{ welcome: proj.slug === WELCOME_SLUG }">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
             </div>
 
