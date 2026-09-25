@@ -127,7 +127,7 @@ function renderType(body, attributes) {                                         
 
 }
 
-function processAssets(tag, attrs, type, slug, portada, silent = new Set()) {                        // replace asset src for optimized HTML tag 
+function processAssets(tag, attrs, type, slug, portada) {                                            // replace asset src for optimized HTML tag 
 
   const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
 
@@ -144,7 +144,6 @@ function processAssets(tag, attrs, type, slug, portada, silent = new Set()) {   
   const isSpotify = /(spotify\.com\/(track|album|playlist|episode)\/|spotify:)/i.test(filename)
 
   const size = mediaSizes.get(filename)
-  const sized = size ? ` width="${size.width}" height="${size.height}"` : ''
 
   if (isImage) {
 
@@ -163,12 +162,13 @@ function processAssets(tag, attrs, type, slug, portada, silent = new Set()) {   
     }
 
     const absUrl = `/posts/${type}/${slug}/${filename}`
+    const sized = size ? ` width="${size.width}" height="${size.height}"` : ''
     return `<img src="${absUrl}"${sized} loading="lazy" alt="${altText}">`
 
   } else if (isVideo) {
     
     const absUrl = `/posts/${type}/${slug}/${filename}`
-    if (silent.has(filename)) {
+    if (silentVideos.has(filename)) {
       return `<video src="${absUrl}" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="${altText}"></video>`
     }
     return `<video src="${absUrl}" muted loop playsinline preload="auto" class="videosync" aria-label="${altText}"></video>`
@@ -447,9 +447,9 @@ async function readShell() {
 function composeHead(page, lang, item) {
 
   const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
-  const archive = '<link rel="stylesheet" href="/assets/neocities.css">'
-  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('${archive}') } })()</script>`
-  return [app, `<noscript>${archive}<style>noscript.archive { display: contents }</style></noscript>`, view, renderHead(headFor(page, lang, item))].join('\n\n    ')
+  const archiveCss = '<link rel="stylesheet" href="/assets/neocities.css">'
+  const view = `<script>(function () { var archive = ${ARCHIVE_FLAG}.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('${archiveCss}') } })()</script>`
+  return [app, `<noscript>${archiveCss}<style>noscript.archive { display: contents }</style></noscript>`, view, renderHead(headFor(page, lang, item))].join('\n\n    ')
 
 }
 
@@ -548,7 +548,7 @@ async function processPosts() {                                                 
 
     const finalHash = hash.digest('hex')
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
-    const formatted = `${String(dateObj.getDate()).padStart(2,'0')}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${dateObj.getFullYear()}`
+    const formatted = `${String(dateObj.getUTCDate()).padStart(2,'0')}/${String(dateObj.getUTCMonth()+1).padStart(2,'0')}/${dateObj.getUTCFullYear()}`
     const isoDate = attributes.date ? new Date(attributes.date).toISOString() : dateObj.toISOString()
     const modifiedDate = attributes.modified ? new Date(attributes.modified).toISOString() : isoDate
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
@@ -589,7 +589,7 @@ async function processPosts() {                                                 
       else { setCustomSoftbreak() }
 
       let htmlContent = renderType(body, attributes).trim()
-      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada, silentVideos))
+      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
 
       if (isTradStyle) { setCustomSoftbreak() }
 
@@ -624,7 +624,7 @@ async function processPosts() {                                                 
       if (isBilingual) {
         const { attributes: attrEn, body: bodyEn } = fm(rawEn)
         let htmlContentEn = renderType(bodyEn, attrEn).trim()
-        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada, silentVideos))
+        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
         pageEn = fill('en', attrEn.title || slug, htmlContentEn)
       }
 

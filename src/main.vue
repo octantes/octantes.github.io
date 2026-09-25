@@ -1,12 +1,12 @@
 <script setup>
 import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
-import { veilOn, veilHides, registerVeil } from './03/veil.js'
+import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
 </script>
 
 <template>
 
-  <div class="pagina" :class="{ veiled: veilHides }">
+  <div class="pagina">
 
     <DotGrid viewport />
 
@@ -14,7 +14,7 @@ import { veilOn, veilHides, registerVeil } from './03/veil.js'
 
     <RouterView />
 
-    <div v-if="veilOn" class="veil" aria-hidden="true"><Portal :ref="registerVeil" /></div>
+    <div v-if="veilOn" class="veil" :class="{ opaque: veilOpaque }" aria-hidden="true"><Portal :ref="registerVeil" /></div>
 
   </div>
 
@@ -30,7 +30,7 @@ import { veilOn, veilHides, registerVeil } from './03/veil.js'
 
 .veil       { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
-.pagina.veiled > .veil { background: var(--carbon); }
+.veil.opaque { background: var(--carbon); }
 
 @media (--mobile) { .pagina { max-width: 100%; } }
 
