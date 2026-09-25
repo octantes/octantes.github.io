@@ -316,6 +316,20 @@ body::after {
 .article-list a::before          { content: ">"; margin-right: 8px; color: var(--polvo); }
 .article-list a:hover::before    { color: var(--lirio);                                  }
 
+.project-list                    { gap: 0; }
+
+.projects.lirio h2,
+.projects.lirio .project-list a,
+.projects.cristal .project-list a:hover,
+.projects.cristal .project-list a::before,
+.projects.lirio .project-list a:hover::before     { color: var(--lirio);   }
+
+.projects.cristal h2,
+.projects.cristal .project-list a,
+.projects.lirio .project-list a:hover,
+.projects.lirio .project-list a::before,
+.projects.cristal .project-list a:hover::before   { color: var(--cristal); }
+
 .post-header h1                  { 
 
   /* FONT   */ font-family: 'Inconsolata', monospace; font-variant: small-caps; line-height: 1.1;
