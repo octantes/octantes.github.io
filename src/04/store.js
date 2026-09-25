@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { TAGLINE, CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
-import { sectionOf, wordOf, labelOf, pageOf, pathOf, headFor, applyHead } from '@/04/pages.js'
+import { sectionOf, labelOf, pageOf, pathOf, headFor, applyHead } from '@/04/pages.js'
 import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
@@ -638,7 +638,7 @@ export const useStore = defineStore('store', () => {
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, aboutSection, searchQuery, tabs,
-    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, wordOf: id => wordOf(id, lang.value), labelOf: id => labelOf(id, lang.value),
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, notePath: (type, slug) => pathOf({ kind: 'note', id: type, slug }, lang.value), labelOf: id => labelOf(id, lang.value),
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
     /* LANG FUN  */ toggleLang,
