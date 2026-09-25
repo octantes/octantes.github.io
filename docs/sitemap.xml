@@ -1,103 +1,417 @@
 <?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-      <loc>https://octantes.github.io/</loc>
-      <lastmod>2026-09-24T19:14:38.258Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/archivo.html</loc>
-      <lastmod>2026-09-24T19:14:38.258Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/archive.html</loc>
-      <lastmod>2026-09-24T19:14:38.258Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/culto/</loc>
-      <lastmod>2026-08-08T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/diseño/nubenueve/</loc>
-      <lastmod>2026-06-20T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/bocetos/</loc>
-      <lastmod>2026-06-08T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/orbitas/</loc>
-      <lastmod>2026-04-08T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/desarrollo/browsewithscroll/</loc>
-      <lastmod>2026-03-05T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/desarrollo/arch-hud/</loc>
-      <lastmod>2025-09-14T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/desarrollo/shadewithseal/</loc>
-      <lastmod>2025-07-03T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/desarrollo/trackwithslate/</loc>
-      <lastmod>2025-06-23T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/geminis/</loc>
-      <lastmod>2025-06-06T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/viñetas/</loc>
-      <lastmod>2024-12-22T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/diseño/dinamik/</loc>
-      <lastmod>2024-11-30T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/diseño/cruzar/</loc>
-      <lastmod>2024-09-19T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/diseño/enuna/</loc>
-      <lastmod>2023-09-06T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/textos/pof-softwarevr/</loc>
-      <lastmod>2022-07-21T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/textos/poe-futurovr/</loc>
-      <lastmod>2022-05-10T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/seance/</loc>
-      <lastmod>2022-05-08T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/textos/pod-abandonware/</loc>
-      <lastmod>2022-03-31T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/textos/poc-propiedades/</loc>
-      <lastmod>2022-02-07T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/textos/pob-microtransacciones/</loc>
-      <lastmod>2021-12-13T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/sixminutesolder/</loc>
-      <lastmod>2021-12-08T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/textos/poa-kena/</loc>
-      <lastmod>2021-09-10T00:00:00.000Z</lastmod>
-    </url>
-<url>
-      <loc>https://octantes.github.io/posts/musica/moodworktapes/</loc>
-      <lastmod>2019-04-11T00:00:00.000Z</lastmod>
-    </url>
-  </urlset>
+    <loc>https://octantes.github.io/</loc>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dise%C3%B1o/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/"/>
+    <lastmod>2026-06-20T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/design/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/"/>
+    <lastmod>2026-06-20T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/desarrollo/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/"/>
+    <lastmod>2026-03-05T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dev/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/"/>
+    <lastmod>2026-03-05T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/textos/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/"/>
+    <lastmod>2022-07-21T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/writing/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/"/>
+    <lastmod>2022-07-21T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/juegos/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/games/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/info</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/info"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/info"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/about</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/info"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/info"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/portfolio</loc>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/culto</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/culto"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/culto"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/culto"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/culto</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/culto"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/culto"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/culto"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dise%C3%B1o/nubenueve</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/nubenueve"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/nubenueve"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/nubenueve"/>
+    <lastmod>2026-06-20T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/design/nubenueve</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/nubenueve"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/nubenueve"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/nubenueve"/>
+    <lastmod>2026-06-20T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/bocetos</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/bocetos"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/bocetos"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/bocetos"/>
+    <lastmod>2026-06-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/bocetos</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/bocetos"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/bocetos"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/bocetos"/>
+    <lastmod>2026-06-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/orbitas</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/orbitas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/orbitas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/orbitas"/>
+    <lastmod>2026-04-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/orbitas</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/orbitas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/orbitas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/orbitas"/>
+    <lastmod>2026-04-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/desarrollo/browsewithscroll</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/browsewithscroll"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/browsewithscroll"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/browsewithscroll"/>
+    <lastmod>2026-03-05T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dev/browsewithscroll</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/browsewithscroll"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/browsewithscroll"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/browsewithscroll"/>
+    <lastmod>2026-03-05T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/desarrollo/arch-hud</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/arch-hud"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/arch-hud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/arch-hud"/>
+    <lastmod>2025-09-14T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dev/arch-hud</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/arch-hud"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/arch-hud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/arch-hud"/>
+    <lastmod>2025-09-14T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/desarrollo/shadewithseal</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/shadewithseal"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/shadewithseal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/shadewithseal"/>
+    <lastmod>2025-07-03T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dev/shadewithseal</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/shadewithseal"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/shadewithseal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/shadewithseal"/>
+    <lastmod>2025-07-03T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/desarrollo/trackwithslate</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/trackwithslate"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/trackwithslate"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/trackwithslate"/>
+    <lastmod>2025-06-23T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dev/trackwithslate</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/trackwithslate"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/trackwithslate"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/trackwithslate"/>
+    <lastmod>2025-06-23T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/geminis</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/geminis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/geminis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/geminis"/>
+    <lastmod>2025-06-06T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/geminis</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/geminis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/geminis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/geminis"/>
+    <lastmod>2025-06-06T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/vi%C3%B1etas</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/vi%C3%B1etas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/vi%C3%B1etas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/vi%C3%B1etas"/>
+    <lastmod>2024-12-22T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/vi%C3%B1etas</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/vi%C3%B1etas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/vi%C3%B1etas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/vi%C3%B1etas"/>
+    <lastmod>2024-12-22T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dise%C3%B1o/dinamik</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/dinamik"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/dinamik"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/dinamik"/>
+    <lastmod>2024-11-30T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/design/dinamik</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/dinamik"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/dinamik"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/dinamik"/>
+    <lastmod>2024-11-30T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dise%C3%B1o/cruzar</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/cruzar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/cruzar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/cruzar"/>
+    <lastmod>2024-09-19T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/design/cruzar</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/cruzar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/cruzar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/cruzar"/>
+    <lastmod>2024-09-19T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dise%C3%B1o/enuna</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/enuna"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/enuna"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/enuna"/>
+    <lastmod>2023-09-06T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/design/enuna</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/enuna"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/enuna"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/enuna"/>
+    <lastmod>2023-09-06T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/textos/pof-softwarevr</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/pof-softwarevr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/pof-softwarevr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/pof-softwarevr"/>
+    <lastmod>2022-07-21T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/writing/pof-softwarevr</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/pof-softwarevr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/pof-softwarevr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/pof-softwarevr"/>
+    <lastmod>2022-07-21T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/textos/poe-futurovr</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/poe-futurovr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/poe-futurovr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/poe-futurovr"/>
+    <lastmod>2022-05-10T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/writing/poe-futurovr</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/poe-futurovr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/poe-futurovr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/poe-futurovr"/>
+    <lastmod>2022-05-10T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/seance</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/seance"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/seance"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/seance"/>
+    <lastmod>2022-05-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/seance</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/seance"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/seance"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/seance"/>
+    <lastmod>2022-05-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/textos/pod-abandonware</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/pod-abandonware"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/pod-abandonware"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/pod-abandonware"/>
+    <lastmod>2022-03-31T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/writing/pod-abandonware</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/pod-abandonware"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/pod-abandonware"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/pod-abandonware"/>
+    <lastmod>2022-03-31T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/textos/poc-propiedades</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/poc-propiedades"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/poc-propiedades"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/poc-propiedades"/>
+    <lastmod>2022-02-07T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/writing/poc-propiedades</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/poc-propiedades"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/poc-propiedades"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/poc-propiedades"/>
+    <lastmod>2022-02-07T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/textos/pob-microtransacciones</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/pob-microtransacciones"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/pob-microtransacciones"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/pob-microtransacciones"/>
+    <lastmod>2021-12-13T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/writing/pob-microtransacciones</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/pob-microtransacciones"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/pob-microtransacciones"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/pob-microtransacciones"/>
+    <lastmod>2021-12-13T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/sixminutesolder</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/sixminutesolder"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/sixminutesolder"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/sixminutesolder"/>
+    <lastmod>2021-12-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/sixminutesolder</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/sixminutesolder"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/sixminutesolder"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/sixminutesolder"/>
+    <lastmod>2021-12-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/textos/poa-kena</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/poa-kena"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/poa-kena"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/poa-kena"/>
+    <lastmod>2021-09-10T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/writing/poa-kena</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/textos/poa-kena"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/writing/poa-kena"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/textos/poa-kena"/>
+    <lastmod>2021-09-10T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/musica/moodworktapes</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/moodworktapes"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/moodworktapes"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/moodworktapes"/>
+    <lastmod>2019-04-11T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/music/moodworktapes</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/musica/moodworktapes"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/music/moodworktapes"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/musica/moodworktapes"/>
+    <lastmod>2019-04-11T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/archivo.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/archivo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/archive.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/archivo.html"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/archive.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/archivo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/archive.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/archivo.html"/>
+    <lastmod>2026-08-08T00:00:00.000Z</lastmod>
+  </url>
+</urlset>

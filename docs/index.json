@@ -9,12 +9,13 @@
       "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/culto/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/culto/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "08/08/2026",
     "isoDate": "2026-08-08T00:00:00.000Z",
-    "url": "/posts/musica/culto/",
+    "modified": "2026-08-08T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "culto",
@@ -30,12 +31,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/diseño/nubenueve/portada.webp",
+    "share": "https://octantes.github.io/posts/diseño/nubenueve/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "20/06/2026",
     "isoDate": "2026-06-20T00:00:00.000Z",
-    "url": "/posts/diseño/nubenueve/",
+    "modified": "2026-06-20T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "nubenueve - record store",
@@ -51,12 +53,13 @@
       "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/bocetos/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/bocetos/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "08/06/2026",
     "isoDate": "2026-06-08T00:00:00.000Z",
-    "url": "/posts/musica/bocetos/",
+    "modified": "2026-06-08T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "bocetos",
@@ -72,12 +75,13 @@
       "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/orbitas/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/orbitas/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "08/04/2026",
     "isoDate": "2026-04-08T00:00:00.000Z",
-    "url": "/posts/musica/orbitas/",
+    "modified": "2026-04-08T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "órbitas",
@@ -93,12 +97,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/desarrollo/browsewithscroll/portada.webp",
+    "share": "https://octantes.github.io/posts/desarrollo/browsewithscroll/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "05/03/2026",
     "isoDate": "2026-03-05T00:00:00.000Z",
-    "url": "/posts/desarrollo/browsewithscroll/",
+    "modified": "2026-03-05T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "browsewithscroll",
@@ -114,12 +119,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/desarrollo/arch-hud/portada.webp",
+    "share": "https://octantes.github.io/posts/desarrollo/arch-hud/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "14/09/2025",
     "isoDate": "2025-09-14T00:00:00.000Z",
-    "url": "/posts/desarrollo/arch-hud/",
+    "modified": "2025-09-14T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "arch-hud",
@@ -135,12 +141,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/desarrollo/shadewithseal/portada.webp",
+    "share": "https://octantes.github.io/posts/desarrollo/shadewithseal/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "03/07/2025",
     "isoDate": "2025-07-03T00:00:00.000Z",
-    "url": "/posts/desarrollo/shadewithseal/",
+    "modified": "2025-07-03T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "shadewithseal",
@@ -156,12 +163,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/desarrollo/trackwithslate/portada.webp",
+    "share": "https://octantes.github.io/posts/desarrollo/trackwithslate/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "23/06/2025",
     "isoDate": "2025-06-23T00:00:00.000Z",
-    "url": "/posts/desarrollo/trackwithslate/",
+    "modified": "2025-06-23T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "trackwithslate",
@@ -177,12 +185,13 @@
       "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/geminis/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/geminis/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "06/06/2025",
     "isoDate": "2025-06-06T00:00:00.000Z",
-    "url": "/posts/musica/geminis/",
+    "modified": "2025-06-06T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "geminis",
@@ -198,12 +207,13 @@
       "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/viñetas/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/viñetas/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "22/12/2024",
     "isoDate": "2024-12-22T00:00:00.000Z",
-    "url": "/posts/musica/viñetas/",
+    "modified": "2024-12-22T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "viñetas",
@@ -219,12 +229,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/diseño/dinamik/portada.webp",
+    "share": "https://octantes.github.io/posts/diseño/dinamik/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "30/11/2024",
     "isoDate": "2024-11-30T00:00:00.000Z",
-    "url": "/posts/diseño/dinamik/",
+    "modified": "2024-11-30T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "dinamik - studio dev",
@@ -240,12 +251,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/diseño/cruzar/portada.webp",
+    "share": "https://octantes.github.io/posts/diseño/cruzar/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "19/09/2024",
     "isoDate": "2024-09-19T00:00:00.000Z",
-    "url": "/posts/diseño/cruzar/",
+    "modified": "2024-09-19T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "cruzar - crypto cordillera",
@@ -261,12 +273,13 @@
       "portfolio"
     ],
     "portada": "https://octantes.github.io/posts/diseño/enuna/portada.webp",
+    "share": "https://octantes.github.io/posts/diseño/enuna/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "06/09/2023",
     "isoDate": "2023-09-06T00:00:00.000Z",
-    "url": "/posts/diseño/enuna/",
+    "modified": "2023-09-06T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "en una - digital publication",
@@ -282,12 +295,13 @@
       "opinión"
     ],
     "portada": "https://octantes.github.io/posts/textos/pof-softwarevr/portada.webp",
+    "share": "https://octantes.github.io/posts/textos/pof-softwarevr/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "21/07/2022",
     "isoDate": "2022-07-21T00:00:00.000Z",
-    "url": "/posts/textos/pof-softwarevr/",
+    "modified": "2022-07-21T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "virtual reality - the best applications",
@@ -303,12 +317,13 @@
       "opinión"
     ],
     "portada": "https://octantes.github.io/posts/textos/poe-futurovr/portada.webp",
+    "share": "https://octantes.github.io/posts/textos/poe-futurovr/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "10/05/2022",
     "isoDate": "2022-05-10T00:00:00.000Z",
-    "url": "/posts/textos/poe-futurovr/",
+    "modified": "2022-05-10T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "virtual reality - a contemporary future",
@@ -324,12 +339,13 @@
       "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/seance/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/seance/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "08/05/2022",
     "isoDate": "2022-05-08T00:00:00.000Z",
-    "url": "/posts/musica/seance/",
+    "modified": "2022-05-08T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "seance",
@@ -345,12 +361,13 @@
       "opinión"
     ],
     "portada": "https://octantes.github.io/posts/textos/pod-abandonware/portada.webp",
+    "share": "https://octantes.github.io/posts/textos/pod-abandonware/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "31/03/2022",
     "isoDate": "2022-03-31T00:00:00.000Z",
-    "url": "/posts/textos/pod-abandonware/",
+    "modified": "2022-03-31T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "abandonware - the permanence of the author",
@@ -366,12 +383,13 @@
       "opinión"
     ],
     "portada": "https://octantes.github.io/posts/textos/poc-propiedades/portada.webp",
+    "share": "https://octantes.github.io/posts/textos/poc-propiedades/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "07/02/2022",
     "isoDate": "2022-02-07T00:00:00.000Z",
-    "url": "/posts/textos/poc-propiedades/",
+    "modified": "2022-02-07T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "intellectual properties - do we need new IPs?",
@@ -387,12 +405,13 @@
       "opinión"
     ],
     "portada": "https://octantes.github.io/posts/textos/pob-microtransacciones/portada.webp",
+    "share": "https://octantes.github.io/posts/textos/pob-microtransacciones/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "13/12/2021",
     "isoDate": "2021-12-13T00:00:00.000Z",
-    "url": "/posts/textos/pob-microtransacciones/",
+    "modified": "2021-12-13T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "microtransactions and their future",
@@ -408,12 +427,13 @@
       "visualizer"
     ],
     "portada": "https://octantes.github.io/posts/musica/sixminutesolder/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/sixminutesolder/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "08/12/2021",
     "isoDate": "2021-12-08T00:00:00.000Z",
-    "url": "/posts/musica/sixminutesolder/",
+    "modified": "2021-12-08T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "six minutes older",
@@ -429,12 +449,13 @@
       "opinión"
     ],
     "portada": "https://octantes.github.io/posts/textos/poa-kena/portada.webp",
+    "share": "https://octantes.github.io/posts/textos/poa-kena/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "10/09/2021",
     "isoDate": "2021-09-10T00:00:00.000Z",
-    "url": "/posts/textos/poa-kena/",
+    "modified": "2021-09-10T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "kena - is it ok for aesthetics to be everything?",
@@ -450,12 +471,13 @@
       "instrumental"
     ],
     "portada": "https://octantes.github.io/posts/musica/moodworktapes/portada.webp",
+    "share": "https://octantes.github.io/posts/musica/moodworktapes/share.jpg",
     "handle": [
       "kaste"
     ],
     "date": "11/04/2019",
     "isoDate": "2019-04-11T00:00:00.000Z",
-    "url": "/posts/musica/moodworktapes/",
+    "modified": "2019-04-11T00:00:00.000Z",
     "vuecomp": null,
     "bilingual": true,
     "titleEn": "mood worktapes",
