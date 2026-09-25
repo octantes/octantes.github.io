@@ -317,6 +317,8 @@ body::after {
 .article-list a::before          { content: ">"; margin-right: 8px; color: var(--polvo); }
 .article-list a:hover::before    { color: var(--lirio);                                  }
 .article-list [aria-current]     { color: var(--lirio);                                  }
+.cat-header a                    { color: inherit;                                       }
+.cat-header a::before            { content: none;                                        }
 
 .project-list                    { gap: 0; }
 .project-row a                   { display: inline; }

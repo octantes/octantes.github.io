@@ -433,8 +433,8 @@ async function cleanOrphans() {                                                 
 }
 
 const chrome = {
-  es: { bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navArchiveHref: 'archivo.html', navArticles: 'art\u00edculos', toggleLabel: '[ENG]' },
-  en: { bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navArchiveHref: 'archive.html', navArticles: 'articles', toggleLabel: '[ESP]' },
+  es: { bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navArchiveHref: 'archivo.html', navArticles: 'art\u00edculos', toggleLabel: '[ENG]', archiveMeta: 'archivo plano // octantes.ar' },
+  en: { bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navArchiveHref: 'archive.html', navArticles: 'articles', toggleLabel: '[ESP]', archiveMeta: 'flat archive // octantes.ar' },
 }
 
 let shell = null
@@ -707,7 +707,8 @@ function generateBilingualSidebar() {                                        // 
 
   order.forEach(type => {
     if (groups[type]) {
-      html += `<li class="cat-header" data-es-text="${esc(labelOf(type, 'es'))}" data-en-text="${esc(labelOf(type, 'en'))}">${esc(labelOf(type, 'es'))}</li>`
+      const esHref = archiveHref({ kind: 'section', id: type }, 'es'), enHref = archiveHref({ kind: 'section', id: type }, 'en')
+      html += `<li class="cat-header"><a href="${esHref}" data-es-href="${esHref}" data-en-href="${enHref}" data-es-text="${esc(labelOf(type, 'es'))}" data-en-text="${esc(labelOf(type, 'en'))}">${esc(labelOf(type, 'es'))}</a></li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
         const esUrl = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, 'es')
         const enUrl = p.bilingual ? archiveHref({ kind: 'note', id: p.type, slug: p.slug }, 'en') : esUrl
@@ -828,7 +829,7 @@ async function writeBilingualArchive() {                                   // cr
       el.href = el.dataset[l + 'Href']
     })
   }
-  applyLang(lang)
+  document.addEventListener('DOMContentLoaded', function() { applyLang(lang) })
   window.toggleLang = function() { applyLang(lang === 'es' ? 'en' : 'es') }
 })()
   <\/script>
@@ -907,23 +908,26 @@ async function writeBilingualArchive() {                                   // cr
 
 }
 
+function projectList(items, shape = '') { return `<ul class="article-list project-list${shape}">${items.join('')}</ul>` }
+
+function noteItem(p, lang) {
+
+  const en = lang === 'en'
+  const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, en && p.bilingual ? 'en' : 'es')
+  return `<li><a href="${href}">${esc(en && p.titleEn || p.title)}</a>${esc(en && p.descriptionEn || p.description)}<br><br></li>`
+
+}
+
 async function writePortfolio() {
 
   const page = { kind: 'portfolio' }
   const tones = { 'dise\u00f1o': 'lirio', desarrollo: 'cristal' }
-  const list = (items, shape = '') => `<ul class="article-list project-list${shape}">${items.join('')}</ul>`
-
-  const item = (p, lang) => {
-    const en = lang === 'en'
-    const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, en && p.bilingual ? 'en' : 'es')
-    return `<li><a href="${href}">${esc(en && p.titleEn || p.title)}</a>${esc(en && p.descriptionEn || p.description)}<br><br></li>`
-  }
 
   const content = lang => [
     `<p>${DICT[lang].portfolio.desc}</p>`,
-    `<section class="projects cristal">${list(MAIN_PROJECTS.map(p => `<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a>: ${esc(p.desc[lang])}</li>`), ' project-row')}</section>`,
+    `<section class="projects cristal">${projectList(MAIN_PROJECTS.map(p => `<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a>: ${esc(p.desc[lang])}</li>`), ' project-row')}</section>`,
     ...Object.entries(tones).map(([id, tone]) => `<section class="projects ${tone}"><h2>${esc(labelOf(id, lang))}</h2>\n` +
-      list(indexItems.filter(p => p.type === id).map(p => item(p, lang))) + '</section>'),
+      projectList(indexItems.filter(p => p.type === id).map(p => noteItem(p, lang))) + '</section>'),
   ].join('\n')
 
   const fill = lang => fillTemplate({
@@ -950,13 +954,28 @@ async function writeShells() {
   ]
 
   for (const [page, lang] of pages) {
-    const html = shell.html.replace('<html lang="es">', `<html lang="${lang}">`).replace(shell.home, () => renderHead(headFor(page, lang)))
+    const html = page.kind === 'section' ? sectionPage(page, lang) : shell.html.replace('<html lang="es">', `<html lang="${lang}">`).replace(shell.home, () => renderHead(headFor(page, lang)))
     await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
     await fs.writeFile(pageFile(page, lang), html)
     if (page.kind === 'section') await fs.writeFile(path.join(outputDir, pathOf(page, lang).slice(1) + '.html'), html)
   }
 
   console.log(`${pages.length} page shells written`)
+
+}
+
+function sectionPage(page, lang) {
+
+  const about = DICT[lang].about
+  const content = [
+    `<p>${about.sections[page.id]}</p>`, '<hr>', `<p>${about.footers[page.id]}</p>`,
+    projectList(indexItems.filter(p => p.type === page.id).map(p => noteItem(p, lang))),
+  ].join('\n')
+
+  return fillTemplate({
+    page, lang, title: labelOf(page.id, lang), meta: chrome[lang].archiveMeta, type: 'section',
+    toggleHref: archiveHref(page, lang === 'es' ? 'en' : 'es'), sidebar: generateMonolingualSidebar(lang), content,
+  })
 
 }
 
@@ -982,7 +1001,7 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
   order.forEach(type => {
     if (groups[type]) {
       const typeLabel = labelOf(type, lang)
-      html += `<li class="cat-header">${esc(typeLabel)}</li>`
+      html += `<li class="cat-header"><a href="${archiveHref({ kind: 'section', id: type }, lang)}">${esc(typeLabel)}</a></li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
         const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, lang === 'en' && p.bilingual ? 'en' : 'es')
         const title = lang === 'en' ? (p.titleEn || p.title) : p.title
