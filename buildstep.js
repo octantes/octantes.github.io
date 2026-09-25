@@ -8,6 +8,7 @@ import sharp from 'sharp'
 import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
 import { DICT } from './src/04/dict.js'
 import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf } from './src/04/pages.js'
+import { figlet } from './src/04/figlet.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -433,23 +434,29 @@ async function cleanOrphans() {                                                 
 }
 
 const chrome = {
-  es: { bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navArchiveHref: 'archivo.html', navArticles: 'art\u00edculos', toggleLabel: '[ENG]', archiveMeta: 'archivo plano // octantes.ar' },
-  en: { bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navArchiveHref: 'archive.html', navArticles: 'articles', toggleLabel: '[ESP]', archiveMeta: 'flat archive // octantes.ar' },
+  es: { bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navPosts: 'posteos', toggleLabel: '[ENG]', archiveMeta: 'archivo plano // octantes.ar' },
+  en: { bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navPosts: 'posts', toggleLabel: '[ESP]', archiveMeta: 'flat archive // octantes.ar' },
 }
+
+const otherLang = lang => lang === 'es' ? 'en' : 'es'
 
 let shell = null
 const writtenPages = []
 
 function pageFile(page, lang) {
 
-  const parts = pathOf(page, lang).split('/').filter(Boolean)
-  return page.kind === 'section' ? path.join(outputDir, ...parts, 'index.html') : path.join(outputDir, ...parts) + '.html'
+  const file = path.join(outputDir, ...pathOf(page, lang).split('/').filter(Boolean))
+  return page.kind === 'section' ? path.join(file, 'index.html') : file.endsWith('.html') ? file : file + '.html'
 
 }
 
-function archiveHref(page, lang) { return `${pathOf(page, lang)}?${ARCHIVE_VIEW[lang]}` }
+function archiveHref(page, lang) { return page.kind === 'archive' ? pathOf(page, lang) : `${pathOf(page, lang)}?${ARCHIVE_VIEW[lang]}` }
 
-function markCurrent(html, href) { return html.replace(`<a href="${href}">`, () => `<a href="${href}" aria-current="page">`) }
+function markCurrent(html, href) { return html.replace(`<a href="${href}"`, () => `<a href="${href}" aria-current="page"`) }
+
+function noteHref(p, lang) { return archiveHref({ kind: 'note', id: p.type, slug: p.slug }, lang === 'en' && p.bilingual ? 'en' : 'es') }
+
+function noteTitle(p, lang) { return lang === 'en' && p.titleEn || p.title }
 
 async function readShell() {
 
@@ -465,17 +472,27 @@ async function readShell() {
 
 function composeHead(page, lang, item) {
 
-  const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
+  const bare = '<meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1">'
   const archiveCss = '<link rel="stylesheet" href="/assets/neocities.css">'
+  const unwrapped = '<style>noscript.archive { display: contents }</style>'
+  const head = renderHead(headFor(page, lang, item))
+
+  if (page.kind === 'archive') {
+    const top = shell ? shell.top.split('\n').filter(line => !/type="module"|modulepreload|rel="stylesheet"|rel="preload"/.test(line)).join('\n').replace(/\n\s*\n\s*\n/g, '\n\n') : bare
+    return [top, archiveCss, `<noscript>${unwrapped}</noscript>`, `<script>document.documentElement.classList.add('archive')</script>`, head].join('\n\n    ')
+  }
+
+  const app = shell ? shell.top.replace(/<link rel="stylesheet" crossorigin/g, '<link rel="stylesheet" media="(scripting: enabled)" crossorigin') : bare
   const view = `<script>(function () { var archive = location.search.match(${ARCHIVE_FLAG}); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.documentElement.dataset.view = archive[1]; document.write('${archiveCss}') } })()</script>`
   const note = page.kind === 'note' ? `<script type="application/json" id="note">${JSON.stringify(item).replace(/</g, '\\u003c')}</script>` : ''
-  return [app, `<noscript>${archiveCss}<style>noscript.archive { display: contents }</style></noscript>`, view, renderHead(headFor(page, lang, item)), note].filter(Boolean).join('\n\n    ')
+  return [app, `<noscript>${archiveCss}${unwrapped}</noscript>`, view, head, note].filter(Boolean).join('\n\n    ')
 
 }
 
 function fillTemplate({ page, lang, item, title, meta, type, toggleHref, sidebar = '', content }) {
 
-  return markCurrent(template
+  const chromed = template
+    .replace(/\s*<header class="post-header">[\s\S]*?<\/header>/, header => title ? header : '')
     .replace(/{{head}}/g, () => composeHead(page, lang, item))
     .replace(/{{langTag}}/g, lang)
     .replace(/{{title}}/g, () => title)
@@ -485,12 +502,14 @@ function fillTemplate({ page, lang, item, title, meta, type, toggleHref, sidebar
     .replace(/{{bio}}/g, chrome[lang].bio)
     .replace(/{{postType}}/g, type)
     .replace(/{{navArchive}}/g, chrome[lang].navArchive)
-    .replace(/{{navArchiveHref}}/g, chrome[lang].navArchiveHref)
-    .replace(/{{navArticles}}/g, chrome[lang].navArticles)
+    .replace(/{{navArchiveHref}}/g, archiveHref({ kind: 'archive' }, lang))
+    .replace(/{{navPosts}}/g, chrome[lang].navPosts)
+    .replace(/{{aboutHref}}/g, archiveHref({ kind: 'about' }, lang))
     .replace(/{{toggleLabel}}/g, chrome[lang].toggleLabel)
     .replace(/{{toggleHref}}/g, toggleHref)
     .replace(/{{portfolioHref}}/g, archiveHref({ kind: 'portfolio' }, lang))
-    .replace(/{{htmlContent}}/g, () => content), archiveHref(page, lang))
+
+  return markCurrent(chromed, archiveHref(page, lang)).replace(/{{htmlContent}}/g, () => content)
 
 }
 
@@ -645,7 +664,7 @@ async function processPosts() {                                                 
           return match
       })
 
-      const toggleHref = lang => isBilingual ? archiveHref(page, lang === 'es' ? 'en' : 'es') : '/archive.html'
+      const toggleHref = lang => isBilingual ? archiveHref(page, otherLang(lang)) : archiveHref({ kind: 'archive' }, 'en')
       const fill = (lang, title, content) => fillTemplate({ page, lang, item, title, meta: `${formatted} // ${primaryHandle}`, type: postType, toggleHref: toggleHref(lang), content })
 
       const pageEs = fill('es', attributes.title || slug, htmlContent)
@@ -691,230 +710,27 @@ async function writeIndex() {                                                   
 
 }
 
-function generateBilingualSidebar() {                                        // create bilingual sidebar for archive page
-
-  const groups = {}
-
-  indexItems.forEach(item => {
-    if (!groups[item.type]) groups[item.type] = []
-    groups[item.type].push(item)
-  })
-
-  const order = ['musica', 'diseño', 'juegos', 'desarrollo', 'textos']
-  Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
-
-  let html = ''
-
-  order.forEach(type => {
-    if (groups[type]) {
-      const esHref = archiveHref({ kind: 'section', id: type }, 'es'), enHref = archiveHref({ kind: 'section', id: type }, 'en')
-      html += `<li class="cat-header"><a href="${esHref}" data-es-href="${esHref}" data-en-href="${enHref}" data-es-text="${esc(labelOf(type, 'es'))}" data-en-text="${esc(labelOf(type, 'en'))}">${esc(labelOf(type, 'es'))}</a></li>`
-      groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
-        const esUrl = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, 'es')
-        const enUrl = p.bilingual ? archiveHref({ kind: 'note', id: p.type, slug: p.slug }, 'en') : esUrl
-        const esTitle = p.title
-        const enTitle = p.titleEn || p.title
-        html += `<li><a href="${esc(esUrl)}" data-es-href="${esc(esUrl)}" data-en-href="${esc(enUrl)}"><span data-es-text="${esc(esTitle)}" data-en-text="${esc(enTitle)}">${esc(esTitle)}</span></a></li>`
-      })
-    }
-  })
-  
-  return html
-}
-
 function esc(str) {
   return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-async function writeBilingualArchive() {                                   // create bilingual archive page with JS toggle
+function projectList(items, shape = '') { return `<ul class="article-list project-list${shape}">${items.join('')}</ul>` }
 
-  const sidebarHTML = generateBilingualSidebar()
-  const sortedItems = [...indexItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
+function noteItem(p, lang) { return `<li><a href="${noteHref(p, lang)}">${esc(noteTitle(p, lang))}</a>${esc(lang === 'en' && p.descriptionEn || p.description)}<br><br></li>` }
 
-  const latestHTML = sortedItems.slice(0, 15).map(i => {
-    const esUrl = archiveHref({ kind: 'note', id: i.type, slug: i.slug }, 'es')
-    const enUrl = i.bilingual ? archiveHref({ kind: 'note', id: i.type, slug: i.slug }, 'en') : esUrl
-    const esTitle = i.title
-    const enTitle = i.titleEn || i.title
-    return `<li><a href="${esc(esUrl)}" data-es-href="${esc(esUrl)}" data-en-href="${esc(enUrl)}"><span class="list-span">[${i.date}]</span> <span data-es-text="${esc(esTitle)}" data-en-text="${esc(enTitle)}">${esc(esTitle)}</span></a></li>`
-  }).join('\n')
+function latestList(lang) {
 
-  const pageHtml = `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-key="pageTitle">octantes.ar - archive</title>
-  <meta name="description" content="archivo plano // octantes.ar" data-key="desc">
-  <link rel="canonical" href="${webURL}/archivo.html">
-  <link rel="alternate" hreflang="es" href="${webURL}/archivo.html">
-  <link rel="alternate" hreflang="en" href="${webURL}/archive.html">
-  <link rel="alternate" hreflang="x-default" href="${webURL}/archivo.html">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="octantes.ar - archivo" data-key="pageTitle">
-  <meta property="og:description" content="archivo plano // octantes.ar" data-key="desc">
-  <meta property="og:url" content="${webURL}/archivo.html">
-  <meta property="og:image" content="${webURL}/assets/share.jpg">
-  <meta property="og:site_name" content="octantes.ar">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="octantes.ar - archivo" data-key="pageTitle">
-  <meta name="twitter:description" content="archivo plano // octantes.ar" data-key="desc">
-  <meta name="twitter:image" content="${webURL}/assets/share.jpg">
-  <meta name="twitter:creator" content="@octantes">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "octantes.ar - archivo",
-    "description": "archivo plano // octantes.ar",
-    "url": "${webURL}/archivo.html",
-    "author": { "@type": "Person", "name": "kaste" },
-    "publisher": { "@type": "Organization", "name": "octantes.ar" }
-  }
-  <\/script>
-  <link rel="stylesheet" href="/assets/neocities.css">
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="09728bae-6bcd-4609-a854-f6b016251416"></script>
-  <meta name="google-site-verification" content="dLiN5dsyf2dn83nTH9o-9xwHc7YUgZs4dR2ojjJ4OAM" />
-  <script>
-(function() {
-  var L = {
-    es: {
-      pageTitle: 'octantes.ar - archivo',
-      title: 'abriendo portales a universos alternativos',
-      desc: 'archivo plano // octantes.ar',
-      subtitle: '${TAGLINE.es}',
-      instruct: 'seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.',
-      latest: '\u00faltimas actualizaciones',
-      articles: 'art\u00edculos',
-      bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura',
-      navArticles: '[ART\u00cdCULOS]',
-      navPortal: '[PORTAL]',
-      navRss: '[RSS]',
-      toggleTo: '[ENG]'
-    },
-    en: {
-      pageTitle: 'octantes.ar - archive',
-      title: 'opening portals to alternative universes',
-      desc: 'flat archive // octantes.ar',
-      subtitle: '${TAGLINE.en}',
-      instruct: 'select a note from the left menu to start reading.',
-      latest: 'latest updates',
-      articles: 'articles',
-      bio: 'music, design, dev & writing',
-      navArticles: '[ARTICLES]',
-      navPortal: '[PORTAL]',
-      navRss: '[RSS]',
-      toggleTo: '[ESP]'
-    }
-  }
-  var lang = localStorage.getItem('lang')
-  if (!lang) {
-    var nav = (navigator.language || '').toLowerCase().split('-')[0]
-    lang = nav === 'es' ? 'es' : 'en'
-    localStorage.setItem('lang', lang)
-  }
-  function applyLang(l) {
-    lang = l
-    localStorage.setItem('lang', l)
-    document.documentElement.lang = l
-    document.title = L[l].pageTitle
-    document.querySelectorAll('[data-key]').forEach(function(el) {
-      if (el.tagName === 'META') { el.content = L[l][el.dataset.key]; return }
-      el.textContent = L[l][el.dataset.key]
-    })
-    document.querySelectorAll('[data-es-text]').forEach(function(el) {
-      el.textContent = el.dataset[l + 'Text']
-    })
-    document.querySelectorAll('[data-es-href]').forEach(function(el) {
-      el.href = el.dataset[l + 'Href']
-    })
-  }
-  document.addEventListener('DOMContentLoaded', function() { applyLang(lang) })
-  window.toggleLang = function() { applyLang(lang === 'es' ? 'en' : 'es') }
-})()
-  <\/script>
-</head>
-<body>
-
-  <aside class="static-nav">
-    <div class="sidebar-content">
-    
-      <div class="site-logo">OCTANTES</div>
-      <div class="site-subtitle" data-key="subtitle">${TAGLINE.es}</div>
-      
-      <div class="profile-box">
-        <a href="https://x.com/octantes" target="_blank" class="profile-link">
-          <img src="/assets/kaste.webp" alt="kaste avatar" class="profile-img">
-        </a>
-        <div class="profile-text">
-          <strong>kaste</strong><br>
-          <i data-key="bio">m\u00fasica, dise\u00f1o, desarrollo y escritura</i>
-        </div>
-      </div>
-      
-      <nav class="nav-links">
-        <div class="nav-row">
-          <a href="/archive.html" data-key="navArticles" aria-current="page" data-es-href="/archivo.html" data-en-href="/archive.html">[ART\u00cdCULOS]</a>
-          <a href="/" data-key="navPortal">[PORTAL]</a>
-        </div>
-        <div class="nav-row">
-          <a href="/feed.xml" data-key="navRss">[RSS]</a>
-          <button onclick="toggleLang()" data-key="toggleTo">[ENG]</button>
-        </div>
-        <div class="nav-row">
-          <a href="${archiveHref({ kind: 'portfolio' }, 'es')}" data-es-href="${archiveHref({ kind: 'portfolio' }, 'es')}" data-en-href="${archiveHref({ kind: 'portfolio' }, 'en')}">[PORTFOLIO]</a>
-        </div>
-      </nav>
-      
-      <div class="separator-nomargin" data-key="articles">art\u00edculos</div>
-      <ul class="article-list">${sidebarHTML}</ul>
-      
-    </div>
-  </aside>
-  
-  <main class="post-content">
-  
-    <header class="post-header">
-      <h1 data-key="title">abriendo portales a universos alternativos</h1>
-      <div class="meta" data-key="desc">archivo plano // octantes.ar</div>
-    </header>
-    
-    <p data-key="instruct">seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.</p>
-    
-    <div class="separator-margin" data-key="latest">\u00faltimas actualizaciones</div>
-
-    <ul class="article-list">
-      ${latestHTML}
-    </ul>
-    
-  </main>
-  
-</body>
-</html>`
-
-  const pageHtmlEn = pageHtml
-    .replace('lang="es"', 'lang="en"')
-    .replace(`<link rel="canonical" href="${webURL}/archivo.html">`, `<link rel="canonical" href="${webURL}/archive.html">`)
-    .replace(`<meta property="og:url" content="${webURL}/archivo.html">`, `<meta property="og:url" content="${webURL}/archive.html">`)
-    .replace(`"url": "${webURL}/archivo.html"`, `"url": "${webURL}/archive.html"`)
-    .replace('"name": "octantes.ar - archivo"', '"name": "octantes.ar - archive"')
-    .replace('"description": "archivo plano // octantes.ar"', '"description": "flat archive // octantes.ar"')
-    .replaceAll('content="octantes.ar - archivo"', 'content="octantes.ar - archive"')
-    .replaceAll('content="archivo plano // octantes.ar"', 'content="flat archive // octantes.ar"')
-
-  await fs.writeFile(path.join(outputDir, 'archivo.html'), pageHtml)
-  await fs.writeFile(path.join(outputDir, 'archive.html'), pageHtmlEn)
-  console.log('archivo.html / archive.html generated (bilingual)')
+  const latest = [...indexItems].sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate)).slice(0, 15)
+  return `<ul class="article-list">${latest.map(p => `<li><a href="${noteHref(p, lang)}"><span class="list-span">[${p.date}]</span> ${esc(noteTitle(p, lang))}</a></li>`).join('')}</ul>`
 
 }
 
-function projectList(items, shape = '') { return `<ul class="article-list project-list${shape}">${items.join('')}</ul>` }
+function withEnglish(es, en) {
 
-function noteItem(p, lang) {
-
-  const en = lang === 'en'
-  const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, en && p.bilingual ? 'en' : 'es')
-  return `<li><a href="${href}">${esc(en && p.titleEn || p.title)}</a>${esc(en && p.descriptionEn || p.description)}<br><br></li>`
+  const open = '<noscript class="archive">', close = '</noscript>'
+  const english = `<template data-view="${ARCHIVE_VIEW.en}" lang="en">${en.slice(en.indexOf(open) + open.length, en.lastIndexOf(close))}</template>`
+  const end = es.lastIndexOf(close) + close.length
+  return `${es.slice(0, end)}\n\n    ${english}${es.slice(end)}`
 
 }
 
@@ -932,14 +748,10 @@ async function writePortfolio() {
 
   const fill = lang => fillTemplate({
     page, lang, title: AUTHOR_NAME.toLowerCase(), meta: DICT[lang].portfolio.subtitle.toLowerCase(), type: 'portfolio',
-    toggleHref: archiveHref(page, lang === 'es' ? 'en' : 'es'), sidebar: generateMonolingualSidebar(lang), content: content(lang),
+    toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content: content(lang),
   })
 
-  const open = '<noscript class="archive">', close = '</noscript>'
-  const [es, en] = [fill('es'), fill('en')]
-  const english = `<template data-view="${ARCHIVE_VIEW.en}" lang="en">${en.slice(en.indexOf(open) + open.length, en.lastIndexOf(close))}</template>`
-  const end = es.lastIndexOf(close) + close.length
-  await fs.writeFile(pageFile(page, 'es'), `${es.slice(0, end)}\n\n    ${english}${es.slice(end)}`)
+  await fs.writeFile(pageFile(page, 'es'), withEnglish(fill('es'), fill('en')))
 
 }
 
@@ -954,7 +766,7 @@ async function writeShells() {
   ]
 
   for (const [page, lang] of pages) {
-    const html = page.kind === 'section' ? sectionPage(page, lang) : shell.html.replace('<html lang="es">', `<html lang="${lang}">`).replace(shell.home, () => renderHead(headFor(page, lang)))
+    const html = page.kind === 'portal' ? shell.html.replace('<html lang="es">', `<html lang="${lang}">`).replace(shell.home, () => renderHead(headFor(page, lang))) : aboutPage(page, lang)
     await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
     await fs.writeFile(pageFile(page, lang), html)
     if (page.kind === 'section') await fs.writeFile(path.join(outputDir, pathOf(page, lang).slice(1) + '.html'), html)
@@ -964,23 +776,39 @@ async function writeShells() {
 
 }
 
-function sectionPage(page, lang) {
+function aboutPage(page, lang) {
 
+  const id = page.id ?? 'portal'
   const about = DICT[lang].about
-  const content = [
-    `<p>${about.sections[page.id]}</p>`, '<hr>', `<p>${about.footers[page.id]}</p>`,
-    projectList(indexItems.filter(p => p.type === page.id).map(p => noteItem(p, lang))),
-  ].join('\n')
+  const notes = page.kind === 'about' ? latestList(lang) : projectList(indexItems.filter(p => p.type === id).map(p => noteItem(p, lang)))
+  const content = [`<p>${about.sections[id]}</p>`, '<hr>', `<p>${about.footers[id]}</p>`, notes].join('\n')
 
   return fillTemplate({
-    page, lang, title: labelOf(page.id, lang), meta: chrome[lang].archiveMeta, type: 'section',
-    toggleHref: archiveHref(page, lang === 'es' ? 'en' : 'es'), sidebar: generateMonolingualSidebar(lang), content,
+    page, lang, title: headFor(page, lang).name, meta: chrome[lang].archiveMeta, type: page.kind,
+    toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content,
   })
 
 }
 
-async function writeBasicIndex() {                                               // create both language archive versions
-  await writeBilingualArchive()
+async function writeArchive() {                                                  // create both language archive versions
+
+  const intro = {
+    es: { title: 'abriendo portales a universos alternativos', instruct: 'seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.', latest: '\u00faltimas actualizaciones' },
+    en: { title: 'opening portals to alternative universes', instruct: 'select a note from the left menu to start reading.', latest: 'latest updates' },
+  }
+
+  const page = { kind: 'archive' }
+
+  for (const lang of ['es', 'en']) {
+    const content = [`<p>${intro[lang].instruct}</p>`, `<div class="separator-margin">${intro[lang].latest}</div>`, latestList(lang)].join('\n')
+    await fs.writeFile(pageFile(page, lang), fillTemplate({
+      page, lang, title: intro[lang].title, meta: chrome[lang].archiveMeta, type: 'archive',
+      toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content,
+    }))
+  }
+
+  console.log('archivo.html / archive.html generated')
+
 }
 
 function generateMonolingualSidebar(lang = 'es') {                          // create static sidebar for post pages
@@ -1003,9 +831,7 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
       const typeLabel = labelOf(type, lang)
       html += `<li class="cat-header"><a href="${archiveHref({ kind: 'section', id: type }, lang)}">${esc(typeLabel)}</a></li>`
       groups[type].sort((a,b) => new Date(b.isoDate) - new Date(a.isoDate)).forEach(p => {
-        const href = archiveHref({ kind: 'note', id: p.type, slug: p.slug }, lang === 'en' && p.bilingual ? 'en' : 'es')
-        const title = lang === 'en' ? (p.titleEn || p.title) : p.title
-        html += `<li><a href="${href}">${esc(title)}</a></li>`
+        html += `<li><a href="${noteHref(p, lang)}">${esc(noteTitle(p, lang))}</a></li>`
       })
     }
   })
@@ -1134,17 +960,19 @@ async function writeFeed() {                                                    
 
 }
 
-async function finalizeBuild() {                                                 // update cache and create 404 from index 
+async function finalizeBuild() {                                                 // update cache and create 404 
 
   await fs.mkdir(path.dirname(cacheFile), { recursive: true })
   await fs.writeFile(cacheFile, JSON.stringify(cache, null, 2))
 
-  try {
-    const notFoundPath = path.join(outputDir, '404.html')
-    const html = await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')
-    await fs.writeFile(notFoundPath, html.replace(renderHead(headFor({ kind: 'home' }, 'es')), () => renderHead(headFor({ kind: 'notfound' }, 'es'))))
-    console.log('404.html generated from index.html')
-  } catch (e) { console.warn('could not generate 404.html (index.html missing, did vite build?):', e.message) }
+  const page = { kind: 'notfound', path: '' }
+  const fill = lang => {
+    const copy = DICT[lang].notFound
+    const content = `<pre class="errorart">${figlet(404)}</pre>\n<p>${copy.byCode['404']}</p>\n<nav class="nav-links"><a href="${archiveHref({ kind: 'archive' }, lang)}">[${copy.back}]</a></nav>`
+    return fillTemplate({ page, lang, title: '', meta: '', type: 'notfound', toggleHref: archiveHref(page, otherLang(lang)), sidebar: generateMonolingualSidebar(lang), content })
+  }
+  await fs.writeFile(path.join(outputDir, '404.html'), withEnglish(fill('es'), fill('en')))
+  console.log('404.html generated')
 
   await fs.writeFile(path.join(outputDir, '.nojekyll'), '')
   console.log('.nojekyll created')
@@ -1166,7 +994,7 @@ async function main() {                                                         
   await writeIndex()
   await writePortfolio()
   await updateSidebars()
-  await writeBasicIndex()
+  await writeArchive()
   await writeShells()
   await writeSitemap()
   await writeFeed()
