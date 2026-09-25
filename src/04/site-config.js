@@ -16,6 +16,7 @@ export const ABOUT_PATH   = { es: '/info', en: '/about' }
 export const ARCHIVE_VIEW = { es: 'archivo', en: 'archive' }
 
 export const SITE_NAME        = 'octantes.ar'
+export const AUTHOR_NAME      = 'Facundo Gerbino'
 export const SITE_DESCRIPTION = { es: 'un portal web multimedia, sin algoritmos ni intermediarios', en: 'a multimedia web portal, no algorithms or middlemen' }
 export const TWITTER          = '@octantes'
 
