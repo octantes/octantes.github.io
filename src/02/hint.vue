@@ -26,7 +26,7 @@ const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `
 .hint {
 
   /* LAYOUT */ position: fixed; z-index: 3; pointer-events: none; display: flex; flex-direction: column; gap: .3rem;
-               --aw: 16px; --ah: 9px; --inset: 14px; --reach: calc(var(--inset) + var(--aw) / 2);
+               --aw: 24px; --ah: 14px; --inset: 14px; --reach: calc(var(--inset) + var(--aw) / 2);
   /* BOX    */ width: 18rem; padding: .6rem .8rem;
   /* FILL   */ background: var(--carbon); color: var(--humo);
   /* BORDER */ border-radius: var(--radius-ss);
