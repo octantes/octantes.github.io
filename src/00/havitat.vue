@@ -90,8 +90,8 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
     <div class="room" ref="room" role="main">
 
       <svg class="wall" :class="{ focused: halo }" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
-        <rect class="surface" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" :fill="wall.color" @click="armed = null" />
-        <clipPath id="inside"><rect :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" /></clipPath>
+        <rect class="surface" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" :fill="wall.color" @click="armed = null" />
+        <clipPath id="inside"><rect :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" /></clipPath>
         <g class="items" clip-path="url(#inside)">
           <template v-for="item in layout.items" :key="item.id">
             <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill" />
@@ -100,7 +100,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
           </template>
         </g>
         <rect v-if="halo" clip-path="url(#inside)" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" :stroke-width="LINE" :fill="halo.fill" />
-        <rect class="edge" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" :stroke-width="LINE" />
+        <rect class="edge" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" :stroke-width="LINE" />
       </svg>
 
       <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
