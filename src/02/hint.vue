@@ -27,11 +27,11 @@ const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `
 
   /* LAYOUT */ position: fixed; z-index: 3; pointer-events: none; display: flex; flex-direction: column; gap: .3rem; --gap: 10px;
   /* BOX    */ width: 18rem; padding: .6rem .8rem;
-  /* FILL   */ background: var(--carbon-a95); color: var(--humo);
+  /* FILL   */ background: var(--carbon); color: var(--humo);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
 
-  &::before { content: ''; position: absolute; width: calc(2 * var(--gap)); height: calc(2 * var(--gap)); background: var(--carbon-a95); clip-path: polygon(0 0, 100% 50%, 50% 50%, 50% 100%); }
+  &::before { content: ''; position: absolute; width: calc(2 * var(--gap)); height: calc(2 * var(--gap)); background: var(--carbon); clip-path: polygon(0 0, 100% 50%, 100% 100%, 50% 100%); }
 
   &.tl { transform: translate(var(--gap), var(--gap));                                 border-top-left-radius: 0;     &::before { left: calc(-1 * var(--gap)); top: calc(-1 * var(--gap)); } }
   &.tr { transform: translate(calc(-100% - var(--gap)), var(--gap));                   border-top-right-radius: 0;    &::before { right: calc(-1 * var(--gap)); top: calc(-1 * var(--gap)); transform: scaleX(-1); } }
