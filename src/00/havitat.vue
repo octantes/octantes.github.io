@@ -8,6 +8,9 @@ import { WALLS, LANDING_WALL, layoutWall } from '../04/walls.js'
 import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
 
+const ROOM_FOR_HINT = 140
+const GAP           = 4
+
 const route  = useRoute()
 const router = useRouter()
 const store  = useStore()
@@ -34,10 +37,13 @@ const tip = computed(() => {
 
   const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / layout.value.size[0]
   const [x, y, w, h] = item.box.map(v => v * scale)
-  const west  = frame.left + x + w / 2 < frame.left + frame.width / 2
-  const north = frame.top + y + h / 2 < frame.top + frame.height / 2
+  const [left, top] = [frame.left + x, frame.top + y]
+  const west  = left + w / 2 < frame.left + frame.width / 2
+  const north = top + h / 2 < frame.top + frame.height / 2
+  const space = north ? frame.bottom - top - h : top - frame.top
 
-  return { item, at: [frame.left + (west ? x + w : x), frame.top + (north ? y + h : y)], corner: (north ? 't' : 'b') + (west ? 'l' : 'r') }
+  if (space > ROOM_FOR_HINT) return { item, at: [left + w / 2, north ? top + h + GAP : top - GAP], place: `${north ? 'top' : 'bottom'}-${west ? 'start' : 'end'}` }
+  return { item, at: [west ? left + w + GAP : left - GAP, top + h / 2], place: `${west ? 'left' : 'right'}-${north ? 'start' : 'end'}` }
 
 })
 
