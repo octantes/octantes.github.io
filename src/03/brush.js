@@ -1,4 +1,4 @@
-export const BRUSH = { width: 18, taper: 30, swell: 0.14, grain: 0.05, boil: 2.4, frames: 3, fps: 12 }
+export const BRUSH = { width: 18, taper: 30, swell: 0.14, grain: 0.05, boil: 2.4, frames: 3, fps: 6 }
 
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
 
