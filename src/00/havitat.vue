@@ -4,11 +4,10 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf } from '../04/pages.js'
-import { WALLS, LANDING_WALL, layoutWall } from '../04/walls.js'
+import { WALLS, LANDING_WALL, LINE, layoutWall } from '../04/walls.js'
 import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
 
-const LINE = 18
 const HINT = { w: 288, h: 110, gap: 12, arrow: 14 }
 
 const route  = useRoute()
@@ -91,15 +90,17 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
     <div class="room" ref="room" role="main">
 
       <svg class="wall" :class="{ focused: halo }" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
-        <rect class="surface" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" :stroke-width="LINE" :fill="wall.color" @click="armed = null" />
-        <g class="items">
+        <rect class="surface" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" :fill="wall.color" @click="armed = null" />
+        <clipPath id="inside"><rect :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" /></clipPath>
+        <g class="items" clip-path="url(#inside)">
           <template v-for="item in layout.items" :key="item.id">
             <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill" />
             <rect v-else class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill"
                   @pointerenter="hover(item.id, $event)" @pointerleave="hover(null, $event)" @click="pick(item, $event)" />
           </template>
         </g>
-        <rect v-if="halo" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" :stroke-width="LINE" :fill="halo.fill" />
+        <rect v-if="halo" clip-path="url(#inside)" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" :stroke-width="LINE" :fill="halo.fill" />
+        <rect class="edge" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" :stroke-width="LINE" />
       </svg>
 
       <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
@@ -125,7 +126,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
 .wall    { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-.surface { stroke: var(--carbon); }
+.edge    { fill: none; stroke: var(--carbon); pointer-events: none; }
 
 .items   { transition: opacity var(--animate-fast); }
 

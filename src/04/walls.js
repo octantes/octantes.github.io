@@ -1,4 +1,5 @@
 export const LANDING_WALL = 'orange'
+export const LINE         = 18
 
 export const WALLS = [
 
@@ -105,6 +106,14 @@ const SHIFT = {
   y: { top: () => [0, 0], bottom: e => [e, 0], stretch: e => [0, e] },
 }
 
+function beyondEdge([x, y, w, h], vw, vh) {
+
+  const edge = LINE / 2
+  const [left, right, bottom] = [x <= edge, x + w >= vw - edge, y + h >= vh - edge]
+  return [left ? x - LINE : x, y, w + (left ? LINE : 0) + (right ? LINE : 0), h + (bottom ? LINE : 0)]
+
+}
+
 export function layoutWall(wall, width, height) {
 
   const [bw, bh] = wall.size
@@ -115,7 +124,7 @@ export function layoutWall(wall, width, height) {
     const [x, y, w, h] = item.box
     const [dx, dw] = SHIFT.x[item.anchor?.x ?? 'center'](vw - bw)
     const [dy, dh] = SHIFT.y[item.anchor?.y ?? 'bottom'](vh - bh)
-    return { ...item, box: [x + dx, y + dy, w + dw, h + dh] }
+    return { ...item, box: beyondEdge([x + dx, y + dy, w + dw, h + dh], vw, vh) }
   })
 
   return { size: [vw, vh], items }
