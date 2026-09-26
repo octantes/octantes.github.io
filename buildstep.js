@@ -435,11 +435,11 @@ async function cleanOrphans() {                                                 
 const chrome = {
   es: {
     bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navPosts: 'posteos', toggleLabel: '[ENG]', archiveMeta: 'archivo plano // octantes.ar',
-    archiveTitle: 'abriendo portales a universos alternativos', instruct: 'seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.', latest: '\u00faltimas actualizaciones',
+    archiveTitle: 'abriendo portales a universos alternativos', instruct: 'seleccion\u00e1 una nota del men\u00fa para comenzar la lectura.', latest: '\u00faltimas actualizaciones',
   },
   en: {
     bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navPosts: 'posts', toggleLabel: '[ESP]', archiveMeta: 'flat archive // octantes.ar',
-    archiveTitle: 'opening portals to alternative universes', instruct: 'select a note from the left menu to start reading.', latest: 'latest updates',
+    archiveTitle: 'opening portals to alternative universes', instruct: 'select a note from the menu to start reading.', latest: 'latest updates',
   },
 }
 
