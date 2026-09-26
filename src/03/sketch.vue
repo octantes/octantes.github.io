@@ -28,7 +28,10 @@ const drawn = computed(() => props.layout.items.map(item => {
 
 const edge  = computed(() => {
   const seed = seedOf(props.wall.id)
-  return VARIANTS.map(v => ribbon(trace(sketchBox(inside.value[2], inside.value[3], seed), inside.value, seed, v), seed + v, LINE * 1.4))
+  const [ex, ey] = [LINE * 3 / inside.value[2], LINE * 3 / inside.value[3]]
+  const run = (from, to) => Array.from({ length: 5 }, (_, i) => [from[0] + (to[0] - from[0]) * i / 4, from[1] + (to[1] - from[1]) * i / 4])
+  const sides = [run([-ex, 0], [1 + ex, 0]), run([1, -ey], [1, 1 + ey]), run([1 + ex, 1], [-ex, 1]), run([0, 1 + ey], [0, -ey])]
+  return VARIANTS.map(v => sides.map((side, k) => ribbon(trace(side, inside.value, seed + k * 7, v), seed + k * 7 + v, LINE * 1.4)).join(''))
 })
 
 const lit = computed(() => drawn.value.find(d => d.item.id === props.hot))
