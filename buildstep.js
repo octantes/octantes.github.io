@@ -7,7 +7,7 @@ import fm from 'front-matter'
 import sharp from 'sharp'
 import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
 import { DICT } from './src/04/dict.js'
-import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other } from './src/04/pages.js'
+import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from './src/04/pages.js'
 import { figlet } from './src/04/figlet.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
@@ -774,10 +774,14 @@ async function writeAbouts() {
 
 }
 
-async function writePortal() {
+async function writeShells() {
 
-  if (!shell) { console.warn('no built index.html, skipping the portal page'); return }
-  await fs.writeFile(pageFile({ kind: 'portal' }, 'es'), shell.html.replace(shell.home, () => renderHead(headFor({ kind: 'portal' }, 'es'))))
+  if (!shell) { console.warn('no built index.html, skipping page shells'); return }
+
+  for (const page of [{ kind: 'portal' }, { kind: 'havitat' }]) {
+    const html = shell.html.replace(shell.home, () => renderHead(headFor(page, 'es')))
+    await fs.writeFile(pageFile(page, 'es'), themeOf(page) === 'light' ? html.replace('<html lang="es">', '<html lang="es" class="light">') : html)
+  }
 
 }
 
@@ -966,7 +970,7 @@ async function main() {                                                         
   await updateSidebars()
   await writeArchive()
   await writeAbouts()
-  await writePortal()
+  await writeShells()
   await writeSitemap()
   await writeFeed()
   await finalizeBuild()

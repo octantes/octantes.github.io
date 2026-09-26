@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   tile:     { type: Number,  default: 22 },
@@ -8,6 +8,7 @@ const props = defineProps({
   driftX:   { type: Number,  default: 40 },
   driftY:   { type: Number,  default: 60 },
   viewport: { type: Boolean, default: false },
+  ink:      { type: String,  default: 'var(--niebla)' },
 })
 
 const root   = ref(null)
@@ -15,7 +16,7 @@ const slide  = ref(null)
 const canvas = ref(null)
 
 let host  = null
-let watch = null
+let sizes = null
 let sig   = ''
 let refit = 0
 let anims = []
@@ -38,7 +39,8 @@ function fit() {
   if (next === sig) { pin(); return }
   sig = next
 
-  const ink    = getComputedStyle(cv).getPropertyValue('--niebla').trim() || '#D8DADE'
+  cv.style.color = props.ink
+  const ink    = getComputedStyle(cv).color
   pin()
 
   const step   = Math.max(1, Math.round(props.tile * dpr))
@@ -111,16 +113,18 @@ function pin() {
 
 }
 
+watch(() => props.ink, () => { sig = ''; fit() })
+
 onMounted(() => {
   host = root.value?.parentElement || null
-  if (typeof ResizeObserver !== 'undefined' && host) { watch = new ResizeObserver(() => fit()); watch.observe(props.viewport ? document.documentElement : host) }
+  if (typeof ResizeObserver !== 'undefined' && host) { sizes = new ResizeObserver(() => fit()); sizes.observe(props.viewport ? document.documentElement : host) }
   else fit()
   window.addEventListener('resize', queue)
   host?.addEventListener('scroll', pin, { passive: true })
 })
 
 onBeforeUnmount(() => {
-  watch?.disconnect(); watch = null
+  sizes?.disconnect(); sizes = null
   for (const a of anims) a.cancel()
   anims = []
   cancelAnimationFrame(refit); refit = 0

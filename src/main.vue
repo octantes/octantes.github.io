@@ -1,14 +1,22 @@
 <script setup>
+import { computed, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
 import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
+import { pageOf, themeOf } from './04/pages.js'
+
+const route = useRoute()
+const light = computed(() => themeOf(pageOf(route)) === 'light')
+
+watchEffect(() => document.documentElement.classList.toggle('light', light.value))
 </script>
 
 <template>
 
   <div class="pagina">
 
-    <DotGrid viewport />
+    <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 
     <h1 class="a11y-only">octantes</h1>
 
