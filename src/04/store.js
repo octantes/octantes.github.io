@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
-import { sectionOf, labelOf, pageOf, pathOf, headFor, applyHead } from '@/04/pages.js'
+import { sectionOf, labelOf, textOf, other, pageOf, pathOf, headFor, applyHead } from '@/04/pages.js'
 import { DICT } from '@/04/dict.js'
 import router from '@/04/router.js'
 
@@ -20,7 +20,7 @@ export const useStore = defineStore('store', () => {
   // LENGUAJE Y DICCIONARIO
 
   function detectLang() {
-    var nav = (navigator.language || navigator.languages?.[0] || '').toLowerCase().split('-')[0]
+    const nav = (navigator.language || navigator.languages?.[0] || '').toLowerCase().split('-')[0]
     return nav === 'es' ? 'es' : 'en'
   }
 
@@ -34,7 +34,7 @@ export const useStore = defineStore('store', () => {
   }
 
   function toggleLang() {
-    setLang(lang.value === 'es' ? 'en' : 'es')
+    setLang(other(lang.value))
     const route = router.currentRoute.value
     router.replace({ path: pathOf(pageOf(route), lang.value), query: route.query, hash: route.hash })
   }
@@ -42,20 +42,6 @@ export const useStore = defineStore('store', () => {
   router.afterEach(to => { const language = pageOf(to).lang; if (language && language !== lang.value) setLang(language) })
 
   const t = computed(() => DICT[lang.value])
-
-  const error404   =                                                                                                                  // div for content miss 
-`
-<div class="figlet">
-  <pre aria-hidden="true">
-██╗  ██╗ ██████╗ ██╗  ██╗
-██║  ██║██╔═████╗██║  ██║
-███████║██║██╔██║███████║
-╚════██║████╔╝██║╚════██║
-     ██║╚██████╔╝     ██║
-     ╚═╝ ╚═════╝      ╚═╝
-  </pre>
-</div>
-`
 
   // CONTENT                                                                                                                          // LOAD DATA
 
@@ -306,17 +292,11 @@ export const useStore = defineStore('store', () => {
 
       const html = await fetchAndParse(slug, post, currentLang)
 
-      if (post.bilingual) {
-        const otherLang = currentLang === 'en' ? 'es' : 'en'
-        if (!postHtmlCache.value[`${slug}-${otherLang}`]) {
-          fetchAndParse(slug, post, otherLang).catch(() => {})
-        }
-      }
-
+      if (post.bilingual && !postHtmlCache.value[`${slug}-${other(currentLang)}`]) fetchAndParse(slug, post, other(currentLang)).catch(() => {})
 
       return { html, error: null }
 
-    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: error404, error: e } }
+    } catch (e) { console.error(`error fetching slug "${slug}":`, e); return { html: '', error: e } }
     
   }
 
@@ -418,8 +398,8 @@ export const useStore = defineStore('store', () => {
 
     return { 
 
-      title: (lang.value === 'en' && metadata.bilingual && metadata.titleEn) ? metadata.titleEn : (metadata.title || t.value.portada.welcome),
-      description: (lang.value === 'en' && metadata.bilingual && metadata.descriptionEn) ? metadata.descriptionEn : (metadata.description || t.value.portada.desc),
+      title: textOf(metadata, 'title', lang.value) || t.value.portada.welcome,
+      description: textOf(metadata, 'description', lang.value) || t.value.portada.desc,
       authors: postAuthors,
       portada: metadata.portada || '',
 
@@ -433,7 +413,7 @@ export const useStore = defineStore('store', () => {
     const latest = notesIndex.value[0]
 
     return {
-      title: (lang.value === 'en' && latest.bilingual && latest.titleEn) ? latest.titleEn : latest.title,
+      title: textOf(latest, 'title', lang.value),
       url: pathOf({ kind: 'note', id: latest.type, slug: latest.slug }, lang.value)
     }
 
@@ -447,8 +427,8 @@ export const useStore = defineStore('store', () => {
 
     filtered = filtered.map(note => ({                                                                                               // add lang-aware display fields
       ...note,
-      displayTitle: (lang.value === 'en' && note.bilingual && note.titleEn) ? note.titleEn : note.title,
-      displayDescription: (lang.value === 'en' && note.bilingual && note.descriptionEn) ? note.descriptionEn : note.description,
+      displayTitle: textOf(note, 'title', lang.value),
+      displayDescription: textOf(note, 'description', lang.value),
     }))
 
     const fold  = text => (text || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
@@ -499,7 +479,7 @@ export const useStore = defineStore('store', () => {
     /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, aboutSection, searchQuery, tabs,
-    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, notePath: (type, slug) => pathOf({ kind: 'note', id: type, slug }, lang.value), labelOf: id => labelOf(id, lang.value),
+    /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, textOf: (note, key) => textOf(note, key, lang.value), notePath: (type, slug) => pathOf({ kind: 'note', id: type, slug }, lang.value), labelOf: id => labelOf(id, lang.value),
     /* NAVIG COM */ noteSortFilter,
     /* LANG VAR  */ lang, t,
     /* LANG FUN  */ toggleLang,
