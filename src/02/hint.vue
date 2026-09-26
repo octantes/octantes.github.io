@@ -31,12 +31,12 @@ const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
 
-  &::before { content: ''; position: absolute; width: var(--gap); height: var(--gap); background: var(--carbon-a95); clip-path: polygon(0 0, 100% 45%, 45% 100%); }
+  &::before { content: ''; position: absolute; width: calc(2 * var(--gap)); height: calc(2 * var(--gap)); background: var(--carbon-a95); clip-path: polygon(0 0, 100% 50%, 50% 50%, 50% 100%); }
 
-  &.tl { transform: translate(var(--gap), var(--gap));                                 &::before { left: calc(-1 * var(--gap)); top: calc(-1 * var(--gap)); } }
-  &.tr { transform: translate(calc(-100% - var(--gap)), var(--gap));                   &::before { right: calc(-1 * var(--gap)); top: calc(-1 * var(--gap)); transform: scaleX(-1); } }
-  &.bl { transform: translate(var(--gap), calc(-100% - var(--gap)));                   &::before { left: calc(-1 * var(--gap)); bottom: calc(-1 * var(--gap)); transform: scaleY(-1); } }
-  &.br { transform: translate(calc(-100% - var(--gap)), calc(-100% - var(--gap)));     &::before { right: calc(-1 * var(--gap)); bottom: calc(-1 * var(--gap)); transform: scale(-1); } }
+  &.tl { transform: translate(var(--gap), var(--gap));                                 border-top-left-radius: 0;     &::before { left: calc(-1 * var(--gap)); top: calc(-1 * var(--gap)); } }
+  &.tr { transform: translate(calc(-100% - var(--gap)), var(--gap));                   border-top-right-radius: 0;    &::before { right: calc(-1 * var(--gap)); top: calc(-1 * var(--gap)); transform: scaleX(-1); } }
+  &.bl { transform: translate(var(--gap), calc(-100% - var(--gap)));                   border-bottom-left-radius: 0;  &::before { left: calc(-1 * var(--gap)); bottom: calc(-1 * var(--gap)); transform: scaleY(-1); } }
+  &.br { transform: translate(calc(-100% - var(--gap)), calc(-100% - var(--gap)));     border-bottom-right-radius: 0; &::before { right: calc(-1 * var(--gap)); bottom: calc(-1 * var(--gap)); transform: scale(-1); } }
 
   &.docked { position: static; width: auto; padding: .6rem 0 0; margin-top: .5rem; background: none; border-top: var(--small-outline) var(--humo-a15); border-radius: 0; &::before { display: none; } }
 
