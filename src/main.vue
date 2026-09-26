@@ -42,6 +42,6 @@ watchEffect(() => document.documentElement.classList.toggle('light', light.value
 
 .veil.opaque { background: var(--carbon); }
 
-@media (--mobile) { .pagina { max-width: 100%; } .frame { padding-bottom: 2rem; } }
+@media (--mobile) { .pagina { max-width: 100%; } }
 
 </style>
