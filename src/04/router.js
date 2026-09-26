@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Octantes from '../00/octantes.vue'
 import Portfolio from '../00/portfolio.vue'
+import Havitat from '../00/havitat.vue'
 
 const routes = [
 
   { path: '/portfolio',      component: Portfolio }, // opens the portfolio page
+  { path: '/havitat',        component: Havitat   },
   { path: '/portal',         component: Octantes  }, // opens the portal
   { path: '/about',          component: Octantes  }, // opens the portal's about
   { path: '/info',           component: Octantes  }, // opens the portal's about in spanish

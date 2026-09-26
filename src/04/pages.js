@@ -44,6 +44,7 @@ export function pageOf(route) {
 
   if (path === '/portfolio') return { kind: 'portfolio' }
   if (path === '/portal') return { kind: 'portal' }
+  if (path === '/havitat') return { kind: 'havitat' }
   if (aboutLang) return { kind: 'about', lang: aboutLang }
   if (slug && sectionOf(type)) return { kind: 'note', id: sectionOf(type), slug, lang: langOfWord(type) }
   if (filterType && sectionOf(filterType)) return { kind: 'section', id: sectionOf(filterType), lang: langOfWord(filterType) }
@@ -65,6 +66,7 @@ export function pathOf(page, lang) {
   switch (page.kind) {
     case 'home':      return '/'
     case 'portal':    return '/portal'
+    case 'havitat':   return '/havitat'
     case 'portfolio': return '/portfolio'
     case 'about':     return ABOUT_PATH[lang]
     case 'archive':   return `/${ARCHIVE_VIEW[lang]}.html`
@@ -74,6 +76,8 @@ export function pathOf(page, lang) {
   }
 
 }
+
+export function themeOf(page) { return page.kind === 'havitat' ? 'light' : 'dark' }
 
 export function urlOf(page, lang) { return page.kind === 'home' ? `${SITE_URL}/` : `${SITE_URL}${pathOf(page, lang)}` }
 
@@ -88,10 +92,11 @@ export function headFor(page, lang, post) {
     ld: { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/`, description, inLanguage: lang, author: { '@type': 'Person', name: 'kaste' } },
   }
 
-  if (page.kind === 'section' || page.kind === 'about' || page.kind === 'portfolio' || page.kind === 'archive') {
-    const name = { section: labelOf(page.id, lang), about: ABOUT_NAME[lang], portfolio: 'portfolio', archive: ARCHIVE_VIEW[lang] }[page.kind]
-    const text = page.kind === 'portfolio' ? plainOf(DICT[lang].portfolio.desc) : page.kind === 'archive' ? description : summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
-    const paired = page.kind !== 'portfolio'
+  const name = { section: labelOf(page.id, lang), about: ABOUT_NAME[lang], portfolio: 'portfolio', archive: ARCHIVE_VIEW[lang], havitat: 'havitat' }[page.kind]
+
+  if (name) {
+    const text = { portfolio: plainOf(DICT[lang].portfolio.desc), archive: description, havitat: description }[page.kind] ?? summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
+    const paired = page.kind !== 'portfolio' && page.kind !== 'havitat'
     Object.assign(head, { title: `${name} - ${SITE_NAME}`, name, description: text, canonical: urlOf(page, lang), alternates: paired ? pair : null, localeAlt: paired ? LOCALE[other(lang)] : null, ld: null })
   }
 
