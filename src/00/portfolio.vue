@@ -189,8 +189,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 
 <style scoped> 
 
-.frame { display: flex; flex-direction: column; height: 100%; overflow-y: hidden; padding: 1rem; }
-
 .portfolio { 
 
   /* CURSOR */ user-select: none;
@@ -480,8 +478,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 }
 
 @keyframes spawnData { 0% { opacity: 0; } 100% { opacity: 1; } }
-
-@media (--mobile) { .portfolio { margin-bottom: 1rem; } }
 
 @media (max-width: 1000px) { 
 

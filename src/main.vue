@@ -36,10 +36,12 @@ watchEffect(() => document.documentElement.classList.toggle('light', light.value
 
 .page       { flex: 1 1 auto; width: 100%; min-height: 0; }
 
+.frame      { display: flex; flex-direction: column; height: 100%; overflow-y: hidden; padding: 1rem; }
+
 .veil       { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
 .veil.opaque { background: var(--carbon); }
 
-@media (--mobile) { .pagina { max-width: 100%; } }
+@media (--mobile) { .pagina { max-width: 100%; } .frame { padding-bottom: 2rem; } }
 
 </style>
