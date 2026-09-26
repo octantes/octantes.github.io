@@ -7,6 +7,7 @@ import { pageOf, pathOf } from '../04/pages.js'
 import { WALLS, LANDING_WALL, LINE, layoutWall } from '../04/walls.js'
 import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
+import Sketch from '../03/sketch.vue'
 
 const HINT = { w: 288, h: 110, gap: 12, arrow: 14 }
 
@@ -26,7 +27,6 @@ const layout = computed(() => layoutWall(wall.value, ...bounds.value))
 const hovered = ref(null)
 const armed   = ref(null)
 const hot     = computed(() => hovered.value ?? armed.value)
-const halo    = computed(() => layout.value.items.find(i => i.id === hot.value))
 const docked  = computed(() => layout.value.items.find(i => i.id === armed.value))
 
 const tip = computed(() => {
@@ -89,19 +89,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
     <div class="room" ref="room" role="main">
 
-      <svg class="wall" :class="{ focused: halo }" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
-        <rect class="surface" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" :fill="wall.color" @click="armed = null" />
-        <clipPath id="inside"><rect :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" /></clipPath>
-        <g class="items" clip-path="url(#inside)">
-          <template v-for="item in layout.items" :key="item.id">
-            <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill" />
-            <rect v-else class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill"
-                  @pointerenter="hover(item.id, $event)" @pointerleave="hover(null, $event)" @click="pick(item, $event)" />
-          </template>
-        </g>
-        <rect v-if="halo" clip-path="url(#inside)" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" :stroke-width="LINE" :fill="halo.fill" />
-        <rect class="edge" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" :stroke-width="LINE" />
-      </svg>
+      <Sketch :wall="wall" :layout="layout" :hot="hot" @hover="hover" @pick="pick" @clear="armed = null" />
 
       <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
         <Hint v-if="docked" :item="docked" />
@@ -123,19 +111,5 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
   /* BORDER */ border: var(--small-outline) var(--carbon-a15); border-radius: var(--radius-ss);
 
 }
-
-.wall    { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-.edge    { fill: none; stroke: var(--carbon); pointer-events: none; }
-
-.items   { transition: opacity var(--animate-fast); }
-
-.focused .items { opacity: .35; }
-
-.item    { stroke: var(--carbon); cursor: pointer; }
-
-.decor   { pointer-events: none; }
-
-.halo    { stroke: var(--lirio); pointer-events: none; }
 
 </style>
