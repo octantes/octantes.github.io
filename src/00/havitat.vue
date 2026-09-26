@@ -23,12 +23,25 @@ const layout = computed(() => layoutWall(wall.value, ...bounds.value))
 
 const hovered = ref(null)
 const armed   = ref(null)
-const at      = ref(null)
 const hot     = computed(() => hovered.value ?? armed.value)
 const halo    = computed(() => layout.value.items.find(i => i.id === hot.value))
-const hint    = computed(() => at.value && halo.value)
+const docked  = computed(() => layout.value.items.find(i => i.id === armed.value))
 
-watch(() => wall.value.id, () => { hovered.value = armed.value = at.value = null })
+const tip = computed(() => {
+
+  const item = layout.value.items.find(i => i.id === hovered.value)
+  if (!item || item.id === armed.value || !room.value) return null
+
+  const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / layout.value.size[0]
+  const [x, y, w, h] = item.box.map(v => v * scale)
+  const west  = frame.left + x + w / 2 < frame.left + frame.width / 2
+  const north = frame.top + y + h / 2 < frame.top + frame.height / 2
+
+  return { item, at: [frame.left + (west ? x + w : x), frame.top + (north ? y + h : y)], corner: (north ? 't' : 'b') + (west ? 'l' : 'r') }
+
+})
+
+watch(() => wall.value.id, () => { hovered.value = armed.value = null })
 
 let sizes = null
 
@@ -36,15 +49,12 @@ function turn(step) { router.push(pathOf({ kind: 'wall', id: WALLS[(index.value 
 
 function pick(item, e) {
   if (e.pointerType === 'touch' && armed.value !== item.id) { armed.value = item.id; return }
+  if (e.pointerType === 'touch') hovered.value = null
   armed.value = null
   if (item.to) router.push(item.to)
 }
 
-function enter(item, e) { hovered.value = item.id; track(e) }
-
-function leave() { hovered.value = at.value = null }
-
-function track(e) { at.value = e.pointerType === 'mouse' ? [e.clientX, e.clientY] : null }
+function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
 function onKey(e) { if (e.key === 'ArrowLeft') turn(-1); if (e.key === 'ArrowRight') turn(1) }
 
@@ -69,16 +79,16 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
         <template v-for="item in layout.items" :key="item.id">
           <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill" />
           <rect v-else class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill"
-                @pointerenter="enter(item, $event)" @pointermove="track" @pointerleave="leave" @click="pick(item, $event)" />
+                @pointerenter="hover(item.id, $event)" @pointerleave="hover(null, $event)" @click="pick(item, $event)" />
         </template>
         <rect v-if="halo" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" />
       </svg>
 
-      <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hovered = $event" @pick="pick" @turn="turn">
-        <Hint v-if="halo && !at" :item="halo" />
+      <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
+        <Hint v-if="docked" :item="docked" />
       </Guide>
 
-      <Hint v-if="hint" :item="hint" :at="at" />
+      <Hint v-if="tip" :item="tip.item" :tip="tip" />
 
     </div>
 
