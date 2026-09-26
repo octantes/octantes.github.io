@@ -9,6 +9,7 @@ import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAM
 import { DICT } from './src/04/dict.js'
 import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from './src/04/pages.js'
 import { figlet } from './src/04/figlet.js'
+import { WALLS } from './src/04/walls.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -778,9 +779,13 @@ async function writeShells() {
 
   if (!shell) { console.warn('no built index.html, skipping page shells'); return }
 
-  for (const page of [{ kind: 'portal' }, { kind: 'havitat' }]) {
-    const html = shell.html.replace(shell.home, () => renderHead(headFor(page, 'es')))
-    await fs.writeFile(pageFile(page, 'es'), themeOf(page) === 'light' ? html.replace('<html lang="es">', '<html lang="es" class="light">') : html)
+  const shells = [[{ kind: 'portal' }, 'es'], [{ kind: 'havitat' }, 'es'], ...WALLS.flatMap(w => ['es', 'en'].map(lang => [{ kind: 'wall', id: w.id }, lang]))]
+
+  for (const [page, lang] of shells) {
+    const theme = themeOf(page) === 'light' ? ' class="light"' : ''
+    const html = shell.html.replace('<html lang="es">', `<html lang="${lang}"${theme}>`).replace(shell.home, () => renderHead(headFor(page, lang)))
+    await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
+    await fs.writeFile(pageFile(page, lang), html)
   }
 
 }

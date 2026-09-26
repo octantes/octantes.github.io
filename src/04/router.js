@@ -2,11 +2,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Octantes from '../00/octantes.vue'
 import Portfolio from '../00/portfolio.vue'
 import Havitat from '../00/havitat.vue'
+import { WALLS } from './walls.js'
+
+const wallPath = `/havitat/:wall(${WALLS.flatMap(w => [w.es, w.en]).join('|')})`
 
 const routes = [
 
   { path: '/portfolio',      component: Portfolio }, // opens the portfolio page
   { path: '/havitat',        component: Havitat   },
+  { path: wallPath,          component: Havitat   },
   { path: '/portal',         component: Octantes  }, // opens the portal
   { path: '/about',          component: Octantes  }, // opens the portal's about
   { path: '/info',           component: Octantes  }, // opens the portal's about in spanish
