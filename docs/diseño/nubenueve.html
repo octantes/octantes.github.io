@@ -15,12 +15,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" crossorigin src="/assets/index-C9YznCA9.js"></script>
-    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-xxwGIdf_.css">
+    <script type="module" crossorigin src="/assets/index-trr9qveg.js"></script>
+    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-DE0GGxWz.css">
 
     <noscript><link rel="stylesheet" href="/assets/neocities.css"><style>noscript.archive { display: contents }</style></noscript>
 
-    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
+    <script>(function () { var archive = location.search.match(/[?&](archivo|archive)(&|=|$)/); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.documentElement.dataset.view = archive[1]; document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
 
     <title>nubenueve - tienda de discos - octantes.ar</title>
     <meta name="description" content="pagina para tienda de discos, vinilos y cintas de casette" data-head>
@@ -50,6 +50,8 @@
     <meta name="twitter:image" content="https://octantes.github.io/posts/diseño/nubenueve/share.jpg" data-head>
     <meta name="twitter:image:alt" content="nubenueve - tienda de discos" data-head>
     <script type="application/ld+json" data-head>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://octantes.github.io/diseño/nubenueve"},"headline":"nubenueve - tienda de discos","image":"https://octantes.github.io/posts/diseño/nubenueve/share.jpg","inLanguage":"es","author":{"@type":"Person","name":"kaste","url":"https://x.com/octantes"},"publisher":{"@type":"Organization","name":"octantes.ar","url":"https://octantes.github.io/"},"datePublished":"2026-06-20T00:00:00.000Z","dateModified":"2026-06-20T00:00:00.000Z","description":"pagina para tienda de discos, vinilos y cintas de casette","keywords":"sitio, portfolio"}</script>
+
+    <script type="application/json" id="note">{"slug":"nubenueve","title":"nubenueve - tienda de discos","description":"pagina para tienda de discos, vinilos y cintas de casette","type":"diseño","tags":["sitio","portfolio"],"portada":"https://octantes.github.io/posts/diseño/nubenueve/portada.webp","share":"https://octantes.github.io/posts/diseño/nubenueve/share.jpg","handle":["kaste"],"date":"20/06/2026","isoDate":"2026-06-20T00:00:00.000Z","modified":"2026-06-20T00:00:00.000Z","vuecomp":null,"bilingual":true,"titleEn":"nubenueve - record store","descriptionEn":"record store website, cd's, vinyls and cassette tapes"}</script>
 
   </head>
 
@@ -86,11 +88,14 @@
             <a href="/feed.xml">[RSS]</a>
             <a href="/design/nubenueve?archive">[ENG]</a>
           </div>
+          <div class="nav-row">
+            <a href="/portfolio?archivo">[PORTFOLIO]</a>
+          </div>
         </nav>
 
-        <div class="separator-nomargin">artículos</div>
+        <a href="/info?archivo" class="separator-nomargin">posteos</a>
         
-        <ul class="article-list"><li class="cat-header">música</li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header">diseño</li><li><a href="/diseño/nubenueve?archivo">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo">en una - publicación digital</a></li><li class="cat-header">desarrollo</li><li><a href="/desarrollo/browsewithscroll?archivo">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header">textos</li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
+        <ul class="article-list"><li class="cat-header"><a href="/musica?archivo">música</a></li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header"><a href="/diseño?archivo">diseño</a></li><li><a href="/diseño/nubenueve?archivo" aria-current="page">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo">en una - publicación digital</a></li><li class="cat-header"><a href="/desarrollo?archivo">desarrollo</a></li><li><a href="/desarrollo/browsewithscroll?archivo">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header"><a href="/textos?archivo">textos</a></li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
 
       </div>
 
@@ -104,7 +109,7 @@
       </header>
       
       <div class="nota nota-verso"><p><em>Podés visitar la página entrando al link: <a href="https://inercia-ar.github.io/front-nubenueve/" target="_blank" rel="noopener noreferrer">nubenueve</a></em></p>
-<p><video src="/posts/diseño/nubenueve/1.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="1"></video><br /><video src="/posts/diseño/nubenueve/2.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="2"></video><br /><video src="/posts/diseño/nubenueve/3.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="3"></video></p>
+<p><video src="/posts/diseño/nubenueve/1.mp4" poster="/posts/diseño/nubenueve/1-poster.jpg" width="800" height="408" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="1"></video><br /><video src="/posts/diseño/nubenueve/2.mp4" poster="/posts/diseño/nubenueve/2-poster.jpg" width="800" height="408" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="2"></video><br /><video src="/posts/diseño/nubenueve/3.mp4" poster="/posts/diseño/nubenueve/3-poster.jpg" width="800" height="408" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="3"></video></p>
 <p>nubenueve fue mi primer proyecto de diseño <em>funcional</em> para el portfolio<br />después de tantas marcas ficticias, buscaba algo real, en producción y vivo</p>
 <p>la idea era construir una tienda virtual de discos con identidad <em>propia</em><br />creé cuatro artistas ficticios, diseñando discos con portadas para cada uno</p>
 <p>exploré fondos animados, textura visual y transiciones en la interfaz<br />el sistema incluye un <strong>carrito</strong> y un visualizador de portadas interactivo<br />el frontend funciona por su cuenta pero puede acoplarse a un backend<br />el diseño usa una paleta cálida, inspirada en la estética de los casettes tdk</p>
@@ -115,7 +120,7 @@
 
     </noscript>
 
-    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'), view = document.querySelector('template[data-view="' + document.documentElement.dataset.view + '"]'); if (view) document.documentElement.lang = view.lang; archive.outerHTML = view ? view.innerHTML : archive.textContent }</script>
 
     <div id="octantes"></div>
 
