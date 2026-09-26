@@ -7,7 +7,7 @@ import fm from 'front-matter'
 import sharp from 'sharp'
 import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
 import { DICT } from './src/04/dict.js'
-import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, other } from './src/04/pages.js'
+import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other } from './src/04/pages.js'
 import { figlet } from './src/04/figlet.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
@@ -82,7 +82,6 @@ setCustomSoftbreak()
 
 const cacheFile = path.resolve(process.env.BUILD_CACHE || '.build-cache.json')
 const template = await fs.readFile('./templates/post.html', 'utf-8')
-const webURL = SITE_URL
 
 const contentDir = './content'
 const outputDir = './dist'
@@ -434,8 +433,14 @@ async function cleanOrphans() {                                                 
 }
 
 const chrome = {
-  es: { bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navPosts: 'posteos', toggleLabel: '[ENG]', archiveMeta: 'archivo plano // octantes.ar' },
-  en: { bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navPosts: 'posts', toggleLabel: '[ESP]', archiveMeta: 'flat archive // octantes.ar' },
+  es: {
+    bio: 'm\u00fasica, dise\u00f1o, desarrollo y escritura', navArchive: '[ARCHIVO]', navPosts: 'posteos', toggleLabel: '[ENG]', archiveMeta: 'archivo plano // octantes.ar',
+    archiveTitle: 'abriendo portales a universos alternativos', instruct: 'seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.', latest: '\u00faltimas actualizaciones',
+  },
+  en: {
+    bio: 'music, design, dev &amp; writing', navArchive: '[ARTICLES]', navPosts: 'posts', toggleLabel: '[ESP]', archiveMeta: 'flat archive // octantes.ar',
+    archiveTitle: 'opening portals to alternative universes', instruct: 'select a note from the left menu to start reading.', latest: 'latest updates',
+  },
 }
 
 let shell = null
@@ -453,8 +458,6 @@ function archiveHref(page, lang) { return page.kind === 'archive' ? pathOf(page,
 function markCurrent(html, href) { return html.replace(`<a href="${href}"`, () => `<a href="${href}" aria-current="page"`) }
 
 function noteHref(p, lang) { return archiveHref({ kind: 'note', id: p.type, slug: p.slug }, lang === 'en' && p.bilingual ? 'en' : 'es') }
-
-function noteTitle(p, lang) { return lang === 'en' && p.titleEn || p.title }
 
 async function readShell() {
 
@@ -610,10 +613,10 @@ async function processPosts() {                                                 
     const finalHash = hash.digest('hex')
     const dateObj = attributes.date ? new Date(attributes.date) : new Date()
     const formatted = `${String(dateObj.getUTCDate()).padStart(2,'0')}/${String(dateObj.getUTCMonth()+1).padStart(2,'0')}/${dateObj.getUTCFullYear()}`
-    const isoDate = attributes.date ? new Date(attributes.date).toISOString() : dateObj.toISOString()
+    const isoDate = dateObj.toISOString()
     const modifiedDate = attributes.modified ? new Date(attributes.modified).toISOString() : isoDate
     const rawPortada = attributes.portada ? attributes.portada.replace(/\[\[|\]\]/g, '') : ''
-    const portadaUrl = rawPortada ? `${webURL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
+    const portadaUrl = rawPortada ? `${SITE_URL}/posts/${postType}/${slug}/${rawPortada.replace(/\.(jpe?g|png)$/i, '.webp')}` : ''
 
     const rawHandle = attributes.handle
     const handles = (Array.isArray(rawHandle) ? rawHandle : (rawHandle ? [rawHandle] : ['kaste'])).map(h => String(h).replace(/^@/, ''))
@@ -628,7 +631,7 @@ async function processPosts() {                                                 
       type: postType || 'textos',
       tags: attributes.tags || [],
       portada: portadaUrl,
-      share: rawPortada ? `${webURL}/posts/${postType}/${slug}/share.jpg` : null,
+      share: rawPortada ? `${SITE_URL}/posts/${postType}/${slug}/share.jpg` : null,
       handle: handles,
       date: formatted,
       isoDate: isoDate,
@@ -650,11 +653,9 @@ async function processPosts() {                                                 
       else { setCustomSoftbreak() }
 
       let htmlContent = renderType(body, attributes).trim()
-      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs) => processAssets(tagName, attrs, postType, slug, attributes.portada))
 
-      if (isTradStyle) { setCustomSoftbreak() }
-
-      const internalLinkRegex = new RegExp(`href=['"](${webURL}|\\/)`, 'i')
+      const internalLinkRegex = new RegExp(`href=['"](${SITE_URL}|\\/)`, 'i')
 
       htmlContent = htmlContent.replace(/<a\s+(.*?)href=['"](.*?)['"](.*?)\s*>/gi, (match, before, href, after) => {
           if (internalLinkRegex.test(match) || href.startsWith('#')) { return match }
@@ -671,9 +672,11 @@ async function processPosts() {                                                 
       if (isBilingual) {
         const { attributes: attrEn, body: bodyEn } = fm(rawEn)
         let htmlContentEn = renderType(bodyEn, attrEn).trim()
-        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs, endTag) => processAssets(tagName, attrs, postType, slug, attributes.portada))
+        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs) => processAssets(tagName, attrs, postType, slug, attributes.portada))
         pageEn = fill('en', attrEn.title || slug, htmlContentEn)
       }
+
+      if (isTradStyle) { setCustomSoftbreak() }
 
       for (const [lang, html] of [['es', pageEs], ['en', pageEn]]) {
         await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
@@ -694,7 +697,6 @@ async function processPosts() {                                                 
 
 async function writeIndex() {                                                    // create index.json with processed post metadata 
 
-  await fs.mkdir(outputDir, { recursive: true })
   const indexPath = path.join(outputDir, 'index.json')
   
   indexItems.sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
@@ -714,9 +716,9 @@ function esc(str) {
 
 function projectList(items, shape = '') { return `<ul class="article-list project-list${shape}">${items.join('')}</ul>` }
 
-function noteItem(p, lang) { return `<li><a href="${noteHref(p, lang)}">${esc(noteTitle(p, lang))}</a>${esc(lang === 'en' && p.descriptionEn || p.description)}<br><br></li>` }
+function noteItem(p, lang) { return `<li><a href="${noteHref(p, lang)}">${esc(textOf(p, 'title', lang))}</a>${esc(textOf(p, 'description', lang))}<br><br></li>` }
 
-function latestList(lang) { return `<ul class="article-list">${indexItems.slice(0, 15).map(p => `<li><a href="${noteHref(p, lang)}"><span class="list-span">[${p.date}]</span> ${esc(noteTitle(p, lang))}</a></li>`).join('')}</ul>` }
+function latestList(lang) { return `<ul class="article-list">${indexItems.slice(0, 15).map(p => `<li><a href="${noteHref(p, lang)}"><span class="list-span">[${p.date}]</span> ${esc(textOf(p, 'title', lang))}</a></li>`).join('')}</ul>` }
 
 function withEnglish(es, en) {
 
@@ -748,53 +750,46 @@ async function writePortfolio() {
 
 }
 
-async function writeShells() {
+async function writeAbouts() {
 
-  if (!shell) { console.warn('no built index.html, skipping page shells'); return }
+  const pages = [{ kind: 'about' }, ...SECTIONS.filter(s => s.id !== 'portal').map(s => ({ kind: 'section', id: s.id }))]
 
-  const pages = [
-    ...['es', 'en'].map(lang => [{ kind: 'about' }, lang]),
-    ...SECTIONS.filter(s => s.id !== 'portal').flatMap(s => ['es', 'en'].map(lang => [{ kind: 'section', id: s.id }, lang])),
-    [{ kind: 'portal' }, 'es'],
-  ]
+  for (const page of pages) for (const lang of ['es', 'en']) {
 
-  for (const [page, lang] of pages) {
-    const html = page.kind === 'portal' ? shell.html.replace(shell.home, () => renderHead(headFor(page, lang))) : aboutPage(page, lang)
+    const about = DICT[lang].about
+    const id = page.id ?? 'portal'
+    const html = fillTemplate({
+      page, lang, title: headFor(page, lang).name, meta: chrome[lang].archiveMeta, type: page.kind,
+      toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang),
+      content: [`<p>${about.sections[id]}</p>`, '<hr>', `<p>${about.footers[id]}</p>`].join('\n'),
+    })
+
     await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
     await fs.writeFile(pageFile(page, lang), html)
     if (page.kind === 'section') await fs.writeFile(path.join(outputDir, pathOf(page, lang).slice(1) + '.html'), html)
+
   }
 
-  console.log(`${pages.length} page shells written`)
+  console.log(`${pages.length * 2} about pages written`)
 
 }
 
-function aboutPage(page, lang) {
+async function writePortal() {
 
-  const id = page.id ?? 'portal'
-  const about = DICT[lang].about
-  const content = [`<p>${about.sections[id]}</p>`, '<hr>', `<p>${about.footers[id]}</p>`].join('\n')
-
-  return fillTemplate({
-    page, lang, title: headFor(page, lang).name, meta: chrome[lang].archiveMeta, type: page.kind,
-    toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang), content,
-  })
+  if (!shell) { console.warn('no built index.html, skipping the portal page'); return }
+  await fs.writeFile(pageFile({ kind: 'portal' }, 'es'), shell.html.replace(shell.home, () => renderHead(headFor({ kind: 'portal' }, 'es'))))
 
 }
 
 async function writeArchive() {                                                  // create both language archive versions
 
-  const intro = {
-    es: { title: 'abriendo portales a universos alternativos', instruct: 'seleccion\u00e1 una nota del men\u00fa izquierdo para comenzar la lectura.', latest: '\u00faltimas actualizaciones' },
-    en: { title: 'opening portals to alternative universes', instruct: 'select a note from the left menu to start reading.', latest: 'latest updates' },
-  }
-
   const page = { kind: 'archive' }
 
   for (const lang of ['es', 'en']) {
-    const content = [`<p>${intro[lang].instruct}</p>`, `<div class="separator-margin">${intro[lang].latest}</div>`, latestList(lang)].join('\n')
+    const text = chrome[lang]
+    const content = [`<p>${text.instruct}</p>`, `<div class="separator-margin">${text.latest}</div>`, latestList(lang)].join('\n')
     await fs.writeFile(pageFile(page, lang), fillTemplate({
-      page, lang, title: intro[lang].title, meta: chrome[lang].archiveMeta, type: 'archive',
+      page, lang, title: text.archiveTitle, meta: chrome[lang].archiveMeta, type: 'archive',
       toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang), content,
     }))
   }
@@ -803,7 +798,7 @@ async function writeArchive() {                                                 
 
 }
 
-function generateMonolingualSidebar(lang = 'es') {                          // create static sidebar for post pages
+function generateMonolingualSidebar(lang) {                                 // create static sidebar for archive pages
 
   const groups = {}
 
@@ -815,7 +810,6 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
   const order = ['musica', 'diseño', 'juegos', 'desarrollo', 'textos']
   Object.keys(groups).forEach(key => { if (!order.includes(key)) order.push(key) })
 
-
   let html = ''
 
   order.forEach(type => {
@@ -823,7 +817,7 @@ function generateMonolingualSidebar(lang = 'es') {                          // c
       const typeLabel = labelOf(type, lang)
       html += `<li class="cat-header"><a href="${archiveHref({ kind: 'section', id: type }, lang)}">${esc(typeLabel)}</a></li>`
       groups[type].forEach(p => {
-        html += `<li><a href="${noteHref(p, lang)}">${esc(noteTitle(p, lang))}</a></li>`
+        html += `<li><a href="${noteHref(p, lang)}">${esc(textOf(p, 'title', lang))}</a></li>`
       })
     }
   })
@@ -850,9 +844,10 @@ async function updateSidebars() {                                               
 
 }
 
+function newest(items) { return items.reduce((a, p) => (p.modified || p.isoDate) > a ? (p.modified || p.isoDate) : a, '') }
+
 async function writeSitemap() {                                                  // create sitemap and robots.txt 
 
-  const newest = items => items.reduce((a, p) => (p.modified || p.isoDate) > a ? (p.modified || p.isoDate) : a, '')
   const latest = newest(indexItems)
   const paired = (page, lastmod) => ['es', 'en'].map(lang => ({ url: urlOf(page, lang), lastmod, alternates: { es: urlOf(page, 'es'), en: urlOf(page, 'en'), 'x-default': urlOf(page, 'es') } }))
 
@@ -886,45 +881,28 @@ async function writeSitemap() {                                                 
   await fs.writeFile(path.join(outputDir, 'sitemap.xml'), sitemap)
   console.log('sitemap.xml updated')
 
-  await fs.writeFile(path.join(outputDir, 'robots.txt'), `User-agent: *\nDisallow:\n\nSitemap: ${webURL}/sitemap.xml\n`)
+  await fs.writeFile(path.join(outputDir, 'robots.txt'), `User-agent: *\nDisallow:\n\nSitemap: ${SITE_URL}/sitemap.xml\n`)
   console.log('robots.txt generated')
 
 }
 
 async function writeFeed() {                                                     // create RSS feed XML 
 
-  await fs.mkdir(outputDir, { recursive: true })
   const feedPath = path.join(outputDir, 'feed.xml')
   
-  const now = new Date().toUTCString()
   const feedTitle = 'octantes.ar'
-  const feedUrl = `${webURL}/feed.xml`
+  const feedUrl = `${SITE_URL}/feed.xml`
   const feedDescription = `${TAGLINE.en} - ${SITE_DESCRIPTION.en}`
 
   const channelItems = indexItems.map(post => {
     const postUrl = encodeURI(urlOf({ kind: 'note', id: post.type, slug: post.slug }, post.bilingual ? 'en' : 'es'))
     const postDate = new Date(post.isoDate).toUTCString()
-    const rssTitle = post.titleEn || post.title
-    const rssDesc = post.titleEn ? (post.descriptionEn || post.description) : post.description
-    const escapedTitle = rssTitle
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
-    const escapedDescription = rssDesc
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
-
     return `<item>
-      <title>${escapedTitle}</title>
+      <title>${esc(textOf(post, 'title', 'en'))}</title>
       <link>${postUrl}</link>
       <guid isPermaLink="true">${postUrl}</guid>
       <pubDate>${postDate}</pubDate>
-      <description>${escapedDescription}</description>
+      <description>${esc(textOf(post, 'description', 'en'))}</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>`
   }).join('\n')
@@ -934,10 +912,10 @@ async function writeFeed() {                                                    
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${feedTitle}</title>
-    <link>${webURL}/</link>
+    <link>${SITE_URL}/</link>
     <description>${feedDescription}</description>
     <language>en</language>
-    <lastBuildDate>${now}</lastBuildDate>
+    <lastBuildDate>${new Date(newest(indexItems)).toUTCString()}</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
   ${channelItems}
@@ -987,7 +965,8 @@ async function main() {                                                         
   await writePortfolio()
   await updateSidebars()
   await writeArchive()
-  await writeShells()
+  await writeAbouts()
+  await writePortal()
   await writeSitemap()
   await writeFeed()
   await finalizeBuild()

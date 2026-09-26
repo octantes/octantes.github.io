@@ -268,26 +268,6 @@ audio::-webkit-media-controls-enclosure:hover {
 
 }
 
-.figlet { 
-
-  /* LAYOUT */ display: flex; flex-direction: column; align-items: center; flex-shrink: 0; user-select: none;
-  /* BOX    */ width: 100%; height: 100%; overflow: hidden;
-  /* FONT   */ font-size: .8vw; line-height: 1.24;
-
-  &.clickable { cursor: pointer; }
-
-  & pre {
-  
-    /* LAYOUT */ flex-shrink: 0;
-    /* BOX    */ margin-bottom: .25rem; margin-top: .8rem; overflow: visible;
-    /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); color: var(--lirio);
-    /* FONT   */ font-family: monospace;
-    /* WEBKIT */ -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
-  
-  }
-
-}
-
 .a11y-only {
   /* LAYOUT */ position: absolute; width: 1px; height: 1px; overflow: hidden;
   /* CLIP   */ clip-path: inset(50%); white-space: nowrap;

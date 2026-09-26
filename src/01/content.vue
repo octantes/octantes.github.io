@@ -39,11 +39,7 @@ const fullBleed = ref(false)
 store.land(route)
 
 const aboutMode = computed(() => store.aboutSection)
-const noteTitle = computed(() => {
-  const p = currentPost.value
-  if (!p) return ''
-  return (store.lang === 'en' && p.bilingual && p.titleEn) ? p.titleEn : (p.title || '')
-})
+const noteTitle = computed(() => currentPost.value ? store.textOf(currentPost.value, 'title') || '' : '')
 
 const aboutOpen = ref(null)
 
