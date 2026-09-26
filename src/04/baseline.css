@@ -20,6 +20,7 @@
     --carbon-a50:  #1B1C1C80;
     --carbon-a56:  #1B1C1C90;
     --carbon-a60:  #1B1C1C99;
+    --carbon-a85:  #1B1C1CD9;
 
     --carbon:      #1B1C1C;
 
@@ -271,6 +272,8 @@ audio::-webkit-media-controls-enclosure:hover {
   /* FILL   */ background-color: var(--lirio-a40);
 
 }
+
+@keyframes scroll-progress { from { transform: translateX(0); } to { transform: translateX(-8ch); } }
 
 .a11y-only {
   /* LAYOUT */ position: absolute; width: 1px; height: 1px; overflow: hidden;

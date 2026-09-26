@@ -65,13 +65,15 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
     <div class="room" ref="room" role="main">
 
       <svg class="wall" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
-        <rect class="surface" x="18" y="18" :width="layout.size[0] - 36" :height="layout.size[1] - 36" rx="24" :fill="wall.color" @click="armed = null" />
+        <rect class="surface" x="9" y="9" :width="layout.size[0] - 18" :height="layout.size[1] - 18" rx="24" :fill="wall.color" @click="armed = null" />
         <rect v-for="item in layout.items" :key="item.id" class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill"
               @pointerenter="enter(item, $event)" @pointermove="track" @pointerleave="leave" @click="pick(item, $event)" />
         <rect v-if="halo" class="halo" :x="halo.box[0] - 14" :y="halo.box[1] - 14" :width="halo.box[2] + 28" :height="halo.box[3] + 28" rx="18" />
       </svg>
 
-      <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hovered = $event" @pick="pick" @turn="turn" />
+      <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hovered = $event" @pick="pick" @turn="turn">
+        <Hint v-if="halo && !at" :item="halo" />
+      </Guide>
 
       <Hint v-if="hint" :item="hint" :at="at" />
 
@@ -92,7 +94,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
 .wall    { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-.surface { stroke: var(--carbon); stroke-width: 36; }
+.surface { stroke: var(--carbon); stroke-width: 18; }
 
 .item    { stroke: var(--carbon); stroke-width: 18; cursor: pointer; }
 

@@ -26,6 +26,8 @@ const store = useStore()
       </li>
     </ul>
 
+    <slot />
+
   </nav>
 
 </template>
@@ -34,9 +36,9 @@ const store = useStore()
 
 .guide {
 
-  /* LAYOUT */ position: absolute; left: 1rem; bottom: 1rem; z-index: 2;
+  /* LAYOUT */ position: absolute; left: 2rem; bottom: 2rem; z-index: 2;
   /* BOX    */ width: 16rem; padding: .75rem 1rem;
-  /* FILL   */ background: var(--carbon-a60); color: var(--humo);
+  /* FILL   */ background: var(--carbon-a85); color: var(--humo);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
 
@@ -57,7 +59,7 @@ const store = useStore()
 
 @media (--mobile) {
 
-  .guide { top: 1rem; right: 1rem; bottom: auto; width: auto; }
+  .guide { top: 1rem; left: 1rem; right: 1rem; bottom: auto; width: auto; }
   .items { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; }
 
 }
