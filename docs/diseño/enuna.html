@@ -15,12 +15,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" crossorigin src="/assets/index-C9YznCA9.js"></script>
-    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-xxwGIdf_.css">
+    <script type="module" crossorigin src="/assets/index-trr9qveg.js"></script>
+    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-DE0GGxWz.css">
 
     <noscript><link rel="stylesheet" href="/assets/neocities.css"><style>noscript.archive { display: contents }</style></noscript>
 
-    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
+    <script>(function () { var archive = location.search.match(/[?&](archivo|archive)(&|=|$)/); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.documentElement.dataset.view = archive[1]; document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
 
     <title>en una - publicación digital - octantes.ar</title>
     <meta name="description" content="proyecto de branding y motion graphics para revista digital de música" data-head>
@@ -50,6 +50,8 @@
     <meta name="twitter:image" content="https://octantes.github.io/posts/diseño/enuna/share.jpg" data-head>
     <meta name="twitter:image:alt" content="en una - publicación digital" data-head>
     <script type="application/ld+json" data-head>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://octantes.github.io/diseño/enuna"},"headline":"en una - publicación digital","image":"https://octantes.github.io/posts/diseño/enuna/share.jpg","inLanguage":"es","author":{"@type":"Person","name":"kaste","url":"https://x.com/octantes"},"publisher":{"@type":"Organization","name":"octantes.ar","url":"https://octantes.github.io/"},"datePublished":"2023-09-06T00:00:00.000Z","dateModified":"2023-09-06T00:00:00.000Z","description":"proyecto de branding y motion graphics para revista digital de música","keywords":"branding, portfolio"}</script>
+
+    <script type="application/json" id="note">{"slug":"enuna","title":"en una - publicación digital","description":"proyecto de branding y motion graphics para revista digital de música","type":"diseño","tags":["branding","portfolio"],"portada":"https://octantes.github.io/posts/diseño/enuna/portada.webp","share":"https://octantes.github.io/posts/diseño/enuna/share.jpg","handle":["kaste"],"date":"06/09/2023","isoDate":"2023-09-06T00:00:00.000Z","modified":"2023-09-06T00:00:00.000Z","vuecomp":null,"bilingual":true,"titleEn":"en una - digital publication","descriptionEn":"branding and motion graphics project for a digital music magazine"}</script>
 
   </head>
 
@@ -86,11 +88,14 @@
             <a href="/feed.xml">[RSS]</a>
             <a href="/design/enuna?archive">[ENG]</a>
           </div>
+          <div class="nav-row">
+            <a href="/portfolio?archivo">[PORTFOLIO]</a>
+          </div>
         </nav>
 
-        <div class="separator-nomargin">artículos</div>
+        <a href="/info?archivo" class="separator-nomargin">posteos</a>
         
-        <ul class="article-list"><li class="cat-header">música</li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header">diseño</li><li><a href="/diseño/nubenueve?archivo">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo">en una - publicación digital</a></li><li class="cat-header">desarrollo</li><li><a href="/desarrollo/browsewithscroll?archivo">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header">textos</li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
+        <ul class="article-list"><li class="cat-header"><a href="/musica?archivo">música</a></li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header"><a href="/diseño?archivo">diseño</a></li><li><a href="/diseño/nubenueve?archivo">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo" aria-current="page">en una - publicación digital</a></li><li class="cat-header"><a href="/desarrollo?archivo">desarrollo</a></li><li><a href="/desarrollo/browsewithscroll?archivo">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header"><a href="/textos?archivo">textos</a></li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
 
       </div>
 
@@ -103,7 +108,7 @@
         <div class="meta">06/09/2023 // kaste</div>
       </header>
       
-      <video src="/posts/diseño/enuna/header.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="header del proyecto de diseño"></video><video src="/posts/diseño/enuna/explainer.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="concepto de la marca explicado"></video><video src="/posts/diseño/enuna/marquee.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="divisor de presentacion"></video><video src="/posts/diseño/enuna/iconography.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="presentacion del icono"></video><video src="/posts/diseño/enuna/identity.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="assets de identidad para redes"></video><img src="/posts/diseño/enuna/break.webp" width="600" height="292" loading="lazy" alt="separador de presentacion"><img src="/posts/diseño/enuna/credits.webp" width="600" height="235" loading="lazy" alt="creditos del proyecto de branding"><div class="nota nota-verso"><p><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/dINpNVg0hiw?rel=0" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe></p>
+      <video src="/posts/diseño/enuna/header.mp4" poster="/posts/diseño/enuna/header-poster.jpg" width="1920" height="700" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="header del proyecto de diseño"></video><video src="/posts/diseño/enuna/explainer.mp4" poster="/posts/diseño/enuna/explainer-poster.jpg" width="1920" height="600" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="concepto de la marca explicado"></video><video src="/posts/diseño/enuna/marquee.mp4" poster="/posts/diseño/enuna/marquee-poster.jpg" width="1920" height="150" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="divisor de presentacion"></video><video src="/posts/diseño/enuna/iconography.mp4" poster="/posts/diseño/enuna/iconography-poster.jpg" width="480" height="360" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="presentacion del icono"></video><video src="/posts/diseño/enuna/identity.mp4" poster="/posts/diseño/enuna/identity-poster.jpg" width="1920" height="2390" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="assets de identidad para redes"></video><img src="/posts/diseño/enuna/break.webp" width="600" height="292" loading="lazy" alt="separador de presentacion"><img src="/posts/diseño/enuna/credits.webp" width="600" height="235" loading="lazy" alt="creditos del proyecto de branding"><div class="nota nota-verso"><p><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/dINpNVg0hiw?rel=0" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe></p>
 <p>este fue mi primer <em>proyecto</em> de diseño, después de años sin profundizar mucho<br />se me ocurrió pensar conceptos de marcas ficticias, como excusa para practicar</p>
 <p>en este caso, el objetivo era diseñar assets y <strong>animarlos</strong> usando after effects<br />para eso, la excusa fue una revista de publicación digital con muy pocos colores<br />hoy en día le veo problemas de espaciado, y el texto del copy me parece básico<br />me gustaría revisitar esta <em>estética</em> con algún proyecto real que la aproveche</p>
 <p>el trabajo fue realizado usando figma, photoshop y after effects, entre otros</p>
@@ -114,7 +119,7 @@
 
     </noscript>
 
-    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'), view = document.querySelector('template[data-view="' + document.documentElement.dataset.view + '"]'); if (view) document.documentElement.lang = view.lang; archive.outerHTML = view ? view.innerHTML : archive.textContent }</script>
 
     <div id="octantes"></div>
 

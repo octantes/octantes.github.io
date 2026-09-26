@@ -15,12 +15,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" crossorigin src="/assets/index-C9YznCA9.js"></script>
-    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-xxwGIdf_.css">
+    <script type="module" crossorigin src="/assets/index-trr9qveg.js"></script>
+    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-DE0GGxWz.css">
 
     <noscript><link rel="stylesheet" href="/assets/neocities.css"><style>noscript.archive { display: contents }</style></noscript>
 
-    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
+    <script>(function () { var archive = location.search.match(/[?&](archivo|archive)(&|=|$)/); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.documentElement.dataset.view = archive[1]; document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
 
     <title>geminis - octantes.ar</title>
     <meta name="description" content="la musica de mi hermano, junto a un tema propio al final" data-head>
@@ -50,6 +50,8 @@
     <meta name="twitter:image" content="https://octantes.github.io/posts/musica/geminis/share.jpg" data-head>
     <meta name="twitter:image:alt" content="geminis" data-head>
     <script type="application/ld+json" data-head>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://octantes.github.io/musica/geminis"},"headline":"geminis","image":"https://octantes.github.io/posts/musica/geminis/share.jpg","inLanguage":"es","author":{"@type":"Person","name":"kaste","url":"https://x.com/octantes"},"publisher":{"@type":"Organization","name":"octantes.ar","url":"https://octantes.github.io/"},"datePublished":"2025-06-06T00:00:00.000Z","dateModified":"2025-06-06T00:00:00.000Z","description":"la musica de mi hermano, junto a un tema propio al final","keywords":"album, instrumental"}</script>
+
+    <script type="application/json" id="note">{"slug":"geminis","title":"geminis","description":"la musica de mi hermano, junto a un tema propio al final","type":"musica","tags":["album","instrumental"],"portada":"https://octantes.github.io/posts/musica/geminis/portada.webp","share":"https://octantes.github.io/posts/musica/geminis/share.jpg","handle":["kaste"],"date":"06/06/2025","isoDate":"2025-06-06T00:00:00.000Z","modified":"2025-06-06T00:00:00.000Z","vuecomp":null,"bilingual":true,"titleEn":"geminis","descriptionEn":"my brother's music, alongside one of my own at the end"}</script>
 
   </head>
 
@@ -86,11 +88,14 @@
             <a href="/feed.xml">[RSS]</a>
             <a href="/music/geminis?archive">[ENG]</a>
           </div>
+          <div class="nav-row">
+            <a href="/portfolio?archivo">[PORTFOLIO]</a>
+          </div>
         </nav>
 
-        <div class="separator-nomargin">artículos</div>
+        <a href="/info?archivo" class="separator-nomargin">posteos</a>
         
-        <ul class="article-list"><li class="cat-header">música</li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header">diseño</li><li><a href="/diseño/nubenueve?archivo">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo">en una - publicación digital</a></li><li class="cat-header">desarrollo</li><li><a href="/desarrollo/browsewithscroll?archivo">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header">textos</li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
+        <ul class="article-list"><li class="cat-header"><a href="/musica?archivo">música</a></li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo" aria-current="page">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header"><a href="/diseño?archivo">diseño</a></li><li><a href="/diseño/nubenueve?archivo">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo">en una - publicación digital</a></li><li class="cat-header"><a href="/desarrollo?archivo">desarrollo</a></li><li><a href="/desarrollo/browsewithscroll?archivo">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header"><a href="/textos?archivo">textos</a></li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
 
       </div>
 
@@ -113,7 +118,7 @@
 
     </noscript>
 
-    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'), view = document.querySelector('template[data-view="' + document.documentElement.dataset.view + '"]'); if (view) document.documentElement.lang = view.lang; archive.outerHTML = view ? view.innerHTML : archive.textContent }</script>
 
     <div id="octantes"></div>
 

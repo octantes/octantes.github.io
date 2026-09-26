@@ -15,12 +15,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" crossorigin src="/assets/index-C9YznCA9.js"></script>
-    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-xxwGIdf_.css">
+    <script type="module" crossorigin src="/assets/index-trr9qveg.js"></script>
+    <link rel="stylesheet" media="(scripting: enabled)" crossorigin href="/assets/index-DE0GGxWz.css">
 
     <noscript><link rel="stylesheet" href="/assets/neocities.css"><style>noscript.archive { display: contents }</style></noscript>
 
-    <script>(function () { var archive = /[?&](archivo|archive)(&|=|$)/.test(location.search); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
+    <script>(function () { var archive = location.search.match(/[?&](archivo|archive)(&|=|$)/); document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) { if (archive) l.disabled = true; else l.media = 'all' }); if (archive) { document.documentElement.classList.add('archive'); document.documentElement.dataset.view = archive[1]; document.write('<link rel="stylesheet" href="/assets/neocities.css">') } })()</script>
 
     <title>browsewithscroll - octantes.ar</title>
     <meta name="description" content="herramienta para previsualizar fuentes y multimedia con scroll directamente en el navegador" data-head>
@@ -50,6 +50,8 @@
     <meta name="twitter:image" content="https://octantes.github.io/posts/desarrollo/browsewithscroll/share.jpg" data-head>
     <meta name="twitter:image:alt" content="browsewithscroll" data-head>
     <script type="application/ld+json" data-head>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://octantes.github.io/desarrollo/browsewithscroll"},"headline":"browsewithscroll","image":"https://octantes.github.io/posts/desarrollo/browsewithscroll/share.jpg","inLanguage":"es","author":{"@type":"Person","name":"kaste","url":"https://x.com/octantes"},"publisher":{"@type":"Organization","name":"octantes.ar","url":"https://octantes.github.io/"},"datePublished":"2026-03-05T00:00:00.000Z","dateModified":"2026-03-05T00:00:00.000Z","description":"herramienta para previsualizar fuentes y multimedia con scroll directamente en el navegador","keywords":"herramientas, portfolio"}</script>
+
+    <script type="application/json" id="note">{"slug":"browsewithscroll","title":"browsewithscroll","description":"herramienta para previsualizar fuentes y multimedia con scroll directamente en el navegador","type":"desarrollo","tags":["herramientas","portfolio"],"portada":"https://octantes.github.io/posts/desarrollo/browsewithscroll/portada.webp","share":"https://octantes.github.io/posts/desarrollo/browsewithscroll/share.jpg","handle":["kaste"],"date":"05/03/2026","isoDate":"2026-03-05T00:00:00.000Z","modified":"2026-03-05T00:00:00.000Z","vuecomp":null,"bilingual":true,"titleEn":"browsewithscroll","descriptionEn":"tool to preview fonts and multimedia with scroll directly in the browser"}</script>
 
   </head>
 
@@ -86,11 +88,14 @@
             <a href="/feed.xml">[RSS]</a>
             <a href="/dev/browsewithscroll?archive">[ENG]</a>
           </div>
+          <div class="nav-row">
+            <a href="/portfolio?archivo">[PORTFOLIO]</a>
+          </div>
         </nav>
 
-        <div class="separator-nomargin">artículos</div>
+        <a href="/info?archivo" class="separator-nomargin">posteos</a>
         
-        <ul class="article-list"><li class="cat-header">música</li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header">diseño</li><li><a href="/diseño/nubenueve?archivo">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo">en una - publicación digital</a></li><li class="cat-header">desarrollo</li><li><a href="/desarrollo/browsewithscroll?archivo">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header">textos</li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
+        <ul class="article-list"><li class="cat-header"><a href="/musica?archivo">música</a></li><li><a href="/musica/culto?archivo">culto</a></li><li><a href="/musica/bocetos?archivo">bocetos</a></li><li><a href="/musica/orbitas?archivo">órbitas</a></li><li><a href="/musica/geminis?archivo">geminis</a></li><li><a href="/musica/viñetas?archivo">viñetas</a></li><li><a href="/musica/seance?archivo">seance</a></li><li><a href="/musica/sixminutesolder?archivo">six minutes older</a></li><li><a href="/musica/moodworktapes?archivo">mood worktapes</a></li><li class="cat-header"><a href="/diseño?archivo">diseño</a></li><li><a href="/diseño/nubenueve?archivo">nubenueve - tienda de discos</a></li><li><a href="/diseño/dinamik?archivo">dinamik - studio dev</a></li><li><a href="/diseño/cruzar?archivo">cruzar - cordillera cripto</a></li><li><a href="/diseño/enuna?archivo">en una - publicación digital</a></li><li class="cat-header"><a href="/desarrollo?archivo">desarrollo</a></li><li><a href="/desarrollo/browsewithscroll?archivo" aria-current="page">browsewithscroll</a></li><li><a href="/desarrollo/arch-hud?archivo">arch-hud</a></li><li><a href="/desarrollo/shadewithseal?archivo">shadewithseal</a></li><li><a href="/desarrollo/trackwithslate?archivo">trackwithslate</a></li><li class="cat-header"><a href="/textos?archivo">textos</a></li><li><a href="/textos/pof-softwarevr?archivo">realidad virtual - las mejores aplicaciones</a></li><li><a href="/textos/poe-futurovr?archivo">realidad virtual - un futuro contemporáneo</a></li><li><a href="/textos/pod-abandonware?archivo">abandonware - la permanencia del autor</a></li><li><a href="/textos/poc-propiedades?archivo">propiedades intelectuales - hacen falta nuevas IPs?</a></li><li><a href="/textos/pob-microtransacciones?archivo">las microtransacciones y su futuro</a></li><li><a href="/textos/poa-kena?archivo">kena - está bien que la estética lo sea todo?</a></li></ul>
 
       </div>
 
@@ -107,7 +112,7 @@
 <p>scroll es una herramienta local para <strong>previsualizar colecciones de fuentes y multimedia</strong><br />no necesita instalación ni internet: solo cloná el repo y ejecutá el script &quot;launch.sh&quot;</p>
 <p>armado para diseñadores y creadores que necesiten una forma rápida de buscar recursos<br />ideal para quienes buscan simpleza y privacidad: no pensado para workflows complejos<br />sin embargo, por lo liviano que es, se encarga de directorios enormes sin problemas</p>
 <p>toda la información se mantiene en tu máquina, sin cuentas, servidores o syncs<br />la herramienta <em>se salta el CORS al usar scripts</em> para &quot;bakear&quot; la lista de archivos</p>
-<p><video src="/posts/desarrollo/browsewithscroll/preview.mp4" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="screenshot"></video></p>
+<p><video src="/posts/desarrollo/browsewithscroll/preview.mp4" poster="/posts/desarrollo/browsewithscroll/preview-poster.jpg" width="1920" height="1080" class="gifvideo" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="screenshot"></video></p>
 <p>cada release es estable, el objetivo es mantenerlo <strong>simple</strong>: abrilo y scrolleá</p>
 <p><em>cero dependencias</em>: sin librerías, los scripts usan solo herramientas estándar unix<br /><em>font-viewer</em>: previsualizá archivos .ttf, .otf y .woff con render de lorem ipsum<br /><em>multimedia</em>: soporte para formatos de imágenes comunes y videos (mp4, webm, ogg)<br /><em>launch y sync</em>: el script launch.sh actualiza la lista de assets y abre scroll<br /><em>modo shuffle</em>: explorá tu colección de forma aleatoria o en orden secuencial<br /><em>serverless</em>: funciona directamente vía protocolo file:// sin usar servidores<br /><em>hiperligero</em>: overhead mínimo para mantener la fluidez con miles de archivos</p>
 <p><strong>wip</strong>: modo grilla &gt; texto personalizable &gt; display de metadata básica &gt; sistema de tags</p>
@@ -118,7 +123,7 @@
 
     </noscript>
 
-    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'); archive.outerHTML = archive.textContent }</script>
+    <script>if (document.documentElement.classList.contains('archive')) { var archive = document.querySelector('noscript.archive'), view = document.querySelector('template[data-view="' + document.documentElement.dataset.view + '"]'); if (view) document.documentElement.lang = view.lang; archive.outerHTML = view ? view.innerHTML : archive.textContent }</script>
 
     <div id="octantes"></div>
 
