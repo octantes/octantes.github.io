@@ -34,6 +34,8 @@ function wordOf(id, lang) { return sectionById(id)?.[lang] ?? id }
 
 export function labelOf(id, lang) { return sectionById(id)?.label[lang] ?? id }
 
+export function textOf(note, key, lang) { return lang === 'en' && note[`${key}En`] || note[key] }
+
 export function pageOf(route) {
 
   const path = route.path.length > 1 ? route.path.replace(/\/$/, '') : route.path
@@ -99,8 +101,8 @@ export function headFor(page, lang, post) {
 
   if (page.kind === 'note' && post) {
     const shown = lang === 'en' && post.bilingual ? 'en' : 'es'
-    const name = (shown === 'en' && post.titleEn) || post.title || post.slug
-    const text = (shown === 'en' && post.descriptionEn) || post.description || description
+    const name = textOf(post, 'title', shown) || post.slug
+    const text = textOf(post, 'description', shown) || description
     const handle = [].concat(post.handle || 'kaste')[0]
     const url = urlOf(page, shown)
     Object.assign(head, {

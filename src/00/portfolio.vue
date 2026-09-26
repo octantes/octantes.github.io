@@ -155,12 +155,12 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 
         <div class="rays-container">
         
-          <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)`, '--i': i, '--n': portfolioProjects.length }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
+          <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)`, '--i': i, '--n': portfolioProjects.length }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + store.textOf(proj, 'title')">
           
             <div class="ray-line"></div>
-            <span class="ray-text"><span class="ray-label">{{ (store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title }}</span></span>
+            <span class="ray-text"><span class="ray-label">{{ store.textOf(proj, 'title') }}</span></span>
 
-            <div v-if="currentProject && currentProject.slug === proj.slug && proj.slug !== WELCOME_SLUG" class="ray-portal" :title="store.t.portfolio.open + ((store.lang === 'en' && proj.bilingual && proj.titleEn) ? proj.titleEn : proj.title)">
+            <div v-if="currentProject && currentProject.slug === proj.slug && proj.slug !== WELCOME_SLUG" class="ray-portal" :title="store.t.portfolio.open + store.textOf(proj, 'title')">
               <div class="portal-line"></div>
               <div class="portal-trigger"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.6 L9.4 6 L4.2 9.4 Z" /></svg></div>
             </div>
@@ -172,7 +172,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
                 <span class="tag">{{ (proj.tags || []).slice(0, 3).join(', ') }}</span>
               </p>
               <p v-else class="legend"><span class="key dis"></span>{{ store.labelOf('diseño') }}<span class="key dev"></span>{{ store.labelOf('desarrollo') }}</p>
-              <p class="desc" :class="{ welcome: proj.slug === WELCOME_SLUG }">{{ (store.lang === 'en' && proj.bilingual && proj.descriptionEn) ? proj.descriptionEn : (proj.description || store.t.portfolio.noDesc) }}</p>
+              <p class="desc" :class="{ welcome: proj.slug === WELCOME_SLUG }">{{ store.textOf(proj, 'description') || store.t.portfolio.noDesc }}</p>
             </div>
 
           </div>
