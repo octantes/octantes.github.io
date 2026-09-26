@@ -66,9 +66,12 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
       <svg class="wall" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
         <rect class="surface" x="9" y="9" :width="layout.size[0] - 18" :height="layout.size[1] - 18" rx="24" :fill="wall.color" @click="armed = null" />
-        <rect v-for="item in layout.items" :key="item.id" class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill"
-              @pointerenter="enter(item, $event)" @pointermove="track" @pointerleave="leave" @click="pick(item, $event)" />
-        <rect v-if="halo" class="halo" :x="halo.box[0] - 14" :y="halo.box[1] - 14" :width="halo.box[2] + 28" :height="halo.box[3] + 28" rx="18" />
+        <template v-for="item in layout.items" :key="item.id">
+          <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill" />
+          <rect v-else class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill"
+                @pointerenter="enter(item, $event)" @pointermove="track" @pointerleave="leave" @click="pick(item, $event)" />
+        </template>
+        <rect v-if="halo" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" />
       </svg>
 
       <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hovered = $event" @pick="pick" @turn="turn">
@@ -98,6 +101,8 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
 .item    { stroke: var(--carbon); stroke-width: 18; cursor: pointer; }
 
-.halo    { fill: none; stroke: var(--lirio); stroke-width: 10; pointer-events: none; }
+.decor   { pointer-events: none; }
+
+.halo    { fill: none; stroke: var(--lirio); stroke-width: 18; pointer-events: none; }
 
 </style>
