@@ -8,8 +8,8 @@ import { WALLS, LANDING_WALL, layoutWall } from '../04/walls.js'
 import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
 
-const ROOM_FOR_HINT = 140
-const GAP           = 4
+const LINE = 18
+const HINT = { w: 288, h: 110, gap: 12, arrow: 14 }
 
 const route  = useRoute()
 const router = useRouter()
@@ -36,14 +36,24 @@ const tip = computed(() => {
   if (!item || item.id === armed.value || !room.value) return null
 
   const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / layout.value.size[0]
-  const [x, y, w, h] = item.box.map(v => v * scale)
+  const [x, y, w, h] = [item.box[0] - LINE / 2, item.box[1] - LINE / 2, item.box[2] + LINE, item.box[3] + LINE].map(v => v * scale)
   const [left, top] = [frame.left + x, frame.top + y]
   const west  = left + w / 2 < frame.left + frame.width / 2
   const north = top + h / 2 < frame.top + frame.height / 2
-  const space = north ? frame.bottom - top - h : top - frame.top
+  const space = { left: left - frame.left, right: frame.right - left - w, above: top - frame.top, below: frame.bottom - top - h }
 
-  if (space > ROOM_FOR_HINT) return { item, at: [left + w / 2, north ? top + h + GAP : top - GAP], place: `${north ? 'top' : 'bottom'}-${west ? 'start' : 'end'}` }
-  return { item, at: [west ? left + w + GAP : left - GAP, top + h / 2], place: `${west ? 'left' : 'right'}-${north ? 'start' : 'end'}` }
+  const beside = () => space.right > space.left
+    ? { at: [left + w + HINT.gap, top + h / 2], place: `left-${north ? 'start' : 'end'}` }
+    : { at: [left - HINT.gap, top + h / 2], place: `right-${north ? 'start' : 'end'}` }
+  const around = () => space.below > space.above
+    ? { at: [left + w / 2, top + h + HINT.gap], place: `top-${west ? 'start' : 'end'}` }
+    : { at: [left + w / 2, top - HINT.gap], place: `bottom-${west ? 'start' : 'end'}` }
+
+  const reach = HINT.gap + HINT.arrow
+  const fits  = { beside: Math.max(space.left, space.right) > HINT.w + reach, around: Math.max(space.above, space.below) > HINT.h + reach }
+  const wide  = frame.width > frame.height
+  const [first, second] = wide ? [beside, around] : [around, beside]
+  return { item, ...((wide ? fits.beside : fits.around) ? first() : second()) }
 
 })
 
@@ -81,13 +91,13 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
     <div class="room" ref="room" role="main">
 
       <svg class="wall" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
-        <rect class="surface" x="9" y="9" :width="layout.size[0] - 18" :height="layout.size[1] - 18" rx="24" :fill="wall.color" @click="armed = null" />
+        <rect class="surface" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" :stroke-width="LINE" :fill="wall.color" @click="armed = null" />
         <template v-for="item in layout.items" :key="item.id">
-          <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill" />
-          <rect v-else class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :fill="item.fill"
+          <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill" />
+          <rect v-else class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill"
                 @pointerenter="hover(item.id, $event)" @pointerleave="hover(null, $event)" @click="pick(item, $event)" />
         </template>
-        <rect v-if="halo" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" />
+        <rect v-if="halo" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" :stroke-width="LINE" />
       </svg>
 
       <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
@@ -113,12 +123,12 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
 .wall    { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-.surface { stroke: var(--carbon); stroke-width: 18; }
+.surface { stroke: var(--carbon); }
 
-.item    { stroke: var(--carbon); stroke-width: 18; cursor: pointer; }
+.item    { stroke: var(--carbon); cursor: pointer; }
 
 .decor   { pointer-events: none; }
 
-.halo    { fill: none; stroke: var(--lirio); stroke-width: 18; pointer-events: none; }
+.halo    { fill: none; stroke: var(--lirio); pointer-events: none; }
 
 </style>
