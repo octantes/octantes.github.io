@@ -22,7 +22,7 @@ const store = useStore()
 
     <ul class="items">
       <li v-for="item in wall.items.filter(i => !i.decor)" :key="item.id">
-        <button class="entry" :class="{ hot: hot === item.id }" @pointerenter="emit('hover', item.id)" @pointerleave="emit('hover', null)" @focus="emit('hover', item.id)" @blur="emit('hover', null)" @click="emit('pick', item, $event)">{{ item.label[store.lang] }}</button>
+        <button class="entry" :class="{ hot: hot === item.id }" @pointerenter="emit('hover', item.id, $event)" @pointerleave="emit('hover', null, $event)" @focus="emit('hover', item.id)" @blur="emit('hover', null)" @click="emit('pick', item, $event)">{{ item.label[store.lang] }}</button>
       </li>
     </ul>
 
