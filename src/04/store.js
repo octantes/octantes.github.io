@@ -256,7 +256,7 @@ export const useStore = defineStore('store', () => {
     if (cached) return cached
 
     const notePath = pathOf({ kind: 'note', id: post.type || 'textos', slug }, langCode)
-    const ownPage = decodeURIComponent(location.pathname) === notePath && document.querySelector('noscript.archive')
+    const ownPage = decodeURIComponent(location.pathname) === notePath && document.getElementById('note') && document.querySelector('noscript.archive')
 
     let rawText = ownPage?.textContent
     if (!rawText) {
