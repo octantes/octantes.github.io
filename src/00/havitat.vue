@@ -90,14 +90,14 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
     <div class="room" ref="room" role="main">
 
-      <svg class="wall" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
+      <svg class="wall" :class="{ focused: halo }" :viewBox="`0 0 ${layout.size[0]} ${layout.size[1]}`" aria-hidden="true">
         <rect class="surface" :x="LINE / 2" :y="LINE / 2" :width="layout.size[0] - LINE" :height="layout.size[1] - LINE" rx="24" :stroke-width="LINE" :fill="wall.color" @click="armed = null" />
         <template v-for="item in layout.items" :key="item.id">
           <rect v-if="item.decor" class="item decor" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill" />
           <rect v-else class="item" :x="item.box[0]" :y="item.box[1]" :width="item.box[2]" :height="item.box[3]" rx="10" :stroke-width="LINE" :fill="item.fill"
                 @pointerenter="hover(item.id, $event)" @pointerleave="hover(null, $event)" @click="pick(item, $event)" />
         </template>
-        <rect v-if="halo" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" :stroke-width="LINE" />
+        <rect v-if="halo" class="halo" :x="halo.box[0]" :y="halo.box[1]" :width="halo.box[2]" :height="halo.box[3]" rx="10" :stroke-width="LINE" :fill="halo.fill" />
       </svg>
 
       <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
@@ -125,10 +125,14 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
 .surface { stroke: var(--carbon); }
 
+.surface, .item { transition: opacity var(--animate-fast); }
+
+.focused .surface, .focused .item { opacity: .35; }
+
 .item    { stroke: var(--carbon); cursor: pointer; }
 
 .decor   { pointer-events: none; }
 
-.halo    { fill: none; stroke: var(--lirio); pointer-events: none; }
+.halo    { stroke: var(--lirio); pointer-events: none; }
 
 </style>
