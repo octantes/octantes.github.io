@@ -31,7 +31,7 @@ const place = computed(() => props.at && {
 
   /* LAYOUT */ position: fixed; z-index: 3; pointer-events: none; display: flex; flex-direction: column; gap: .3rem; transform: translate(var(--dx), var(--dy));
   /* BOX    */ width: 18rem; padding: .6rem .8rem;
-  /* FILL   */ background: var(--carbon-a85); color: var(--humo);
+  /* FILL   */ background: var(--carbon-a95); color: var(--humo);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
 

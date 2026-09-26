@@ -21,7 +21,7 @@ const store = useStore()
     </header>
 
     <ul class="items">
-      <li v-for="item in wall.items" :key="item.id">
+      <li v-for="item in wall.items.filter(i => !i.decor)" :key="item.id">
         <button class="entry" :class="{ hot: hot === item.id }" @pointerenter="emit('hover', item.id)" @pointerleave="emit('hover', null)" @focus="emit('hover', item.id)" @blur="emit('hover', null)" @click="emit('pick', item, $event)">{{ item.label[store.lang] }}</button>
       </li>
     </ul>
@@ -38,7 +38,7 @@ const store = useStore()
 
   /* LAYOUT */ position: absolute; left: 2rem; bottom: 2rem; z-index: 2;
   /* BOX    */ width: 16rem; padding: .75rem 1rem;
-  /* FILL   */ background: var(--carbon-a85); color: var(--humo);
+  /* FILL   */ background: var(--carbon-a95); color: var(--humo);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
 
