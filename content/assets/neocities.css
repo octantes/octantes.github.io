@@ -399,7 +399,7 @@ audio::-webkit-media-controls-enclosure:hover { background-color: var(--lirio-a4
 @media (max-width: 900px)        { 
   
   body                { grid-template-columns: 1fr; }
-  .static-nav         { height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--polvo); padding: 1.5rem; }
+  .static-nav         { height: auto; position: relative; border-right: none; border-top: 1px solid var(--polvo); padding: 1.5rem; order: 1; }
   .post-content       { padding: 1.5rem; padding-right: 1.5rem; }
   .nav-links          { flex-direction: row; flex-wrap: wrap;   }
   .nav-row:last-child { flex-basis: 100%; }
