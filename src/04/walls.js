@@ -28,13 +28,13 @@ export const WALLS = [
                        box: [450, 635, 825, 233], fill: '#8F9195', anchor: { x: 'left' } },
     { id: 'curtain',   label: { es: 'cortina', en: 'curtain' },
                        description: { es: 'la cortina', en: 'the curtain' },
-                       box: [1410, 150, 293, 718], fill: '#303233', anchor: { x: 'right', y: 'stretch' }, solo: true },
+                       box: [1410, 150, 293, 718], fill: '#303233', anchor: { x: 'right', y: 'stretch' }, solo: true, hover: { box: [.6, 0, .4, 1] } },
   ] },
 
   { id: 'orange', es: 'naranja', en: 'orange', color: '#CA895D', size: [1712, 866], items: [
     { id: 'door',      label: { es: 'puerta', en: 'door' },
                        description: { es: 'la puerta de entrada', en: 'the front door' },
-                       box: [186, 193, 435, 664], fill: '#8F9195' },
+                       box: [186, 193, 435, 664], fill: '#8F9195', hover: { box: [0, 0, .55, 1] } },
     { id: 'corkboard', label: { es: 'corcho', en: 'corkboard' },
                        description: { es: 'el corcho detrás de los monitores', en: 'the corkboard behind the monitors' },
                        box: [750, 135, 660, 300], fill: '#804C49', anchor: { x: 'right' } },
