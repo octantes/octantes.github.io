@@ -8,7 +8,7 @@ const props = defineProps({ wall: Object, layout: Object, hot: String })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
-const MOTION   = { length: 1000, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
+const MOTION   = { length: 1300, stagger: .6, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
 
 const frame   = ref(0)
 const clock   = ref(0)
@@ -33,8 +33,13 @@ function prepare({ wall, layout }) {
 }
 
 function timed(entries, [a, b], incoming) {
-  const speed = Math.max(...entries.map(e => e.total)) / ((b - a) * MOTION.length)
-  return entries.map(e => { const duration = e.total / speed; return { ...e, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
+  const [from, to] = [a * MOTION.length, b * MOTION.length]
+  const order = [...entries].sort((x, y) => y.total - x.total)
+  const step  = MOTION.stagger * (to - from) / Math.max(1, entries.length - 1)
+  return entries.map(e => {
+    const offset = order.indexOf(e) * step
+    return incoming ? { ...e, start: from + offset, duration: to - from - offset } : { ...e, start: from, duration: to - from - offset }
+  })
 }
 
 function play(from, to) {
