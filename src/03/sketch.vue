@@ -8,7 +8,7 @@ const props = defineProps({ wall: Object, layout: Object, hot: String })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
-const MOTION   = { length: 1300, stagger: .6, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
+const MOTION   = { length: 1300, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
 
 const frame   = ref(0)
 const clock   = ref(0)
@@ -25,28 +25,37 @@ const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i]
 const blank = () => getComputedStyle(document.documentElement).getPropertyValue('--niebla').trim()
 
 function prepare({ wall, layout }) {
-  return layout.items.map(item => {
+  return layout.items.map((item, index) => {
     const seed  = seedOf(wall.id + item.id)
     const lines = VARIANTS.map(v => (item.strokes ?? [sketchBox(item.box[2], item.box[3], seed)]).map((stroke, k) => trace(stroke, item.box, seed + k * 13, v)))
-    return { item, seed, lines, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
+    return { item, index, seed, lines, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
 }
 
-function timed(entries, [a, b], incoming) {
-  const [from, to] = [a * MOTION.length, b * MOTION.length]
-  const order = [...entries].sort((x, y) => y.total - x.total)
-  const step  = MOTION.stagger * (to - from) / Math.max(1, entries.length - 1)
-  return entries.map(e => {
-    const offset = order.indexOf(e) * step
-    return incoming ? { ...e, start: from + offset, duration: to - from - offset } : { ...e, start: from, duration: to - from - offset }
-  })
+function touching({ item: { box: a } }, { item: { box: b } }) {
+  return a[0] <= b[0] + b[2] + LINE && b[0] <= a[0] + a[2] + LINE && a[1] <= b[1] + b[3] + LINE && b[1] <= a[1] + a[3] + LINE
+}
+
+function clusters(entries) {
+  const groups = []
+  for (const entry of entries) {
+    const joined = groups.filter(group => group.some(member => touching(member, entry)))
+    joined.forEach(group => groups.splice(groups.indexOf(group), 1))
+    groups.push([entry, ...joined.flat()])
+  }
+  return groups.map(members => ({ members: members.sort((x, y) => y.total - x.total), total: members.reduce((sum, m) => sum + m.total, 0) }))
+}
+
+function timed(groups, [a, b], incoming) {
+  const speed = Math.max(...groups.map(g => g.total)) / ((b - a) * MOTION.length)
+  return groups.map(g => { const duration = g.total / speed; return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
 }
 
 function play(from, to) {
   const windows = from && to ? MOTION.turn : MOTION.alone
   motion.value = {
-    out: from ? timed(prepare(from), windows.out, false) : [],
-    in:  to ? timed(prepare(to), windows.in, true) : [],
+    out: from ? timed(clusters(prepare(from)), windows.out, false) : [],
+    in:  to ? timed(clusters(prepare(to)), windows.in, true) : [],
     colours: [from?.wall.color ?? blank(), to?.wall.color ?? blank()],
     start: performance.now(),
   }
@@ -65,10 +74,9 @@ function tick() {
   current.value = next
 }
 
-function pose(entry, shown, incoming) {
-  if (shown <= 0) return null
+function pose(entry, lo, hi) {
+  if (hi <= lo) return null
   const lines = entry.lines[frame.value]
-  const [lo, hi] = incoming ? [0, shown * entry.total] : [(1 - shown) * entry.total, entry.total]
   const ink = []
   let at = 0
   lines.forEach((line, k) => {
@@ -76,7 +84,13 @@ function pose(entry, shown, incoming) {
     if (b > a) ink.push(ribbon(cut(line, (a - at) / length, (b - at) / length), entry.seed + k * 13 + frame.value))
     at += length
   })
-  return { id: entry.item.id, fill: shape(lines[0]), color: entry.item.fill, opacity: clamp((shown - .8) / .2), ink }
+  return { id: entry.item.id, index: entry.index, fill: shape(lines[0]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
+}
+
+function poses(group, shown, incoming) {
+  const [lo, hi] = incoming ? [0, shown * group.total] : [(1 - shown) * group.total, group.total]
+  let at = 0
+  return group.members.map(member => { const p = pose(member, Math.max(0, lo - at), Math.min(member.total, hi - at)); at += member.total; return p })
 }
 
 const scene = computed(() => {
@@ -86,7 +100,7 @@ const scene = computed(() => {
   const progress = e => clamp((t - e.start) / e.duration)
   return {
     colour: mix(...m.colours, ease(clamp(t / MOTION.length))),
-    poses: [...m.out.map(e => pose(e, 1 - progress(e), false)), ...m.in.map(e => pose(e, progress(e), true))].filter(Boolean),
+    poses: [m.out.flatMap(g => poses(g, 1 - progress(g), false)), m.in.flatMap(g => poses(g, progress(g), true))].flatMap(side => side.filter(Boolean).sort((x, y) => x.index - y.index)),
   }
 })
 
