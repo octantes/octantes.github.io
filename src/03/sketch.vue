@@ -27,8 +27,10 @@ const blank = () => getComputedStyle(document.documentElement).getPropertyValue(
 function prepare({ wall, layout }) {
   return layout.items.map((item, index) => {
     const seed  = seedOf(wall.id + item.id)
-    const lines = VARIANTS.map(v => (item.strokes ?? [sketchBox(item.box[2], item.box[3], seed)]).map((stroke, k) => trace(stroke, item.box, seed + k * 13, v)))
-    return { item, index, seed, lines, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
+    const sketch  = item.strokes ? { outline: item.strokes[0], ink: item.strokes } : sketchBox(item.box[2], item.box[3], seed, item.hidden)
+    const lines   = VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, item.box, seed + k * 13, v)))
+    const outline = VARIANTS.map(v => trace(sketch.outline, item.box, seed, v))
+    return { item, index, seed, lines, outline, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
 }
 
@@ -41,7 +43,7 @@ function overlapping({ item: { box: a } }, { item: { box: b } }) {
 function clusters(entries) {
   const groups = []
   for (const entry of entries) {
-    const joined = groups.filter(group => group.some(member => overlapping(member, entry)))
+    const joined = groups.filter(group => !entry.item.solo && group.some(member => !member.item.solo && overlapping(member, entry)))
     joined.forEach(group => groups.splice(groups.indexOf(group), 1))
     groups.push([entry, ...joined.flat()])
   }
@@ -87,7 +89,7 @@ function pose(entry, lo, hi) {
     if (b > a) ink.push(ribbon(cut(line, (a - at) / length, (b - at) / length), entry.seed + k * 13 + frame.value))
     at += length
   })
-  return { id: entry.item.id, index: entry.index, fill: shape(lines[0]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
+  return { id: entry.item.id, index: entry.index, fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
 }
 
 function poses(group, shown, incoming) {
@@ -109,8 +111,8 @@ const scene = computed(() => {
 
 const inside = computed(() => [LINE / 2, LINE / 2, current.value.layout.size[0] - LINE, current.value.layout.size[1] - LINE])
 
-const drawn = computed(() => prepare(current.value).map(({ item, seed, lines }) => ({
-  item, variants: lines.map((strokes, v) => ({ fill: shape(strokes[0]), ink: strokes.map((line, k) => ribbon(line, seed + k * 13 + v)) })),
+const drawn = computed(() => prepare(current.value).map(({ item, seed, lines, outline }) => ({
+  item, variants: lines.map((strokes, v) => ({ fill: shape(outline[v]), ink: strokes.map((line, k) => ribbon(line, seed + k * 13 + v)) })),
 })))
 
 const edge  = computed(() => {

@@ -81,10 +81,20 @@ export function cut(points, from, to) {
 
 export function shape(points) { return 'M' + points.map(p => p.map(fixed).join(' ')).join('L') + 'Z' }
 
-export function sketchBox(w, h, seed) {
+export function sketchBox(w, h, seed, hidden = {}) {
   const jitter = (k, size) => noise(seed + k, k * .7) * 4 / size
   const side = (from, to, n, k) => Array.from({ length: n }, (_, i) => [from[0] + (to[0] - from[0]) * i / n + jitter(k + i, w), from[1] + (to[1] - from[1]) * i / n + jitter(k + i + 50, h)])
   const per = size => Math.max(2, Math.round(size / 90))
-  const loop = [...side([0, 0], [1, 0], per(w), 1), ...side([1, 0], [1, 1], per(h), 20), ...side([1, 1], [0, 1], per(w), 40), ...side([0, 1], [0, 0], per(h), 60)]
-  return [...loop, loop[0], [loop[1][0] * .5 + loop[0][0] * .5, loop[1][1] * .5 + loop[0][1] * .5]]
+  const sides = [side([0, 0], [1, 0], per(w), 1), side([1, 0], [1, 1], per(h), 20), side([1, 1], [0, 1], per(w), 40), side([0, 1], [0, 0], per(h), 60)]
+  const loop = sides.flat()
+  const shown = [!hidden.top, !hidden.right, !hidden.bottom, !hidden.left]
+  if (shown.every(Boolean)) return { outline: loop, ink: [[...loop, loop[0], [loop[1][0] * .5 + loop[0][0] * .5, loop[1][1] * .5 + loop[0][1] * .5]]] }
+  const first = shown.findIndex((on, k) => on && !shown[(k + 3) % 4])
+  const ink = []
+  for (let k = 0, run = null; k < 4; k++) {
+    const at = (first + k) % 4
+    if (shown[at]) { run = run ?? []; run.push(...sides[at]) }
+    if (run && (!shown[(at + 1) % 4] || k === 3)) { run.push(sides[(at + 1) % 4][0]); ink.push(run); run = null }
+  }
+  return { outline: loop, ink }
 }
