@@ -8,7 +8,7 @@ const props = defineProps({ wall: Object, layout: Object, hot: String })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
-const MOTION   = { length: 1300, overlap: .05, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
+const MOTION   = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
 
 const frame   = ref(0)
 const clock   = ref(0)
@@ -51,7 +51,7 @@ function clusters(entries) {
 function timed(groups, [a, b], incoming) {
   const span  = (b - a) * MOTION.length
   const speed = Math.max(...groups.flatMap(g => g.members.map(m => m.total))) / span
-  return groups.map(g => { const duration = Math.min(span, g.total / speed); return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
+  return groups.map(g => { const duration = Math.min(span, Math.max(span * MOTION.slowest, g.total / speed)); return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
 }
 
 function play(from, to) {
@@ -100,7 +100,7 @@ const scene = computed(() => {
   const m = motion.value
   if (!m) return null
   const t = clock.value
-  const progress = e => clamp((t - e.start) / e.duration)
+  const progress = e => ease(clamp((t - e.start) / e.duration))
   return {
     colour: mix(...m.colours, ease(clamp(t / MOTION.length))),
     poses: [m.out.flatMap(g => poses(g, 1 - progress(g), false)), m.in.flatMap(g => poses(g, progress(g), true))].flatMap(side => side.filter(Boolean).sort((x, y) => x.index - y.index)),
