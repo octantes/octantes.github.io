@@ -13,7 +13,7 @@ const store = useStore()
 
   <nav class="guide" :aria-label="store.t.havitat.items">
 
-    <header v-if="depth" class="head">
+    <header v-if="depth" class="head bare">
       <button class="turn" @click="emit('back')" :title="store.t.havitat.back" :aria-label="store.t.havitat.back">‹</button>
       <span class="name">{{ depth.label[store.lang] }}</span>
       <span class="place">{{ wall[store.lang] }}</span>
@@ -53,6 +53,7 @@ const store = useStore()
 .head   { display: flex; align-items: center; gap: .5rem; padding-bottom: .5rem; margin-bottom: .5rem; border-bottom: var(--small-outline) var(--humo-a15); }
 .name   { flex: 1; color: var(--lirio); font-weight: 700; }
 .place  { color: var(--humo-a60); }
+.bare   { border-bottom: none; margin-bottom: 0; }
 
 .turn   { background: none; border: none; padding: 0 .25rem; color: var(--cristal); font: inherit; font-size: 1.1rem; line-height: 1; cursor: pointer; }
 .turn:hover { color: var(--lirio); }
