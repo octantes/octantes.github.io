@@ -1,5 +1,6 @@
 export const LANDING_WALL = 'orange'
 export const LINE         = 18
+export const DEPTH        = { grow: 2, fill: .6 }
 
 export const WALLS = [
 
@@ -119,11 +120,32 @@ function beyondEdge([x, y, w, h], { left, right, top, bottom }) {
 
 }
 
+export function slugOf(text) { return text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().replace(/\s+/g, '-') }
+
+export function itemNamed(wall, word) { return wall.items.find(item => !item.decor && (slugOf(item.label.es) === word || slugOf(item.label.en) === word)) }
+
+function view(size, width, height) {
+
+  const scale = Math.min(width / size[0], height / size[1])
+  return [width / scale, height / scale]
+
+}
+
+export function layoutDepth(wall, item, width, height) {
+
+  const [vw, vh] = view(wall.size, width, height)
+  const [, , w, h] = item.box
+  const grow = Math.min(DEPTH.grow, DEPTH.fill * vw / w, DEPTH.fill * vh / h)
+  const box  = [(vw - w * grow) / 2, (vh - h * grow) / 2, w * grow, h * grow]
+
+  return { size: [vw, vh], items: [{ ...item, box, hidden: {} }] }
+
+}
+
 export function layoutWall(wall, width, height) {
 
   const [bw, bh] = wall.size
-  const scale = Math.min(width / bw, height / bh)
-  const [vw, vh] = [width / scale, height / scale]
+  const [vw, vh] = view(wall.size, width, height)
 
   const items = wall.items.map(item => {
     const [x, y, w, h] = item.box

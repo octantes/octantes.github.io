@@ -1,6 +1,6 @@
 import { SITE_URL, SITE_NAME, TAGLINE, SITE_DESCRIPTION, SECTIONS, ABOUT_PATH, ARCHIVE_VIEW, TWITTER } from './site-config.js'
 import { DICT } from './dict.js'
-import { WALLS } from './walls.js'
+import { WALLS, slugOf, itemNamed } from './walls.js'
 
 export const SHARE_SIZE = { width: 1200, height: 675 }
 export const ARCHIVE_FLAG = new RegExp(`[?&](${Object.values(ARCHIVE_VIEW).join('|')})(&|=|$)`)
@@ -42,14 +42,16 @@ export function textOf(note, key, lang) { return lang === 'en' && note[`${key}En
 export function pageOf(route) {
 
   const path = route.path.length > 1 ? route.path.replace(/\/$/, '') : route.path
-  const { type, slug, filterType, wall } = route.params
+  const { type, slug, filterType, wall, thing } = route.params
   const facing = wall && namedIn(WALLS, wall)
+  const item   = facing && thing && itemNamed(facing, thing)
   const aboutLang = Object.keys(ABOUT_PATH).find(lang => ABOUT_PATH[lang] === path)
 
   if (path === '/portfolio') return { kind: 'portfolio' }
   if (path === '/portal') return { kind: 'portal' }
   if (path === '/havitat') return { kind: 'havitat' }
-  if (facing) return { kind: 'wall', id: facing.id, lang: langOfWord(wall, WALLS) }
+  if (item) return { kind: 'depth', id: facing.id, item: item.id, lang: langOfWord(wall, WALLS) }
+  if (facing && !thing) return { kind: 'wall', id: facing.id, lang: langOfWord(wall, WALLS) }
   if (aboutLang) return { kind: 'about', lang: aboutLang }
   if (slug && sectionOf(type)) return { kind: 'note', id: sectionOf(type), slug, lang: langOfWord(type) }
   if (filterType && sectionOf(filterType)) return { kind: 'section', id: sectionOf(filterType), lang: langOfWord(filterType) }
@@ -73,6 +75,7 @@ export function pathOf(page, lang) {
     case 'portal':    return '/portal'
     case 'havitat':   return '/havitat'
     case 'wall':      return `/havitat/${WALLS.find(w => w.id === page.id)[lang]}`
+    case 'depth':     return `/havitat/${WALLS.find(w => w.id === page.id)[lang]}/${slugOf(depthItem(page).label[lang])}`
     case 'portfolio': return '/portfolio'
     case 'about':     return ABOUT_PATH[lang]
     case 'archive':   return `/${ARCHIVE_VIEW[lang]}.html`
@@ -83,7 +86,9 @@ export function pathOf(page, lang) {
 
 }
 
-export function themeOf(page) { return page.kind === 'havitat' || page.kind === 'wall' ? 'light' : 'dark' }
+function depthItem(page) { return WALLS.find(w => w.id === page.id).items.find(i => i.id === page.item) }
+
+export function themeOf(page) { return ['havitat', 'wall', 'depth'].includes(page.kind) ? 'light' : 'dark' }
 
 export function urlOf(page, lang) { return page.kind === 'home' ? `${SITE_URL}/` : `${SITE_URL}${pathOf(page, lang)}` }
 
@@ -98,10 +103,10 @@ export function headFor(page, lang, post) {
     ld: { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/`, description, inLanguage: lang, author: { '@type': 'Person', name: 'kaste' } },
   }
 
-  const name = { section: labelOf(page.id, lang), about: ABOUT_NAME[lang], portfolio: 'portfolio', archive: ARCHIVE_VIEW[lang], havitat: 'havitat', wall: `havitat ${WALLS.find(w => w.id === page.id)?.[lang]}` }[page.kind]
+  const name = { section: labelOf(page.id, lang), about: ABOUT_NAME[lang], portfolio: 'portfolio', archive: ARCHIVE_VIEW[lang], havitat: 'havitat', wall: `havitat ${WALLS.find(w => w.id === page.id)?.[lang]}`, depth: page.item && `${depthItem(page).label[lang]} - havitat ${WALLS.find(w => w.id === page.id)[lang]}` }[page.kind]
 
   if (name) {
-    const text = { portfolio: plainOf(DICT[lang].portfolio.desc), archive: description, havitat: description, wall: description }[page.kind] ?? summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
+    const text = { portfolio: plainOf(DICT[lang].portfolio.desc), archive: description, havitat: description, wall: description, depth: page.item && depthItem(page).description[lang] }[page.kind] ?? summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
     const paired = page.kind !== 'portfolio' && page.kind !== 'havitat'
     Object.assign(head, { title: `${name} - ${SITE_NAME}`, name, description: text, canonical: urlOf(page, lang), alternates: paired ? pair : null, localeAlt: paired ? LOCALE[other(lang)] : null, ld: null })
   }
