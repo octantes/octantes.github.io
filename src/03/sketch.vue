@@ -8,7 +8,7 @@ const props = defineProps({ wall: Object, layout: Object, hot: String })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
-const MOTION   = { length: 1300, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
+const MOTION   = { length: 1300, overlap: .05, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
 
 const frame   = ref(0)
 const clock   = ref(0)
@@ -32,14 +32,16 @@ function prepare({ wall, layout }) {
   })
 }
 
-function touching({ item: { box: a } }, { item: { box: b } }) {
-  return a[0] <= b[0] + b[2] + LINE && b[0] <= a[0] + a[2] + LINE && a[1] <= b[1] + b[3] + LINE && b[1] <= a[1] + a[3] + LINE
+function overlapping({ item: { box: a } }, { item: { box: b } }) {
+  const w = Math.min(a[0] + a[2], b[0] + b[2]) - Math.max(a[0], b[0])
+  const h = Math.min(a[1] + a[3], b[1] + b[3]) - Math.max(a[1], b[1])
+  return w > 0 && h > 0 && w * h > MOTION.overlap * Math.min(a[2] * a[3], b[2] * b[3])
 }
 
 function clusters(entries) {
   const groups = []
   for (const entry of entries) {
-    const joined = groups.filter(group => group.some(member => touching(member, entry)))
+    const joined = groups.filter(group => group.some(member => overlapping(member, entry)))
     joined.forEach(group => groups.splice(groups.indexOf(group), 1))
     groups.push([entry, ...joined.flat()])
   }
@@ -47,8 +49,9 @@ function clusters(entries) {
 }
 
 function timed(groups, [a, b], incoming) {
-  const speed = Math.max(...groups.map(g => g.total)) / ((b - a) * MOTION.length)
-  return groups.map(g => { const duration = g.total / speed; return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
+  const span  = (b - a) * MOTION.length
+  const speed = Math.max(...groups.flatMap(g => g.members.map(m => m.total))) / span
+  return groups.map(g => { const duration = Math.min(span, g.total / speed); return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
 }
 
 function play(from, to) {
