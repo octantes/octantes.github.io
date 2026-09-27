@@ -779,7 +779,10 @@ async function writeShells() {
 
   if (!shell) { console.warn('no built index.html, skipping page shells'); return }
 
-  const shells = [[{ kind: 'portal' }, 'es'], [{ kind: 'havitat' }, 'es'], ...WALLS.flatMap(w => ['es', 'en'].map(lang => [{ kind: 'wall', id: w.id }, lang]))]
+  const shells = [
+    [{ kind: 'portal' }, 'es'], [{ kind: 'havitat' }, 'es'],
+    ...WALLS.flatMap(w => [{ kind: 'wall', id: w.id }, ...w.items.filter(i => !i.decor).map(i => ({ kind: 'depth', id: w.id, item: i.id }))]).flatMap(page => ['es', 'en'].map(lang => [page, lang])),
+  ]
 
   for (const [page, lang] of shells) {
     const theme = themeOf(page) === 'light' ? ' class="light"' : ''

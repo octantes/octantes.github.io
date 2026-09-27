@@ -4,7 +4,7 @@ import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vu
 import { BRUSH, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
 import { LINE } from '../04/walls.js'
 
-const props = defineProps({ wall: Object, layout: Object, hot: String })
+const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
@@ -13,7 +13,7 @@ const MOTION   = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1]
 const frame   = ref(0)
 const clock   = ref(0)
 const motion  = shallowRef(null)
-const current = shallowRef({ wall: props.wall, layout: props.layout })
+const current = shallowRef(props.scene)
 
 let ticker = 0
 let raf    = 0
@@ -24,9 +24,9 @@ const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
 const blank = () => getComputedStyle(document.documentElement).getPropertyValue('--niebla').trim()
 
-function prepare({ wall, layout }) {
+function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
-    const seed  = seedOf(wall.id + item.id)
+    const seed    = seedOf(prefix + item.id)
     const sketch  = item.strokes ? { outline: item.strokes[0], ink: item.strokes } : sketchBox(item.box[2], item.box[3], seed, item.hidden)
     const lines   = VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, item.box, seed + k * 13, v)))
     const outline = VARIANTS.map(v => trace(sketch.outline, item.box, seed, v, true))
@@ -61,7 +61,7 @@ function play(from, to) {
   motion.value = {
     out: from ? timed(clusters(prepare(from)), windows.out, false) : [],
     in:  to ? timed(clusters(prepare(to)), windows.in, true) : [],
-    colours: [from?.wall.color ?? blank(), to?.wall.color ?? blank()],
+    colours: [from?.color ?? blank(), to?.color ?? blank()],
     start: performance.now(),
   }
   clock.value = 0
@@ -73,10 +73,9 @@ function tick() {
   clock.value = performance.now() - motion.value.start
   if (clock.value < MOTION.length) { raf = requestAnimationFrame(tick); return }
   motion.value = null
-  if (props.wall.id === current.value.wall.id) { emit('busy', false); return }
-  const next = { wall: props.wall, layout: props.layout }
-  play(current.value, next)
-  current.value = next
+  if (props.scene.id === current.value.id) { emit('busy', false); return }
+  play(current.value, props.scene)
+  current.value = props.scene
 }
 
 function pose(entry, lo, hi) {
@@ -98,7 +97,7 @@ function poses(group, shown, incoming) {
   return group.members.map(member => { const p = pose(member, Math.max(0, lo - at), Math.min(member.total, hi - at)); at += member.total; return p })
 }
 
-const scene = computed(() => {
+const moving = computed(() => {
   const m = motion.value
   if (!m) return null
   const t = clock.value
@@ -116,7 +115,7 @@ const drawn = computed(() => prepare(current.value).map(({ item, seed, lines, ou
 })))
 
 const edge  = computed(() => {
-  const seed = seedOf(current.value.wall.id)
+  const seed = seedOf(current.value.seed)
   const [ex, ey] = [LINE * 3 / inside.value[2], LINE * 3 / inside.value[3]]
   const run = (from, to) => Array.from({ length: 5 }, (_, i) => [from[0] + (to[0] - from[0]) * i / 4, from[1] + (to[1] - from[1]) * i / 4])
   const sides = [run([-ex, 0], [1 + ex, 0]), run([1, -ey], [1, 1 + ey]), run([1 + ex, 1], [-ex, 1]), run([0, 1 + ey], [0, -ey])]
@@ -125,9 +124,8 @@ const edge  = computed(() => {
 
 const lit = computed(() => !motion.value && drawn.value.find(d => d.item.id === props.hot))
 
-watch(() => props.layout, layout => {
-  const next = { wall: props.wall, layout }
-  if (next.wall.id === current.value.wall.id) { current.value = next; return }
+watch(() => props.scene, next => {
+  if (next.id === current.value.id) { current.value = next; return }
   if (motion.value) return
   play(current.value, next)
   current.value = next
@@ -148,10 +146,10 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
 
     <clipPath id="inside"><rect :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" /></clipPath>
 
-    <rect class="surface" :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" :fill="scene ? scene.colour : current.wall.color" @click="emit('clear')" />
+    <rect class="surface" :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" :fill="moving ? moving.colour : current.color ?? blank()" @click="emit('clear')" />
 
-    <g v-if="scene" clip-path="url(#inside)">
-      <g v-for="p in scene.poses" :key="p.id">
+    <g v-if="moving" clip-path="url(#inside)">
+      <g v-for="p in moving.poses" :key="p.id">
         <path :d="p.fill" :fill="p.color" :fill-opacity="p.opacity" />
         <path v-for="(ink, k) in p.ink" :key="k" class="ink" :d="ink" />
       </g>
@@ -165,7 +163,7 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
         </g>
       </g>
       <template v-for="d in drawn" :key="d.item.id">
-        <path v-if="!d.item.decor" class="hit" :d="d.variants[0].fill"
+        <path v-if="interactive && !d.item.decor" class="hit" :d="d.variants[0].fill"
               @pointerenter="emit('hover', d.item.id, $event)" @pointerleave="emit('hover', null, $event)" @click="emit('pick', d.item, $event)" />
       </template>
     </g>

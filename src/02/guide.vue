@@ -2,9 +2,9 @@
 
 import { useStore } from '../04/store.js'
 
-defineProps({ wall: Object, hot: String, place: String })
+defineProps({ wall: Object, depth: Object, hot: String, place: String })
 
-const emit  = defineEmits(['hover', 'pick', 'turn'])
+const emit  = defineEmits(['hover', 'pick', 'turn', 'back'])
 const store = useStore()
 
 </script>
@@ -13,14 +13,20 @@ const store = useStore()
 
   <nav class="guide" :aria-label="store.t.havitat.items">
 
-    <header class="head">
+    <header v-if="depth" class="head">
+      <button class="turn" @click="emit('back')" :title="store.t.havitat.back" :aria-label="store.t.havitat.back">‹</button>
+      <span class="name">{{ depth.label[store.lang] }}</span>
+      <span class="place">{{ wall[store.lang] }}</span>
+    </header>
+
+    <header v-else class="head">
       <button class="turn" @click="emit('turn', -1)" :title="store.t.havitat.prev" :aria-label="store.t.havitat.prev">‹</button>
       <span class="name">{{ wall[store.lang] }}</span>
       <span class="place">{{ place }}</span>
       <button class="turn" @click="emit('turn', 1)" :title="store.t.havitat.next" :aria-label="store.t.havitat.next">›</button>
     </header>
 
-    <ul class="items">
+    <ul v-if="!depth" class="items">
       <li v-for="item in wall.items.filter(i => !i.decor)" :key="item.id">
         <button class="entry" :class="{ hot: hot === item.id }" @pointerenter="emit('hover', item.id, $event)" @pointerleave="emit('hover', null, $event)" @focus="emit('hover', item.id)" @blur="emit('hover', null)" @click="emit('pick', item, $event)">{{ item.label[store.lang] }}</button>
       </li>
