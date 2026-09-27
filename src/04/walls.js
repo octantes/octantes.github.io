@@ -27,7 +27,7 @@ export const WALLS = [
                        box: [450, 635, 825, 233], fill: '#8F9195', anchor: { x: 'left' } },
     { id: 'curtain',   label: { es: 'cortina', en: 'curtain' },
                        description: { es: 'la cortina', en: 'the curtain' },
-                       box: [1410, 150, 293, 718], fill: '#303233', anchor: { x: 'right', y: 'stretch' } },
+                       box: [1410, 150, 293, 718], fill: '#303233', anchor: { x: 'right', y: 'stretch' }, solo: true },
   ] },
 
   { id: 'orange', es: 'naranja', en: 'orange', color: '#CA895D', size: [1712, 866], items: [
@@ -106,10 +106,15 @@ const SHIFT = {
   y: { top: () => [0, 0], bottom: e => [e, 0], stretch: e => [0, e] },
 }
 
-function beyondEdge([x, y, w, h], vw, vh) {
+function touches([x, y, w, h], vw, vh) {
 
   const edge = LINE / 2
-  const [left, right, top, bottom] = [x <= edge, x + w >= vw - edge, y <= edge, y + h >= vh - edge]
+  return { left: x <= edge, right: x + w >= vw - edge, top: y <= edge, bottom: y + h >= vh - edge }
+
+}
+
+function beyondEdge([x, y, w, h], { left, right, top, bottom }) {
+
   return [left ? x - LINE : x, top ? y - LINE : y, w + (left ? LINE : 0) + (right ? LINE : 0), h + (top ? LINE : 0) + (bottom ? LINE : 0)]
 
 }
@@ -124,7 +129,9 @@ export function layoutWall(wall, width, height) {
     const [x, y, w, h] = item.box
     const [dx, dw] = SHIFT.x[item.anchor?.x ?? 'center'](vw - bw)
     const [dy, dh] = SHIFT.y[item.anchor?.y ?? 'bottom'](vh - bh)
-    return { ...item, box: beyondEdge([x + dx, y + dy, w + dw, h + dh], vw, vh) }
+    const box    = [x + dx, y + dy, w + dw, h + dh]
+    const hidden = touches(box, vw, vh)
+    return { ...item, box: beyondEdge(box, hidden), hidden }
   })
 
   return { size: [vw, vh], items }
