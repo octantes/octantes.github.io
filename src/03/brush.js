@@ -68,15 +68,15 @@ export function ribbon(points, seed, width = BRUSH.width) {
 
 export function span(points) { return lengths(points).at(-1) }
 
-export function cut(points, fraction) {
-  const run = lengths(points), end = run.at(-1) * fraction, out = [points[0]]
-  for (let i = 1; i < points.length; i++) {
-    if (run[i] <= end) { out.push(points[i]); continue }
-    const t = (end - run[i - 1]) / (run[i] - run[i - 1] || 1)
-    out.push([points[i - 1][0] + (points[i][0] - points[i - 1][0]) * t, points[i - 1][1] + (points[i][1] - points[i - 1][1]) * t])
-    break
+export function cut(points, from, to) {
+  const run = lengths(points), [a, b] = [from * run.at(-1), to * run.at(-1)]
+  const at = d => {
+    let i = 1
+    while (i < run.length - 1 && run[i] < d) i++
+    const t = (d - run[i - 1]) / (run[i] - run[i - 1] || 1)
+    return [points[i - 1][0] + (points[i][0] - points[i - 1][0]) * t, points[i - 1][1] + (points[i][1] - points[i - 1][1]) * t]
   }
-  return out
+  return [at(a), ...points.filter((_, i) => run[i] > a && run[i] < b), at(b)]
 }
 
 export function shape(points) { return 'M' + points.map(p => p.map(fixed).join(' ')).join('L') + 'Z' }

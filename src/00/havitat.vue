@@ -21,18 +21,18 @@ const index = computed(() => WALLS.findIndex(w => w.id === (pageOf(route).id ?? 
 const wall  = computed(() => WALLS[index.value])
 
 const room   = ref(null)
-const bounds = ref([1712, 866])
-const layout = computed(() => layoutWall(wall.value, ...bounds.value))
+const bounds = ref(null)
+const layout = computed(() => bounds.value && layoutWall(wall.value, ...bounds.value))
 
 const hovered = ref(null)
 const armed   = ref(null)
 const hot     = computed(() => hovered.value ?? armed.value)
-const docked  = computed(() => layout.value.items.find(i => i.id === armed.value))
+const docked  = computed(() => layout.value?.items.find(i => i.id === armed.value))
 
 const tip = computed(() => {
 
-  const item = layout.value.items.find(i => i.id === hovered.value)
-  if (!item || item.id === armed.value || !room.value) return null
+  const item = layout.value?.items.find(i => i.id === hovered.value)
+  if (!item || item.id === armed.value) return null
 
   const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / layout.value.size[0]
   const [x, y, w, h] = [item.box[0] - LINE / 2, item.box[1] - LINE / 2, item.box[2] + LINE, item.box[3] + LINE].map(v => v * scale)
@@ -74,6 +74,7 @@ function lock(busy) { store.setProcessing(busy); if (busy) hovered.value = armed
 function onKey(e) { if (store.processing) return; if (e.key === 'ArrowLeft') turn(-1); if (e.key === 'ArrowRight') turn(1) }
 
 onMounted(() => {
+  bounds.value = [room.value.clientWidth, room.value.clientHeight]
   sizes = new ResizeObserver(([entry]) => { bounds.value = [entry.contentRect.width, entry.contentRect.height] })
   sizes.observe(room.value)
   window.addEventListener('keydown', onKey)
@@ -89,7 +90,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
     <div class="room" ref="room" role="main">
 
-      <Sketch :wall="wall" :layout="layout" :hot="hot" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+      <Sketch v-if="layout" :wall="wall" :layout="layout" :hot="hot" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
       <Guide :inert="store.processing" :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
         <Hint v-if="docked" :item="docked" />

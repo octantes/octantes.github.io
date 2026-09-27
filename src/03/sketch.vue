@@ -60,16 +60,16 @@ function tick() {
   current.value = next
 }
 
-function pose(entry, shown) {
+function pose(entry, shown, incoming) {
   if (shown <= 0) return null
   const lines = entry.lines[frame.value]
-  let left = shown * entry.total
+  const [lo, hi] = incoming ? [0, shown * entry.total] : [(1 - shown) * entry.total, entry.total]
   const ink = []
+  let at = 0
   lines.forEach((line, k) => {
-    if (left <= 0) return
-    const length = span(line)
-    ink.push(ribbon(cut(line, Math.min(1, left / length)), entry.seed + k * 13 + frame.value))
-    left -= length
+    const length = span(line), [a, b] = [Math.max(lo, at), Math.min(hi, at + length)]
+    if (b > a) ink.push(ribbon(cut(line, (a - at) / length, (b - at) / length), entry.seed + k * 13 + frame.value))
+    at += length
   })
   return { id: entry.item.id, fill: shape(lines[0]), color: entry.item.fill, opacity: clamp((shown - .8) / .2), ink }
 }
@@ -81,7 +81,7 @@ const scene = computed(() => {
   const progress = e => clamp((t - e.start) / e.duration)
   return {
     colour: mix(...m.colours, ease(clamp(t / MOTION.length))),
-    poses: [...m.out.map(e => pose(e, 1 - progress(e))), ...m.in.map(e => pose(e, progress(e)))].filter(Boolean),
+    poses: [...m.out.map(e => pose(e, 1 - progress(e), false)), ...m.in.map(e => pose(e, progress(e), true))].filter(Boolean),
   }
 })
 
