@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf } from '../04/pages.js'
@@ -56,8 +56,6 @@ const tip = computed(() => {
 
 })
 
-watch(() => wall.value.id, () => { hovered.value = armed.value = null })
-
 let sizes = null
 
 function turn(step) { router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
@@ -71,7 +69,9 @@ function pick(item, e) {
 
 function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
-function onKey(e) { if (e.key === 'ArrowLeft') turn(-1); if (e.key === 'ArrowRight') turn(1) }
+function lock(busy) { store.setProcessing(busy); if (busy) hovered.value = armed.value = null }
+
+function onKey(e) { if (store.processing) return; if (e.key === 'ArrowLeft') turn(-1); if (e.key === 'ArrowRight') turn(1) }
 
 onMounted(() => {
   sizes = new ResizeObserver(([entry]) => { bounds.value = [entry.contentRect.width, entry.contentRect.height] })
@@ -89,9 +89,9 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
     <div class="room" ref="room" role="main">
 
-      <Sketch :wall="wall" :layout="layout" :hot="hot" @hover="hover" @pick="pick" @clear="armed = null" />
+      <Sketch :wall="wall" :layout="layout" :hot="hot" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
-      <Guide :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
+      <Guide :inert="store.processing" :wall="wall" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn">
         <Hint v-if="docked" :item="docked" />
       </Guide>
 

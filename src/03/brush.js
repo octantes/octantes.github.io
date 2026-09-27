@@ -66,6 +66,19 @@ export function ribbon(points, seed, width = BRUSH.width) {
   return 'M' + [...left, ...right.reverse()].map(p => p.map(fixed).join(' ')).join('L') + 'Z'
 }
 
+export function span(points) { return lengths(points).at(-1) }
+
+export function cut(points, fraction) {
+  const run = lengths(points), end = run.at(-1) * fraction, out = [points[0]]
+  for (let i = 1; i < points.length; i++) {
+    if (run[i] <= end) { out.push(points[i]); continue }
+    const t = (end - run[i - 1]) / (run[i] - run[i - 1] || 1)
+    out.push([points[i - 1][0] + (points[i][0] - points[i - 1][0]) * t, points[i - 1][1] + (points[i][1] - points[i - 1][1]) * t])
+    break
+  }
+  return out
+}
+
 export function shape(points) { return 'M' + points.map(p => p.map(fixed).join(' ')).join('L') + 'Z' }
 
 export function sketchBox(w, h, seed) {
