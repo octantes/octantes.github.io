@@ -1,14 +1,14 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
+import { BRUSH, seedOf, trace, ribbon, shape, span, cut, even, sketchBox } from './brush.js'
 import { LINE } from '../04/walls.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
-const MOTION   = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
+const MOTION   = { hover: 260, length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
 
 const frame   = ref(0)
 const clock   = ref(0)
@@ -24,14 +24,27 @@ const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
 const blank = () => getComputedStyle(document.documentElement).getPropertyValue('--niebla').trim()
 
+function strokesAt(item, box, seed, strokes) {
+  const sketch = strokes ? { outline: strokes[0], ink: strokes } : sketchBox(box[2], box[3], seed, item.hidden)
+  return {
+    lines:   VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, box, seed + k * 13, v))),
+    outline: VARIANTS.map(v => trace(sketch.outline, box, seed, v, true)),
+  }
+}
+
 function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
-    const seed    = seedOf(prefix + item.id)
-    const sketch  = item.strokes ? { outline: item.strokes[0], ink: item.strokes } : sketchBox(item.box[2], item.box[3], seed, item.hidden)
-    const lines   = VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, item.box, seed + k * 13, v)))
-    const outline = VARIANTS.map(v => trace(sketch.outline, item.box, seed, v, true))
+    const seed = seedOf(prefix + item.id)
+    const { lines, outline } = strokesAt(item, item.box, seed, item.strokes)
     return { item, index, seed, lines, outline, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
+}
+
+function blend(a, b, t) {
+  if (t <= 0 || a === b) return a
+  if (t >= 1) return b
+  const n = Math.max(a.length, b.length), [p, q] = [even(a, n), even(b, n)]
+  return p.map(([x, y], i) => [x + (q[i][0] - x) * t, y + (q[i][1] - y) * t])
 }
 
 function overlapping({ item: { box: a } }, { item: { box: b } }) {
@@ -110,7 +123,9 @@ const moving = computed(() => {
 
 const inside = computed(() => [LINE / 2, LINE / 2, current.value.layout.size[0] - LINE, current.value.layout.size[1] - LINE])
 
-const drawn = computed(() => prepare(current.value).map(({ item, seed, lines, outline }) => ({
+const prepared = computed(() => prepare(current.value))
+
+const drawn = computed(() => prepared.value.map(({ item, seed, lines, outline }) => ({
   item, variants: lines.map((strokes, v) => ({ fill: shape(outline[v]), ink: strokes.map((line, k) => ribbon(line, seed + k * 13 + v)) })),
 })))
 
@@ -122,7 +137,48 @@ const edge  = computed(() => {
   return VARIANTS.map(v => sides.map((side, k) => ribbon(trace(side, inside.value, seed + k * 7, v), seed + k * 7 + v, LINE * 1.4)).join(''))
 })
 
-const lit = computed(() => !motion.value && drawn.value.find(d => d.item.id === props.hot))
+const shown = ref(null)
+const shift = ref(0)
+let gliding = 0
+
+function glide(target, done) {
+  cancelAnimationFrame(gliding)
+  const from = shift.value, start = performance.now(), length = MOTION.hover * Math.abs(target - from)
+  const step = () => {
+    const t = length ? clamp((performance.now() - start) / length) : 1
+    shift.value = from + (target - from) * ease(t)
+    if (t < 1) gliding = requestAnimationFrame(step)
+    else done?.()
+  }
+  step()
+}
+
+watch(() => props.hot, id => {
+  if (!id) { glide(0, () => { shown.value = null }); return }
+  if (shown.value !== id) shift.value = 0
+  shown.value = id
+  glide(1)
+})
+
+const hoverPose = computed(() => {
+  const entry = prepared.value.find(e => e.item.id === shown.value)
+  if (!entry?.item.hover) return entry
+  const [x, y, w, h] = entry.item.box, [fx, fy, fw, fh] = entry.item.hover.box ?? [0, 0, 1, 1]
+  return strokesAt(entry.item, [x + fx * w, y + fy * h, fw * w, fh * h], entry.seed, entry.item.hover.strokes)
+})
+
+const lit = computed(() => {
+  const entry = !motion.value && prepared.value.find(e => e.item.id === shown.value)
+  if (!entry) return null
+  const [pose, t] = [hoverPose.value, shift.value]
+  return {
+    item: entry.item,
+    variants: VARIANTS.map(v => ({
+      fill: shape(blend(entry.outline[v], pose.outline[v], t)),
+      ink:  entry.lines[v].map((line, k) => ribbon(blend(line, pose.lines[v][k] ?? line, t), entry.seed + k * 13 + v)),
+    })),
+  }
+})
 
 watch(() => props.scene, next => {
   if (next.id === current.value.id) { current.value = next; return }
@@ -136,13 +192,13 @@ onMounted(() => {
   play(null, current.value)
 })
 
-onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
+onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf); cancelAnimationFrame(gliding) })
 
 </script>
 
 <template>
 
-  <svg class="sketch" :class="[`boil-${frame}`, { focused: lit }]" :viewBox="`0 0 ${current.layout.size[0]} ${current.layout.size[1]}`" aria-hidden="true">
+  <svg class="sketch" :class="[`boil-${frame}`, { focused: lit && hot }]" :viewBox="`0 0 ${current.layout.size[0]} ${current.layout.size[1]}`" aria-hidden="true">
 
     <clipPath id="inside"><rect :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" /></clipPath>
 
@@ -157,7 +213,7 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
 
     <g v-else class="items" clip-path="url(#inside)">
       <g v-for="v in VARIANTS" :key="v" :class="`v${v}`">
-        <g v-for="d in drawn" :key="d.item.id">
+        <g v-for="d in drawn" :key="d.item.id" :class="{ gone: lit && d.item.id === shown }">
           <path :d="d.variants[v].fill" :fill="d.item.fill" />
           <path v-for="(ink, k) in d.variants[v].ink" :key="k" class="ink" :d="ink" />
         </g>
@@ -194,6 +250,7 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
 .outline { fill: var(--lirio); }
 .hit     { fill: transparent; cursor: pointer; }
 .lit     { pointer-events: none; }
+.gone    { display: none; }
 .edge    { fill: var(--carbon); pointer-events: none; }
 
 .items   { transition: opacity var(--animate-fast); }
