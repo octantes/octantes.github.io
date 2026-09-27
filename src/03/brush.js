@@ -15,18 +15,19 @@ function lengths(points) {
   return out
 }
 
-function smooth(points, rounds = 2) {
+function smooth(points, closed, rounds = 2) {
   let pts = points
   for (let r = 0; r < rounds; r++) {
-    const next = [pts[0]]
-    for (let i = 0; i < pts.length - 1; i++) {
-      const [a, b] = [pts[i], pts[i + 1]]
+    const next = closed ? [] : [pts[0]]
+    const pairs = closed ? pts.length : pts.length - 1
+    for (let i = 0; i < pairs; i++) {
+      const [a, b] = [pts[i], pts[(i + 1) % pts.length]]
       next.push([a[0] * .75 + b[0] * .25, a[1] * .75 + b[1] * .25], [a[0] * .25 + b[0] * .75, a[1] * .25 + b[1] * .75])
     }
-    next.push(pts[pts.length - 1])
+    if (!closed) next.push(pts[pts.length - 1])
     pts = next
   }
-  return pts
+  return closed ? [...pts, pts[0]] : pts
 }
 
 function resample(points, step) {
@@ -46,9 +47,9 @@ function boil(points, seed, amount) {
 
 const fixed = n => Math.round(n * 10) / 10
 
-export function trace(stroke, box, seed, variant) {
+export function trace(stroke, box, seed, variant, closed = false) {
   const [x, y, w, h] = box
-  const placed = smooth(stroke.map(([u, v]) => [x + u * w, y + v * h]))
+  const placed = smooth(stroke.map(([u, v]) => [x + u * w, y + v * h]), closed)
   return resample(boil(placed, seed * 3 + variant, BRUSH.boil), 8)
 }
 

@@ -29,7 +29,7 @@ function prepare({ wall, layout }) {
     const seed  = seedOf(wall.id + item.id)
     const sketch  = item.strokes ? { outline: item.strokes[0], ink: item.strokes } : sketchBox(item.box[2], item.box[3], seed, item.hidden)
     const lines   = VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, item.box, seed + k * 13, v)))
-    const outline = VARIANTS.map(v => trace(sketch.outline, item.box, seed, v))
+    const outline = VARIANTS.map(v => trace(sketch.outline, item.box, seed, v, true))
     return { item, index, seed, lines, outline, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
 }
