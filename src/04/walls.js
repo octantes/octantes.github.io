@@ -3,7 +3,10 @@ export const LINE         = 18
 
 export const WALLS = [
 
-  { id: 'grey', es: 'gris', en: 'grey', color: '#8F9195', size: [1712, 877], items: [
+  { id: 'grey', es: 'gris', en: 'grey', color: '#CCCED2', size: [1712, 877], items: [
+    { id: 'roof',      label: { es: 'techo', en: 'roof' },
+                       description: { es: 'el techo bajo', en: 'the lower roof' },
+                       box: [9, 9, 1694, 216], fill: '#8F9195', anchor: { x: 'stretch', y: 'top' }, decor: true },
     { id: 'sign',      label: { es: 'cartel', en: 'sign' },
                        description: { es: 'el cartel con el VIII', en: 'the sign with the VIII' },
                        box: [86, 78, 268, 113], fill: '#8F9195', anchor: { x: 'left', y: 'top' } },
@@ -16,9 +19,6 @@ export const WALLS = [
     { id: 'poster',    label: { es: 'póster', en: 'poster' },
                        description: { es: 'un póster negro sobre la pared', en: 'a black poster on the wall' },
                        box: [95, 303, 285, 435], fill: '#242627', anchor: { x: 'left', y: 'top' } },
-    { id: 'kitchen',   label: { es: 'cocina', en: 'kitchen' },
-                       description: { es: 'la cocina', en: 'the kitchen' },
-                       box: [450, 225, 960, 643], fill: '#CCCED2', anchor: { x: 'stretch', y: 'stretch' }, decor: true },
     { id: 'thermos',   label: { es: 'termo', en: 'thermos' },
                        description: { es: 'el termo del mate', en: 'the thermos for mate' },
                        box: [462, 505, 36, 130], fill: '#242627', anchor: { x: 'left' } },
@@ -109,8 +109,8 @@ const SHIFT = {
 function beyondEdge([x, y, w, h], vw, vh) {
 
   const edge = LINE / 2
-  const [left, right, bottom] = [x <= edge, x + w >= vw - edge, y + h >= vh - edge]
-  return [left ? x - LINE : x, y, w + (left ? LINE : 0) + (right ? LINE : 0), h + (bottom ? LINE : 0)]
+  const [left, right, top, bottom] = [x <= edge, x + w >= vw - edge, y <= edge, y + h >= vh - edge]
+  return [left ? x - LINE : x, top ? y - LINE : y, w + (left ? LINE : 0) + (right ? LINE : 0), h + (top ? LINE : 0) + (bottom ? LINE : 0)]
 
 }
 
