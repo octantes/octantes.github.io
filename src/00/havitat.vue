@@ -4,7 +4,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf, inRoom } from '../04/pages.js'
-import { WALLS, LANDING_WALL } from '../04/walls.js'
+import { WALLS, LANDING_WALL, ROOM_TEXT } from '../04/walls.js'
 import { LINE, drawnWall, layoutWall, layoutDepth } from '../04/drawings.js'
 import { placeHint } from '../04/hint.js'
 import { MOTION, STILL } from '../03/brush.js'
@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
 
     <div class="stage">
 
-      <Arrow v-bind="arrow(-1)" :label="store.t.havitat.prev" @turn="turn" />
+      <Arrow v-bind="arrow(-1)" :label="ROOM_TEXT[store.lang].prev" @turn="turn" />
 
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
@@ -134,7 +134,7 @@ onBeforeUnmount(() => {
 
       </div>
 
-      <Arrow v-bind="arrow(1)" :label="store.t.havitat.next" @turn="turn" />
+      <Arrow v-bind="arrow(1)" :label="ROOM_TEXT[store.lang].next" @turn="turn" />
 
     </div>
 

@@ -31,7 +31,6 @@ export const DICT = {
     nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
     status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
     gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
-    havitat: { prev: 'pared anterior', next: 'pared siguiente', back: 'volver a la pared', items: 'en esta pared' },
     portfolio: {
       subtitle: 'Desarrollador Frontend & Diseñador',
       desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
@@ -104,7 +103,6 @@ export const DICT = {
     nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
     status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
     gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
-    havitat: { prev: 'previous wall', next: 'next wall', back: 'back to the wall', items: 'on this wall' },
     portfolio: {
       subtitle: 'Frontend Engineer & Designer',
       desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',

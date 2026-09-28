@@ -1,29 +1,32 @@
 <script setup>
 
+import { computed } from 'vue'
 import { useStore } from '../04/store.js'
+import { ROOM_TEXT } from '../04/walls.js'
 
 defineProps({ wall: Object, depth: Object, hot: String, place: String })
 
 const emit  = defineEmits(['hover', 'pick', 'turn', 'back', 'aim'])
 const store = useStore()
+const text  = computed(() => ROOM_TEXT[store.lang])
 
 </script>
 
 <template>
 
-  <nav class="guide" :aria-label="store.t.havitat.items">
+  <nav class="guide" :aria-label="text.items">
 
     <header v-if="depth" class="head bare">
-      <button class="turn" @click="emit('back')" :title="store.t.havitat.back" :aria-label="store.t.havitat.back">‹</button>
+      <button class="turn" @click="emit('back')" :title="text.back" :aria-label="text.back">‹</button>
       <span class="name">{{ depth.label[store.lang] }}</span>
       <span class="place">{{ wall[store.lang] }}</span>
     </header>
 
     <header v-else class="head">
-      <button class="turn" @pointerenter="emit('aim', -1)" @pointerleave="emit('aim', null)" @focus="emit('aim', -1)" @blur="emit('aim', null)" @click="emit('turn', -1)" :title="store.t.havitat.prev" :aria-label="store.t.havitat.prev">‹</button>
+      <button class="turn" @pointerenter="emit('aim', -1)" @pointerleave="emit('aim', null)" @focus="emit('aim', -1)" @blur="emit('aim', null)" @click="emit('turn', -1)" :title="text.prev" :aria-label="text.prev">‹</button>
       <span class="name">{{ wall[store.lang] }}</span>
       <span class="place">{{ place }}</span>
-      <button class="turn" @pointerenter="emit('aim', 1)" @pointerleave="emit('aim', null)" @focus="emit('aim', 1)" @blur="emit('aim', null)" @click="emit('turn', 1)" :title="store.t.havitat.next" :aria-label="store.t.havitat.next">›</button>
+      <button class="turn" @pointerenter="emit('aim', 1)" @pointerleave="emit('aim', null)" @focus="emit('aim', 1)" @blur="emit('aim', null)" @click="emit('turn', 1)" :title="text.next" :aria-label="text.next">›</button>
     </header>
 
     <ul v-if="!depth" class="items">
