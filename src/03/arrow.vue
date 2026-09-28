@@ -7,8 +7,21 @@ import { LINE } from '../04/walls.js'
 const props = defineProps({ step: Number, label: String })
 const emit  = defineEmits(['turn'])
 
-const arm     = (from, to) => Array.from({ length: 6 }, (_, i) => [from[0] + (to[0] - from[0]) * i / 5, from[1] + (to[1] - from[1]) * i / 5])
-const CHEVRON = [...arm([.9, .05], [.1, .5]), ...arm([.1, .5], [.9, .95]).slice(1), ...arm([.9, .95], [.9, .05]).slice(1, -1)]
+const CORNERS = [[.9, .05], [.1, .5], [.9, .95]]
+const CURVE   = { cut: .25, steps: 8 }
+
+function rounded(corners) {
+  return corners.flatMap((c, i) => {
+    const [p, n] = [corners.at(i - 1), corners[(i + 1) % corners.length]]
+    const [a, b] = [p, n].map(o => [c[0] + (o[0] - c[0]) * CURVE.cut, c[1] + (o[1] - c[1]) * CURVE.cut])
+    return Array.from({ length: CURVE.steps + 1 }, (_, k) => {
+      const t = k / CURVE.steps
+      return [0, 1].map(d => (1 - t) ** 2 * a[d] + 2 * (1 - t) * t * c[d] + t * t * b[d])
+    })
+  })
+}
+
+const CHEVRON = rounded(CORNERS)
 const BOX     = [12, 20, 96, 200]
 
 const frame  = ref(0)
