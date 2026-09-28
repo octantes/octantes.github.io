@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, seedOf, trace, ribbon, shape } from './brush.js'
+import { BRUSH, STILL, seedOf, trace, ribbon, shape } from './brush.js'
 import { LINE } from '../04/walls.js'
 
 const props = defineProps({ step: Number, label: String, kick: Object, lit: Boolean })
@@ -36,7 +36,7 @@ const variants = computed(() => {
 
 watch(() => props.kick, kick => { if (kick?.step !== props.step) return; kicked.value = false; requestAnimationFrame(() => { kicked.value = true }) })
 
-onMounted(()       => { ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps) })
+onMounted(()       => { if (!STILL) ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps) })
 onBeforeUnmount(() => clearInterval(ticker))
 
 </script>

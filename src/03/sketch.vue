@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
+import { BRUSH, HATCH, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, hatching } from './brush.js'
 import { LINE } from '../04/walls.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
@@ -26,17 +26,21 @@ const blank = () => getComputedStyle(document.documentElement).getPropertyValue(
 
 function strokesAt(item, box, seed, strokes) {
   const sketch = strokes ? { outline: strokes[0], ink: strokes } : sketchBox(box[2], box[3], seed, item.hidden)
+  const ink    = [...sketch.ink, ...(item.hatch ? hatching(box[2], box[3]) : [])]
   return {
-    lines:   VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, box, seed + k * 13, v))),
-    outline: VARIANTS.map(v => trace(sketch.outline, box, seed, v, true)),
+    hatchFrom: sketch.ink.length,
+    lines:     VARIANTS.map(v => ink.map((stroke, k) => trace(stroke, box, seed + k * 13, v))),
+    outline:   VARIANTS.map(v => trace(sketch.outline, box, seed, v, true)),
   }
 }
+
+function inked(entry, line, k, v) { return ribbon(line, entry.seed + k * 13 + v, BRUSH.width * (k < entry.hatchFrom ? 1 : HATCH.weight)) }
 
 function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
     const seed = seedOf(prefix + item.id)
-    const { lines, outline } = strokesAt(item, item.box, seed, item.strokes)
-    return { item, index, seed, lines, outline, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
+    const { lines, outline, hatchFrom } = strokesAt(item, item.box, seed, item.strokes)
+    return { item, index, seed, lines, outline, hatchFrom, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
 }
 
@@ -63,6 +67,7 @@ function timed(groups, [a, b], incoming) {
 }
 
 function play(from, to) {
+  if (STILL) return
   const windows = from && to ? MOTION.turn : MOTION.alone
   motion.value = {
     out: from ? timed(clusters(prepare(from)), windows.out, false) : [],
@@ -91,7 +96,7 @@ function pose(entry, lo, hi) {
   let at = 0
   lines.forEach((line, k) => {
     const length = span(line), [a, b] = [Math.max(lo, at), Math.min(hi, at + length)]
-    if (b > a) ink.push(ribbon(cut(line, (a - at) / length, (b - at) / length), entry.seed + k * 13 + frame.value))
+    if (b > a) ink.push(inked(entry, cut(line, (a - at) / length, (b - at) / length), k, frame.value))
     at += length
   })
   return { id: entry.item.id, index: entry.index, fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
@@ -118,8 +123,8 @@ const inside = computed(() => [LINE / 2, LINE / 2, current.value.layout.size[0] 
 
 const prepared = computed(() => prepare(current.value))
 
-const drawn = computed(() => prepared.value.map(({ item, seed, lines, outline }) => ({
-  item, variants: lines.map((strokes, v) => ({ fill: shape(outline[v]), ink: strokes.map((line, k) => ribbon(line, seed + k * 13 + v)) })),
+const drawn = computed(() => prepared.value.map(entry => ({
+  item: entry.item, variants: entry.lines.map((strokes, v) => ({ fill: shape(entry.outline[v]), ink: strokes.map((line, k) => inked(entry, line, k, v)) })),
 })))
 
 const edge  = computed(() => {
@@ -136,18 +141,19 @@ const lit = computed(() => {
   const { item, seed } = entry
   const [x, y, w, h] = item.box, [fx, fy, fw, fh] = item.hover?.box ?? [0, 0, 1, 1]
   const pose = item.hover ? strokesAt(item, [x + fx * w, y + fy * h, fw * w, fh * h], seed, item.hover.strokes) : entry
-  return { item, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => ribbon(line, seed + k * 13 + v)) })) }
+  const posed = { ...pose, seed }
+  return { item, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => inked(posed, line, k, v)) })) }
 })
 
 watch(() => props.scene, next => {
-  if (next.id === current.value.id) { current.value = next; return }
+  if (STILL || next.id === current.value.id) { current.value = next; return }
   if (motion.value) return
   play(current.value, next)
   current.value = next
 })
 
 onMounted(() => {
-  ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps)
+  if (!STILL) ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps)
   play(null, current.value)
 })
 
