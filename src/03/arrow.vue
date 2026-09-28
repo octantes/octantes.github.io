@@ -1,10 +1,10 @@
 <script setup>
 
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { BRUSH, seedOf, trace, ribbon, shape } from './brush.js'
 import { LINE } from '../04/walls.js'
 
-const props = defineProps({ step: Number, label: String })
+const props = defineProps({ step: Number, label: String, kick: Object, lit: Boolean })
 const emit  = defineEmits(['turn'])
 
 const CORNERS = [[.9, .05], [.1, .5], [.9, .95]]
@@ -34,7 +34,7 @@ const variants = computed(() => {
   return Array.from({ length: BRUSH.frames }, (_, v) => { const line = trace(stroke, BOX, seed, v, true, 1.5); return { fill: shape(line), ink: ribbon(line, seed + v, LINE, false) } })
 })
 
-function press() { kicked.value = false; requestAnimationFrame(() => { kicked.value = true }); emit('turn', props.step) }
+watch(() => props.kick, kick => { if (kick?.step !== props.step) return; kicked.value = false; requestAnimationFrame(() => { kicked.value = true }) })
 
 onMounted(()       => { ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps) })
 onBeforeUnmount(() => clearInterval(ticker))
@@ -43,7 +43,7 @@ onBeforeUnmount(() => clearInterval(ticker))
 
 <template>
 
-  <button class="arrow" :class="{ kicked, back: step < 0 }" :title="label" :aria-label="label" @click="press" @animationend="kicked = false">
+  <button class="arrow" :class="{ kicked, lit, back: step < 0 }" :title="label" :aria-label="label" @click="emit('turn', step)" @animationend="kicked = false">
     <svg viewBox="0 0 120 240" aria-hidden="true"><path class="fill" :d="variants[frame].fill" /><path class="ink" :d="variants[frame].ink" /></svg>
   </button>
 
@@ -60,7 +60,7 @@ onBeforeUnmount(() => clearInterval(ticker))
   /* BORDER */ border: none;
   /* MOTION */ transition: color var(--animate-fast);
 
-  &:hover, &:focus-visible { color: var(--lirio); }
+  &:hover, &:focus-visible, &.lit { color: var(--lirio); }
   &:focus { box-shadow: none; outline: none; }
 
   & svg   { width: 100%; height: auto; max-height: 10rem; overflow: visible; }

@@ -66,7 +66,10 @@ const tip = computed(() => {
 
 let sizes = null
 
-function turn(step) { router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
+const kick  = ref(null)
+const aimed = ref(null)
+
+function turn(step) { kick.value = { step }; router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
 
 function pick(item, e) {
   if (e.pointerType === 'touch' && armed.value !== item.id) { armed.value = item.id; return }
@@ -105,13 +108,13 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
     <div class="stage">
 
-      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="-1" :label="store.t.havitat.prev" @turn="turn" />
+      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="-1" :label="store.t.havitat.prev" :kick="kick" :lit="aimed === -1" @turn="turn" />
 
       <div class="room" ref="room" role="main">
 
         <Sketch v-if="scene" :scene="scene" :hot="hot" :interactive="!depth" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
-        <Guide :inert="store.processing" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn" @back="back">
+        <Guide :inert="store.processing" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event">
           <Hint v-if="depth ?? docked" :item="depth ?? docked" />
         </Guide>
 
@@ -119,7 +122,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
       </div>
 
-      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="1" :label="store.t.havitat.next" @turn="turn" />
+      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="1" :label="store.t.havitat.next" :kick="kick" :lit="aimed === 1" @turn="turn" />
 
     </div>
 
