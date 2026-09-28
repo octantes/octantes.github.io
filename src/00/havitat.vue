@@ -9,8 +9,7 @@ import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
 import Sketch from '../03/sketch.vue'
 import Arrow from '../03/arrow.vue'
-
-const HINT = { w: 288, h: 110, gap: 12, arrow: 14 }
+import { placeHint } from '../04/hint.js'
 
 const route  = useRoute()
 const router = useRouter()
@@ -44,23 +43,7 @@ const tip = computed(() => {
 
   const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / layout.value.size[0]
   const [x, y, w, h] = [item.box[0] - LINE / 2, item.box[1] - LINE / 2, item.box[2] + LINE, item.box[3] + LINE].map(v => v * scale)
-  const [left, top] = [frame.left + x, frame.top + y]
-  const west  = left + w / 2 < frame.left + frame.width / 2
-  const north = top + h / 2 < frame.top + frame.height / 2
-  const space = { left: left - frame.left, right: frame.right - left - w, above: top - frame.top, below: frame.bottom - top - h }
-
-  const beside = () => space.right > space.left
-    ? { at: [left + w + HINT.gap, top + h / 2], place: `left-${north ? 'start' : 'end'}` }
-    : { at: [left - HINT.gap, top + h / 2], place: `right-${north ? 'start' : 'end'}` }
-  const around = () => space.below > space.above
-    ? { at: [left + w / 2, top + h + HINT.gap], place: `top-${west ? 'start' : 'end'}` }
-    : { at: [left + w / 2, top - HINT.gap], place: `bottom-${west ? 'start' : 'end'}` }
-
-  const reach = HINT.gap + HINT.arrow
-  const fits  = { beside: Math.max(space.left, space.right) > HINT.w + reach, around: Math.max(space.above, space.below) > HINT.h + reach }
-  const wide  = frame.width > frame.height
-  const [first, second] = wide ? [beside, around] : [around, beside]
-  return { item, ...((wide ? fits.beside : fits.around) ? first() : second()) }
+  return { item, ...placeHint(frame, [frame.left + x, frame.top + y, w, h]) }
 
 })
 
@@ -127,7 +110,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
         <Sketch v-if="scene" :scene="scene" :hot="hot" :interactive="!depth" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
         <Guide :inert="store.processing" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event">
-          <Hint v-if="depth ?? docked" :item="depth ?? docked" />
+          <Hint v-if="depth ?? docked" :item="depth ?? docked" :named="!depth" />
         </Guide>
 
         <Hint v-if="tip" :item="tip.item" :tip="tip" />
