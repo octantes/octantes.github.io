@@ -40,21 +40,24 @@ function resample(points, step) {
   return out
 }
 
+function wave(seed, d, scale, total, closed) {
+  return closed ? noise(seed, d / scale) * (1 - d / total) + noise(seed, (d - total) / scale) * d / total : noise(seed, d / scale)
+}
+
 function boil(points, seed, amount, closed) {
   const run = lengths(points), total = run.at(-1)
-  const wave = (k, d) => closed ? noise(k, d / 90) * (1 - d / total) + noise(k, (d - total) / 90) * d / total : noise(k, d / 90)
-  return points.map(([x, y], i) => [x + wave(seed, run[i]) * amount, y + wave(seed + 17, run[i]) * amount])
+  return points.map(([x, y], i) => [x + wave(seed, run[i], 90, total, closed) * amount, y + wave(seed + 17, run[i], 90, total, closed) * amount])
 }
 
 const fixed = n => Math.round(n * 10) / 10
 
-export function trace(stroke, box, seed, variant, closed = false) {
+export function trace(stroke, box, seed, variant, closed = false, step = 8) {
   const [x, y, w, h] = box
   const placed = smooth(stroke.map(([u, v]) => [x + u * w, y + v * h]), closed)
-  const line = resample(boil(placed, seed * 3 + variant, BRUSH.boil, closed), 8)
+  const line = resample(boil(placed, seed * 3 + variant, BRUSH.boil, closed), step)
   if (!closed) return line
   const gap = Math.hypot(line.at(-1)[0] - line[0][0], line.at(-1)[1] - line[0][1])
-  return [...(gap < 4 ? line.slice(0, -1) : line), line[0]]
+  return [...(gap < step / 2 ? line.slice(0, -1) : line), line[0]]
 }
 
 export function ribbon(points, seed, width = BRUSH.width, tapered = true) {
@@ -66,7 +69,7 @@ export function ribbon(points, seed, width = BRUSH.width, tapered = true) {
     const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1
     const [nx, ny] = [-(b[1] - a[1]) / len, (b[0] - a[0]) / len]
     const taper = tapered ? Math.min(1, run[i] / BRUSH.taper, (total - run[i]) / BRUSH.taper) : 1
-    const half = width / 2 * (0.35 + 0.65 * taper) * (1 + BRUSH.swell * noise(seed, run[i] / 160) + BRUSH.grain * noise(seed + 5, run[i] / 9))
+    const half = width / 2 * (0.35 + 0.65 * taper) * (1 + BRUSH.swell * wave(seed, run[i], 160, total, ring) + BRUSH.grain * wave(seed + 5, run[i], 9, total, ring))
     left.push([x + nx * half, y + ny * half]); right.push([x - nx * half, y - ny * half])
   })
   return 'M' + [...left, ...right.reverse()].map(p => p.map(fixed).join(' ')).join('L') + 'Z'
