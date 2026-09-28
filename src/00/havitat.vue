@@ -84,6 +84,18 @@ function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
 function lock(busy) { store.setProcessing(busy); if (busy) hovered.value = armed.value = null }
 
+const SWIPE = 50
+let touched = null
+
+function swipeStart(e) { touched = e.touches.length === 1 ? [e.touches[0].clientX, e.touches[0].clientY] : null }
+
+function swipeEnd(e) {
+  if (!touched || store.processing || depth.value) return
+  const [dx, dy] = [e.changedTouches[0].clientX - touched[0], e.changedTouches[0].clientY - touched[1]]
+  touched = null
+  if (Math.abs(dx) > SWIPE && Math.abs(dx) > 1.5 * Math.abs(dy)) turn(dx < 0 ? 1 : -1)
+}
+
 function onKey(e) {
   if (store.processing) return
   if (depth.value) { if (e.key === 'Escape') back(); return }
@@ -110,7 +122,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
       <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="-1" :label="store.t.havitat.prev" :kick="kick" :lit="aimed === -1" @turn="turn" />
 
-      <div class="room" ref="room" role="main">
+      <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
         <Sketch v-if="scene" :scene="scene" :hot="hot" :interactive="!depth" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
@@ -136,6 +148,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
   /* LAYOUT */ position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden;
   /* BORDER */ border: var(--small-outline) var(--carbon-a15); border-radius: var(--radius-ss);
+  /* TOUCH  */ touch-action: pan-y;
 
 }
 

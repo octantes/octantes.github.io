@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, HATCH, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, hatching } from './brush.js'
+import { BRUSH, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
 import { LINE } from '../04/walls.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
@@ -26,21 +26,19 @@ const blank = () => getComputedStyle(document.documentElement).getPropertyValue(
 
 function strokesAt(item, box, seed, strokes) {
   const sketch = strokes ? { outline: strokes[0], ink: strokes } : sketchBox(box[2], box[3], seed, item.hidden)
-  const ink    = [...sketch.ink, ...(item.hatch ? hatching(box[2], box[3]) : [])]
   return {
-    hatchFrom: sketch.ink.length,
-    lines:     VARIANTS.map(v => ink.map((stroke, k) => trace(stroke, box, seed + k * 13, v))),
-    outline:   VARIANTS.map(v => trace(sketch.outline, box, seed, v, true)),
+    lines:   VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, box, seed + k * 13, v))),
+    outline: VARIANTS.map(v => trace(sketch.outline, box, seed, v, true)),
   }
 }
 
-function inked(entry, line, k, v) { return ribbon(line, entry.seed + k * 13 + v, BRUSH.width * (k < entry.hatchFrom ? 1 : HATCH.weight)) }
+function inked(entry, line, k, v) { return ribbon(line, entry.seed + k * 13 + v) }
 
 function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
     const seed = seedOf(prefix + item.id)
-    const { lines, outline, hatchFrom } = strokesAt(item, item.box, seed, item.strokes)
-    return { item, index, seed, lines, outline, hatchFrom, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
+    const { lines, outline } = strokesAt(item, item.box, seed, item.strokes)
+    return { item, index, seed, lines, outline, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
 }
 
