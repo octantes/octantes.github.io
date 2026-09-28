@@ -67,17 +67,6 @@ export function ribbon(points, seed, width = BRUSH.width) {
   return 'M' + [...left, ...right.reverse()].map(p => p.map(fixed).join(' ')).join('L') + 'Z'
 }
 
-export function even(points, n) {
-  const run = lengths(points), total = run.at(-1)
-  return Array.from({ length: n }, (_, k) => {
-    const d = total * k / (n - 1)
-    let i = 1
-    while (i < run.length - 1 && run[i] < d) i++
-    const t = (d - run[i - 1]) / (run[i] - run[i - 1] || 1)
-    return [points[i - 1][0] + (points[i][0] - points[i - 1][0]) * t, points[i - 1][1] + (points[i][1] - points[i - 1][1]) * t]
-  })
-}
-
 export function span(points) { return lengths(points).at(-1) }
 
 export function cut(points, from, to) {
