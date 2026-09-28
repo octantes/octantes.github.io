@@ -3,7 +3,7 @@
 import { computed } from 'vue'
 import { useStore } from '../04/store.js'
 
-const props = defineProps({ item: Object, tip: { type: Object, default: null } })
+const props = defineProps({ item: Object, tip: { type: Object, default: null }, named: { type: Boolean, default: true } })
 
 const store = useStore()
 
@@ -14,7 +14,7 @@ const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `
 <template>
 
   <div class="hint" :class="tip ? tip.place : 'docked'" :style="place" :aria-hidden="tip ? 'true' : null">
-    <span class="label">{{ item.label[store.lang] }}</span>
+    <span v-if="named" class="label">{{ item.label[store.lang] }}</span>
     <span class="text">{{ item.description[store.lang] }}</span>
     <div class="bar"><div class="track">{{ store.barContent }}</div></div>
   </div>
