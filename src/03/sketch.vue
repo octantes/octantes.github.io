@@ -136,7 +136,11 @@ const lit = computed(() => {
   const { item, seed } = entry
   const [x, y, w, h] = item.box, [fx, fy, fw, fh] = item.hover?.box ?? [0, 0, 1, 1]
   const pose = item.hover ? strokesAt(item, [x + fx * w, y + fy * h, fw * w, fh * h], seed, item.hover.strokes) : entry
-  return { item, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => ribbon(line, seed + k * 13 + v)) })) }
+  return {
+    item,
+    footprint: item.hover && VARIANTS.map(v => shape(entry.outline[v])),
+    variants:  VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => ribbon(line, seed + k * 13 + v)) })),
+  }
 })
 
 watch(() => props.scene, next => {
@@ -185,6 +189,7 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
 
     <g v-if="lit" class="lit" clip-path="url(#inside)">
       <g v-for="v in VARIANTS" :key="v" :class="`v${v}`">
+        <path v-if="lit.footprint" class="footprint" :d="lit.footprint[v]" :fill="lit.item.fill" />
         <path :d="lit.variants[v].fill" :fill="lit.item.fill" />
         <path v-for="(ink, k) in lit.variants[v].ink" :key="k" :class="k ? 'ink' : 'ink outline'" :d="ink" />
       </g>
@@ -210,6 +215,7 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
 .hit     { fill: transparent; cursor: pointer; }
 .lit     { pointer-events: none; }
 .gone    { display: none; }
+.footprint { opacity: .25; }
 .edge    { fill: var(--carbon); pointer-events: none; }
 
 .items   { transition: opacity var(--animate-fast); }
