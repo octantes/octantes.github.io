@@ -16,7 +16,7 @@ export const WALLS = [
                        box: [450, 100, 1253, 58], fill: '#242627', anchor: { x: 'stretch', y: 'top' } },
     { id: 'side',      label: { es: 'pared', en: 'wall' },
                        description: { es: 'la pared del costado, con su póster', en: 'the side wall, with its poster' },
-                       box: [9, 225, 441, 643], fill: '#B7BAC0', anchor: { x: 'left', y: 'stretch' } },
+                       box: [9, 225, 441, 643], fill: '#B7BAC0', anchor: { x: 'left', y: 'stretch' }, decor: true },
     { id: 'poster',    label: { es: 'póster', en: 'poster' },
                        description: { es: 'un póster negro sobre la pared', en: 'a black poster on the wall' },
                        box: [95, 303, 285, 435], fill: '#242627', anchor: { x: 'left', y: 'top' } },
