@@ -11,7 +11,8 @@ const ARRIVAL = { settle: 1000, finish: 400 }
 
 const route = useRoute()
 const store = useStore()
-const light = computed(() => themeOf(pageOf(route)) === 'light')
+const baked = document.documentElement.classList.contains('light')
+const light = computed(() => route.matched.length ? themeOf(pageOf(route)) === 'light' : baked)
 
 const fade   = ref(null)
 const landed = ref(false)
