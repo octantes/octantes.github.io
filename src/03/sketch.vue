@@ -1,28 +1,29 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
+import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
 import { LINE } from '../04/walls.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
-const MOTION   = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
 
 const frame   = ref(0)
 const clock   = ref(0)
 const motion  = shallowRef(null)
 const current = shallowRef(props.scene)
 
-let ticker = 0
-let raf    = 0
+let ticker  = 0
+let raf     = 0
+let leaving = null
 
 const clamp = t => Math.min(1, Math.max(0, t))
 const ease  = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
 const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
-const blank = () => getComputedStyle(document.documentElement).getPropertyValue('--niebla').trim()
+const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+const blank = () => token('--niebla')
 
 function strokesAt(item, box, seed, strokes) {
   const sketch = strokes ? { outline: strokes[0], ink: strokes } : sketchBox(box[2], box[3], seed, item.hidden)
@@ -64,13 +65,13 @@ function timed(groups, [a, b], incoming) {
   return groups.map(g => { const duration = Math.min(span, Math.max(span * MOTION.slowest, g.total / speed)); return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
 }
 
-function play(from, to) {
+function play(from, to, end = blank()) {
   if (STILL) return
   const windows = from && to ? MOTION.turn : MOTION.alone
   motion.value = {
     out: from ? timed(clusters(prepare(from)), windows.out, false) : [],
     in:  to ? timed(clusters(prepare(to)), windows.in, true) : [],
-    colours: [from?.color ?? blank(), to?.color ?? blank()],
+    colours: [from?.color ?? blank(), to?.color ?? end],
     start: performance.now(),
   }
   clock.value = 0
@@ -82,6 +83,7 @@ function tick() {
   clock.value = performance.now() - motion.value.start
   if (clock.value < MOTION.length) { raf = requestAnimationFrame(tick); return }
   motion.value = null
+  if (leaving) { leaving(); return }
   if (props.scene.id === current.value.id) { emit('busy', false); return }
   play(current.value, props.scene)
   current.value = props.scene
@@ -132,6 +134,18 @@ const edge  = computed(() => {
   const sides = [run([-ex, 0], [1 + ex, 0]), run([1, -ey], [1, 1 + ey]), run([1 + ex, 1], [-ex, 1]), run([0, 1 + ey], [0, -ey])]
   return VARIANTS.map(v => sides.map((side, k) => ribbon(trace(side, inside.value, seed + k * 7, v), seed + k * 7 + v, LINE * 1.4)).join(''))
 })
+
+function leave() {
+  const end = token('--carbon')
+  const gone = { id: 'gone', seed: '', color: end, layout: { size: current.value.layout.size, items: [] } }
+  return new Promise(resolve => {
+    leaving = () => { current.value = gone; resolve() }
+    if (STILL) { leaving(); return }
+    play(current.value, null, end)
+  })
+}
+
+defineExpose({ leave })
 
 const lit = computed(() => {
   const entry = !motion.value && prepared.value.find(e => e.item.id === props.hot)

@@ -13,7 +13,7 @@ const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `
 
 <template>
 
-  <div class="hint" :class="tip ? tip.place : 'docked'" :style="place" :aria-hidden="tip ? 'true' : null">
+  <div class="hint" :class="[tip ? tip.place : 'docked', { plain: !named }]" :style="place" :aria-hidden="tip ? 'true' : null">
     <span v-if="named" class="label">{{ item.label[store.lang] }}</span>
     <span class="text">{{ item.description[store.lang] }}</span>
     <div class="bar"><div class="track">{{ store.barContent }}</div></div>
@@ -55,6 +55,8 @@ const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `
   &.left-end     { transform: translate(var(--ah), calc(-100% + var(--reach))); }
   &.right-start  { transform: translate(calc(-100% - var(--ah)), calc(-1 * var(--reach))); }
   &.right-end    { transform: translate(calc(-100% - var(--ah)), calc(-100% + var(--reach))); }
+
+  &.plain  { border-top: none; padding-top: 0; }
 
   &.docked { position: static; width: auto; padding: .6rem 0 0; margin-top: .5rem; background: none; border-top: var(--small-outline) var(--humo-a15); border-radius: 0; &::before { display: none; } }
 
