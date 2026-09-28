@@ -4,7 +4,7 @@ import Portfolio from '../00/portfolio.vue'
 import Havitat from '../00/havitat.vue'
 import { WALLS } from './walls.js'
 
-const wallPath = `/havitat/:wall(${WALLS.flatMap(w => [w.es, w.en]).join('|')})`
+const wallPath  = `/havitat/:wall(${WALLS.flatMap(w => [w.es, w.en]).join('|')})`
 const depthPath = `${wallPath}/:thing`
 
 const routes = [

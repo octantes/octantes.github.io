@@ -33,6 +33,8 @@ export function sectionOf(word) { return sectionNamed(word)?.id }
 
 function sectionById(id) { return SECTIONS.find(s => s.id === id) }
 
+function wallById(id) { return WALLS.find(w => w.id === id) }
+
 function wordOf(id, lang) { return sectionById(id)?.[lang] ?? id }
 
 export function labelOf(id, lang) { return sectionById(id)?.label[lang] ?? id }
@@ -74,8 +76,8 @@ export function pathOf(page, lang) {
     case 'home':      return '/'
     case 'portal':    return '/portal'
     case 'havitat':   return '/havitat'
-    case 'wall':      return `/havitat/${WALLS.find(w => w.id === page.id)[lang]}`
-    case 'depth':     return `/havitat/${WALLS.find(w => w.id === page.id)[lang]}/${slugOf(depthItem(page).label[lang])}`
+    case 'wall':      return `/havitat/${wallById(page.id)[lang]}`
+    case 'depth':     return `/havitat/${wallById(page.id)[lang]}/${slugOf(depthItem(page).label[lang])}`
     case 'portfolio': return '/portfolio'
     case 'about':     return ABOUT_PATH[lang]
     case 'archive':   return `/${ARCHIVE_VIEW[lang]}.html`
@@ -86,7 +88,7 @@ export function pathOf(page, lang) {
 
 }
 
-function depthItem(page) { return WALLS.find(w => w.id === page.id).items.find(i => i.id === page.item) }
+function depthItem(page) { return wallById(page.id).items.find(i => i.id === page.item) }
 
 export function inRoom(page) { return ['havitat', 'wall', 'depth'].includes(page.kind) }
 
@@ -105,10 +107,23 @@ export function headFor(page, lang, post) {
     ld: { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/`, description, inLanguage: lang, author: { '@type': 'Person', name: 'kaste' } },
   }
 
-  const name = { section: labelOf(page.id, lang), about: ABOUT_NAME[lang], portfolio: 'portfolio', archive: ARCHIVE_VIEW[lang], havitat: 'havitat', wall: `havitat ${WALLS.find(w => w.id === page.id)?.[lang]}`, depth: page.item && `${depthItem(page).label[lang]} - havitat ${WALLS.find(w => w.id === page.id)[lang]}` }[page.kind]
+  const name = {
+    section:   () => labelOf(page.id, lang),
+    about:     () => ABOUT_NAME[lang],
+    portfolio: () => 'portfolio',
+    archive:   () => ARCHIVE_VIEW[lang],
+    havitat:   () => 'havitat',
+    wall:      () => `havitat ${wallById(page.id)[lang]}`,
+    depth:     () => `${depthItem(page).label[lang]} - havitat ${wallById(page.id)[lang]}`,
+  }[page.kind]?.()
 
   if (name) {
-    const text = { portfolio: plainOf(DICT[lang].portfolio.desc), archive: description, havitat: description, wall: description, depth: page.item && depthItem(page).description[lang] }[page.kind] ?? summaryOf(DICT[lang].about.sections[page.kind === 'about' ? 'portal' : page.id])
+    const text = {
+      section:   () => summaryOf(DICT[lang].about.sections[page.id]),
+      about:     () => summaryOf(DICT[lang].about.sections.portal),
+      portfolio: () => plainOf(DICT[lang].portfolio.desc),
+      depth:     () => depthItem(page).description[lang],
+    }[page.kind]?.() ?? description
     const paired = page.kind !== 'portfolio' && page.kind !== 'havitat'
     Object.assign(head, { title: `${name} - ${SITE_NAME}`, name, description: text, canonical: urlOf(page, lang), alternates: paired ? pair : null, localeAlt: paired ? LOCALE[other(lang)] : null, ld: null })
   }

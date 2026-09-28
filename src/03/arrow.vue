@@ -1,7 +1,8 @@
 <script setup>
 
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, STILL, seedOf, trace, ribbon, shape } from './brush.js'
+import { ref, computed, watch } from 'vue'
+import { BRUSH, seedOf, trace, ribbon, shape } from './brush.js'
+import { useBoil } from './boil.js'
 import { LINE } from '../04/walls.js'
 
 const props = defineProps({ step: Number, label: String, kick: Object, lit: Boolean })
@@ -24,9 +25,8 @@ function rounded(corners) {
 const CHEVRON = rounded(CORNERS)
 const BOX     = [12, 20, 96, 200]
 
-const frame  = ref(0)
+const frame  = useBoil()
 const kicked = ref(false)
-let ticker   = 0
 
 const variants = computed(() => {
   const seed = seedOf(`arrow${props.step}`)
@@ -35,9 +35,6 @@ const variants = computed(() => {
 })
 
 watch(() => props.kick, kick => { if (kick?.step !== props.step) return; kicked.value = false; requestAnimationFrame(() => { kicked.value = true }) })
-
-onMounted(()       => { if (!STILL) ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps) })
-onBeforeUnmount(() => clearInterval(ticker))
 
 </script>
 
