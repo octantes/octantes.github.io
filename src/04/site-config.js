@@ -3,6 +3,13 @@ export const TAGLINE = { es: 'tejiendo hechizos', en: 'weaving spells' }
 export const CONTACT_EMAIL = 'facugerbino@gmail.com'
 export const POPUP_LINK = 'https://www.youtube.com/watch?v=pwzLUeVghDc'
 
+export const ROOM_WALLS = [
+  { id: 'grey',   es: 'gris',    en: 'grey'   },
+  { id: 'orange', es: 'naranja', en: 'orange' },
+  { id: 'green',  es: 'verde',   en: 'green'  },
+  { id: 'blue',   es: 'azul',    en: 'blue'   },
+]
+
 export const SECTIONS = [
   { id: 'portal',        es: 'portal',        en: 'portal',   label: { es: 'portal',       en: 'portal'  } },
   { id: 'dise\u00f1o',   es: 'dise\u00f1o',   en: 'design',   label: { es: 'dise\u00f1o',  en: 'design'  } },

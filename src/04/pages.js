@@ -1,6 +1,5 @@
-import { SITE_URL, SITE_NAME, TAGLINE, SITE_DESCRIPTION, SECTIONS, ABOUT_PATH, ARCHIVE_VIEW, TWITTER } from './site-config.js'
+import { SITE_URL, SITE_NAME, TAGLINE, SITE_DESCRIPTION, SECTIONS, ROOM_WALLS, ABOUT_PATH, ARCHIVE_VIEW, TWITTER } from './site-config.js'
 import { DICT } from './dict.js'
-import { WALLS, slugOf, itemNamed } from './walls.js'
 
 export const SHARE_SIZE = { width: 1200, height: 675 }
 export const ARCHIVE_FLAG = new RegExp(`[?&](${Object.values(ARCHIVE_VIEW).join('|')})(&|=|$)`)
@@ -33,7 +32,15 @@ export function sectionOf(word) { return sectionNamed(word)?.id }
 
 function sectionById(id) { return SECTIONS.find(s => s.id === id) }
 
-function wallById(id) { return WALLS.find(w => w.id === id) }
+let walls = ROOM_WALLS
+
+export function furnish(furnished) { walls = furnished; return furnished }
+
+function wallById(id) { return walls.find(w => w.id === id) }
+
+function slugOf(text) { return text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().replace(/\s+/g, '-') }
+
+function itemNamed(wall, word) { return wall.items?.find(item => !item.decor && (slugOf(item.label.es) === word || slugOf(item.label.en) === word)) }
 
 function wordOf(id, lang) { return sectionById(id)?.[lang] ?? id }
 
@@ -45,15 +52,15 @@ export function pageOf(route) {
 
   const path = route.path.length > 1 ? route.path.replace(/\/$/, '') : route.path
   const { type, slug, filterType, wall, thing } = route.params
-  const facing = wall && namedIn(WALLS, wall)
-  const item   = facing && thing && itemNamed(facing, thing)
+  const facing = wall && namedIn(ROOM_WALLS, wall)
+  const item   = facing && thing && itemNamed(wallById(facing.id), thing)
   const aboutLang = Object.keys(ABOUT_PATH).find(lang => ABOUT_PATH[lang] === path)
 
   if (path === '/portfolio') return { kind: 'portfolio' }
   if (path === '/portal') return { kind: 'portal' }
   if (path === '/havitat') return { kind: 'havitat' }
-  if (item) return { kind: 'depth', id: facing.id, item: item.id, lang: langOfWord(wall, WALLS) }
-  if (facing && !thing) return { kind: 'wall', id: facing.id, lang: langOfWord(wall, WALLS) }
+  if (item) return { kind: 'depth', id: facing.id, item: item.id, lang: langOfWord(wall, ROOM_WALLS) }
+  if (facing && !thing) return { kind: 'wall', id: facing.id, lang: langOfWord(wall, ROOM_WALLS) }
   if (aboutLang) return { kind: 'about', lang: aboutLang }
   if (slug && sectionOf(type)) return { kind: 'note', id: sectionOf(type), slug, lang: langOfWord(type) }
   if (filterType && sectionOf(filterType)) return { kind: 'section', id: sectionOf(filterType), lang: langOfWord(filterType) }
