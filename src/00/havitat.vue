@@ -8,6 +8,7 @@ import { WALLS, LANDING_WALL, LINE, layoutWall, layoutDepth } from '../04/walls.
 import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
 import Sketch from '../03/sketch.vue'
+import Arrow from '../03/arrow.vue'
 
 const HINT = { w: 288, h: 110, gap: 12, arrow: 14 }
 
@@ -102,15 +103,23 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
   <div class="frame page">
 
-    <div class="room" ref="room" role="main">
+    <div class="stage">
 
-      <Sketch v-if="scene" :scene="scene" :hot="hot" :interactive="!depth" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="-1" :label="store.t.havitat.prev" @turn="turn" />
 
-      <Guide :inert="store.processing" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn" @back="back">
-        <Hint v-if="depth ?? docked" :item="depth ?? docked" />
-      </Guide>
+      <div class="room" ref="room" role="main">
 
-      <Hint v-if="tip" :item="tip.item" :tip="tip" />
+        <Sketch v-if="scene" :scene="scene" :hot="hot" :interactive="!depth" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+
+        <Guide :inert="store.processing" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn" @back="back">
+          <Hint v-if="depth ?? docked" :item="depth ?? docked" />
+        </Guide>
+
+        <Hint v-if="tip" :item="tip.item" :tip="tip" />
+
+      </div>
+
+      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="1" :label="store.t.havitat.next" @turn="turn" />
 
     </div>
 
@@ -126,5 +135,13 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
   /* BORDER */ border: var(--small-outline) var(--carbon-a15); border-radius: var(--radius-ss);
 
 }
+
+.stage  { display: flex; align-items: center; flex: 1 1 auto; min-height: 0; gap: 1rem; }
+
+.room   { align-self: stretch; }
+
+.hidden { visibility: hidden; }
+
+@media (--mobile) { .side { display: none; } }
 
 </style>
