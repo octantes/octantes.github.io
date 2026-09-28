@@ -1,5 +1,7 @@
 export const STILL = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
+export const MOTION = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
+
 export const BRUSH = { width: 18, taper: 30, swell: 0.14, grain: 0.05, boil: .5, frames: 3, fps: 5 }
 
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }

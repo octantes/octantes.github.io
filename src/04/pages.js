@@ -88,7 +88,9 @@ export function pathOf(page, lang) {
 
 function depthItem(page) { return WALLS.find(w => w.id === page.id).items.find(i => i.id === page.item) }
 
-export function themeOf(page) { return ['havitat', 'wall', 'depth'].includes(page.kind) ? 'light' : 'dark' }
+export function inRoom(page) { return ['havitat', 'wall', 'depth'].includes(page.kind) }
+
+export function themeOf(page) { return inRoom(page) ? 'light' : 'dark' }
 
 export function urlOf(page, lang) { return page.kind === 'home' ? `${SITE_URL}/` : `${SITE_URL}${pathOf(page, lang)}` }
 

@@ -1,13 +1,14 @@
 <script setup>
 
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
-import { pageOf, pathOf } from '../04/pages.js'
+import { pageOf, pathOf, inRoom } from '../04/pages.js'
 import { WALLS, LANDING_WALL, LINE, layoutWall, layoutDepth } from '../04/walls.js'
 import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
 import Sketch from '../03/sketch.vue'
+import { MOTION, STILL } from '../03/brush.js'
 import Arrow from '../03/arrow.vue'
 import { placeHint } from '../04/hint.js'
 
@@ -23,6 +24,7 @@ const wall  = computed(() => WALLS[index.value])
 const depth = computed(() => page.value.kind === 'depth' ? wall.value.items.find(i => i.id === page.value.item) : null)
 
 const room   = ref(null)
+const sketch = ref(null)
 const bounds = ref(null)
 const layout = computed(() => bounds.value && layoutWall(wall.value, ...bounds.value))
 const scene  = computed(() => bounds.value && (depth.value
@@ -35,13 +37,14 @@ const hovered = ref(null)
 const armed   = ref(null)
 const hot     = computed(() => hovered.value ?? armed.value)
 const docked  = computed(() => layout.value?.items.find(i => i.id === armed.value))
+const shading = () => [document.documentElement, document.body, document.getElementById('octantes')]
 
 const tip = computed(() => {
 
-  const item = layout.value?.items.find(i => i.id === hovered.value)
+  const item = scene.value?.layout.items.find(i => i.id === hovered.value)
   if (!item || item.id === armed.value) return null
 
-  const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / layout.value.size[0]
+  const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / scene.value.layout.size[0]
   const [x, y, w, h] = [item.box[0] - LINE / 2, item.box[1] - LINE / 2, item.box[2] + LINE, item.box[3] + LINE].map(v => v * scale)
   return { item, ...placeHint(frame, [frame.left + x, frame.top + y, w, h]) }
 
@@ -58,8 +61,15 @@ function pick(item, e) {
   if (e.pointerType === 'touch' && armed.value !== item.id) { armed.value = item.id; return }
   if (e.pointerType === 'touch') hovered.value = null
   armed.value = null
-  router.push(item.to ?? pathOf({ kind: 'depth', id: wall.value.id, item: item.id }, store.lang))
+  router.push(depth.value ? item.to : pathOf({ kind: 'depth', id: wall.value.id, item: item.id }, store.lang))
 }
+
+onBeforeRouteLeave(async to => {
+  if (inRoom(pageOf(to))) return
+  if (!STILL) for (const el of shading()) el.style.transition = `background-color ${MOTION.length}ms ease-in-out`
+  document.documentElement.classList.remove('light')
+  await sketch.value?.leave()
+})
 
 function back() { router.push(pathOf({ kind: 'wall', id: wall.value.id }, store.lang)) }
 
@@ -93,7 +103,12 @@ onMounted(() => {
   window.addEventListener('keydown', onKey)
 })
 
-onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown', onKey) })
+onBeforeUnmount(() => {
+  sizes?.disconnect()
+  window.removeEventListener('keydown', onKey)
+  for (const el of shading()) el.style.transition = ''
+  store.setProcessing(false)
+})
 
 </script>
 
@@ -107,7 +122,7 @@ onBeforeUnmount(() => { sizes?.disconnect(); window.removeEventListener('keydown
 
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
-        <Sketch v-if="scene" :scene="scene" :hot="hot" :interactive="!depth" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+        <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="!depth || !!depth.to" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
         <Guide :inert="store.processing" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event">
           <Hint v-if="depth ?? docked" :item="depth ?? docked" :named="!depth" />
