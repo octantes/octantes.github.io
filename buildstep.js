@@ -55,29 +55,25 @@ linea de ejemplo para el ancho: cruzar fue mi segundo proyecto de diseño basado
 
 const md = new MarkdownIt()
 
-const defaultSoftbreak = md.renderer.rules.softbreak                             // normal linebreaks on tradnotes
+const base = { ...md.renderer.rules }
+const { escapeHtml } = md.utils
 
-const customSoftbreak = (tokens, idx, options, env, self) => {                   // render linebreaks only on text 
+md.renderer.rules.softbreak = (tokens, idx, options, env, self) => env.trad ? base.softbreak(tokens, idx, options, env, self) : env.flat ? '' : '<br />'
 
-    const token = tokens[idx]
+md.renderer.rules.hardbreak = (tokens, idx, options, env, self) => env.flat ? '' : base.hardbreak(tokens, idx, options, env, self)
 
-    if (token.level % 2 === 1) { return '<br />' }
-
-    const prev = tokens[idx - 1]
-    const next = tokens[idx + 1]
-
-    const isAsset = (t) => t && t.type === 'inline' && (t.children.some(c => c.type === 'image') || t.content.match(/<iframe|<img/i))
-
-    if (isAsset(prev) || isAsset(next)) { return '' }
-
-    return '<br />'
-
+md.renderer.rules.image = (tokens, idx, options, env, self) => {
+  const token = tokens[idx]
+  const src   = escapeHtml(token.attrGet('src'))
+  const alt   = escapeHtml(self.renderInlineAsText(token.children, options, env))
+  return processAssets(src, alt, env.post) ?? base.image(tokens, idx, options, env, self)
 }
 
-function setCustomSoftbreak()   { md.renderer.rules.softbreak = customSoftbreak }
-function unsetCustomSoftbreak() { md.renderer.rules.softbreak = defaultSoftbreak }
-
-setCustomSoftbreak()
+md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  const href = tokens[idx].attrGet('href')
+  if (env.newTab && !href.toLowerCase().startsWith(SITE_URL.toLowerCase()) && !href.startsWith('/') && !href.startsWith('#')) tokens[idx].attrs.push(['target', '_blank'], ['rel', 'noopener noreferrer'])
+  return self.renderToken(tokens, idx, options)
+}
 
 // VARIABLES
 
@@ -95,7 +91,7 @@ const indexItems = []
 
 // MD TO HTML BODY PROCESSING
 
-function renderType(body, attributes) {                                          // render body applying type logic 
+function renderType(body, attributes, env) {                                     // render body applying type logic 
 
   const type = attributes.type
   const isTrad = attributes.style === 'trad'
@@ -108,20 +104,18 @@ function renderType(body, attributes) {                                         
       let assetBlock = parts[0] || ''
       let noteBlock = parts.slice(1).join('[!TEXT]')
 
-      const renderedAssets = md.render(assetBlock)
-        .replace(/^\s*<p>(.*?)<\/p>\s*$/is, '$1')
-        .replace(/<br\s*\/?>/gi, '')
+      const renderedAssets = md.renderInline(assetBlock.trim(), { ...env, flat: true })
 
       const noteBlockClass = isTrad ? 'nota nota-prosa' : 'nota nota-verso'
 
-      return `${renderedAssets}${ noteBlock ? `<div class="${noteBlockClass}">${md.render(noteBlock)}</div>` : ''}`
+      return `${renderedAssets}${ noteBlock ? `<div class="${noteBlockClass}">${md.render(noteBlock, env)}</div>` : ''}`
 
     }
 
     default: {
 
-        if (isTrad) { return `<div class="nota-prosa">${md.render(body)}</div>` }
-        return md.render(body) 
+        if (isTrad) { return `<div class="nota-prosa">${md.render(body, env)}</div>` }
+        return md.render(body, env)
 
     }
 
@@ -129,15 +123,9 @@ function renderType(body, attributes) {                                         
 
 }
 
-function processAssets(tag, attrs, type, slug, portada) {                                            // replace asset src for optimized HTML tag 
+function processAssets(src, altText, { type, slug, portada }) {                                     // replace asset src for optimized HTML tag 
 
-  const srcMatch = attrs.match(/src=['"]([^'"]+)['"]/)
-
-  if (!srcMatch) return tag
-  let filename = srcMatch[1]
-
-  const altMatch = attrs.match(/alt=['"]([^'"]*)['"]/)
-  const altText = altMatch ? altMatch[1] : ''
+  let filename = src
   const isImage = /\.(jpe?g|png)$/i.test(filename)
   const isGif = /\.gif$/i.test(filename)
   const isVideo = /\.(mov|mp4|avi|webm)$/i.test(filename) 
@@ -186,7 +174,7 @@ function processAssets(tag, attrs, type, slug, portada) {                       
 
     let videoId = ''
     const ytMatch = filename.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
-    if (ytMatch && ytMatch[1]) { videoId = ytMatch[1] } else { return `<${tag} ${attrs}>` }
+    if (ytMatch && ytMatch[1]) { videoId = ytMatch[1] } else { return null }
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
     return `<iframe width="560" height="315" src="${embedUrl}" title="YouTube Video" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen class="YTVideo"> </iframe>`
     
@@ -201,14 +189,14 @@ function processAssets(tag, attrs, type, slug, portada) {                       
         const contentType = match[1]
         const contentId = match[2]
         embedUrl = `https://open.spotify.com/embed/${contentType}/${contentId}?utm_source=generator`
-      } else { return `<${tag} ${attrs}>` }
+      } else { return null }
     }
 
     return `<iframe style="border-radius:12px" src="${embedUrl}" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`
 
   }
   
-  else { return `<${tag} ${attrs}>` }
+  else { return null }
 
 }
 
@@ -648,21 +636,10 @@ async function processPosts() {                                                 
 
     if (fullRebuild || written.includes(false) || cache[`${postType}/${slug}/index.md`] !== finalHash) {
 
-      const isTradStyle = attributes.style === 'trad'
+      const env = { trad: attributes.style === 'trad', post: { type: postType, slug, portada: attributes.portada } }
+      if (env.trad) console.log(`using 'trad' style on ${slug} - default softbreak`)
 
-      if (isTradStyle) { unsetCustomSoftbreak(); console.log(`using 'trad' style on ${slug} - default softbreak`) }
-      else { setCustomSoftbreak() }
-
-      let htmlContent = renderType(body, attributes).trim()
-      htmlContent = htmlContent.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs) => processAssets(tagName, attrs, postType, slug, attributes.portada))
-
-      const internalLinkRegex = new RegExp(`href=['"](${SITE_URL}|\\/)`, 'i')
-
-      htmlContent = htmlContent.replace(/<a\s+(.*?)href=['"](.*?)['"](.*?)\s*>/gi, (match, before, href, after) => {
-          if (internalLinkRegex.test(match) || href.startsWith('#')) { return match }
-          if (!/(target\s*=\s*['"]_blank['"])/i.test(match)) { return `<a ${before}href="${href}"${after} target="_blank" rel="noopener noreferrer">` }
-          return match
-      })
+      const htmlContent = renderType(body, attributes, { ...env, newTab: true }).trim()
 
       const toggleHref = lang => isBilingual ? archiveHref(page, other(lang)) : archiveHref({ kind: 'archive' }, 'en')
       const fill = (lang, title, content) => fillTemplate({ page, lang, item, title, meta: `${formatted} // ${primaryHandle}`, type: postType, toggleHref: toggleHref(lang), content })
@@ -672,12 +649,8 @@ async function processPosts() {                                                 
 
       if (isBilingual) {
         const { attributes: attrEn, body: bodyEn } = fm(rawEn)
-        let htmlContentEn = renderType(bodyEn, attrEn).trim()
-        htmlContentEn = htmlContentEn.replace(/<(img|video)\s+([^>]+?)(\/?>)/gi, (match, tagName, attrs) => processAssets(tagName, attrs, postType, slug, attributes.portada))
-        pageEn = fill('en', attrEn.title || slug, htmlContentEn)
+        pageEn = fill('en', attrEn.title || slug, renderType(bodyEn, attrEn, env).trim())
       }
-
-      if (isTradStyle) { setCustomSoftbreak() }
 
       for (const [lang, html] of [['es', pageEs], ['en', pageEn]]) {
         await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
