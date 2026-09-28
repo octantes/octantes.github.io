@@ -5,20 +5,43 @@ import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
 import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
 import { pageOf, themeOf, inRoom } from './04/pages.js'
+import { useStore } from './04/store.js'
+
+const ARRIVAL = { rise: .85, pace: 600, finish: 400, unlocked: 1000 }
 
 const route = useRoute()
+const store = useStore()
 const light = computed(() => themeOf(pageOf(route)) === 'light')
 
-const arriving = ref(false)
+const arrive = ref(1)
 
 watchEffect(() => document.documentElement.classList.toggle('light', light.value))
 
-useRouter().afterEach((to, from) => { arriving.value = inRoom(pageOf(from)) && !inRoom(pageOf(to)) })
+function fadeIn() {
+
+  const start = performance.now()
+  let locked = false, released = 0, from = 0
+
+  const step = now => {
+    locked ||= store.processing
+    if (!released && (locked ? !store.processing : now - start > ARRIVAL.unlocked)) { released = now; from = arrive.value }
+    arrive.value = released
+      ? from + (1 - from) * Math.min(1, (now - released) / ARRIVAL.finish)
+      : ARRIVAL.rise * (1 - Math.exp(-(now - start) / ARRIVAL.pace))
+    if (arrive.value < 1) requestAnimationFrame(step)
+  }
+
+  arrive.value = 0
+  requestAnimationFrame(step)
+
+}
+
+useRouter().afterEach((to, from) => { if (inRoom(pageOf(from)) && !inRoom(pageOf(to))) fadeIn() })
 </script>
 
 <template>
 
-  <div class="pagina" :class="{ arriving }">
+  <div class="pagina" :class="{ arriving: arrive < 1 }" :style="{ '--arrive': arrive }">
 
     <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 
@@ -46,9 +69,7 @@ useRouter().afterEach((to, from) => { arriving.value = inRoom(pageOf(from)) && !
 
 .veil.opaque { background: var(--carbon); }
 
-.arriving :is(.portada, .navigation, .footer, .portal-glow, .post, .portfolio) { animation: arrive 1s ease-in-out both; }
-
-@keyframes arrive { from { opacity: 0; } }
+.arriving :is(.portada, .navigation, .footer, .portal-glow, .post, .portfolio) { opacity: var(--arrive); }
 
 @media (--mobile) { .pagina { max-width: 100%; } }
 
