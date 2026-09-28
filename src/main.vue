@@ -14,6 +14,7 @@ const store = useStore()
 const light = computed(() => themeOf(pageOf(route)) === 'light')
 
 const arrive = ref(1)
+const landed = ref(false)
 
 watchEffect(() => document.documentElement.classList.toggle('light', light.value))
 
@@ -36,12 +37,16 @@ function fadeIn() {
 
 }
 
-useRouter().afterEach((to, from) => { if (inRoom(pageOf(from)) && !inRoom(pageOf(to))) fadeIn() })
+useRouter().afterEach((to, from) => {
+  if (inRoom(pageOf(to)) || to.matched[0]?.components.default === from.matched[0]?.components.default) return
+  landed.value = !from.matched.length
+  fadeIn()
+})
 </script>
 
 <template>
 
-  <div class="pagina" :class="{ arriving: arrive < 1 }" :style="{ '--arrive': arrive }">
+  <div class="pagina" :class="{ arriving: arrive < 1, landed }" :style="{ '--arrive': arrive }">
 
     <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 
@@ -69,7 +74,7 @@ useRouter().afterEach((to, from) => { if (inRoom(pageOf(from)) && !inRoom(pageOf
 
 .veil.opaque { background: var(--carbon); }
 
-.arriving :is(.portada, .navigation, .footer, .portal-glow, .post, .portfolio) { opacity: var(--arrive); }
+.arriving :is(.navigation, .footer, .portal-glow, .portfolio), .arriving:not(.landed) .portada { opacity: var(--arrive); }
 
 @media (--mobile) { .pagina { max-width: 100%; } }
 
