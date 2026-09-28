@@ -40,9 +40,10 @@ function resample(points, step) {
   return out
 }
 
-function boil(points, seed, amount) {
-  const run = lengths(points)
-  return points.map(([x, y], i) => [x + noise(seed, run[i] / 90) * amount, y + noise(seed + 17, run[i] / 90) * amount])
+function boil(points, seed, amount, closed) {
+  const run = lengths(points), total = run.at(-1)
+  const wave = (k, d) => closed ? noise(k, d / 90) * (1 - d / total) + noise(k, (d - total) / 90) * d / total : noise(k, d / 90)
+  return points.map(([x, y], i) => [x + wave(seed, run[i]) * amount, y + wave(seed + 17, run[i]) * amount])
 }
 
 const fixed = n => Math.round(n * 10) / 10
@@ -50,17 +51,21 @@ const fixed = n => Math.round(n * 10) / 10
 export function trace(stroke, box, seed, variant, closed = false) {
   const [x, y, w, h] = box
   const placed = smooth(stroke.map(([u, v]) => [x + u * w, y + v * h]), closed)
-  return resample(boil(placed, seed * 3 + variant, BRUSH.boil), 8)
+  const line = resample(boil(placed, seed * 3 + variant, BRUSH.boil, closed), 8)
+  if (!closed) return line
+  const gap = Math.hypot(line.at(-1)[0] - line[0][0], line.at(-1)[1] - line[0][1])
+  return [...(gap < 4 ? line.slice(0, -1) : line), line[0]]
 }
 
-export function ribbon(points, seed, width = BRUSH.width) {
-  const run = lengths(points), total = run[run.length - 1]
+export function ribbon(points, seed, width = BRUSH.width, tapered = true) {
+  const run = lengths(points), total = run[run.length - 1], last = points.length - 1
+  const ring = Math.hypot(points[0][0] - points[last][0], points[0][1] - points[last][1]) < 1
   const left = [], right = []
   points.forEach(([x, y], i) => {
-    const [a, b] = [points[Math.max(0, i - 1)], points[Math.min(points.length - 1, i + 1)]]
+    const [a, b] = ring ? [points[i ? i - 1 : last - 1], points[i === last ? 1 : i + 1]] : [points[Math.max(0, i - 1)], points[Math.min(last, i + 1)]]
     const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1
     const [nx, ny] = [-(b[1] - a[1]) / len, (b[0] - a[0]) / len]
-    const taper = Math.min(1, run[i] / BRUSH.taper, (total - run[i]) / BRUSH.taper)
+    const taper = tapered ? Math.min(1, run[i] / BRUSH.taper, (total - run[i]) / BRUSH.taper) : 1
     const half = width / 2 * (0.35 + 0.65 * taper) * (1 + BRUSH.swell * noise(seed, run[i] / 160) + BRUSH.grain * noise(seed + 5, run[i] / 9))
     left.push([x + nx * half, y + ny * half]); right.push([x - nx * half, y - ny * half])
   })
