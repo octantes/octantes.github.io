@@ -23,6 +23,7 @@
     --carbon-a95:  #1B1C1CF2;
 
     --carbon:      #1B1C1C;
+    --page:        var(--carbon);
 
     --ceniza-a02:  #2B2C2C05;
     --ceniza-a06:  #2B2C2C10;
@@ -165,8 +166,6 @@
     --leading-base:  1.50;
 
     --measure: 34rem;
-
-    --page: var(--carbon);
 
     --radius-xl: 12px;
     --radius-ll: 10px;

@@ -2,12 +2,13 @@
 
 import { computed } from 'vue'
 import { useStore } from '../04/store.js'
+import { HINT } from '../04/hint.js'
 
 const props = defineProps({ item: Object, tip: { type: Object, default: null }, named: { type: Boolean, default: true } })
 
 const store = useStore()
 
-const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `${props.tip.at[1]}px` })
+const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `${props.tip.at[1]}px`, width: `${HINT.w}px`, '--ah': `${HINT.arrow}px` })
 
 </script>
 
@@ -26,8 +27,8 @@ const place = computed(() => props.tip && { left: `${props.tip.at[0]}px`, top: `
 .hint {
 
   /* LAYOUT */ position: fixed; z-index: 3; pointer-events: none; display: flex; flex-direction: column; gap: .3rem;
-               --aw: 24px; --ah: 14px; --inset: 14px; --reach: calc(var(--inset) + var(--aw) / 2);
-  /* BOX    */ width: 18rem; padding: .6rem .8rem;
+               --aw: 24px; --inset: 14px; --reach: calc(var(--inset) + var(--aw) / 2);
+  /* BOX    */ padding: .6rem .8rem;
   /* FILL   */ background: var(--carbon); color: var(--humo);
   /* BORDER */ border-radius: var(--radius-ss);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;

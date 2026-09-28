@@ -5,12 +5,12 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf, inRoom } from '../04/pages.js'
 import { WALLS, LANDING_WALL, LINE, layoutWall, layoutDepth } from '../04/walls.js'
+import { placeHint } from '../04/hint.js'
+import { MOTION, STILL } from '../03/brush.js'
 import Guide from '../02/guide.vue'
 import Hint from '../02/hint.vue'
 import Sketch from '../03/sketch.vue'
-import { MOTION, STILL } from '../03/brush.js'
 import Arrow from '../03/arrow.vue'
-import { placeHint } from '../04/hint.js'
 
 const route  = useRoute()
 const router = useRouter()
@@ -35,6 +35,8 @@ watch(() => page.value.kind, kind => { if (kind === 'notfound') router.replace('
 
 const hovered = ref(null)
 const armed   = ref(null)
+const kick    = ref(null)
+const aimed   = ref(null)
 const hot     = computed(() => hovered.value ?? armed.value)
 const docked  = computed(() => layout.value?.items.find(i => i.id === armed.value))
 const shading = () => [document.documentElement, document.body, document.getElementById('octantes')]
@@ -50,10 +52,10 @@ const tip = computed(() => {
 
 })
 
-let sizes = null
+let sizes   = null
+let touched = null
 
-const kick  = ref(null)
-const aimed = ref(null)
+const SWIPE = 50
 
 function turn(step) { kick.value = { step }; router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
 
@@ -71,14 +73,13 @@ onBeforeRouteLeave(async to => {
   await sketch.value?.leave()
 })
 
+function arrow(step) { return { step, kick: kick.value, lit: aimed.value === step, inert: store.processing || !!depth.value, class: ['side', { hidden: depth.value }] } }
+
 function back() { router.push(pathOf({ kind: 'wall', id: wall.value.id }, store.lang)) }
 
 function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
 function lock(busy) { store.setProcessing(busy); if (busy) hovered.value = armed.value = null }
-
-const SWIPE = 50
-let touched = null
 
 function swipeStart(e) { touched = e.touches.length === 1 ? [e.touches[0].clientX, e.touches[0].clientY] : null }
 
@@ -118,7 +119,7 @@ onBeforeUnmount(() => {
 
     <div class="stage">
 
-      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="-1" :label="store.t.havitat.prev" :kick="kick" :lit="aimed === -1" @turn="turn" />
+      <Arrow v-bind="arrow(-1)" :label="store.t.havitat.prev" @turn="turn" />
 
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
@@ -132,7 +133,7 @@ onBeforeUnmount(() => {
 
       </div>
 
-      <Arrow class="side" :class="{ hidden: depth }" :inert="store.processing || !!depth" :step="1" :label="store.t.havitat.next" :kick="kick" :lit="aimed === 1" @turn="turn" />
+      <Arrow v-bind="arrow(1)" :label="store.t.havitat.next" @turn="turn" />
 
     </div>
 
@@ -144,15 +145,13 @@ onBeforeUnmount(() => {
 
 .room {
 
-  /* LAYOUT */ position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden;
+  /* LAYOUT */ position: relative; flex: 1 1 auto; align-self: stretch; min-height: 0; overflow: hidden;
   /* BORDER */ border: var(--small-outline) var(--carbon-a15); border-radius: var(--radius-ss);
   /* TOUCH  */ touch-action: pan-y;
 
 }
 
 .stage  { display: flex; align-items: center; flex: 1 1 auto; min-height: 0; gap: 1rem; }
-
-.room   { align-self: stretch; }
 
 .hidden { visibility: hidden; }
 

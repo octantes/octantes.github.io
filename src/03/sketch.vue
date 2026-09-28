@@ -1,6 +1,7 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useBoil } from './boil.js'
 import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
 import { LINE } from '../04/walls.js'
 
@@ -9,12 +10,11 @@ const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
 
-const frame   = ref(0)
+const frame   = useBoil()
 const clock   = ref(0)
 const motion  = shallowRef(null)
 const current = shallowRef(props.scene)
 
-let ticker  = 0
 let raf     = 0
 let leaving = null
 
@@ -33,7 +33,7 @@ function strokesAt(item, box, seed, strokes) {
   }
 }
 
-function inked(entry, line, k, v) { return ribbon(line, entry.seed + k * 13 + v) }
+function inked(seed, line, k, v) { return ribbon(line, seed + k * 13 + v) }
 
 function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
@@ -60,9 +60,9 @@ function clusters(entries) {
 }
 
 function timed(groups, [a, b], incoming) {
-  const span  = (b - a) * MOTION.length
-  const speed = Math.max(...groups.flatMap(g => g.members.map(m => m.total))) / span
-  return groups.map(g => { const duration = Math.min(span, Math.max(span * MOTION.slowest, g.total / speed)); return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
+  const window = (b - a) * MOTION.length
+  const speed  = Math.max(...groups.flatMap(g => g.members.map(m => m.total))) / window
+  return groups.map(g => { const duration = Math.min(window, Math.max(window * MOTION.slowest, g.total / speed)); return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
 }
 
 function play(from, to, end = blank()) {
@@ -96,7 +96,7 @@ function pose(entry, lo, hi) {
   let at = 0
   lines.forEach((line, k) => {
     const length = span(line), [a, b] = [Math.max(lo, at), Math.min(hi, at + length)]
-    if (b > a) ink.push(inked(entry, cut(line, (a - at) / length, (b - at) / length), k, frame.value))
+    if (b > a) ink.push(inked(entry.seed, cut(line, (a - at) / length, (b - at) / length), k, frame.value))
     at += length
   })
   return { id: entry.item.id, index: entry.index, fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
@@ -124,7 +124,7 @@ const inside = computed(() => [LINE / 2, LINE / 2, current.value.layout.size[0] 
 const prepared = computed(() => prepare(current.value))
 
 const drawn = computed(() => prepared.value.map(entry => ({
-  item: entry.item, variants: entry.lines.map((strokes, v) => ({ fill: shape(entry.outline[v]), ink: strokes.map((line, k) => inked(entry, line, k, v)) })),
+  item: entry.item, variants: entry.lines.map((strokes, v) => ({ fill: shape(entry.outline[v]), ink: strokes.map((line, k) => inked(entry.seed, line, k, v)) })),
 })))
 
 const edge  = computed(() => {
@@ -153,8 +153,7 @@ const lit = computed(() => {
   const { item, seed } = entry
   const [x, y, w, h] = item.box, [fx, fy, fw, fh] = item.hover?.box ?? [0, 0, 1, 1]
   const pose = item.hover ? strokesAt(item, [x + fx * w, y + fy * h, fw * w, fh * h], seed, item.hover.strokes) : entry
-  const posed = { ...pose, seed }
-  return { item, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => inked(posed, line, k, v)) })) }
+  return { item, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => inked(seed, line, k, v)) })) }
 })
 
 watch(() => props.scene, next => {
@@ -164,18 +163,15 @@ watch(() => props.scene, next => {
   current.value = next
 })
 
-onMounted(() => {
-  if (!STILL) ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps)
-  play(null, current.value)
-})
+onMounted(() => play(null, current.value))
 
-onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
+onBeforeUnmount(() => cancelAnimationFrame(raf))
 
 </script>
 
 <template>
 
-  <svg class="sketch" :class="[`boil-${frame}`, { focused: lit }]" :viewBox="`0 0 ${current.layout.size[0]} ${current.layout.size[1]}`" aria-hidden="true">
+  <svg class="sketch" :class="{ focused: lit }" :viewBox="`0 0 ${current.layout.size[0]} ${current.layout.size[1]}`" aria-hidden="true">
 
     <clipPath id="inside"><rect :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" /></clipPath>
 
@@ -189,7 +185,7 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
     </g>
 
     <g v-else class="items" clip-path="url(#inside)">
-      <g v-for="v in VARIANTS" :key="v" :class="`v${v}`">
+      <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <g v-for="d in drawn" :key="d.item.id">
           <path :d="d.variants[v].fill" :fill="d.item.fill" />
           <path v-for="(ink, k) in d.variants[v].ink" :key="k" class="ink" :d="ink" />
@@ -202,14 +198,14 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
     </g>
 
     <g v-if="lit" class="lit" clip-path="url(#inside)">
-      <g v-for="v in VARIANTS" :key="v" :class="`v${v}`">
+      <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <path :d="lit.variants[v].fill" :fill="lit.item.fill" />
         <path v-for="(ink, k) in lit.variants[v].ink" :key="k" :class="k ? 'ink' : 'ink outline'" :d="ink" />
       </g>
     </g>
 
     <g class="edge">
-      <path v-for="v in VARIANTS" :key="v" :class="`v${v}`" :d="edge[v]" />
+      <path v-for="v in VARIANTS" :key="v" v-show="v === frame" :d="edge[v]" />
     </g>
 
   </svg>
@@ -219,9 +215,6 @@ onBeforeUnmount(() => { clearInterval(ticker); cancelAnimationFrame(raf) })
 <style scoped>
 
 .sketch  { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-.v0, .v1, .v2 { display: none; }
-.boil-0 .v0, .boil-1 .v1, .boil-2 .v2 { display: inline; }
 
 .ink     { fill: var(--carbon); }
 .outline { fill: var(--lirio); }

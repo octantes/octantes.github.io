@@ -28,20 +28,22 @@ function smooth(points, closed, rounds = 2) {
       const [a, b] = [pts[i], pts[(i + 1) % pts.length]]
       next.push([a[0] * .75 + b[0] * .25, a[1] * .75 + b[1] * .25], [a[0] * .25 + b[0] * .75, a[1] * .25 + b[1] * .75])
     }
-    if (!closed) next.push(pts[pts.length - 1])
+    if (!closed) next.push(pts.at(-1))
     pts = next
   }
   return closed ? [...pts, pts[0]] : pts
 }
 
+function along(points, run, d) {
+  let i = 1
+  while (i < run.length - 1 && run[i] < d) i++
+  const t = (d - run[i - 1]) / (run[i] - run[i - 1] || 1)
+  return [points[i - 1][0] + (points[i][0] - points[i - 1][0]) * t, points[i - 1][1] + (points[i][1] - points[i - 1][1]) * t]
+}
+
 function resample(points, step) {
-  const run = lengths(points), total = run[run.length - 1], out = []
-  for (let s = 0, i = 1; s <= total; s += step) {
-    while (i < run.length - 1 && run[i] < s) i++
-    const t = (s - run[i - 1]) / (run[i] - run[i - 1] || 1)
-    out.push([points[i - 1][0] + (points[i][0] - points[i - 1][0]) * t, points[i - 1][1] + (points[i][1] - points[i - 1][1]) * t])
-  }
-  return out
+  const run = lengths(points)
+  return Array.from({ length: Math.floor(run.at(-1) / step) + 1 }, (_, k) => along(points, run, k * step))
 }
 
 function wave(seed, d, scale, total, closed) {
@@ -65,7 +67,7 @@ export function trace(stroke, box, seed, variant, closed = false, step = 8) {
 }
 
 export function ribbon(points, seed, width = BRUSH.width, tapered = true) {
-  const run = lengths(points), total = run[run.length - 1], last = points.length - 1
+  const run = lengths(points), total = run.at(-1), last = points.length - 1
   const ring = Math.hypot(points[0][0] - points[last][0], points[0][1] - points[last][1]) < 1
   const left = [], right = []
   points.forEach(([x, y], i) => {
@@ -83,13 +85,7 @@ export function span(points) { return lengths(points).at(-1) }
 
 export function cut(points, from, to) {
   const run = lengths(points), [a, b] = [from * run.at(-1), to * run.at(-1)]
-  const at = d => {
-    let i = 1
-    while (i < run.length - 1 && run[i] < d) i++
-    const t = (d - run[i - 1]) / (run[i] - run[i - 1] || 1)
-    return [points[i - 1][0] + (points[i][0] - points[i - 1][0]) * t, points[i - 1][1] + (points[i][1] - points[i - 1][1]) * t]
-  }
-  return [at(a), ...points.filter((_, i) => run[i] > a && run[i] < b), at(b)]
+  return [along(points, run, a), ...points.filter((_, i) => run[i] > a && run[i] < b), along(points, run, b)]
 }
 
 export function shape(points) { return 'M' + points.map(p => p.map(fixed).join(' ')).join('L') + 'Z' }
