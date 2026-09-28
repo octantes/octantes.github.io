@@ -4,7 +4,7 @@ import { useStore } from '../04/store.js'
 
 defineProps({ wall: Object, depth: Object, hot: String, place: String })
 
-const emit  = defineEmits(['hover', 'pick', 'turn', 'back'])
+const emit  = defineEmits(['hover', 'pick', 'turn', 'back', 'aim'])
 const store = useStore()
 
 </script>
@@ -20,10 +20,10 @@ const store = useStore()
     </header>
 
     <header v-else class="head">
-      <button class="turn" @click="emit('turn', -1)" :title="store.t.havitat.prev" :aria-label="store.t.havitat.prev">‹</button>
+      <button class="turn" @pointerenter="emit('aim', -1)" @pointerleave="emit('aim', null)" @focus="emit('aim', -1)" @blur="emit('aim', null)" @click="emit('turn', -1)" :title="store.t.havitat.prev" :aria-label="store.t.havitat.prev">‹</button>
       <span class="name">{{ wall[store.lang] }}</span>
       <span class="place">{{ place }}</span>
-      <button class="turn" @click="emit('turn', 1)" :title="store.t.havitat.next" :aria-label="store.t.havitat.next">›</button>
+      <button class="turn" @pointerenter="emit('aim', 1)" @pointerleave="emit('aim', null)" @focus="emit('aim', 1)" @blur="emit('aim', null)" @click="emit('turn', 1)" :title="store.t.havitat.next" :aria-label="store.t.havitat.next">›</button>
     </header>
 
     <ul v-if="!depth" class="items">
