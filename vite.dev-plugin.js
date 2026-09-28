@@ -3,7 +3,7 @@ import { readFile, stat } from 'fs/promises'
 import { spawn } from 'child_process'
 import path from 'path'
 import { SITE_URL } from './src/04/site-config.js'
-import { ARCHIVE_FLAG } from './src/04/pages.js'
+import { ARCHIVE_FLAG } from './src/04/map.js'
 
 const outputDir  = path.resolve('dist')
 const contentDir = path.resolve('content')

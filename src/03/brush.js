@@ -1,3 +1,7 @@
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+// BRUSH
+
 export const STILL = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export const MOTION = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
@@ -106,4 +110,19 @@ export function sketchBox(w, h, seed, hidden = {}) {
     if (run && (!shown[(at + 1) % 4] || k === 3)) { run.push(sides[(at + 1) % 4][0]); ink.push(run); run = null }
   }
   return { outline: loop, ink }
+}
+
+// BOIL
+
+const frame = ref(0)
+
+let users  = 0
+let ticker = 0
+
+export function useBoil() {
+
+  onMounted(() => { if (!users++ && !STILL) ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps) })
+  onBeforeUnmount(() => { if (!--users) clearInterval(ticker) })
+  return frame
+
 }

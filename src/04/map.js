@@ -1,5 +1,5 @@
 import { SITE_URL, SITE_NAME, TAGLINE, SITE_DESCRIPTION, SECTIONS, ROOM_WALLS, ABOUT_PATH, ARCHIVE_VIEW, TWITTER } from './site-config.js'
-import { DICT } from './dict.js'
+import { DICT } from './lang.js'
 
 export const SHARE_SIZE = { width: 1200, height: 675 }
 export const ARCHIVE_FLAG = new RegExp(`[?&](${Object.values(ARCHIVE_VIEW).join('|')})(&|=|$)`)

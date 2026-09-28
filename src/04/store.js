@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/site-config.js'
-import { sectionOf, labelOf, textOf, other, pageOf, pathOf, headFor, applyHead } from '@/04/pages.js'
-import { DICT } from '@/04/dict.js'
+import { sectionOf, labelOf, textOf, other, pageOf, pathOf, headFor, applyHead } from '@/04/map.js'
+import { DICT } from '@/04/lang.js'
 import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
