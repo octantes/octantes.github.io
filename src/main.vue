@@ -1,20 +1,24 @@
 <script setup>
-import { computed, watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
 import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
-import { pageOf, themeOf } from './04/pages.js'
+import { pageOf, themeOf, inRoom } from './04/pages.js'
 
 const route = useRoute()
 const light = computed(() => themeOf(pageOf(route)) === 'light')
 
+const arriving = ref(false)
+
 watchEffect(() => document.documentElement.classList.toggle('light', light.value))
+
+useRouter().afterEach((to, from) => { arriving.value = inRoom(pageOf(from)) && !inRoom(pageOf(to)) })
 </script>
 
 <template>
 
-  <div class="pagina">
+  <div class="pagina" :class="{ arriving }">
 
     <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 
@@ -41,6 +45,10 @@ watchEffect(() => document.documentElement.classList.toggle('light', light.value
 .veil       { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
 .veil.opaque { background: var(--carbon); }
+
+.arriving :is(.portada, .navigation, .footer, .portal-glow, .post, .portfolio) { animation: arrive 1s ease-in-out both; }
+
+@keyframes arrive { from { opacity: 0; } }
 
 @media (--mobile) { .pagina { max-width: 100%; } }
 
