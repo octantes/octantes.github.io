@@ -3,15 +3,11 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
-import { pageOf, pathOf, inRoom } from '../04/pages.js'
-import { WALLS, LANDING_WALL, ROOM_TEXT } from '../04/walls.js'
-import { LINE, drawnWall, layoutWall, layoutDepth } from '../04/drawings.js'
-import { placeHint } from '../04/hint.js'
-import { MOTION, STILL } from '../03/brush.js'
-import Guide from '../02/guide.vue'
-import Hint from '../02/hint.vue'
+import { pageOf, pathOf, inRoom } from '../04/map.js'
+import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, drawnWall, layoutWall, layoutDepth } from '../04/havitat-setup.js'
+import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, useBoil } from '../03/brush.js'
+import Hud from '../02/hud.vue'
 import Sketch from '../03/sketch.vue'
-import Arrow from '../03/arrow.vue'
 
 const route  = useRoute()
 const router = useRouter()
@@ -36,29 +32,53 @@ watch(() => page.value.kind, kind => { if (kind === 'notfound') router.replace('
 
 const hovered = ref(null)
 const armed   = ref(null)
-const kick    = ref(null)
+const kicked  = ref({})
 const aimed   = ref(null)
 const hot     = computed(() => hovered.value ?? armed.value)
 const docked  = computed(() => layout.value?.items.find(i => i.id === armed.value))
 const shading = () => [document.documentElement, document.body, document.getElementById('octantes')]
 
-const tip = computed(() => {
+const pointed = computed(() => {
 
   const item = scene.value?.layout.items.find(i => i.id === hovered.value)
   if (!item || item.id === armed.value) return null
 
   const frame = room.value.getBoundingClientRect(), scale = bounds.value[0] / scene.value.layout.size[0]
   const [x, y, w, h] = [item.box[0] - LINE / 2, item.box[1] - LINE / 2, item.box[2] + LINE, item.box[3] + LINE].map(v => v * scale)
-  return { item, ...placeHint(frame, [frame.left + x, frame.top + y, w, h]) }
+  return { item, frame, box: [frame.left + x, frame.top + y, w, h] }
 
 })
+
+// ARROWS
+
+const frame    = useBoil()
+const chevrons = { [-1]: chevron(-1), 1: chevron(1) }
+
+function chevron(step) {
+  const seed = seedOf(`arrow${step}`)
+  const stroke = step > 0 ? ARROW.stroke.map(([u, v]) => [1 - u, v]) : ARROW.stroke
+  return Array.from({ length: BRUSH.frames }, (_, v) => { const line = trace(stroke, ARROW.box, seed, v, true, 1.5); return { fill: shape(line), ink: ribbon(line, seed + v, LINE, false) } })
+}
+
+function kick(step) { kicked.value[step] = false; requestAnimationFrame(() => { kicked.value[step] = true }) }
+
+function arrow(step) {
+  const label = ROOM_TEXT[store.lang][step < 0 ? 'prev' : 'next']
+  return {
+    class: ['arrow', 'side', { kicked: kicked.value[step], lit: aimed.value === step, back: step < 0, hidden: depth.value }],
+    inert: store.processing || !!depth.value, title: label, 'aria-label': label,
+    onClick: () => turn(step), onAnimationend: () => { kicked.value[step] = false },
+  }
+}
+
+// ROOM
 
 let sizes   = null
 let touched = null
 
 const SWIPE = 50
 
-function turn(step) { kick.value = { step }; router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
+function turn(step) { kick(step); router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
 
 function pick(item, e) {
   if (e.pointerType === 'touch' && armed.value !== item.id) { armed.value = item.id; return }
@@ -73,8 +93,6 @@ onBeforeRouteLeave(async to => {
   document.documentElement.classList.remove('light')
   await sketch.value?.leave()
 })
-
-function arrow(step) { return { step, kick: kick.value, lit: aimed.value === step, inert: store.processing || !!depth.value, class: ['side', { hidden: depth.value }] } }
 
 function back() { router.push(pathOf({ kind: 'wall', id: wall.value.id }, store.lang)) }
 
@@ -120,21 +138,17 @@ onBeforeUnmount(() => {
 
     <div class="stage">
 
-      <Arrow v-bind="arrow(-1)" :label="ROOM_TEXT[store.lang].prev" @turn="turn" />
+      <button v-bind="arrow(-1)"><svg viewBox="0 0 120 240" aria-hidden="true"><path class="fill" :d="chevrons[-1][frame].fill" /><path class="ink" :d="chevrons[-1][frame].ink" /></svg></button>
 
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
         <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="!depth || !!depth.to" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
-        <Guide :inert="store.processing" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event">
-          <Hint v-if="depth ?? docked" :item="depth ?? docked" :named="!depth" />
-        </Guide>
-
-        <Hint v-if="tip" :item="tip.item" :tip="tip" />
+        <Hud :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" :docked="depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
       </div>
 
-      <Arrow v-bind="arrow(1)" :label="ROOM_TEXT[store.lang].next" @turn="turn" />
+      <button v-bind="arrow(1)"><svg viewBox="0 0 120 240" aria-hidden="true"><path class="fill" :d="chevrons[1][frame].fill" /><path class="ink" :d="chevrons[1][frame].ink" /></svg></button>
 
     </div>
 
@@ -155,6 +169,30 @@ onBeforeUnmount(() => {
 .stage  { display: flex; align-items: center; flex: 1 1 auto; min-height: 0; gap: 1rem; }
 
 .hidden { visibility: hidden; }
+
+.arrow {
+
+  /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  /* BOX    */ width: 5rem; padding: 0;
+  /* FILL   */ background: none; color: var(--carbon);
+  /* BORDER */ border: none;
+  /* MOTION */ transition: color var(--animate-fast);
+
+  &:hover, &:focus-visible, &.lit { color: var(--lirio); }
+  &:focus { box-shadow: none; outline: none; }
+
+  & svg   { width: 100%; height: auto; max-height: 10rem; overflow: visible; }
+  & .fill { fill: var(--carbon); }
+  & .ink  { fill: currentColor; }
+
+  &.kicked      svg { animation: kick .25s ease-out; }
+  &.kicked.back svg { animation-name: kick-back; }
+
+}
+
+@keyframes kick      { 50% { transform: translateX(.5rem);  } }
+@keyframes kick-back { 50% { transform: translateX(-.5rem); } }
 
 @media (--mobile) { .side { display: none; } }
 

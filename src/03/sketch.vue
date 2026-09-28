@@ -1,9 +1,8 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { useBoil } from './boil.js'
-import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox } from './brush.js'
-import { LINE } from '../04/drawings.js'
+import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
+import { LINE } from '../04/havitat-setup.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])

@@ -2,7 +2,7 @@
 import { ref, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
-import Mark from '../03/mark.vue'
+import Icon from '../03/icons.vue'
 import { storeToRefs } from 'pinia'
 
 const router          = useRouter()                                                                                                   // handles note open route
@@ -69,7 +69,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
         <p v-if="route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery)" class="description">{{ note.displayDescription }}</p>
         
         <div class="tags">
-          <span class="tag mark" :title="note.type"><Mark :type="note.type" /></span>
+          <span class="tag mark" :title="note.type"><Icon :type="note.type" /></span>
           <span v-for="tag in note.tags?.slice(0,3)" :key="tag" class="tag" role="button" tabindex="0" @click.stop="store.setSearchQuery(tag)" @keydown.enter.stop.prevent="store.setSearchQuery(tag)">{{ tag }}</span>
         </div>
 

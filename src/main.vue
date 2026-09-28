@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
 import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
-import { pageOf, themeOf, inRoom } from './04/pages.js'
+import { pageOf, themeOf, inRoom } from './04/map.js'
 import { useStore } from './04/store.js'
 
 const ARRIVAL = { settle: 1000, finish: 400 }
