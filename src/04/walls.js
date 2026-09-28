@@ -25,7 +25,7 @@ export const WALLS = [
                        box: [462, 505, 36, 130], fill: '#242627', anchor: { x: 'left' } },
     { id: 'table',     label: { es: 'mesa', en: 'table' },
                        description: { es: 'la mesa baja', en: 'the low table' },
-                       box: [450, 635, 825, 233], fill: '#8F9195', hatch: true, anchor: { x: 'left' } },
+                       box: [450, 635, 825, 233], fill: '#8F9195', anchor: { x: 'left' } },
     { id: 'curtain',   label: { es: 'cortina', en: 'curtain' },
                        description: { es: 'la cortina', en: 'the curtain' },
                        box: [1410, 150, 293, 718], fill: '#303233', anchor: { x: 'right', y: 'stretch' }, solo: true, hover: { box: [.6, 0, .4, 1] } },
@@ -34,7 +34,7 @@ export const WALLS = [
   { id: 'orange', es: 'naranja', en: 'orange', color: '#CA895D', size: [1712, 866], items: [
     { id: 'door',      label: { es: 'puerta', en: 'door' },
                        description: { es: 'la puerta de entrada', en: 'the front door' },
-                       box: [186, 193, 435, 664], fill: '#8F9195', hatch: true, hover: { box: [0, 0, .55, 1] } },
+                       box: [186, 193, 435, 664], fill: '#8F9195', hover: { box: [0, 0, .55, 1] } },
     { id: 'corkboard', label: { es: 'corcho', en: 'corkboard' },
                        description: { es: 'el corcho detrás de los monitores', en: 'the corkboard behind the monitors' },
                        box: [750, 135, 660, 300], fill: '#804C49', anchor: { x: 'right' } },
@@ -55,7 +55,7 @@ export const WALLS = [
                        box: [1553, 355, 150, 200], fill: '#909296', anchor: { x: 'right' } },
     { id: 'desk',      label: { es: 'escritorio', en: 'desk' },
                        description: { es: 'el escritorio de trabajo', en: 'the work desk' },
-                       box: [690, 640, 1013, 217], fill: '#CBCDD1', hatch: true, anchor: { x: 'right' } },
+                       box: [690, 640, 1013, 217], fill: '#CBCDD1', anchor: { x: 'right' } },
   ] },
 
   { id: 'green', es: 'verde', en: 'green', color: '#69A268', size: [1712, 866], items: [
@@ -64,7 +64,7 @@ export const WALLS = [
                        box: [9, 118, 236, 160], fill: '#8F9195', anchor: { x: 'left' } },
     { id: 'window',    label: { es: 'ventana', en: 'window' },
                        description: { es: 'la ventana con blackout', en: 'the blackout window' },
-                       box: [432, 219, 856, 638], fill: '#909296', hatch: true },
+                       box: [432, 219, 856, 638], fill: '#909296' },
     { id: 'desk',      label: { es: 'escritorio', en: 'desk' },
                        description: { es: 'el escritorio, visto desde este lado', en: 'the desk, seen from this side' },
                        box: [9, 700, 276, 157], fill: '#CCCED2', anchor: { x: 'left' } },
@@ -76,7 +76,7 @@ export const WALLS = [
   { id: 'blue', es: 'azul', en: 'blue', color: '#5681BB', size: [1712, 866], items: [
     { id: 'sofa',      label: { es: 'sillón', en: 'sofa' },
                        description: { es: 'el sillón del living', en: 'the living room sofa' },
-                       box: [9, 600, 466, 257], fill: '#8F9195', hatch: true, anchor: { x: 'left' } },
+                       box: [9, 600, 466, 257], fill: '#8F9195', anchor: { x: 'left' } },
     { id: 'fan',       label: { es: 'ventilador', en: 'fan' },
                        description: { es: 'el ventilador de pie', en: 'the standing fan' },
                        box: [614, 510, 103, 215], fill: '#303233' },

@@ -1,7 +1,5 @@
 export const STILL = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
-export const HATCH = { spacing: 26, reach: .32, inset: 24, weight: .35 }
-
 export const BRUSH = { width: 18, taper: 30, swell: 0.14, grain: 0.05, boil: .5, frames: 3, fps: 5 }
 
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
@@ -93,17 +91,6 @@ export function cut(points, from, to) {
 }
 
 export function shape(points) { return 'M' + points.map(p => p.map(fixed).join(' ')).join('L') + 'Z' }
-
-export function hatching(w, h) {
-  const [x0, x1, y0, y1] = [w * (1 - HATCH.reach), w - HATCH.inset, HATCH.inset, h - HATCH.inset]
-  if (x1 - x0 < HATCH.spacing || y1 - y0 < HATCH.spacing) return []
-  const lines = []
-  for (let k = x0 + y0 + HATCH.spacing / 2; k < x1 + y1; k += HATCH.spacing * Math.SQRT2) {
-    const [lo, hi] = [Math.max(y0, k - x1), Math.min(y1, k - x0)]
-    if (hi - lo > HATCH.spacing / 2) lines.push([[(k - hi) / w, hi / h], [(k - lo) / w, lo / h]])
-  }
-  return lines
-}
 
 export function sketchBox(w, h, seed, hidden = {}) {
   const jitter = (k, size) => noise(seed + k, k * .7) * 4 / size
