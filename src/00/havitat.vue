@@ -4,7 +4,8 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf, inRoom } from '../04/pages.js'
-import { WALLS, LANDING_WALL, LINE, layoutWall, layoutDepth } from '../04/walls.js'
+import { WALLS, LANDING_WALL } from '../04/walls.js'
+import { LINE, drawnWall, layoutWall, layoutDepth } from '../04/drawings.js'
 import { placeHint } from '../04/hint.js'
 import { MOTION, STILL } from '../03/brush.js'
 import Guide from '../02/guide.vue'
@@ -20,7 +21,7 @@ store.land(route)
 
 const page  = computed(() => pageOf(route))
 const index = computed(() => WALLS.findIndex(w => w.id === (page.value.id ?? LANDING_WALL)))
-const wall  = computed(() => WALLS[index.value])
+const wall  = computed(() => drawnWall(WALLS[index.value]))
 const depth = computed(() => page.value.kind === 'depth' ? wall.value.items.find(i => i.id === page.value.item) : null)
 
 const room   = ref(null)

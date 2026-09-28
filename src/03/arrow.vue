@@ -3,7 +3,7 @@
 import { ref, computed, watch } from 'vue'
 import { BRUSH, seedOf, trace, ribbon, shape } from './brush.js'
 import { useBoil } from './boil.js'
-import { LINE } from '../04/walls.js'
+import { LINE } from '../04/drawings.js'
 
 const props = defineProps({ step: Number, label: String, kick: Object, lit: Boolean })
 const emit  = defineEmits(['turn'])

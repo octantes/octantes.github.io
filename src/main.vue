@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Portal from './03/portal.vue'
 import DotGrid from './03/dotgrid.vue'
@@ -7,35 +7,37 @@ import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
 import { pageOf, themeOf, inRoom } from './04/pages.js'
 import { useStore } from './04/store.js'
 
-const ARRIVAL = { rise: .85, pace: 600, finish: 400, unlocked: 1000 }
+const ARRIVAL = { settle: 1000, finish: 400 }
 
 const route = useRoute()
 const store = useStore()
 const light = computed(() => themeOf(pageOf(route)) === 'light')
 
-const arrive = ref(1)
+const fade   = ref(null)
 const landed = ref(false)
+
+let locked = false
+let timer  = 0
 
 watchEffect(() => document.documentElement.classList.toggle('light', light.value))
 
+function phase(next) { clearTimeout(timer); fade.value = next }
+
+function finish() { phase('finish'); timer = setTimeout(() => phase(null), ARRIVAL.finish) }
+
 function fadeIn() {
-
-  const start = performance.now()
-  let locked = false, released = 0, from = 0
-
-  const step = now => {
-    locked ||= store.processing
-    if (!released && (locked ? !store.processing : now - start > ARRIVAL.unlocked)) { released = now; from = arrive.value }
-    arrive.value = released
-      ? from + (1 - from) * Math.min(1, (now - released) / ARRIVAL.finish)
-      : ARRIVAL.rise * (1 - Math.exp(-(now - start) / ARRIVAL.pace))
-    if (arrive.value < 1) requestAnimationFrame(step)
-  }
-
-  arrive.value = 0
-  requestAnimationFrame(step)
-
+  phase('hold')
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    phase('rise')
+    locked = store.processing
+    if (!locked) timer = setTimeout(finish, ARRIVAL.settle)
+  }))
 }
+
+watch(() => store.processing, busy => {
+  if (fade.value !== 'rise') return
+  if (busy) { locked = true; clearTimeout(timer) } else if (locked) finish()
+})
 
 useRouter().afterEach((to, from) => {
   if (inRoom(pageOf(to)) || to.matched[0]?.components.default === from.matched[0]?.components.default) return
@@ -46,7 +48,7 @@ useRouter().afterEach((to, from) => {
 
 <template>
 
-  <div class="pagina" :class="{ arriving: arrive < 1, landed }" :style="{ '--arrive': arrive }">
+  <div class="pagina" :class="[fade && `fade-${fade}`, { landed }]">
 
     <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 
@@ -74,7 +76,12 @@ useRouter().afterEach((to, from) => {
 
 .veil.opaque { background: var(--carbon); }
 
-.arriving :is(.navigation, .footer, .portal-glow, .portfolio), .arriving:not(.landed) .portada { opacity: var(--arrive); }
+.fade-hold   { --fade-to: 0;   --fade-time: 0s;                                         }
+.fade-rise   { --fade-to: .85; --fade-time: 1.8s; --fade-curve: cubic-bezier(.2, .6, .35, 1); }
+.fade-finish { --fade-to: 1;   --fade-time: .4s;  --fade-curve: ease-out;                  }
+
+:is(.fade-hold, .fade-rise, .fade-finish) :is(.footer, .portal-glow),
+:is(.fade-hold, .fade-rise, .fade-finish):not(.landed) :is(.portada, .navigation, .portfolio) { opacity: var(--fade-to); transition: opacity var(--fade-time) var(--fade-curve, linear); }
 
 @media (--mobile) { .pagina { max-width: 100%; } }
 
