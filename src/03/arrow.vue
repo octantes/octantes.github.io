@@ -18,7 +18,7 @@ let ticker   = 0
 const variants = computed(() => {
   const seed = seedOf(`arrow${props.step}`)
   const stroke = props.step > 0 ? CHEVRON.map(([u, v]) => [1 - u, v]) : CHEVRON
-  return Array.from({ length: BRUSH.frames }, (_, v) => { const line = trace(stroke, BOX, seed, v, true); return { fill: shape(line), ink: ribbon(line, seed + v, LINE) } })
+  return Array.from({ length: BRUSH.frames }, (_, v) => { const line = trace(stroke, BOX, seed, v, true); return { fill: shape(line), ink: ribbon(line, seed + v, LINE, false) } })
 })
 
 function press() { kicked.value = false; requestAnimationFrame(() => { kicked.value = true }); emit('turn', props.step) }
@@ -50,7 +50,7 @@ onBeforeUnmount(() => clearInterval(ticker))
   &:hover, &:focus-visible { color: var(--lirio); }
   &:focus { box-shadow: none; outline: none; }
 
-  & svg   { width: 100%; height: auto; max-height: 10rem; }
+  & svg   { width: 100%; height: auto; max-height: 10rem; overflow: visible; }
   & .fill { fill: var(--carbon); }
   & .ink  { fill: currentColor; }
 
