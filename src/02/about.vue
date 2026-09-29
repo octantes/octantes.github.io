@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
-import { SECTIONS } from '../04/site-config.js'
+import { SECTIONS } from '../04/config.js'
 const authorpic = '/assets/kaste.webp'
 
 const props           = defineProps({ section: { type: String, default: null } })

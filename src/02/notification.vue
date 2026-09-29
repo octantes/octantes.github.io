@@ -2,8 +2,8 @@
 
 import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
-import { MOBILE_MAX } from '../04/site-config.js'
-import { figlet } from '../04/figlet.js'
+import { MOBILE_MAX } from '../04/config.js'
+import { figlet } from '../03/figlet.js'
 
 const props = defineProps({ code: { type: [Number, String], default: 404 } })
 

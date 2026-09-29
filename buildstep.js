@@ -5,11 +5,11 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/site-config.js'
+import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/config.js'
 import { DICT } from './src/04/lang.js'
 import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from './src/04/map.js'
-import { figlet } from './src/04/figlet.js'
-import { WALLS } from './src/04/havitat-setup.js'
+import { figlet } from './src/03/figlet.js'
+import { WALLS } from './src/04/rooms.js'
 
 // IMAGES  | .jpg .jpeg .png      | sharp processing     | .webp       | <img width="..." height="..." loading="lazy">
 // AUDIOS  | .mp3 .wav            | ffmpeg processing    | .ogg (opus) | <audio controls preload="auto">
@@ -78,7 +78,7 @@ md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 // VARIABLES
 
 const cacheFile = path.resolve(process.env.BUILD_CACHE || '.build-cache.json')
-const template = await fs.readFile('./templates/post.html', 'utf-8')
+const template = await fs.readFile('./post.html', 'utf-8')
 
 const contentDir = './content'
 const outputDir = './dist'

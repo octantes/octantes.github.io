@@ -10,7 +10,7 @@ import Notification from '../02/notification.vue'
 import { throughTheVeil, veilFromStart } from '../03/veil.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
-import { MOBILE_MAX } from '../04/site-config.js'
+import { MOBILE_MAX } from '../04/config.js'
 
 const compMap = { }                                                                                                                   // add vuecomps/fullcomps and import if needed
 

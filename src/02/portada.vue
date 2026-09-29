@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
-import { MOBILE_MAX } from '../04/site-config.js'
+import { MOBILE_MAX } from '../04/config.js'
 
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content

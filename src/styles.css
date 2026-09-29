@@ -286,3 +286,85 @@ audio::-webkit-media-controls-enclosure:hover {
                            transition-duration: .001ms !important; scroll-behavior: auto !important; }
 
 }
+
+/* CONTENT */
+
+.nota {
+
+  /* BOX    */ z-index: 1; width: 100%; padding: var(--space-ll) var(--space-xxl) 0 var(--space-xxl); overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: var(--text-ll); line-height: var(--leading-base); word-break: break-word;
+
+  & img, & video {
+
+    /* LAYOUT */ display: block;
+    /* BOX    */ max-width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo-a15); border-radius: var(--radius-ss);
+
+  }
+
+  & video.gifvideo { border: none; border-radius: 0; width: 100%; }
+
+}
+
+.nota-verso {
+
+  /* LAYOUT */ text-align: center;
+
+  & img { margin: 0 auto; }
+
+}
+
+.nota-prosa {
+
+  /* LAYOUT */ text-align: left;
+  /* BOX    */ max-width: var(--measure); margin-inline: auto;
+  /* FONT   */ font-size: var(--text-ll);
+
+}
+
+.nota.nota-prosa  { padding-top: var(--space-xxl); }
+.nota .nota-prosa { padding: var(--space-ll) 0 0; }
+.notetitle + .nota, .notetitle + .nota > .nota-prosa { padding-top: 0; }
+.notetitle + .nota:not(:has(.nota-prosa)) { padding-top: var(--space-mm); }
+
+@media (--mobile) { .notetitle + .nota:not(:has(.nota-prosa)) { padding-top: var(--space-ss); } }
+
+.nota-medios {
+
+  /* BOX    */ z-index: 1; width: 100%; overflow-wrap: break-word;
+  /* FILL   */ color: var(--humo);
+  /* FONT   */ font-size: var(--text-ll); line-height: var(--leading-base); word-break: break-word;
+
+  & img {
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+
+  }
+
+  & video {
+
+    /* LAYOUT */ display: block; object-fit: cover;
+    /* BOX    */ max-width: 100%; width: 100%; height: auto;
+    /* BORDER */ border: var(--small-outline) var(--humo-a15); border-radius: var(--radius-ss);
+
+  }
+
+  & video.gifvideo { border: none; border-radius: 0; }
+
+}
+
+/* EMBEDS */
+
+.YTVideo {
+
+  /* LAYOUT */ position: relative;
+  /* BOX    */ width: 100%; height: 100%; aspect-ratio: 16 / 9;
+  /* BORDER */ border: var(--small-outline) var(--humo-a15); border-radius: var(--radius-ss);
+
+}
+
+@container post-viewer (min-width: 0px) { .nota-verso { font-size: clamp(0.40rem, 2.25cqw, 1.35rem); } }
+@media (--mobile)                       { .nota .nota-prosa { padding-top: 0; } }
+@media (max-width: 500px)               { .nota { padding: 0.2rem var(--space-xs) 0 var(--space-xs); } }
