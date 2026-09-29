@@ -27,8 +27,6 @@ function place([x, y, w, h]) { return { left: `${x * props.scale}px`, top: `${y 
       </button>
     </div>
 
-    <span class="badge" :style="place(layout.slots.badge)" aria-hidden="true">{{ shown.badge }}</span>
-
     <div class="text" role="tabpanel" :style="place(layout.slots.text)">
       <strong>{{ leaf.title[store.lang] }}</strong>
       <p>{{ leaf.text[store.lang] }}</p>
@@ -51,24 +49,22 @@ function place([x, y, w, h]) { return { left: `${x * props.scale}px`, top: `${y 
 
 }
 
-.tab, .page, .badge, .text { position: absolute; }
+.tab, .page, .text { position: absolute; }
 
 .tab, .page {
 
   /* CURSOR */ cursor: pointer; pointer-events: auto;
-  /* BOX    */ padding: 0 0 0 calc(var(--u) * 32);
+  /* LAYOUT */ display: flex; align-items: center; justify-content: center;
+  /* BOX    */ padding: 0;
   /* FILL   */ background: none; color: inherit;
   /* BORDER */ border: none;
-  /* FONT   */ font-family: var(--font-mono); font-size: calc(var(--u) * 40); font-weight: 700; text-align: left;
+  /* FONT   */ font-family: var(--font-mono); font-size: calc(var(--u) * 40); font-weight: 700;
 
-  &:focus { outline: none; }
-  &:focus-visible { outline: 2px solid var(--lirio); outline-offset: -4px; }
+  &:focus { box-shadow: none; outline: none; }
 
 }
 
 .tab.active { cursor: default; }
-
-.badge { display: flex; align-items: center; justify-content: center; font-size: calc(var(--u) * 84); font-weight: 700; }
 
 .text {
 
