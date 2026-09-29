@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Octantes from '../00/octantes.vue'
-import Portfolio from '../00/portfolio.vue'
+import Octantes from '../01/octantes.vue'
+import Portfolio from '../01/portfolio.vue'
 import { ROOM_WALLS } from './config.js'
 
 const wallPath  = `/havitat/:wall(${ROOM_WALLS.flatMap(w => [w.es, w.en]).join('|')})`
 const depthPath = `${wallPath}/:thing`
-const Havitat   = () => import('../00/havitat.vue')
+const Havitat   = () => import('../01/havitat.vue')
 
 const routes = [
 
