@@ -1,10 +1,16 @@
+<script>
+
+let introduced = false
+
+</script>
+
 <script setup>
 
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf, inRoom } from '../04/map.js'
-import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, drawnWall, layoutWall, layoutDepth } from '../04/rooms.js'
+import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, STICKER, drawnWall, layoutWall, layoutDepth } from '../04/rooms.js'
 import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, useBoil } from '../03/brush.js'
 import Hud from '../02/hud.vue'
 import Sketch from '../03/sketch.vue'
@@ -24,9 +30,21 @@ const room   = ref(null)
 const sketch = ref(null)
 const bounds = ref(null)
 const layout = computed(() => bounds.value && layoutWall(wall.value, ...bounds.value))
-const scene  = computed(() => bounds.value && (depth.value
+const scene  = computed(() => bounds.value && (intro.value ? sticker.value : depth.value
   ? { id: `${wall.value.id}/${depth.value.id}`, seed: wall.value.id, color: depth.value.depth?.color ?? null, layout: layoutDepth(wall.value, depth.value, ...bounds.value) }
   : { id: wall.value.id, seed: wall.value.id, color: wall.value.color, layout: layout.value }))
+
+// INTRO
+
+const INTRO   = { hold: 900 }
+const intro   = ref(!introduced)
+const sticker = computed(() => bounds.value && { id: STICKER.id, seed: STICKER.id, color: STICKER.color, layout: layoutWall(STICKER, ...bounds.value) })
+
+let holding = 0
+
+introduced = true
+
+function unveil() { intro.value = false; if (STILL) store.setProcessing(false) }
 
 watch(() => page.value.kind, kind => { if (kind === 'notfound') router.replace('/havitat') }, { immediate: true })
 
@@ -65,7 +83,7 @@ function kick(step) { kicked.value[step] = false; requestAnimationFrame(() => { 
 function arrow(step) {
   const label = ROOM_TEXT[store.lang][step < 0 ? 'prev' : 'next']
   return {
-    class: ['arrow', 'side', { kicked: kicked.value[step], lit: aimed.value === step, back: step < 0, hidden: depth.value }],
+    class: ['arrow', 'side', { kicked: kicked.value[step], lit: aimed.value === step, back: step < 0, hidden: depth.value || intro.value }],
     inert: store.processing || !!depth.value, title: label, 'aria-label': label,
     onClick: () => turn(step), onAnimationend: () => { kicked.value[step] = false },
   }
@@ -98,7 +116,11 @@ function back() { router.push(pathOf({ kind: 'wall', id: wall.value.id }, store.
 
 function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
-function lock(busy) { store.setProcessing(busy); if (busy) hovered.value = armed.value = null }
+function lock(busy) {
+  store.setProcessing(busy || intro.value)
+  if (busy) hovered.value = armed.value = null
+  else if (intro.value) holding = setTimeout(unveil, INTRO.hold)
+}
 
 function swipeStart(e) { touched = e.touches.length === 1 ? [e.touches[0].clientX, e.touches[0].clientY] : null }
 
@@ -117,6 +139,7 @@ function onKey(e) {
 }
 
 onMounted(() => {
+  if (intro.value) { store.setProcessing(true); if (STILL) holding = setTimeout(unveil, INTRO.hold) }
   bounds.value = [room.value.clientWidth, room.value.clientHeight]
   sizes = new ResizeObserver(([entry]) => { bounds.value = [entry.contentRect.width, entry.contentRect.height] })
   sizes.observe(room.value)
@@ -124,6 +147,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  clearTimeout(holding)
   sizes?.disconnect()
   window.removeEventListener('keydown', onKey)
   for (const el of shading()) el.style.transition = ''
@@ -142,9 +166,9 @@ onBeforeUnmount(() => {
 
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
-        <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="!depth || !!depth.to" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+        <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="!intro && (!depth || !!depth.to)" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
-        <Hud :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" :docked="depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
+        <Hud v-if="!intro" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" :docked="depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
       </div>
 
