@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
+import { BRUSH, MOTION, STILL, seedOf, slip, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
 import { LINE } from '../04/rooms.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
@@ -38,7 +38,7 @@ function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
     const seed = seedOf(prefix + item.id)
     const { lines, outline } = strokesAt(item, item.box, seed, item.strokes)
-    return { item, index, seed, lines, outline, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
+    return { item, index, seed, lines, outline, plate: slip(seedOf(prefix)), total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
 }
 
@@ -98,7 +98,7 @@ function pose(entry, lo, hi) {
     if (b > a) ink.push(inked(entry.seed, cut(line, (a - at) / length, (b - at) / length), k, frame.value))
     at += length
   })
-  return { id: entry.item.id, index: entry.index, fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
+  return { id: entry.item.id, index: entry.index, plate: entry.plate, fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
 }
 
 function poses(group, shown, incoming) {
@@ -123,7 +123,7 @@ const inside = computed(() => [LINE / 2, LINE / 2, current.value.layout.size[0] 
 const prepared = computed(() => prepare(current.value))
 
 const drawn = computed(() => prepared.value.map(entry => ({
-  item: entry.item, variants: entry.lines.map((strokes, v) => ({ fill: shape(entry.outline[v]), ink: strokes.map((line, k) => inked(entry.seed, line, k, v)) })),
+  item: entry.item, plate: entry.plate, variants: entry.lines.map((strokes, v) => ({ fill: shape(entry.outline[v]), ink: strokes.map((line, k) => inked(entry.seed, line, k, v)) })),
 })))
 
 const edge  = computed(() => {
@@ -152,7 +152,7 @@ const lit = computed(() => {
   const { item, seed } = entry
   const [x, y, w, h] = item.box, [fx, fy, fw, fh] = item.hover?.box ?? [0, 0, 1, 1]
   const pose = item.hover ? strokesAt(item, [x + fx * w, y + fy * h, fw * w, fh * h], seed, item.hover.strokes) : entry
-  return { item, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => inked(seed, line, k, v)) })) }
+  return { item, plate: entry.plate, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => inked(seed, line, k, v)) })) }
 })
 
 watch(() => props.scene, next => {
@@ -178,7 +178,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 
     <g v-if="moving" clip-path="url(#inside)">
       <g v-for="p in moving.poses" :key="p.id">
-        <path :d="p.fill" :fill="p.color" :fill-opacity="p.opacity" />
+        <path :d="p.fill" :fill="p.color" :fill-opacity="p.opacity" :transform="p.plate" />
         <path v-for="(ink, k) in p.ink" :key="k" class="ink" :d="ink" />
       </g>
     </g>
@@ -186,7 +186,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
     <g v-else class="items" clip-path="url(#inside)">
       <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <g v-for="d in drawn" :key="d.item.id">
-          <path :d="d.variants[v].fill" :fill="d.item.fill" />
+          <path :d="d.variants[v].fill" :fill="d.item.fill" :transform="d.plate" />
           <path v-for="(ink, k) in d.variants[v].ink" :key="k" class="ink" :d="ink" />
         </g>
       </g>
@@ -198,7 +198,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 
     <g v-if="lit" class="lit" clip-path="url(#inside)">
       <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
-        <path :d="lit.variants[v].fill" :fill="lit.item.fill" />
+        <path :d="lit.variants[v].fill" :fill="lit.item.fill" :transform="lit.plate" />
         <path v-for="(ink, k) in lit.variants[v].ink" :key="k" :class="k ? 'ink' : 'ink outline'" :d="ink" />
       </g>
     </g>

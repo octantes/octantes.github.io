@@ -17,12 +17,18 @@ export function useBoil() {
 export const STILL  = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 export const MOTION = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
 export const BRUSH  = { width: 18, taper: 30, swell: 0.14, grain: 0.05, boil: .5, frames: 3, fps: 5 }
+export const PLATE  = { reach: 26, angle: 35, sway: 15 }
 
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
 
 function noise(seed, t) {
   const i = Math.floor(t), f = t - i, u = f * f * (3 - 2 * f)
   return (hash(seed * 31.7 + i) * (1 - u) + hash(seed * 31.7 + i + 1) * u) * 2 - 1
+}
+
+export function slip(seed) {
+  const angle = (PLATE.angle + noise(seed, 1.3) * PLATE.sway) * Math.PI / 180
+  return `translate(${fixed(Math.cos(angle) * PLATE.reach)} ${fixed(Math.sin(angle) * PLATE.reach)})`
 }
 
 export function seedOf(text) { return [...text].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 9973, 7) }
