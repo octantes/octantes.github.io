@@ -7,7 +7,7 @@ import fm from 'front-matter'
 import sharp from 'sharp'
 import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/config.js'
 import { DICT } from './src/04/lang.js'
-import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from './src/04/map.js'
+import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf, inRoom } from './src/04/map.js'
 import { figlet } from './src/03/figlet.js'
 import { WALLS } from './src/04/rooms.js'
 
@@ -759,7 +759,8 @@ async function writeShells() {
 
   for (const [page, lang] of shells) {
     const theme = themeOf(page) === 'light' ? ' class="light"' : ''
-    const html = shell.html.replace('<html lang="es">', `<html lang="${lang}"${theme}>`).replace(shell.home, () => renderHead(headFor(page, lang)))
+    const away  = inRoom(page) ? `<noscript><meta http-equiv="refresh" content="0; url=${pathOf({ kind: 'archive' }, lang)}"></noscript>\n  </head>` : '</head>'
+    const html = shell.html.replace('<html lang="es">', `<html lang="${lang}"${theme}>`).replace(shell.home, () => renderHead(headFor(page, lang))).replace('</head>', away)
     await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
     await fs.writeFile(pageFile(page, lang), html)
   }
