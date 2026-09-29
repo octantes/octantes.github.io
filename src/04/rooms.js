@@ -6,8 +6,8 @@ import { furnish } from './map.js'
 export const LANDING_WALL = 'orange'
 
 export const ROOM_TEXT = {
-  es: { prev: 'pared anterior', next: 'pared siguiente', back: 'volver a la pared', items: 'en esta pared' },
-  en: { prev: 'previous wall', next: 'next wall', back: 'back to the wall', items: 'on this wall' },
+  es: { prev: 'pared anterior', next: 'pared siguiente', back: 'volver a la pared', items: 'en esta pared', tabs: 'pestañas', page: 'página' },
+  en: { prev: 'previous wall', next: 'next wall', back: 'back to the wall', items: 'on this wall', tabs: 'tabs', page: 'page' },
 }
 
 const ITEMS = {
@@ -54,6 +54,18 @@ const ITEMS = {
 
 }
 
+const draft = (tab, n) => Array.from({ length: n }, (_, i) => ({
+  title: { es: `${tab.es}, página ${i + 1}`, en: `${tab.en}, page ${i + 1}` },
+  text:  { es: 'texto de ejemplo hasta que llegue el contenido real de esta pestaña.', en: 'placeholder text until the real content for this tab arrives.' },
+}))
+
+export const BOARD = { tabs: [
+  { id: 'one',   label: { es: 'uno', en: 'one' },     badge: 'N1', pages: draft({ es: 'uno', en: 'one' }, 4) },
+  { id: 'two',   label: { es: 'dos', en: 'two' },     badge: 'N2', pages: draft({ es: 'dos', en: 'two' }, 4) },
+  { id: 'three', label: { es: 'tres', en: 'three' },  badge: 'N3', pages: draft({ es: 'tres', en: 'three' }, 4) },
+  { id: 'four',  label: { es: 'cuatro', en: 'four' }, badge: 'N4', pages: draft({ es: 'cuatro', en: 'four' }, 4) },
+] }
+
 export const WALLS = furnish(ROOM_WALLS.map(wall => ({ ...wall, items: ITEMS[wall.id] })))
 
 // ART
@@ -76,7 +88,7 @@ const ART = {
 
   orange: { color: '#CA895D', size: [1712, 866], items: {
     door:       { box: [186, 193, 435, 664], fill: '#8F9195', hover: { box: [0, 0, .55, 1] } },
-    corkboard:  { box: [750, 135, 660, 300], fill: '#804C49', anchor: { x: 'right' } },
+    corkboard:  { box: [750, 135, 660, 300], fill: '#804C49', anchor: { x: 'right' }, depth: { color: '#B7BAC1', layout: 'board' } },
     riser:      { box: [750, 510, 775, 130], fill: '#636467', anchor: { x: 'right' } },
     speakerL:   { box: [684, 368, 127, 193], fill: '#909295', anchor: { x: 'right' } },
     monitor:    { box: [883, 353, 393, 218], fill: '#805C83', anchor: { x: 'right' } },
@@ -127,6 +139,13 @@ function rounded(corners) {
 }
 
 export const ARROW = { stroke: rounded(CORNERS), box: [12, 20, 96, 200] }
+
+const BOARD_ART = {
+  size:  [1712, 866], card: '#B7BAC1', tab: '#909296', badge: '#7D5A80', ink: '#242627',
+  frame: [460, 290, 1200, 325], badgeBox: [552, 372, 288, 162], text: [917, 356, 672, 198],
+  tabs:  { x: 465, w: 276, raised: 97, lowered: 53, under: 17 },
+  pages: { x: 512, w: 92, raised: 82, lowered: 40, under: 13, mark: [37, 26, 20, 34] },
+}
 
 const TONE = { dark: '#616365', mid: '#909296', light: '#ADB0B4', ink: '#242627' }
 
@@ -204,5 +223,31 @@ export function layoutWall(wall, width, height) {
   })
 
   return { size: [vw, vh], items }
+
+}
+
+export function layoutBoard(tab, page, width, height) {
+
+  const { size, card, tab: grey, badge, ink, frame, badgeBox, text, tabs, pages } = BOARD_ART
+  const [vw, vh] = view(size, width, height)
+  const moved = ([x, y, w, h]) => [x + (vw - size[0]) / 2, y + (vh - size[1]) / 2, w, h]
+  const [fx, fy, , fh] = frame
+
+  const tabAt  = i => { const h = i === tab ? tabs.raised : tabs.lowered; return [tabs.x + i * tabs.w, fy - h, tabs.w, h] }
+  const pageAt = i => [pages.x + i * pages.w, fy + fh, pages.w, i === page ? pages.raised : pages.lowered]
+  const count  = { tabs: BOARD.tabs.length, pages: BOARD.tabs[tab].pages.length }
+  const under  = ([x, y, w, h], extra, top) => top ? [x, y - extra, w, h + extra] : [x, y, w, h + extra]
+  const range  = n => Array.from({ length: n }, (_, i) => i)
+
+  const items = [
+    ...range(count.pages).map(i => ({ id: `page${i}`, box: under(pageAt(i), pages.under, true), fill: grey })),
+    ...range(count.tabs).filter(i => i !== tab).map(i => ({ id: `tab${i}`, box: under(tabAt(i), tabs.under / 1.4), fill: grey })),
+    { id: 'card', box: frame, fill: card },
+    { id: `tab${tab}`, box: under(tabAt(tab), tabs.under), fill: card, hidden: { bottom: true } },
+    { id: 'badge', box: badgeBox, fill: badge },
+    { id: 'mark', box: [pages.x + page * pages.w + pages.mark[0], fy + fh + pages.mark[1], pages.mark[2], pages.mark[3]], fill: ink },
+  ].map(item => ({ hidden: {}, ...item, box: moved(item.box) }))
+
+  return { size: [vw, vh], items, slots: { text: moved(text), badge: moved(badgeBox), tabs: range(count.tabs).map(i => moved(tabAt(i))), pages: range(count.pages).map(i => moved(pageAt(i))) } }
 
 }
