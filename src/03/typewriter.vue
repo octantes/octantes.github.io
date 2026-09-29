@@ -1,6 +1,6 @@
 <script setup>
 
-import { POEM, POEMS, MOBILE_MAX } from '../04/site-config.js'
+import { POEM, POEMS, MOBILE_MAX } from '../04/config.js'
 import { watch, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from '../04/store.js'
 

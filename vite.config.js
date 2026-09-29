@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import devPlugin from './vite.dev-plugin.js'
-import { MOBILE_MAX } from './src/04/site-config.js'
+import { MOBILE_MAX } from './src/04/config.js'
 import { headFor, renderHead } from './src/04/map.js'
 
 export default defineConfig({

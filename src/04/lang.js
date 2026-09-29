@@ -1,4 +1,4 @@
-import { TAGLINE } from './site-config.js'
+import { TAGLINE } from './config.js'
 
 export const DICT = {
   es: {

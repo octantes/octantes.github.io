@@ -6,7 +6,7 @@ import Navigation from '../01/navigation.vue'
 import Content from '../01/content.vue'
 import Status from '../01/status.vue'
 import Portada from '../02/portada.vue'
-import { MOBILE_MAX } from '../04/site-config.js'
+import { MOBILE_MAX } from '../04/config.js'
 
 const store = useStore()
 const { currentPost } = storeToRefs(store)

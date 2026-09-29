@@ -2,7 +2,7 @@
 
 import { computed } from 'vue'
 import { useStore } from '../04/store.js'
-import { ROOM_TEXT } from '../04/havitat-setup.js'
+import { ROOM_TEXT } from '../04/rooms.js'
 
 const props = defineProps({ wall: Object, depth: Object, hot: String, place: String, docked: Object, pointed: Object })
 

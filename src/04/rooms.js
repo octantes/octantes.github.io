@@ -1,4 +1,4 @@
-import { ROOM_WALLS } from './site-config.js'
+import { ROOM_WALLS } from './config.js'
 import { furnish } from './map.js'
 
 // CONTENT

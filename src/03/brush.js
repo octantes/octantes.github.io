@@ -1,12 +1,22 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+// BOIL
+
+const frame  = ref(0)
+let   users  = 0
+let   ticker = 0
+
+export function useBoil() {
+  onMounted(() => { if (!users++ && !STILL) ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps) })
+  onBeforeUnmount(() => { if (!--users) clearInterval(ticker) })
+  return frame
+}
+
 // BRUSH
 
-export const STILL = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
-
+export const STILL  = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 export const MOTION = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
-
-export const BRUSH = { width: 18, taper: 30, swell: 0.14, grain: 0.05, boil: .5, frames: 3, fps: 5 }
+export const BRUSH  = { width: 18, taper: 30, swell: 0.14, grain: 0.05, boil: .5, frames: 3, fps: 5 }
 
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
 
@@ -110,19 +120,4 @@ export function sketchBox(w, h, seed, hidden = {}) {
     if (run && (!shown[(at + 1) % 4] || k === 3)) { run.push(sides[(at + 1) % 4][0]); ink.push(run); run = null }
   }
   return { outline: loop, ink }
-}
-
-// BOIL
-
-const frame = ref(0)
-
-let users  = 0
-let ticker = 0
-
-export function useBoil() {
-
-  onMounted(() => { if (!users++ && !STILL) ticker = setInterval(() => { frame.value = (frame.value + 1) % BRUSH.frames }, 1000 / BRUSH.fps) })
-  onBeforeUnmount(() => { if (!--users) clearInterval(ticker) })
-  return frame
-
 }
