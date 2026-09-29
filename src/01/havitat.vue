@@ -10,9 +10,10 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf, inRoom } from '../04/map.js'
-import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, STICKER, drawnWall, layoutWall, layoutDepth } from '../04/rooms.js'
+import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, STICKER, drawnWall, layoutWall, layoutDepth, layoutBoard } from '../04/rooms.js'
 import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, useBoil } from '../03/brush.js'
 import Hud from '../02/hud.vue'
+import Board from '../02/board.vue'
 import Sketch from '../03/sketch.vue'
 
 const route  = useRoute()
@@ -31,8 +32,18 @@ const sketch = ref(null)
 const bounds = ref(null)
 const layout = computed(() => bounds.value && layoutWall(wall.value, ...bounds.value))
 const scene  = computed(() => bounds.value && (intro.value ? sticker.value : depth.value
-  ? { id: `${wall.value.id}/${depth.value.id}`, seed: wall.value.id, color: depth.value.depth?.color ?? null, layout: layoutDepth(wall.value, depth.value, ...bounds.value) }
+  ? { id: `${wall.value.id}/${depth.value.id}`, seed: wall.value.id, color: depth.value.depth?.color ?? null, layout: board.value ? layoutBoard(tab.value, leaf.value, ...bounds.value) : layoutDepth(wall.value, depth.value, ...bounds.value) }
   : { id: wall.value.id, seed: wall.value.id, color: wall.value.color, layout: layout.value }))
+
+// BOARD
+
+const board = computed(() => depth.value?.depth?.layout === 'board')
+const tab   = ref(0)
+const leaf  = ref(0)
+
+watch(() => depth.value?.id, () => { tab.value = leaf.value = 0 })
+
+function openTab(i) { tab.value = i; leaf.value = 0 }
 
 // INTRO
 
@@ -167,6 +178,8 @@ onBeforeUnmount(() => {
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
         <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="!intro && (!depth || !!depth.to)" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+
+        <Board v-if="board && !intro && !store.processing && scene" :layout="scene.layout" :scale="bounds[0] / scene.layout.size[0]" :tab="tab" :page="leaf" @tab="openTab" @page="leaf = $event" />
 
         <Hud v-if="!intro" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" :docked="depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
