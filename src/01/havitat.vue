@@ -31,9 +31,22 @@ const room   = ref(null)
 const sketch = ref(null)
 const bounds = ref(null)
 const layout = computed(() => bounds.value && layoutWall(wall.value, ...bounds.value))
-const scene  = computed(() => bounds.value && (intro.value ? sticker.value : depth.value
+const scene  = computed(() => bounds.value && (intro.value ? sticker.value : passing.value ? wallScene(passing.value) : depth.value
   ? { id: `${wall.value.id}/${depth.value.id}`, seed: wall.value.id, color: depth.value.depth?.color ?? null, layout: board.value ? layoutBoard(tab.value, leaf.value, ...bounds.value) : layoutDepth(wall.value, depth.value, ...bounds.value) }
   : { id: wall.value.id, seed: wall.value.id, color: wall.value.color, layout: layout.value }))
+
+// ROUTES
+
+const stops   = ref([])
+const passing = computed(() => stops.value[0] && drawnWall(WALLS.find(w => w.id === stops.value[0])))
+const shown   = computed(() => ({ wall: passing.value ?? wall.value, depth: passing.value ? null : depth.value }))
+
+function wallScene(drawn) { return { id: drawn.id, seed: drawn.id, color: drawn.color, layout: layoutWall(drawn, ...bounds.value) } }
+
+watch(page, (to, from) => {
+  const hop = !STILL && from?.kind === 'depth' && to.kind === 'depth' && (to.id !== from.id || to.item !== from.item)
+  stops.value = hop ? [...new Set([from.id, to.id])] : []
+})
 
 // BOARD
 
@@ -94,7 +107,7 @@ function kick(step) { kicked.value[step] = false; requestAnimationFrame(() => { 
 function arrow(step) {
   const label = ROOM_TEXT[store.lang][step < 0 ? 'prev' : 'next']
   return {
-    class: ['arrow', 'side', { kicked: kicked.value[step], lit: aimed.value === step, back: step < 0, hidden: depth.value || intro.value }],
+    class: ['arrow', 'side', { kicked: kicked.value[step], lit: aimed.value === step, back: step < 0, hidden: shown.value.depth || intro.value }],
     inert: store.processing || !!depth.value, title: label, 'aria-label': label,
     onClick: () => turn(step), onAnimationend: () => { kicked.value[step] = false },
   }
@@ -128,9 +141,10 @@ function back() { router.push(pathOf({ kind: 'wall', id: wall.value.id }, store.
 function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
 function lock(busy) {
-  store.setProcessing(busy || intro.value)
+  store.setProcessing(busy || intro.value || stops.value.length > 0)
   if (busy) hovered.value = armed.value = null
   else if (intro.value) holding = setTimeout(unveil, INTRO.hold)
+  else if (stops.value.length) stops.value = stops.value.slice(1)
 }
 
 function swipeStart(e) { touched = e.touches.length === 1 ? [e.touches[0].clientX, e.touches[0].clientY] : null }
@@ -181,7 +195,7 @@ onBeforeUnmount(() => {
 
         <Board v-if="board && !intro && !store.processing && scene" :layout="scene.layout" :scale="bounds[0] / scene.layout.size[0]" :tab="tab" :page="leaf" @tab="openTab" @page="leaf = $event" />
 
-        <Hud v-if="!intro" :wall="wall" :depth="depth" :hot="hot" :place="`${index + 1}/${WALLS.length}`" :docked="depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
+        <Hud v-if="!intro" :wall="shown.wall" :depth="shown.depth" :hot="hot" :place="`${WALLS.findIndex(w => w.id === shown.wall.id) + 1}/${WALLS.length}`" :docked="shown.depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
       </div>
 
