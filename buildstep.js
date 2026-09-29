@@ -7,7 +7,7 @@ import fm from 'front-matter'
 import sharp from 'sharp'
 import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/config.js'
 import { DICT } from './src/04/lang.js'
-import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf, inRoom } from './src/04/map.js'
+import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from './src/04/map.js'
 import { figlet } from './src/03/figlet.js'
 import { WALLS } from './src/04/rooms.js'
 
@@ -451,7 +451,7 @@ function noteHref(p, lang) { return archiveHref({ kind: 'note', id: p.type, slug
 async function readShell() {
 
   try {
-    const html = await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')
+    const html = (await fs.readFile(path.join(outputDir, 'index.html'), 'utf-8')).replace(/\s*<noscript><meta http-equiv="refresh"[^<]*<\/noscript>/, '')
     const home = renderHead(headFor({ kind: 'home' }, 'es'))
     if (!html.includes(home)) return null
     const top = html.slice(html.indexOf('<head>') + 6, html.indexOf('</head>')).replace(home, '').replace(/\s*<noscript>[\s\S]*?<\/noscript>/, '').replace(/\n\s*\n\s*\n/g, '\n\n').trim()
@@ -759,11 +759,18 @@ async function writeShells() {
 
   for (const [page, lang] of shells) {
     const theme = themeOf(page) === 'light' ? ' class="light"' : ''
-    const away  = inRoom(page) ? `<noscript><meta http-equiv="refresh" content="0; url=${pathOf({ kind: 'archive' }, lang)}"></noscript>\n  </head>` : '</head>'
-    const html = shell.html.replace('<html lang="es">', `<html lang="${lang}"${theme}>`).replace(shell.home, () => renderHead(headFor(page, lang))).replace('</head>', away)
+    const html = shell.html.replace('<html lang="es">', `<html lang="${lang}"${theme}>`).replace(shell.home, () => renderHead(headFor(page, lang)))
     await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
-    await fs.writeFile(pageFile(page, lang), html)
+    await fs.writeFile(pageFile(page, lang), awayWithoutScript(html, lang))
   }
+
+  await fs.writeFile(path.join(outputDir, 'index.html'), awayWithoutScript(shell.html, 'es'))
+
+}
+
+function awayWithoutScript(html, lang) {
+
+  return html.replace('</head>', `<noscript><meta http-equiv="refresh" content="0; url=${pathOf({ kind: 'archive' }, lang)}"></noscript>\n  </head>`)
 
 }
 
