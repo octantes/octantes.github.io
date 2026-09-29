@@ -71,7 +71,7 @@ md.renderer.rules.image = (tokens, idx, options, env, self) => {
 
 md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const href = tokens[idx].attrGet('href')
-  if (env.newTab && !href.toLowerCase().startsWith(SITE_URL.toLowerCase()) && !href.startsWith('/') && !href.startsWith('#')) tokens[idx].attrs.push(['target', '_blank'], ['rel', 'noopener noreferrer'])
+  if (!href.toLowerCase().startsWith(SITE_URL.toLowerCase()) && !href.startsWith('/') && !href.startsWith('#')) tokens[idx].attrs.push(['target', '_blank'], ['rel', 'noopener noreferrer'])
   return self.renderToken(tokens, idx, options)
 }
 
@@ -639,7 +639,7 @@ async function processPosts() {                                                 
       const env = { trad: attributes.style === 'trad', post: { type: postType, slug, portada: attributes.portada } }
       if (env.trad) console.log(`using 'trad' style on ${slug} - default softbreak`)
 
-      const htmlContent = renderType(body, attributes, { ...env, newTab: true }).trim()
+      const htmlContent = renderType(body, attributes, env).trim()
 
       const toggleHref = lang => isBilingual ? archiveHref(page, other(lang)) : archiveHref({ kind: 'archive' }, 'en')
       const fill = (lang, title, content) => fillTemplate({ page, lang, item, title, meta: `${formatted} // ${primaryHandle}`, type: postType, toggleHref: toggleHref(lang), content })
