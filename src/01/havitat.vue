@@ -12,7 +12,8 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf, inRoom } from '../04/map.js'
-import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, STICKER, drawnWall, layoutWall, layoutDepth, layoutBoard } from '../04/rooms.js'
+import { ERA } from '../04/config.js'
+import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, CARDS, drawnWall, layoutWall, layoutDepth, layoutBoard } from '../04/rooms.js'
 import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, useBoil, camo } from '../03/brush.js'
 import Hud from '../02/hud.vue'
 import Board from '../02/board.vue'
@@ -64,11 +65,12 @@ function openTab(i) { tab.value = i; leaf.value = 0 }
 
 const intro   = ref(!introduced)
 const waiting = ref(false)
-const door    = STICKER.items.find(item => !item.decor && !item.camo).id
+const card    = CARDS[ERA]
+const door    = card.items.find(item => !item.decor && !item.camo).id
 const sticker = computed(() => {
   if (!bounds.value) return null
-  const layout = layoutWall(STICKER, ...bounds.value), reel = camo({ ...STICKER.camo, seed: visit, aspect: Math.round(layout.size[0] / layout.size[1] * 20) / 20 })
-  return { id: STICKER.id, seed: STICKER.id, color: STICKER.color, layout: { ...layout, items: layout.items.map(item => item.camo ? { ...item, reel: reel[item.camo] } : item) } }
+  const layout = layoutWall(card, ...bounds.value), reel = camo({ ...card.camo, seed: visit, aspect: Math.round(layout.size[0] / layout.size[1] * 20) / 20 })
+  return { id: card.id, seed: card.id, color: card.color, layout: { ...layout, items: layout.items.map(item => item.camo ? { ...item, reel: reel[item.camo] } : item) } }
 })
 
 introduced = true
