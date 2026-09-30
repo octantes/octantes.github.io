@@ -62,27 +62,23 @@ function openTab(i) { tab.value = i; leaf.value = 0 }
 
 // INTRO
 
-const INTRO   = { hint: 1000 }
 const intro   = ref(!introduced)
 const waiting = ref(false)
-const hinted  = ref(false)
+const door    = STICKER.items.find(item => !item.decor && !item.camo).id
 const sticker = computed(() => {
   if (!bounds.value) return null
   const layout = layoutWall(STICKER, ...bounds.value), reel = camo({ ...STICKER.camo, seed: visit, aspect: Math.round(layout.size[0] / layout.size[1] * 20) / 20 })
   return { id: STICKER.id, seed: STICKER.id, color: STICKER.color, layout: { ...layout, items: layout.items.map(item => item.camo ? { ...item, reel: reel[item.camo] } : item) } }
 })
 
-let holding = 0
-
 introduced = true
 
-function wait() { waiting.value = true; holding = setTimeout(() => { hinted.value = true }, INTRO.hint) }
+function wait() { waiting.value = true; store.setProcessing(false) }
 
 function unveil() {
   if (!waiting.value) return
-  clearTimeout(holding)
-  waiting.value = hinted.value = intro.value = false
-  if (STILL) store.setProcessing(false)
+  waiting.value = intro.value = false
+  hovered.value = null
 }
 
 watch(() => page.value.kind, kind => { if (kind === 'notfound') router.replace('/havitat') }, { immediate: true })
@@ -138,6 +134,7 @@ const SWIPE = 50
 function turn(step) { kick(step); router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
 
 function pick(item, e) {
+  if (intro.value) { unveil(); return }
   if (e.pointerType === 'touch' && armed.value !== item.id) { armed.value = item.id; return }
   if (e.pointerType === 'touch') hovered.value = null
   armed.value = null
@@ -156,7 +153,7 @@ function back() { router.push(pathOf({ kind: 'wall', id: wall.value.id }, store.
 function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
 function lock(busy) {
-  store.setProcessing(busy || intro.value || stops.value.length > 0)
+  store.setProcessing(busy || stops.value.length > 0)
   if (busy) hovered.value = armed.value = null
   else if (intro.value) wait()
   else if (stops.value.length) stops.value = stops.value.slice(1)
@@ -165,14 +162,14 @@ function lock(busy) {
 function swipeStart(e) { touched = e.touches.length === 1 ? [e.touches[0].clientX, e.touches[0].clientY] : null }
 
 function swipeEnd(e) {
-  if (!touched || store.processing || depth.value) return
+  if (!touched || store.processing || depth.value || intro.value) return
   const [dx, dy] = [e.changedTouches[0].clientX - touched[0], e.changedTouches[0].clientY - touched[1]]
   touched = null
   if (Math.abs(dx) > SWIPE && Math.abs(dx) > 1.5 * Math.abs(dy)) turn(dx < 0 ? 1 : -1)
 }
 
 function onKey(e) {
-  if (waiting.value) { unveil(); return }
+  if (intro.value) return
   if (store.processing) return
   if (depth.value) { if (e.key === 'Escape') back(); return }
   if (e.key === 'ArrowLeft') turn(-1)
@@ -181,7 +178,6 @@ function onKey(e) {
 
 onMounted(() => {
   if (intro.value) { store.setProcessing(true); if (STILL) wait() }
-  window.addEventListener('pointerdown', unveil)
   bounds.value = [room.value.clientWidth, room.value.clientHeight]
   sizes = new ResizeObserver(([entry]) => { bounds.value = [entry.contentRect.width, entry.contentRect.height] })
   sizes.observe(room.value)
@@ -189,10 +185,8 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  clearTimeout(holding)
   sizes?.disconnect()
   window.removeEventListener('keydown', onKey)
-  window.removeEventListener('pointerdown', unveil)
   for (const el of shading()) el.style.transition = ''
   store.setProcessing(false)
 })
@@ -209,11 +203,11 @@ onBeforeUnmount(() => {
 
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
-        <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="!intro && (!depth || !!depth.to)" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+        <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="intro ? waiting : !depth || !!depth.to" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
         <Board v-if="board && !intro && !store.processing && scene" :layout="scene.layout" :scale="bounds[0] / scene.layout.size[0]" :tab="tab" :page="leaf" @tab="openTab" @page="leaf = $event" />
 
-        <p v-if="hinted" class="enter">{{ ROOM_TEXT[store.lang].enter }}</p>
+        <button v-if="waiting" class="a11y-only enter" @click="unveil" @focus="hovered = door" @blur="hovered = null">{{ ROOM_TEXT[store.lang].enter }}</button>
 
         <Hud v-if="!intro" :wall="shown.wall" :depth="shown.depth" :hot="hot" :place="`${WALLS.findIndex(w => w.id === shown.wall.id) + 1}/${WALLS.length}`" :docked="shown.depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
@@ -241,18 +235,6 @@ onBeforeUnmount(() => {
 
 .hidden { visibility: hidden; }
 
-.enter {
-
-  /* LAYOUT */ position: absolute; left: 50%; bottom: 2rem; z-index: 2; transform: translateX(-50%); margin: 0;
-  /* BOX    */ padding: .5rem 1rem;
-  /* FILL   */ background: var(--carbon-a95); color: var(--humo);
-  /* BORDER */ border-radius: var(--radius-ss);
-  /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
-  /* MOTION */ animation: enter-in var(--animate-fast) ease-out;
-
-}
-
-@keyframes enter-in { from { opacity: 0; } }
 
 .arrow {
 
