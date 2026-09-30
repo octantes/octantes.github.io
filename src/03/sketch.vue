@@ -17,7 +17,7 @@ const current = shallowRef(props.scene)
 
 let raf     = 0
 let leaving = null
-let spinner = 0
+let spinning = false
 
 const clamp = t => Math.min(1, Math.max(0, t))
 const ease  = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
@@ -37,7 +37,7 @@ function strokesAt(item, box, seed, strokes) {
   }
 }
 
-function inked({ seed, item }, line, k, v) { return ribbon(line, seed + k * 13 + v, item.bare ? BRUSH.thin : BRUSH.width) }
+function inked({ seed, item }, line, k, v) { return ribbon(line, seed + k * 13 + v, k && item.marker ? item.marker : item.bare ? BRUSH.thin : BRUSH.width) }
 
 function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
@@ -61,7 +61,7 @@ function clusters(entries) {
     joined.forEach(group => groups.splice(groups.indexOf(group), 1))
     groups.push([entry, ...joined.flat()])
   }
-  return groups.map(members => ({ members: members.sort((x, y) => y.total - x.total), total: members.reduce((sum, m) => sum + m.total, 0) }))
+  return groups.map(members => ({ members: members.sort((x, y) => (x.item.order ?? 0) - (y.item.order ?? 0) || y.total - x.total), total: members.reduce((sum, m) => sum + m.total, 0) }))
 }
 
 function timed(groups, [a, b], incoming) {
@@ -151,10 +151,9 @@ function reelFrame(entry, f) {
   return reels.get(key)
 }
 
-function spin(on) {
-  if (!on || STILL) { clearInterval(spinner); spinner = 0; return }
-  spinner ||= setInterval(() => { reel.value = (reel.value + 1) % REEL.frames }, 1000 / REEL.fps)
-}
+function spin(on) { spinning = on && !STILL }
+
+watch(frame, () => { if (spinning) reel.value = (reel.value + 1) % REEL.frames })
 
 const edge  = computed(() => {
   const seed = seedOf(current.value.seed)
@@ -194,7 +193,7 @@ watch(() => props.scene, next => {
 
 onMounted(() => play(null, current.value))
 
-onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(spinner) })
+onBeforeUnmount(() => cancelAnimationFrame(raf))
 
 </script>
 

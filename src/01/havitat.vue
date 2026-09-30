@@ -2,6 +2,8 @@
 
 let introduced = false
 
+const visit = Math.floor(Math.random() * 1000)
+
 </script>
 
 <script setup>
@@ -64,7 +66,7 @@ const INTRO   = { hold: 900 }
 const intro   = ref(!introduced)
 const sticker = computed(() => {
   if (!bounds.value) return null
-  const reel = camo(STICKER.camo), layout = layoutWall(STICKER, ...bounds.value)
+  const layout = layoutWall(STICKER, ...bounds.value), reel = camo({ ...STICKER.camo, seed: visit, aspect: Math.round(layout.size[0] / layout.size[1] * 20) / 20 })
   return { id: STICKER.id, seed: STICKER.id, color: STICKER.color, layout: { ...layout, items: layout.items.map(item => item.camo ? { ...item, reel: reel[item.camo] } : item) } }
 })
 
