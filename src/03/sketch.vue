@@ -25,12 +25,11 @@ const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 const blank = () => token('--niebla')
+const pen   = entry => !entry.item.reel
+const reels = new Map()
 const tintOf = item => item.bare ? { fill: item.fill } : null
-const fillOf = (item, outline) => item.reel ? outline.map(shape).join('') : shape(outline)
-const ruleOf = item => item.reel ? 'evenodd' : null
 
 function strokesAt(item, box, seed, strokes) {
-  if (item.reel) { const lines = VARIANTS.map(v => item.reel(0).map((loop, k) => trace(loop, box, seed + k * 13, v, true))); return { lines, outline: lines } }
   const sketch = strokes ? { outline: strokes[0], ink: strokes } : sketchBox(box[2], box[3], seed, item.hidden)
   return {
     lines:   VARIANTS.map(v => sketch.ink.map((stroke, k) => trace(stroke, box, seed + k * 13, v))),
@@ -43,6 +42,7 @@ function inked({ seed, item }, line, k, v) { return ribbon(line, seed + k * 13 +
 function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
     const seed = seedOf(prefix + item.id)
+    if (item.reel) return { item, index, seed }
     const { lines, outline } = strokesAt(item, item.box, seed, item.strokes)
     return { item, index, seed, lines, outline, total: lines[0].reduce((sum, line) => sum + span(line), 0) }
   })
@@ -73,13 +73,16 @@ function timed(groups, [a, b], incoming) {
 function play(from, to, end = blank()) {
   if (STILL) return
   const windows = from && to ? MOTION.turn : MOTION.alone
+  const [before, after] = [from ? prepare(from) : [], to ? prepare(to) : []]
   motion.value = {
-    out: from ? timed(clusters(prepare(from)), windows.out, false) : [],
-    in:  to ? timed(clusters(prepare(to)), windows.in, true) : [],
+    out: from ? timed(clusters(before.filter(pen)), windows.out, false) : [],
+    in:  to ? timed(clusters(after.filter(pen)), windows.in, true) : [],
+    reels: { out: before.filter(e => e.item.reel), in: after.filter(e => e.item.reel) },
     colours: [from?.color ?? blank(), to?.color ?? end],
     start: performance.now(),
   }
   clock.value = 0
+  spin([...before, ...after].some(e => e.item.reel))
   emit('busy', true)
   raf = requestAnimationFrame(tick)
 }
@@ -88,7 +91,7 @@ function tick() {
   clock.value = performance.now() - motion.value.start
   if (clock.value < MOTION.length) { raf = requestAnimationFrame(tick); return }
   motion.value = null
-  spin()
+  spin(prepared.value.some(e => e.item.reel))
   if (leaving) { leaving(); return }
   if (props.scene.id === current.value.id) { emit('busy', false); return }
   play(current.value, props.scene)
@@ -105,7 +108,7 @@ function pose(entry, lo, hi) {
     if (b > a) ink.push(inked(entry, cut(line, (a - at) / length, (b - at) / length), k, frame.value))
     at += length
   })
-  return { id: entry.item.id, index: entry.index, tint: tintOf(entry.item), rule: ruleOf(entry.item), fill: fillOf(entry.item, entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
+  return { id: entry.item.id, index: entry.index, tint: tintOf(entry.item), fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
 }
 
 function poses(group, shown, incoming) {
@@ -129,23 +132,28 @@ const inside = computed(() => [LINE / 2, LINE / 2, current.value.layout.size[0] 
 
 const prepared = computed(() => prepare(current.value))
 
-const drawn = computed(() => prepared.value.filter(entry => !entry.item.reel).map(entry => ({
+const drawn = computed(() => prepared.value.filter(pen).map(entry => ({
   item: entry.item, tint: tintOf(entry.item), variants: entry.lines.map((strokes, v) => ({ fill: shape(entry.outline[v]), ink: strokes.map((line, k) => inked(entry, line, k, v)) })),
 })))
 
-const reeled = computed(() => prepared.value.filter(entry => entry.item.reel).map(entry => {
-  entry.frames ??= new Map()
-  if (!entry.frames.has(reel.value)) {
-    const lines = entry.item.reel(reel.value).map((loop, k) => trace(loop, entry.item.box, entry.seed + k * 13, 0, true))
-    entry.frames.set(reel.value, { fill: lines.map(shape).join(''), ink: lines.map((line, k) => inked(entry, line, k, 0)) })
-  }
-  return { item: entry.item, tint: tintOf(entry.item), ...entry.frames.get(reel.value) }
-}))
+const backdrop = computed(() => {
+  const m = motion.value, shown = m ? ease(clamp(clock.value / MOTION.length)) : 1
+  const layers = m ? [...m.reels.out.map(e => [e, 1 - shown]), ...m.reels.in.map(e => [e, shown])] : prepared.value.filter(e => e.item.reel).map(e => [e, 1])
+  return layers.map(([entry, opacity]) => ({ item: entry.item, tint: tintOf(entry.item), opacity, ...reelFrame(entry, reel.value) }))
+})
 
-function spin() {
-  clearInterval(spinner)
-  reel.value = 0
-  if (!STILL && prepared.value.some(entry => entry.item.reel)) spinner = setInterval(() => { reel.value = (reel.value + 1) % REEL.frames }, 1000 / REEL.fps)
+function reelFrame(entry, f) {
+  const key = `${entry.seed}|${entry.item.box}|${f}`
+  if (!reels.has(key)) {
+    const lines = entry.item.reel(f).map((loop, k) => trace(loop, entry.item.box, entry.seed + k * 13, 0, true))
+    reels.set(key, { fill: lines.map(shape).join(''), ink: lines.map((line, k) => inked(entry, line, k, 0)) })
+  }
+  return reels.get(key)
+}
+
+function spin(on) {
+  if (!on || STILL) { clearInterval(spinner); spinner = 0; return }
+  spinner ||= setInterval(() => { reel.value = (reel.value + 1) % REEL.frames }, 1000 / REEL.fps)
 }
 
 const edge  = computed(() => {
@@ -198,18 +206,21 @@ onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(spinner) })
 
     <rect class="surface" :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" :fill="moving ? moving.colour : current.color ?? blank()" @click="emit('clear')" />
 
+    <g clip-path="url(#inside)">
+      <g v-for="r in backdrop" :key="r.item.id" :opacity="r.opacity">
+        <path :d="r.fill" :fill="r.item.fill" fill-rule="evenodd" />
+        <path v-for="(ink, k) in r.ink" :key="k" class="ink" :style="r.tint" :d="ink" />
+      </g>
+    </g>
+
     <g v-if="moving" clip-path="url(#inside)">
       <g v-for="p in moving.poses" :key="p.id">
-        <path :d="p.fill" :fill="p.color" :fill-opacity="p.opacity" :fill-rule="p.rule" />
+        <path :d="p.fill" :fill="p.color" :fill-opacity="p.opacity" />
         <path v-for="(ink, k) in p.ink" :key="k" class="ink" :style="p.tint" :d="ink" />
       </g>
     </g>
 
     <g v-else class="items" clip-path="url(#inside)">
-      <g v-for="r in reeled" :key="r.item.id">
-        <path :d="r.fill" :fill="r.item.fill" fill-rule="evenodd" />
-        <path v-for="(ink, k) in r.ink" :key="k" class="ink" :style="r.tint" :d="ink" />
-      </g>
       <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <g v-for="d in drawn" :key="d.item.id">
           <path :d="d.variants[v].fill" :fill="d.item.fill" />
