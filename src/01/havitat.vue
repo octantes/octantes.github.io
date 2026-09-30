@@ -62,8 +62,10 @@ function openTab(i) { tab.value = i; leaf.value = 0 }
 
 // INTRO
 
-const INTRO   = { hold: 900 }
+const INTRO   = { hint: 1000 }
 const intro   = ref(!introduced)
+const waiting = ref(false)
+const hinted  = ref(false)
 const sticker = computed(() => {
   if (!bounds.value) return null
   const layout = layoutWall(STICKER, ...bounds.value), reel = camo({ ...STICKER.camo, seed: visit, aspect: Math.round(layout.size[0] / layout.size[1] * 20) / 20 })
@@ -74,7 +76,14 @@ let holding = 0
 
 introduced = true
 
-function unveil() { intro.value = false; if (STILL) store.setProcessing(false) }
+function wait() { waiting.value = true; holding = setTimeout(() => { hinted.value = true }, INTRO.hint) }
+
+function unveil() {
+  if (!waiting.value) return
+  clearTimeout(holding)
+  waiting.value = hinted.value = intro.value = false
+  if (STILL) store.setProcessing(false)
+}
 
 watch(() => page.value.kind, kind => { if (kind === 'notfound') router.replace('/havitat') }, { immediate: true })
 
@@ -149,7 +158,7 @@ function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 function lock(busy) {
   store.setProcessing(busy || intro.value || stops.value.length > 0)
   if (busy) hovered.value = armed.value = null
-  else if (intro.value) holding = setTimeout(unveil, INTRO.hold)
+  else if (intro.value) wait()
   else if (stops.value.length) stops.value = stops.value.slice(1)
 }
 
@@ -163,6 +172,7 @@ function swipeEnd(e) {
 }
 
 function onKey(e) {
+  if (waiting.value) { unveil(); return }
   if (store.processing) return
   if (depth.value) { if (e.key === 'Escape') back(); return }
   if (e.key === 'ArrowLeft') turn(-1)
@@ -170,7 +180,8 @@ function onKey(e) {
 }
 
 onMounted(() => {
-  if (intro.value) { store.setProcessing(true); if (STILL) holding = setTimeout(unveil, INTRO.hold) }
+  if (intro.value) { store.setProcessing(true); if (STILL) wait() }
+  window.addEventListener('pointerdown', unveil)
   bounds.value = [room.value.clientWidth, room.value.clientHeight]
   sizes = new ResizeObserver(([entry]) => { bounds.value = [entry.contentRect.width, entry.contentRect.height] })
   sizes.observe(room.value)
@@ -181,6 +192,7 @@ onBeforeUnmount(() => {
   clearTimeout(holding)
   sizes?.disconnect()
   window.removeEventListener('keydown', onKey)
+  window.removeEventListener('pointerdown', unveil)
   for (const el of shading()) el.style.transition = ''
   store.setProcessing(false)
 })
@@ -200,6 +212,8 @@ onBeforeUnmount(() => {
         <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="!intro && (!depth || !!depth.to)" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
         <Board v-if="board && !intro && !store.processing && scene" :layout="scene.layout" :scale="bounds[0] / scene.layout.size[0]" :tab="tab" :page="leaf" @tab="openTab" @page="leaf = $event" />
+
+        <p v-if="hinted" class="enter">{{ ROOM_TEXT[store.lang].enter }}</p>
 
         <Hud v-if="!intro" :wall="shown.wall" :depth="shown.depth" :hot="hot" :place="`${WALLS.findIndex(w => w.id === shown.wall.id) + 1}/${WALLS.length}`" :docked="shown.depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
@@ -226,6 +240,19 @@ onBeforeUnmount(() => {
 .stage  { display: flex; align-items: center; flex: 1 1 auto; min-height: 0; gap: 1rem; }
 
 .hidden { visibility: hidden; }
+
+.enter {
+
+  /* LAYOUT */ position: absolute; left: 50%; bottom: 2rem; z-index: 2; transform: translateX(-50%); margin: 0;
+  /* BOX    */ padding: .5rem 1rem;
+  /* FILL   */ background: var(--carbon-a95); color: var(--humo);
+  /* BORDER */ border-radius: var(--radius-ss);
+  /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
+  /* MOTION */ animation: enter-in var(--animate-fast) ease-out;
+
+}
+
+@keyframes enter-in { from { opacity: 0; } }
 
 .arrow {
 
