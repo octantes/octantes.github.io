@@ -135,10 +135,9 @@ function field(x, y, seed) {
 
 function contours(grid, [gx, gy], place) {
   const inside = (i, j) => grid[j][i] > 0
-  const key = (kind, i, j) => `${kind}${i},${j}`
   const spot = new Map(), links = new Map()
   const cross = (kind, i, j) => {
-    const id = key(kind, i, j)
+    const id = `${kind}${i},${j}`
     if (!spot.has(id)) {
       const [a, b] = kind === 'h' ? [grid[j][i], grid[j][i + 1]] : [grid[j][i], grid[j + 1][i]], t = a / (a - b)
       spot.set(id, place(kind === 'h' ? i + t : i, kind === 'h' ? j : j + t))
@@ -170,8 +169,8 @@ function contours(grid, [gx, gy], place) {
 
 const reels = new Map()
 
-export function camo({ seed, scale, drift, warp, levels, grid: [gx, gy], aspect, pad }) {
-  const name = JSON.stringify(arguments[0])
+export function camo(options) {
+  const { seed, scale, drift, warp, levels, grid: [gx, gy], aspect, pad } = options, name = JSON.stringify(options)
   if (reels.has(name)) return reels.get(name)
   const place = (i, j) => [-pad + i / gx * (1 + 2 * pad), -pad + j / gy * (1 + 2 * pad)]
   const edge  = (i, j) => i === 0 || j === 0 || i === gx || j === gy
