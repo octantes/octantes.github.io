@@ -11,7 +11,6 @@
     "build": "vite build && node buildstep.js",
     "build:vite": "vite build",
     "build:static": "node buildstep.js",
-    "deploy": "rsync -av --delete dist/ docs/",
     "preview": "vite preview"
   },
   "dependencies": {
