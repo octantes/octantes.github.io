@@ -16,6 +16,7 @@ export function useBoil() {
 
 export const STILL  = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 export const MOTION = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
+export const REEL   = { frames: 16, fps: 6 }
 export const BRUSH  = { width: 18, thin: 6, taper: 30, swell: 0.14, grain: 0.05, boil: .5, frames: 3, fps: 5 }
 
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
@@ -120,4 +121,72 @@ export function sketchBox(w, h, seed, hidden = {}) {
     if (run && (!shown[(at + 1) % 4] || k === 3)) { run.push(sides[(at + 1) % 4][0]); ink.push(run); run = null }
   }
   return { outline: loop, ink }
+}
+
+// CAMO
+
+function lattice(x, y, seed) { return hash(x * 157.31 + y * 311.7 + seed * 71.3) }
+
+function field(x, y, seed) {
+  const [i, j] = [Math.floor(x), Math.floor(y)], [u, v] = [x - i, y - j].map(f => f * f * (3 - 2 * f))
+  const at = (a, b) => lattice(i + a, j + b, seed)
+  return (at(0, 0) * (1 - u) + at(1, 0) * u) * (1 - v) + (at(0, 1) * (1 - u) + at(1, 1) * u) * v
+}
+
+function contours(grid, [gx, gy], place) {
+  const inside = (i, j) => grid[j][i] > 0
+  const key = (kind, i, j) => `${kind}${i},${j}`
+  const spot = new Map(), links = new Map()
+  const cross = (kind, i, j) => {
+    const id = key(kind, i, j)
+    if (!spot.has(id)) {
+      const [a, b] = kind === 'h' ? [grid[j][i], grid[j][i + 1]] : [grid[j][i], grid[j + 1][i]], t = a / (a - b)
+      spot.set(id, place(kind === 'h' ? i + t : i, kind === 'h' ? j : j + t))
+    }
+    return id
+  }
+  const link = (a, b) => { for (const [x, y] of [[a, b], [b, a]]) links.set(x, [...(links.get(x) ?? []), y]) }
+  for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) {
+    const corners = [inside(i, j), inside(i + 1, j), inside(i + 1, j + 1), inside(i, j + 1)]
+    const sides = [['h', i, j], ['v', i + 1, j], ['h', i, j + 1], ['v', i, j]]
+    const cut = sides.filter((_, k) => corners[k] !== corners[(k + 1) % 4]).map(side => cross(...side))
+    if (cut.length === 2) link(...cut)
+    if (cut.length === 4) {
+      const middle = (grid[j][i] + grid[j][i + 1] + grid[j + 1][i + 1] + grid[j + 1][i]) / 4 > 0
+      const edges = sides.map(side => cross(...side))
+      corners.forEach((c, k) => { if (c !== middle) link(edges[(k + 3) % 4], edges[k]) })
+    }
+  }
+  const loops = [], seen = new Set()
+  for (const start of links.keys()) {
+    if (seen.has(start)) continue
+    const loop = []
+    let [at, from] = [start, null]
+    while (at && !seen.has(at)) { seen.add(at); loop.push(spot.get(at)); const next = links.get(at).find(n => n !== from && !seen.has(n)); [from, at] = [at, next] }
+    if (loop.length > 14) loops.push(loop)
+  }
+  return loops
+}
+
+const reels = new Map()
+
+export function camo({ seed, scale, drift, levels, grid: [gx, gy], aspect, pad }) {
+  const name = JSON.stringify(arguments[0])
+  if (reels.has(name)) return reels.get(name)
+  const place = (i, j) => [-pad + i / gx * (1 + 2 * pad), -pad + j / gy * (1 + 2 * pad)]
+  const edge  = (i, j) => i === 0 || j === 0 || i === gx || j === gy
+  const made  = new Map()
+  const at = f => {
+    if (made.has(f)) return made.get(f)
+    const t = f / REEL.frames * 2 * Math.PI, [c, s] = [Math.cos(t) * drift, Math.sin(t) * drift]
+    const value  = (u, v) => { const [x, y] = [u * aspect * scale, v * scale]; return .6 * field(x + c, y + s, seed) + .32 * field(x * 1.9 - s + 7.3, y * 1.9 + c + 3.1, seed + 1) + .08 * field(x * 9, y * 9, seed + 2) }
+    const values = Array.from({ length: gy + 1 }, (_, j) => Array.from({ length: gx + 1 }, (_, i) => value(...place(i, j))))
+    const band   = side => values.map((row, j) => row.map((v, i) => edge(i, j) ? -1 : side(v)))
+    const frame  = { low: contours(band(v => levels[0] - v), [gx, gy], place), high: contours(band(v => v - levels[1]), [gx, gy], place) }
+    made.set(f, frame)
+    return frame
+  }
+  const reel = { low: f => at(f).low, high: f => at(f).high }
+  reels.set(name, reel)
+  return reel
 }
