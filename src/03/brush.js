@@ -16,7 +16,7 @@ export function useBoil() {
 
 export const STILL  = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 export const MOTION = { length: 1300, overlap: .05, slowest: .5, alone: { out: [0, 1], in: [0, 1] }, turn: { out: [0, .45], in: [.35, 1] } }
-export const REEL   = { frames: 16, fps: 6 }
+export const REEL   = { frames: 16 }
 export const BRUSH  = { width: 18, thin: 6, taper: 30, swell: 0.14, grain: 0.05, boil: .5, frames: 3, fps: 5 }
 
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
@@ -170,7 +170,7 @@ function contours(grid, [gx, gy], place) {
 
 const reels = new Map()
 
-export function camo({ seed, scale, drift, levels, grid: [gx, gy], aspect, pad }) {
+export function camo({ seed, scale, drift, warp, levels, grid: [gx, gy], aspect, pad }) {
   const name = JSON.stringify(arguments[0])
   if (reels.has(name)) return reels.get(name)
   const place = (i, j) => [-pad + i / gx * (1 + 2 * pad), -pad + j / gy * (1 + 2 * pad)]
@@ -179,7 +179,8 @@ export function camo({ seed, scale, drift, levels, grid: [gx, gy], aspect, pad }
   const at = f => {
     if (made.has(f)) return made.get(f)
     const t = f / REEL.frames * 2 * Math.PI, [c, s] = [Math.cos(t) * drift, Math.sin(t) * drift]
-    const value  = (u, v) => { const [x, y] = [u * aspect * scale, v * scale]; return .6 * field(x + c, y + s, seed) + .32 * field(x * 1.9 - s + 7.3, y * 1.9 + c + 3.1, seed + 1) + .08 * field(x * 9, y * 9, seed + 2) }
+    const bent = (x, y) => [x + warp * (field(x * .7 + 11, y * .7 + 5, seed + 3) - .5) * 2, y + warp * (field(x * .7 + 23, y * .7 + 17, seed + 4) - .5) * 2]
+    const value  = (u, v) => { const [x, y] = bent(u * aspect * scale, v * scale); return .6 * field(x + c, y + s, seed) + .32 * field(x * 1.9 - s + 7.3, y * 1.9 + c + 3.1, seed + 1) + .08 * field(x * 9, y * 9, seed + 2) }
     const values = Array.from({ length: gy + 1 }, (_, j) => Array.from({ length: gx + 1 }, (_, i) => value(...place(i, j))))
     const band   = side => values.map((row, j) => row.map((v, i) => edge(i, j) ? -1 : side(v)))
     const frame  = { low: contours(band(v => levels[0] - v), [gx, gy], place), high: contours(band(v => v - levels[1]), [gx, gy], place) }
