@@ -11,7 +11,7 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { pageOf, pathOf, inRoom } from '../04/map.js'
 import { WALLS, LANDING_WALL, ROOM_TEXT, LINE, ARROW, STICKER, drawnWall, layoutWall, layoutDepth, layoutBoard } from '../04/rooms.js'
-import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, useBoil } from '../03/brush.js'
+import { BRUSH, MOTION, STILL, seedOf, trace, ribbon, shape, useBoil, camo } from '../03/brush.js'
 import Hud from '../02/hud.vue'
 import Board from '../02/board.vue'
 import Sketch from '../03/sketch.vue'
@@ -62,7 +62,11 @@ function openTab(i) { tab.value = i; leaf.value = 0 }
 
 const INTRO   = { hold: 900 }
 const intro   = ref(!introduced)
-const sticker = computed(() => bounds.value && { id: STICKER.id, seed: STICKER.id, color: STICKER.color, layout: layoutWall(STICKER, ...bounds.value) })
+const sticker = computed(() => {
+  if (!bounds.value) return null
+  const reel = camo(STICKER.camo), layout = layoutWall(STICKER, ...bounds.value)
+  return { id: STICKER.id, seed: STICKER.id, color: STICKER.color, layout: { ...layout, items: layout.items.map(item => item.camo ? { ...item, reel: reel[item.camo] } : item) } }
+})
 
 let holding = 0
 
