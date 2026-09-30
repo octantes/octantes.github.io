@@ -147,7 +147,7 @@ const BOARD_ART = {
   pages: { x: 308, w: 92, raised: 82, lowered: 40, under: 13 },
 }
 
-const MARKER = Array.from({ length: 6 }, (_, i) => [[.03, (i + .5) / 6], [.97, (i + .5) / 6 + .01]])
+const MARKER = Array.from({ length: 6 }, (_, i) => [[-.08, (i + .5) / 6], [1.08, (i + .5) / 6 + .01]])
 
 const TONE = { dark: '#616365', mid: '#909296', light: '#ADB0B4', ink: '#242627' }
 

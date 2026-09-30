@@ -108,7 +108,7 @@ function pose(entry, lo, hi) {
     if (b > a) ink.push(inked(entry, cut(line, (a - at) / length, (b - at) / length), k, frame.value))
     at += length
   })
-  return { id: entry.item.id, index: entry.index, tint: tintOf(entry.item), fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
+  return { id: entry.item.id, index: entry.index, tint: tintOf(entry.item), marker: !!entry.item.marker, fill: shape(entry.outline[frame.value]), color: entry.item.fill, opacity: clamp(((hi - lo) / entry.total - .8) / .2), ink }
 }
 
 function poses(group, shown, incoming) {
@@ -214,16 +214,18 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 
     <g v-if="moving" clip-path="url(#inside)">
       <g v-for="p in moving.poses" :key="p.id">
+        <clipPath v-if="p.marker" :id="`in-${p.id}`"><path :d="p.fill" /></clipPath>
         <path :d="p.fill" :fill="p.color" :fill-opacity="p.opacity" />
-        <path v-for="(ink, k) in p.ink" :key="k" class="ink" :style="p.tint" :d="ink" />
+        <path v-for="(ink, k) in p.ink" :key="k" class="ink" :style="p.tint" :d="ink" :clip-path="p.marker && k ? `url(#in-${p.id})` : null" />
       </g>
     </g>
 
     <g v-else class="items" clip-path="url(#inside)">
       <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <g v-for="d in drawn" :key="d.item.id">
+          <clipPath v-if="d.item.marker" :id="`in-${d.item.id}-${v}`"><path :d="d.variants[v].fill" /></clipPath>
           <path :d="d.variants[v].fill" :fill="d.item.fill" />
-          <path v-for="(ink, k) in d.variants[v].ink" :key="k" class="ink" :style="d.tint" :d="ink" />
+          <path v-for="(ink, k) in d.variants[v].ink" :key="k" class="ink" :style="d.tint" :d="ink" :clip-path="d.item.marker && k ? `url(#in-${d.item.id}-${v})` : null" />
         </g>
       </g>
       <template v-for="d in drawn" :key="d.item.id">
