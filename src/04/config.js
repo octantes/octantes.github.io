@@ -37,6 +37,8 @@ export const MAIN_PROJECTS = [
 
 export const STATUS = 'frenzy'
 
+export const ERA = 'camo'
+
 export const STATUSES = {
   frenzy:   { emoji: '❤️‍🔥', es: 'in a frenzy!',        en: 'in a frenzy!' },
   dominion: { emoji: '🪡',   es: 'dominando el mundo', en: 'dominating the world' },
