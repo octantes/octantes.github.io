@@ -32,7 +32,7 @@ function place([x, y, w, h]) { return { left: `${x * props.scale}px`, top: `${y 
       <p>{{ leaf.text[store.lang] }}</p>
     </div>
 
-    <button v-for="(p, i) in shown.pages" :key="i" class="page" :style="place(layout.slots.pages[i])"
+    <button v-for="(_, i) in shown.pages" :key="i" class="page" :style="place(layout.slots.pages[i])"
             :aria-current="i === page ? 'page' : null" :aria-label="`${text.page} ${i + 1}`" @click="emit('page', i)" />
 
   </div>

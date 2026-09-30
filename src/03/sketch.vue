@@ -15,8 +15,8 @@ const reel    = ref(0)
 const motion  = shallowRef(null)
 const current = shallowRef(props.scene)
 
-let raf     = 0
-let leaving = null
+let raf      = 0
+let leaving  = null
 let spinning = false
 
 const clamp = t => Math.min(1, Math.max(0, t))
@@ -25,8 +25,9 @@ const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 const blank = () => token('--niebla')
-const pen   = entry => !entry.item.reel
-const reels = new Map()
+const reeled = entry => !!entry.item.reel
+const pen    = entry => !reeled(entry)
+const traced = new Map()
 const tintOf = item => item.bare ? { fill: item.fill } : null
 
 function strokesAt(item, box, seed, strokes) {
@@ -77,12 +78,12 @@ function play(from, to, end = blank()) {
   motion.value = {
     out: from ? timed(clusters(before.filter(pen)), windows.out, false) : [],
     in:  to ? timed(clusters(after.filter(pen)), windows.in, true) : [],
-    reels: { out: before.filter(e => e.item.reel), in: after.filter(e => e.item.reel) },
+    reels: { out: before.filter(reeled), in: after.filter(reeled) },
     colours: [from?.color ?? blank(), to?.color ?? end],
     start: performance.now(),
   }
   clock.value = 0
-  spin([...before, ...after].some(e => e.item.reel))
+  spin([...before, ...after].some(reeled))
   emit('busy', true)
   raf = requestAnimationFrame(tick)
 }
@@ -91,7 +92,7 @@ function tick() {
   clock.value = performance.now() - motion.value.start
   if (clock.value < MOTION.length) { raf = requestAnimationFrame(tick); return }
   motion.value = null
-  spin(prepared.value.some(e => e.item.reel))
+  spin(prepared.value.some(reeled))
   if (leaving) { leaving(); return }
   if (props.scene.id === current.value.id) { emit('busy', false); return }
   play(current.value, props.scene)
@@ -138,17 +139,17 @@ const drawn = computed(() => prepared.value.filter(pen).map(entry => ({
 
 const backdrop = computed(() => {
   const m = motion.value, shown = m ? ease(clamp(clock.value / MOTION.length)) : 1
-  const layers = m ? [...m.reels.out.map(e => [e, 1 - shown]), ...m.reels.in.map(e => [e, shown])] : prepared.value.filter(e => e.item.reel).map(e => [e, 1])
+  const layers = m ? [...m.reels.out.map(e => [e, 1 - shown]), ...m.reels.in.map(e => [e, shown])] : prepared.value.filter(reeled).map(e => [e, 1])
   return layers.map(([entry, opacity]) => ({ item: entry.item, tint: tintOf(entry.item), opacity, ...reelFrame(entry, reel.value) }))
 })
 
 function reelFrame(entry, f) {
   const key = `${entry.seed}|${entry.item.box}|${f}`
-  if (!reels.has(key)) {
+  if (!traced.has(key)) {
     const lines = entry.item.reel(f).map((loop, k) => trace(loop, entry.item.box, entry.seed + k * 13, 0, true))
-    reels.set(key, { fill: lines.map(shape).join(''), ink: lines.map((line, k) => inked(entry, line, k, 0)) })
+    traced.set(key, { fill: lines.map(shape).join(''), ink: lines.map((line, k) => inked(entry, line, k, 0)) })
   }
-  return reels.get(key)
+  return traced.get(key)
 }
 
 function spin(on) { spinning = on && !STILL }

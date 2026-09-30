@@ -34,7 +34,7 @@ const room   = ref(null)
 const sketch = ref(null)
 const bounds = ref(null)
 const layout = computed(() => bounds.value && layoutWall(wall.value, ...bounds.value))
-const scene  = computed(() => bounds.value && (intro.value ? sticker.value : passing.value ? wallScene(passing.value) : depth.value
+const scene  = computed(() => bounds.value && (intro.value ? cardScene.value : passing.value ? wallScene(passing.value) : depth.value
   ? { id: `${wall.value.id}/${depth.value.id}`, seed: wall.value.id, color: depth.value.depth?.color ?? null, layout: board.value ? layoutBoard(tab.value, leaf.value, ...bounds.value) : layoutDepth(wall.value, depth.value, ...bounds.value) }
   : { id: wall.value.id, seed: wall.value.id, color: wall.value.color, layout: layout.value }))
 
@@ -63,14 +63,14 @@ function openTab(i) { tab.value = i; leaf.value = 0 }
 
 // INTRO
 
-const intro   = ref(!introduced)
-const waiting = ref(false)
-const card    = CARDS[ERA]
-const door    = card.items.find(item => !item.decor && !item.camo).id
-const sticker = computed(() => {
+const intro     = ref(!introduced)
+const waiting   = ref(false)
+const card      = CARDS[ERA]
+const door      = card.items.find(item => !item.decor && !item.layer).id
+const cardScene = computed(() => {
   if (!bounds.value) return null
   const layout = layoutWall(card, ...bounds.value), reel = camo({ ...card.camo, seed: visit, aspect: Math.round(layout.size[0] / layout.size[1] * 20) / 20 })
-  return { id: card.id, seed: card.id, color: card.color, layout: { ...layout, items: layout.items.map(item => item.camo ? { ...item, reel: reel[item.camo] } : item) } }
+  return { id: card.id, seed: card.id, color: card.color, layout: { ...layout, items: layout.items.map(item => item.layer ? { ...item, reel: reel[item.layer] } : item) } }
 })
 
 introduced = true
@@ -171,8 +171,7 @@ function swipeEnd(e) {
 }
 
 function onKey(e) {
-  if (intro.value) return
-  if (store.processing) return
+  if (intro.value || store.processing) return
   if (depth.value) { if (e.key === 'Escape') back(); return }
   if (e.key === 'ArrowLeft') turn(-1)
   if (e.key === 'ArrowRight') turn(1)
@@ -236,7 +235,6 @@ onBeforeUnmount(() => {
 .stage  { display: flex; align-items: center; flex: 1 1 auto; min-height: 0; gap: 1rem; }
 
 .hidden { visibility: hidden; }
-
 
 .arrow {
 
