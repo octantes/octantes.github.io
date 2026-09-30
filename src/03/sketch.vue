@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { BRUSH, MOTION, REEL, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
+import { BRUSH, MOTION, REEL, PASTE, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
 import { LINE } from '../04/rooms.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
@@ -25,7 +25,8 @@ const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 const blank = () => token('--niebla')
-const pen   = entry => !entry.item.reel
+const pen   = entry => !entry.item.reel && !entry.item.paste
+const decal = entry => entry.item.paste
 const reels = new Map()
 const tintOf = item => item.bare ? { fill: item.fill } : null
 
@@ -78,6 +79,7 @@ function play(from, to, end = blank()) {
     out: from ? timed(clusters(before.filter(pen)), windows.out, false) : [],
     in:  to ? timed(clusters(after.filter(pen)), windows.in, true) : [],
     reels: { out: before.filter(e => e.item.reel), in: after.filter(e => e.item.reel) },
+    decals: { out: before.filter(decal), in: after.filter(decal), from: windows.out[0] * MOTION.length, to: windows.in[0] * MOTION.length },
     colours: [from?.color ?? blank(), to?.color ?? end],
     start: performance.now(),
   }
@@ -150,6 +152,33 @@ function reelFrame(entry, f) {
   }
   return reels.get(key)
 }
+
+const inkedAll = entry => entry.inked ??= entry.lines.map((strokes, v) => ({ fill: shape(entry.outline[v]), ink: strokes.map((line, k) => inked(entry, line, k, v)) }))
+
+function stepped(t, length) { const steps = Math.max(1, Math.round(length / 1000 * PASTE.fps)); return Math.floor(clamp(t) * steps) / steps }
+
+function sheet(entries, laid, opacity) {
+  const boxes = entries.map(e => e.item.box), m = PASTE.margin
+  const [x0, y0, x1, y1] = [Math.min(...boxes.map(b => b[0])) - m, Math.min(...boxes.map(b => b[1])) - m, Math.max(...boxes.map(b => b[0] + b[2])) + m, Math.max(...boxes.map(b => b[1] + b[3])) + m]
+  const fold = x0 + (x1 - x0) * laid, back = inkedAll(entries[0])
+  return {
+    entries: entries.map(e => ({ item: e.item, tint: tintOf(e.item), variants: inkedAll(e) })), opacity,
+    laid: [x0, y0, Math.max(0, fold - x0), y1 - y0], loose: [fold, y0, Math.max(0, x1 - fold), y1 - y0],
+    crease: laid > 0 && laid < 1 && creaseAt(fold, entries[0]),
+    flap: laid < 1 && { mirror: `translate(${2 * fold} 0) scale(-1 1)`, fill: back[0].fill, ink: back.map(v => v.ink), tint: tintOf(entries[0].item), drop: `translate(${-PASTE.drop[0]} ${PASTE.drop[1]})` },
+  }
+}
+
+function creaseAt(fold, { item: { box: [, y, , h] }, seed }) { return ribbon(trace([[0, 0], [0, 1]], [fold, y - LINE / 2, 1, h + LINE], seed, frame.value), seed, BRUSH.thin * 1.6) }
+
+const decals = computed(() => {
+  const m = motion.value
+  if (!m) { const flat = prepared.value.filter(decal); return flat.length ? [sheet(flat, 1, 1)] : [] }
+  const out = [], t = clock.value
+  if (m.decals.out.length) { const q = stepped((t - m.decals.from) / PASTE.peel, PASTE.peel); out.push(sheet(m.decals.out, 1 - ease(q), 1 - clamp((q - .7) / .3))) }
+  if (m.decals.in.length && t >= m.decals.to + PASTE.delay) { const p = stepped((t - m.decals.to - PASTE.delay) / PASTE.length, PASTE.length); out.push(sheet(m.decals.in, ease(p), clamp(p / .1 + .2))) }
+  return out
+})
 
 function spin(on) {
   if (!on || STILL) { clearInterval(spinner); spinner = 0; return }
@@ -240,6 +269,29 @@ onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(spinner) })
       </g>
     </g>
 
+    <g v-for="(d, n) in decals" :key="n" class="decal" clip-path="url(#inside)" :opacity="d.opacity">
+      <clipPath :id="`laid${n}`"><rect :x="d.laid[0]" :y="d.laid[1]" :width="d.laid[2]" :height="d.laid[3]" /></clipPath>
+      <clipPath :id="`loose${n}`"><rect :x="d.loose[0]" :y="d.loose[1]" :width="d.loose[2]" :height="d.loose[3]" /></clipPath>
+      <g :clip-path="`url(#laid${n})`">
+        <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
+          <g v-for="e in d.entries" :key="e.item.id">
+            <path :d="e.variants[v].fill" :fill="e.item.fill" />
+            <path v-for="(ink, k) in e.variants[v].ink" :key="k" class="ink" :style="e.tint" :d="ink" />
+          </g>
+        </g>
+      </g>
+      <g v-if="d.flap" :transform="d.flap.mirror">
+        <g :clip-path="`url(#loose${n})`">
+          <path :d="d.flap.fill" :transform="d.flap.drop" class="shade" :fill-opacity="PASTE.shade" />
+          <path :d="d.flap.fill" :fill="PASTE.backing" />
+          <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
+            <path v-for="(ink, k) in d.flap.ink[v]" :key="k" class="ink" :d="ink" />
+          </g>
+        </g>
+      </g>
+      <path v-if="d.crease" class="ink" :d="d.crease" />
+    </g>
+
     <g class="edge">
       <path v-for="v in VARIANTS" :key="v" v-show="v === frame" :d="edge[v]" />
     </g>
@@ -257,6 +309,8 @@ onBeforeUnmount(() => { cancelAnimationFrame(raf); clearInterval(spinner) })
 .hit     { fill: transparent; cursor: pointer; }
 .lit     { pointer-events: none; }
 .edge    { fill: var(--carbon); pointer-events: none; }
+.decal   { pointer-events: none; }
+.shade   { fill: var(--carbon); }
 
 .items   { transition: opacity var(--animate-fast); }
 .focused .items { opacity: .35; }
