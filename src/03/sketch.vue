@@ -181,7 +181,9 @@ const lit = computed(() => {
   const { item, seed } = entry
   const [x, y, w, h] = item.box, [fx, fy, fw, fh] = item.hover?.box ?? [0, 0, 1, 1]
   const pose = item.hover ? strokesAt(item, [x + fx * w, y + fy * h, fw * w, fh * h], seed, item.hover.strokes) : entry
-  return { item, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: pose.lines[v].map((line, k) => inked(entry, line, k, v)) })) }
+  const held = (item.holds ?? []).map(id => drawn.value.find(d => d.item.id === id)).filter(Boolean)
+  const lines = v => item.marker ? pose.lines[v].slice(0, 1) : pose.lines[v]
+  return { item, held, variants: VARIANTS.map(v => ({ fill: shape(pose.outline[v]), ink: lines(v).map((line, k) => k ? inked(entry, line, k, v) : ribbon(line, seed + v, BRUSH.width)) })) }
 })
 
 watch(() => props.scene, next => {
@@ -238,6 +240,10 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
       <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <path :d="lit.variants[v].fill" :fill="lit.item.fill" />
         <path v-for="(ink, k) in lit.variants[v].ink" :key="k" :class="k ? 'ink' : 'ink outline'" :d="ink" />
+        <g v-for="h in lit.held" :key="h.item.id">
+          <path :d="h.variants[v].fill" :fill="h.item.fill" />
+          <path v-for="(ink, k) in h.variants[v].ink" :key="k" class="ink" :style="h.tint" :d="ink" />
+        </g>
       </g>
     </g>
 
