@@ -18,5 +18,5 @@ Content is written in plain text and an automated action processes assets, hidra
 * **asset conversion**: local build step converts images and audio for optimization
 * **yaml injection**: system reads md frontmatter to mount specific components
 * **flat archive**: parallel generation of a static [archive](https://octantes.github.io/archivo) geocities style version
-* **single command build**: npm run build && npm run deploy — full rebuild and rsync to docs/
+* **push to publish**: a github action runs the full build on every push and commits it to docs/
 * **centralized config**: site url and contact email live in a single src/04/config.js file
