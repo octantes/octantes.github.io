@@ -11,8 +11,9 @@ const store  = useStore()
 
 store.land(route)
 
-const entries = ref([])
-const active  = ref(null)
+const entries  = ref([])
+const active   = ref(null)
+const hovered  = ref(null)
 const scroller = ref(null)
 
 let spy = null
@@ -39,24 +40,24 @@ onBeforeUnmount(() => spy?.disconnect())
 
   <div class="frame page">
 
-    <div class="log">
+    <main class="board" ref="scroller">
+      <article v-for="e in entries" :id="e.id" :key="e.id" class="entry">
+        <header class="divider" :class="{ open: hovered === e.id }" @pointerenter="hovered = e.id" @pointerleave="hovered = null">
+          <time class="day" :datetime="e.date">{{ e.date }}</time>
+          <span class="rule" />
+          <h2 class="name">{{ e.title }}</h2>
+        </header>
+        <Drawing v-if="e.kind === 'svg'" :src="e.src" />
+        <div v-else class="prose" v-html="e.html" />
+      </article>
+    </main>
 
-      <nav class="dates" :aria-label="'vitacora'">
-        <button v-for="e in entries" :key="e.id" class="date" :class="{ active: active === e.id }" @click="go(e.id)">
-          <span class="day">{{ e.date }}</span>
-          <span class="name">{{ e.title }}</span>
-        </button>
-      </nav>
-
-      <main class="board" ref="scroller">
-        <article v-for="e in entries" :id="e.id" :key="e.id" class="entry">
-          <header class="head"><time :datetime="e.date">{{ e.date }}</time><h2>{{ e.title }}</h2></header>
-          <Drawing v-if="e.kind === 'svg'" :src="e.src" />
-          <div v-else class="prose" v-html="e.html" />
-        </article>
-      </main>
-
-    </div>
+    <nav class="rail" aria-label="vitacora" @pointerleave="hovered = null">
+      <button v-for="e in entries" :key="e.id" class="mark" :class="{ active: active === e.id }" @pointerenter="hovered = e.id" @focus="hovered = e.id" @blur="hovered = null" @click="go(e.id)">
+        <span class="label"><span class="day">{{ e.date }}</span>{{ e.title }}</span>
+        <span class="tick" />
+      </button>
+    </nav>
 
   </div>
 
@@ -64,51 +65,65 @@ onBeforeUnmount(() => spy?.disconnect())
 
 <style scoped>
 
-.log    { display: grid; grid-template-columns: 16rem 1fr; gap: 1rem; flex: 1 1 auto; min-height: 0; }
+.page   { position: relative; }
 
-.dates {
+.board  { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3rem; padding: 0 3rem 50vh 0; scroll-behavior: smooth; scrollbar-width: none; }
 
-  /* LAYOUT */ display: flex; flex-direction: column; gap: .15rem; overflow-y: auto; align-self: start; max-height: 100%;
-  /* BOX    */ padding: .75rem 1rem;
-  /* FILL   */ background: var(--carbon-a95); color: var(--humo);
-  /* BORDER */ border-radius: var(--radius-ss);
+.entry  { display: flex; flex-direction: column; gap: 1.5rem; scroll-margin-top: 1rem; }
+
+.divider {
+
+  /* LAYOUT */ display: flex; align-items: center; gap: 0; min-height: 2rem;
+  /* FILL   */ color: var(--lirio);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
 
-}
+  & .rule { flex: 1; height: 1px; background: var(--lirio); }
+  & .day, & .name { max-width: 0; overflow: hidden; white-space: nowrap; opacity: 0; transition: max-width var(--animate-fast), opacity var(--animate-fast); }
+  & .name { margin: 0; font: inherit; font-weight: 700; }
 
-.date {
-
-  /* CURSOR */ cursor: pointer;
-  /* LAYOUT */ display: flex; flex-direction: column; align-items: flex-start;
-  /* BOX    */ padding: .25rem 0;
-  /* FILL   */ background: none; color: var(--humo);
-  /* BORDER */ border: none;
-  /* FONT   */ font: inherit; text-align: left;
-
-  &:hover, &.active { color: var(--lirio); }
-  &:focus { box-shadow: none; outline: none; }
-  &:focus-visible { color: var(--lirio); }
+  &:hover, &.open {
+    gap: 1rem;
+    & .rule { background: repeating-linear-gradient(90deg, var(--lirio) 0 .5rem, transparent .5rem .9rem); }
+    & .day, & .name { max-width: 30rem; opacity: 1; }
+  }
 
 }
-
-.day    { color: var(--humo-a60); font-size: .8rem; }
-.name   { font-weight: 700; }
-
-.board  { overflow-y: auto; min-height: 0; display: flex; flex-direction: column; gap: 4rem; padding-bottom: 50vh; scroll-behavior: smooth; }
-
-.entry  { display: flex; flex-direction: column; gap: 1rem; scroll-margin-top: 1rem; }
-
-.head   { display: flex; align-items: baseline; gap: 1rem; font-family: var(--font-mono); color: var(--humo); }
-.head time { color: var(--humo-a60); font-size: .85rem; }
-.head h2   { margin: 0; font-size: 1.1rem; color: var(--lirio); }
 
 .prose  { max-width: 42rem; font-family: var(--font-mono); color: var(--humo); line-height: 1.6; }
 
-@media (--mobile) {
+.rail {
 
-  .log   { grid-template-columns: 1fr; }
-  .dates { flex-direction: row; overflow-x: auto; }
+  /* LAYOUT */ position: absolute; top: 50%; right: 1rem; z-index: 2; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .35rem;
+  /* BOX    */ max-height: 70%; overflow-y: auto; padding: .75rem .5rem; scrollbar-width: none;
+  /* BORDER */ border-radius: var(--radius-ss);
+  /* FONT   */ font-family: var(--font-mono); font-size: .85rem;
+  /* MOTION */ transition: background var(--animate-fast);
+
+  &:hover, &:focus-within { background: var(--carbon-a95); }
 
 }
+
+.mark {
+
+  /* CURSOR */ cursor: pointer;
+  /* LAYOUT */ display: flex; align-items: center; justify-content: flex-end; gap: .75rem;
+  /* BOX    */ padding: 0;
+  /* FILL   */ background: none; color: var(--humo);
+  /* BORDER */ border: none;
+  /* FONT   */ font: inherit;
+
+  & .tick  { width: 1rem; height: 2px; background: var(--humo-a60); transition: width var(--animate-fast), background var(--animate-fast); }
+  & .label { display: none; white-space: nowrap; }
+  & .day   { color: var(--humo-a60); margin-right: .75rem; }
+
+  &.active .tick { width: 1.6rem; background: var(--lirio); }
+  &:hover, &:focus-visible { color: var(--lirio); & .tick { background: var(--lirio); } }
+  &:focus { box-shadow: none; outline: none; }
+
+}
+
+.rail:hover .label, .rail:focus-within .label { display: inline; }
+
+@media (--mobile) { .board { padding-right: 2rem; } .rail { right: .25rem; } }
 
 </style>

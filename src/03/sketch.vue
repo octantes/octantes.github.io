@@ -10,7 +10,7 @@ import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vu
 import { BRUSH, MOTION, REEL, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
 import { LINE } from '../04/rooms.js'
 
-const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, base: String })
+const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, surface: { type: Boolean, default: true } })
 const uid   = `sketch${sketches++}`
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
@@ -31,7 +31,7 @@ const ease  = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
 const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-const blank = () => props.base ?? token('--niebla')
+const blank = () => token('--niebla')
 const reeled = entry => !!entry.item.reel
 const pen    = entry => !reeled(entry)
 const traced = new Map()
@@ -213,7 +213,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 
     <clipPath :id="`${uid}-inside`"><rect :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" /></clipPath>
 
-    <rect class="surface" :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" :fill="moving ? moving.colour : current.color ?? blank()" @click="emit('clear')" />
+    <rect v-if="surface" class="surface" :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" :fill="moving ? moving.colour : current.color ?? blank()" @click="emit('clear')" />
 
     <g :clip-path="`url(#${uid}-inside)`">
       <g v-for="r in backdrop" :key="r.item.id" :opacity="r.opacity">
