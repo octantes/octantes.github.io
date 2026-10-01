@@ -59,6 +59,7 @@ export function pageOf(route) {
   if (path === '/portfolio') return { kind: 'portfolio' }
   if (path === '/portal') return { kind: 'portal' }
   if (path === '/havitat') return { kind: 'havitat' }
+  if (path === '/vitacora') return { kind: 'vitacora' }
   if (item) return { kind: 'depth', id: facing.id, item: item.id, lang: langOfWord(wall, ROOM_WALLS) }
   if (facing && !thing) return { kind: 'wall', id: facing.id, lang: langOfWord(wall, ROOM_WALLS) }
   if (aboutLang) return { kind: 'about', lang: aboutLang }
@@ -83,6 +84,7 @@ export function pathOf(page, lang) {
     case 'home':      return '/'
     case 'portal':    return '/portal'
     case 'havitat':   return '/havitat'
+    case 'vitacora':  return '/vitacora'
     case 'wall':      return `/havitat/${wallById(page.id)[lang]}`
     case 'depth':     return `/havitat/${wallById(page.id)[lang]}/${slugOf(depthItem(page).label[lang])}`
     case 'portfolio': return '/portfolio'
@@ -120,6 +122,7 @@ export function headFor(page, lang, post) {
     portfolio: () => 'portfolio',
     archive:   () => ARCHIVE_VIEW[lang],
     havitat:   () => 'havitat',
+    vitacora:  () => 'vitacora',
     wall:      () => `havitat ${wallById(page.id)[lang]}`,
     depth:     () => `${depthItem(page).label[lang]} - havitat ${wallById(page.id)[lang]}`,
   }[page.kind]?.()
@@ -129,9 +132,10 @@ export function headFor(page, lang, post) {
       section:   () => summaryOf(DICT[lang].about.sections[page.id]),
       about:     () => summaryOf(DICT[lang].about.sections.portal),
       portfolio: () => plainOf(DICT[lang].portfolio.desc),
+      vitacora:  () => DICT[lang].vitacora.desc,
       depth:     () => depthItem(page).description[lang],
     }[page.kind]?.() ?? description
-    const paired = page.kind !== 'portfolio' && page.kind !== 'havitat'
+    const paired = !['portfolio', 'havitat', 'vitacora'].includes(page.kind)
     Object.assign(head, { title: `${name} - ${SITE_NAME}`, name, description: text, canonical: urlOf(page, lang), alternates: paired ? pair : null, localeAlt: paired ? LOCALE[other(lang)] : null, ld: null })
   }
 
