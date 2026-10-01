@@ -19,7 +19,7 @@ const drawn   = ref(false)
 
 let watcher = null
 
-const scene = computed(() => drawing.value && { id: props.src, seed: props.src, color: drawing.value.ground, layout: { size: drawing.value.size, items: itemsOf(drawing.value) } })
+const scene = computed(() => drawing.value && { id: props.src, seed: props.src, layout: { size: drawing.value.size, items: itemsOf(drawing.value) } })
 const marks = computed(() => drawing.value?.marks.filter(m => m.kind === 'text' || m.kind === 'image') ?? [])
 
 function itemsOf({ size: [w, h], marks }) {
@@ -60,9 +60,9 @@ onBeforeUnmount(() => watcher?.disconnect())
 
 <template>
 
-  <div class="drawing" ref="root" :style="drawing && { aspectRatio: `${drawing.size[0]} / ${drawing.size[1]}`, background: drawing.ground }">
+  <div class="drawing" ref="root" :style="drawing && { aspectRatio: `${drawing.size[0]} / ${drawing.size[1]}` }">
 
-    <Sketch v-if="seen && scene" :scene="scene" :framed="false" :base="drawing.ground" @busy="busy => { if (!busy) drawn = true }" />
+    <Sketch v-if="seen && scene" :scene="scene" :framed="false" :surface="false" @busy="busy => { if (!busy) drawn = true }" />
 
     <div v-if="drawing" class="layer" :class="{ shown: drawn }">
       <template v-for="m in marks" :key="m.order">
