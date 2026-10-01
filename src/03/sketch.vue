@@ -8,7 +8,6 @@ let sketches = 0
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { BRUSH, MOTION, REEL, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
-import { LINE } from '../04/rooms.js'
 
 const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, surface: { type: Boolean, default: true } })
 const uid   = `sketch${sketches++}`
@@ -136,7 +135,7 @@ const moving = computed(() => {
   }
 })
 
-const inside = computed(() => { const [w, h] = current.value.layout.size, m = props.framed ? LINE / 2 : 0; return [m, m, w - 2 * m, h - 2 * m] })
+const inside = computed(() => { const [w, h] = current.value.layout.size, m = props.framed ? BRUSH.width / 2 : 0; return [m, m, w - 2 * m, h - 2 * m] })
 
 const prepared = computed(() => prepare(current.value))
 
@@ -165,10 +164,10 @@ watch(frame, () => { if (spinning) reel.value = (reel.value + 1) % REEL.frames }
 
 const edge  = computed(() => {
   const seed = seedOf(current.value.seed)
-  const [ex, ey] = [LINE * 3 / inside.value[2], LINE * 3 / inside.value[3]]
+  const [ex, ey] = [BRUSH.width * 3 / inside.value[2], BRUSH.width * 3 / inside.value[3]]
   const run = (from, to) => Array.from({ length: 5 }, (_, i) => [from[0] + (to[0] - from[0]) * i / 4, from[1] + (to[1] - from[1]) * i / 4])
   const sides = [run([-ex, 0], [1 + ex, 0]), run([1, -ey], [1, 1 + ey]), run([1 + ex, 1], [-ex, 1]), run([0, 1 + ey], [0, -ey])]
-  return VARIANTS.map(v => sides.map((side, k) => ribbon(trace(side, inside.value, seed + k * 7, v), seed + k * 7 + v, LINE * 1.4)).join(''))
+  return VARIANTS.map(v => sides.map((side, k) => ribbon(trace(side, inside.value, seed + k * 7, v), seed + k * 7 + v, BRUSH.width * 1.4)).join(''))
 })
 
 function leave() {
