@@ -1,10 +1,17 @@
+<script>
+
+let sketches = 0
+
+</script>
+
 <script setup>
 
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { BRUSH, MOTION, REEL, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
 import { LINE } from '../04/rooms.js'
 
-const props = defineProps({ scene: Object, hot: String, interactive: Boolean })
+const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, base: String })
+const uid   = `sketch${sketches++}`
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
 const VARIANTS = Array.from({ length: BRUSH.frames }, (_, v) => v)
@@ -24,11 +31,11 @@ const ease  = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
 const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => `rgb(${rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t)).join(' ')})`
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-const blank = () => token('--niebla')
+const blank = () => props.base ?? token('--niebla')
 const reeled = entry => !!entry.item.reel
 const pen    = entry => !reeled(entry)
 const traced = new Map()
-const tintOf = item => item.bare ? { fill: item.fill } : null
+const tintOf = item => item.ink ? { fill: item.ink } : item.bare ? { fill: item.fill } : null
 
 function strokesAt(item, box, seed, strokes) {
   const sketch = strokes ? { outline: strokes[0], ink: strokes } : sketchBox(box[2], box[3], seed, item.hidden)
@@ -38,7 +45,7 @@ function strokesAt(item, box, seed, strokes) {
   }
 }
 
-function inked({ seed, item }, line, k, v) { return ribbon(line, seed + k * 13 + v, k && item.marker ? item.marker : item.bare ? BRUSH.thin : BRUSH.width) }
+function inked({ seed, item }, line, k, v) { return ribbon(line, seed + k * 13 + v, k && item.marker ? item.marker : item.pen ?? (item.bare ? BRUSH.thin : BRUSH.width)) }
 
 function prepare({ seed: prefix, layout }) {
   return layout.items.map((item, index) => {
@@ -129,7 +136,7 @@ const moving = computed(() => {
   }
 })
 
-const inside = computed(() => [LINE / 2, LINE / 2, current.value.layout.size[0] - LINE, current.value.layout.size[1] - LINE])
+const inside = computed(() => { const [w, h] = current.value.layout.size, m = props.framed ? LINE / 2 : 0; return [m, m, w - 2 * m, h - 2 * m] })
 
 const prepared = computed(() => prepare(current.value))
 
@@ -204,31 +211,31 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 
   <svg class="sketch" :class="{ focused: lit }" :viewBox="`0 0 ${current.layout.size[0]} ${current.layout.size[1]}`" aria-hidden="true">
 
-    <clipPath id="inside"><rect :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" /></clipPath>
+    <clipPath :id="`${uid}-inside`"><rect :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" /></clipPath>
 
     <rect class="surface" :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" :fill="moving ? moving.colour : current.color ?? blank()" @click="emit('clear')" />
 
-    <g clip-path="url(#inside)">
+    <g :clip-path="`url(#${uid}-inside)`">
       <g v-for="r in backdrop" :key="r.item.id" :opacity="r.opacity">
         <path :d="r.fill" :fill="r.item.fill" fill-rule="evenodd" />
         <path v-for="(ink, k) in r.ink" :key="k" class="ink" :style="r.tint" :d="ink" />
       </g>
     </g>
 
-    <g v-if="moving" clip-path="url(#inside)">
+    <g v-if="moving" :clip-path="`url(#${uid}-inside)`">
       <g v-for="p in moving.poses" :key="p.id">
-        <clipPath v-if="p.marker" :id="`in-${p.id}`"><path :d="p.fill" /></clipPath>
+        <clipPath v-if="p.marker" :id="`${uid}-in-${p.id}`"><path :d="p.fill" /></clipPath>
         <path :d="p.fill" :fill="p.color" :fill-opacity="p.opacity" />
-        <path v-for="(ink, k) in p.ink" :key="k" class="ink" :style="p.tint" :d="ink" :clip-path="p.marker && k ? `url(#in-${p.id})` : null" />
+        <path v-for="(ink, k) in p.ink" :key="k" class="ink" :style="p.tint" :d="ink" :clip-path="p.marker && k ? `url(#${uid}-in-${p.id})` : null" />
       </g>
     </g>
 
-    <g v-else class="items" clip-path="url(#inside)">
+    <g v-else class="items" :clip-path="`url(#${uid}-inside)`">
       <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <g v-for="d in drawn" :key="d.item.id">
-          <clipPath v-if="d.item.marker" :id="`in-${d.item.id}-${v}`"><path :d="d.variants[v].fill" /></clipPath>
+          <clipPath v-if="d.item.marker" :id="`${uid}-in-${d.item.id}-${v}`"><path :d="d.variants[v].fill" /></clipPath>
           <path :d="d.variants[v].fill" :fill="d.item.fill" />
-          <path v-for="(ink, k) in d.variants[v].ink" :key="k" class="ink" :style="d.tint" :d="ink" :clip-path="d.item.marker && k ? `url(#in-${d.item.id}-${v})` : null" />
+          <path v-for="(ink, k) in d.variants[v].ink" :key="k" class="ink" :style="d.tint" :d="ink" :clip-path="d.item.marker && k ? `url(#${uid}-in-${d.item.id}-${v})` : null" />
         </g>
       </g>
       <template v-for="d in drawn" :key="d.item.id">
@@ -237,7 +244,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
       </template>
     </g>
 
-    <g v-if="lit" class="lit" clip-path="url(#inside)">
+    <g v-if="lit" class="lit" :clip-path="`url(#${uid}-inside)`">
       <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
         <path :d="lit.variants[v].fill" :fill="lit.item.fill" />
         <path v-for="(ink, k) in lit.variants[v].ink" :key="k" :class="k ? 'ink' : 'ink outline'" :d="ink" />
@@ -248,7 +255,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
       </g>
     </g>
 
-    <g class="edge">
+    <g v-if="framed" class="edge">
       <path v-for="v in VARIANTS" :key="v" v-show="v === frame" :d="edge[v]" />
     </g>
 

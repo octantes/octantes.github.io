@@ -6,11 +6,13 @@ import { ROOM_WALLS } from './config.js'
 const wallPath  = `/havitat/:wall(${ROOM_WALLS.flatMap(w => [w.es, w.en]).join('|')})`
 const depthPath = `${wallPath}/:thing`
 const Havitat   = () => import('../01/havitat.vue')
+const Vitacora  = () => import('../01/vitacora.vue')
 
 const routes = [
 
   { path: '/portfolio',      component: Portfolio }, // opens the portfolio page
   { path: '/havitat',        component: Havitat   },
+  { path: '/vitacora',       component: Vitacora  },
   { path: wallPath,          component: Havitat   },
   { path: depthPath,         component: Havitat   },
   { path: '/portal',         component: Octantes  }, // opens the portal

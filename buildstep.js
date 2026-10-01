@@ -753,7 +753,7 @@ async function writeShells() {
   if (!shell) { console.warn('no built index.html, skipping page shells'); return }
 
   const shells = [
-    [{ kind: 'portal' }, 'es'], [{ kind: 'havitat' }, 'es'],
+    [{ kind: 'portal' }, 'es'], [{ kind: 'havitat' }, 'es'], [{ kind: 'vitacora' }, 'es'],
     ...WALLS.flatMap(w => [{ kind: 'wall', id: w.id }, ...w.items.filter(i => !i.decor).map(i => ({ kind: 'depth', id: w.id, item: i.id }))]).flatMap(page => ['es', 'en'].map(lang => [page, lang])),
   ]
 
@@ -771,6 +771,26 @@ async function writeShells() {
 function awayWithoutScript(html, lang) {
 
   return html.replace('</head>', `<noscript><meta http-equiv="refresh" content="0; url=${pathOf({ kind: 'archive' }, lang)}"></noscript>\n  </head>`)
+
+}
+
+async function writeVitacora() {
+
+  const source = path.join(contentDir, 'vitacora'), target = path.join(outputDir, 'posts', 'vitacora')
+  const files  = await fs.readdir(source).catch(() => [])
+  await fs.rm(target, { recursive: true, force: true })
+  await fs.mkdir(target, { recursive: true })
+
+  const entries = []
+  for (const file of files.sort().reverse()) {
+    const [, date, name, kind] = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.(svg|md)$/) ?? []
+    if (kind === 'md') { entries.push({ id: `${date}-${name}`, date, title: name.replaceAll('-', ' '), kind, html: md.render(await fs.readFile(path.join(source, file), 'utf-8')) }); continue }
+    await fs.copyFile(path.join(source, file), path.join(target, file))
+    if (kind) entries.push({ id: `${date}-${name}`, date, title: name.replaceAll('-', ' '), kind, src: `/posts/vitacora/${file}` })
+  }
+
+  await fs.writeFile(path.join(outputDir, 'vitacora.json'), JSON.stringify(entries))
+  console.log(`vitacora: ${entries.length} entries`)
 
 }
 
@@ -959,6 +979,7 @@ async function main() {                                                         
   await updateSidebars()
   await writeArchive()
   await writeAbouts()
+  await writeVitacora()
   await writeShells()
   await writeSitemap()
   await writeFeed()
