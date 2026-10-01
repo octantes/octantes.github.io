@@ -117,7 +117,7 @@ onBeforeUnmount(() => spy?.disconnect())
   & .label { display: none; white-space: nowrap; }
   & .day   { color: var(--humo-a60); margin-right: .5rem; }
 
-  &.active .tick { width: 1.6rem; background: var(--lirio); }
+  &.active { color: var(--cristal); & .tick { width: 1.6rem; background: var(--cristal); } }
   &:hover, &:focus-visible { color: var(--lirio); & .tick { background: var(--lirio); } }
   &:focus { box-shadow: none; outline: none; }
 
