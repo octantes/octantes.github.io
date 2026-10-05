@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1600 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <defs>
+        <clipPath id="_clip1"><rect x="0" y="0" width="200" height="200"/></clipPath>
+        <image id="_Image2" width="200" height="200" xlink:href="uv.png"/>
+    </defs>
+    <rect id="fondo" x="0" y="0" width="1600" height="1000" style="fill:#d8dade;"/>
+    <g id="title" serif:id="title">
+        <text x="90px" y="110px" style="font-family:'Inconsolata', monospace;font-weight:700;font-size:56px;fill:#e08a3c;">VERTEX</text>
+    </g>
+    <g id="marco" serif:id="marco">
+        <path d="M70,40L1000,40C1015,40 1030,55 1030,70L1030,620C1030,635 1015,650 1000,650L70,650C55,650 40,635 40,620L40,70C40,55 55,40 70,40Z" style="fill:none;stroke:#8e5e8e;stroke-width:8px;"/>
+    </g>
+    <g id="malla" serif:id="malla">
+        <path d="M140,330L300,200L470,240L420,380L140,330ZM300,200L420,380" style="fill:none;stroke:#242627;stroke-width:5px;"/>
+        <circle cx="300" cy="200" r="9" style="fill:#e08a3c;"/>
+        <circle cx="470" cy="240" r="9" style="fill:#69a268;"/>
+        <circle cx="420" cy="380" r="9" style="fill:#5681bb;"/>
+    </g>
+    <g id="fragment" serif:id="fragment">
+        <path d="M600,330L720,220L780,300L600,330Z" style="fill:#8e5e8e;stroke:#242627;stroke-width:4px;"/>
+        <path d="M720,220L880,230L780,300L720,220Z" style="fill:#e08a3c;stroke:#242627;stroke-width:4px;"/>
+        <path d="M780,300L880,230L900,360L780,300Z" style="fill:#69a268;stroke:#242627;stroke-width:4px;"/>
+    </g>
+    <g id="texto" serif:id="texto">
+        <text x="90px" y="470px" style="font-family:'Inconsolata', monospace;font-size:30px;fill:#242627;">para cada vértice, ubicar en el<tspan x="90px" y="508px">clipspace (espacio normalizado)</tspan><tspan x="90px" y="546px">convirtiendo coords locales</tspan></text>
+    </g>
+    <g id="circulo" serif:id="circulo">
+        <circle cx="1300" cy="260" r="160" style="fill:none;stroke:#242627;stroke-width:5px;"/>
+        <path d="M1300,260L1413,147" style="fill:none;stroke:#e08a3c;stroke-width:7px;"/>
+        <path d="M1360,260A60,60 0 0,0 1342,218" style="fill:none;stroke:#69a268;stroke-width:5px;"/>
+        <path d="M1120,260L1480,260M1300,80L1300,440" style="fill:none;stroke:#5681bb;stroke-width:3px;"/>
+        <text x="1312px" y="70px" style="font-family:'Inconsolata', monospace;font-size:34px;fill:#69a268;">π/2</text>
+    </g>
+    <g transform="matrix(1.1,-0.19,0.19,1.1,180,720)">
+        <g id="letras" serif:id="letras">
+            <path d="M0,60Q20,0 40,60T80,60M110,10C110,90 160,90 160,10S210,-60 210,40" style="fill:none;stroke:#e08a3c;stroke-width:9px;"/>
+        </g>
+    </g>
+    <g id="formula" serif:id="formula">
+        <text x="560px" y="860px" style="font-family:'Inconsolata', monospace;font-size:48px;fill:#5681bb;">c = √(a² + b²)</text>
+    </g>
+    <g id="uv" serif:id="uv">
+        <use xlink:href="#_Image2" x="1200" y="600" width="200" height="200"/>
+    </g>
+    <g id="oculto" serif:id="oculto" style="display:none;">
+        <path d="M0,0L1600,1000" style="fill:none;stroke:#ff0000;stroke-width:20px;"/>
+    </g>
+</svg>
