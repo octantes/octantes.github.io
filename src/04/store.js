@@ -56,6 +56,7 @@ export const useStore = defineStore('store', () => {
   // STATES                                                                                                                           // CHANGE STATES
 
   const processing                 = ref(false)                                                                                       // navigation lock state
+  const groundLight                = ref(null)
   const popLink                    = ref(POPUP_LINK)                                                                                  // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
   const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
@@ -476,7 +477,7 @@ export const useStore = defineStore('store', () => {
     /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
     /* STATS FUN */ startStatusUpdates, stopStatusUpdates,
-    /* VIEWS VAR */ processing, showPopup, popLink, popString, mailtoDir,
+    /* VIEWS VAR */ processing, groundLight, showPopup, popLink, popString, mailtoDir,
     /* VIEWS FUN */ setProcessing, togglePopup,
     /* NAVIG VAR */ activeFilter, aboutSection, searchQuery, tabs,
     /* NAVIG FUN */ setActiveFilter, setSearchQuery, navHome, changeFilter, hasNotes, openAbout, land, sectionOf, textOf: (note, key) => textOf(note, key, lang.value), notePath: (type, slug) => pathOf({ kind: 'note', id: type, slug }, lang.value), labelOf: id => labelOf(id, lang.value),
