@@ -12,8 +12,8 @@ const store = useStore()
 <template>
 
   <div class="top-actions">
-    <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
     <button class="close-btn" @click="emit('close')" :title="label" :aria-label="label">✘</button>
+    <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
   </div>
 
 </template>
@@ -22,7 +22,7 @@ const store = useStore()
 
 .top-actions {
 
-  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50; display: flex;
+  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50; display: flex; flex-direction: column; align-items: center;
   /* BOX    */ gap: 0.75rem;
 
 }

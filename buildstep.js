@@ -39,7 +39,7 @@ mostrar: si/no (si la propiedad no existe se considera como "si")
 
 CUSTOM:       add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
 TEXTOS:       add "style: trad" in metadata to remove the softbreaks rule from that specific note and set left alignment
-JUEGOS:       just use "type: game" and use the custom vuecomp prop to mount the game in content.vue
+JUEGOS:       add "game: slug" (code in juegos/slug, registered in stage.vue) and optionally "ground: carbon/niebla/#hex"; a [link](#jugar) or [link](#play) in the note launches it
 
 - .nota & .nota-verso are centered text classes which are affected by the container query
 - .nota-prosa is the left aligned, normal page, fixed rem size text class
@@ -780,6 +780,8 @@ function awayWithoutScript(html, lang) {
 
 function sizeOf(svg) { return (svg.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 1600 1000').split(/[\s,]+/).slice(2).map(Number) }
 
+let vitacoraDate = null
+
 async function writeVitacora() {
 
   const source = path.join(contentDir, 'vitacora'), target = path.join(outputDir, 'posts', 'vitacora')
@@ -797,6 +799,7 @@ async function writeVitacora() {
   }
 
   await fs.writeFile(path.join(outputDir, 'vitacora.json'), JSON.stringify(entries))
+  vitacoraDate = entries[0]?.date ?? null
   console.log(`vitacora: ${entries.length} entries`)
 
 }
@@ -876,6 +879,9 @@ async function writeSitemap() {                                                 
     ...SECTIONS.filter(s => s.id !== 'portal').flatMap(s => paired({ kind: 'section', id: s.id }, newest(indexItems.filter(p => p.type === s.id)) || latest)),
     ...paired({ kind: 'about' }, latest),
     { url: urlOf({ kind: 'portfolio' }), lastmod: latest },
+    { url: urlOf({ kind: 'havitat' }), lastmod: latest },
+    ...WALLS.flatMap(w => paired({ kind: 'wall', id: w.id }, latest)),
+    ...(vitacoraDate ? [{ url: urlOf({ kind: 'vitacora' }), lastmod: vitacoraDate }] : []),
     ...indexItems.flatMap(p => {
       const page = { kind: 'note', id: p.type, slug: p.slug }
       return p.bilingual ? paired(page, p.modified || p.isoDate) : [{ url: urlOf(page, 'es'), lastmod: p.modified || p.isoDate }]
