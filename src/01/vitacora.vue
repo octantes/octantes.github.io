@@ -23,6 +23,7 @@ const hovered  = ref(null)
 const flying   = ref(null)
 const opened   = ref(false)
 const scroller = ref(null)
+const sheet    = ref(null)
 const grounds  = reactive({})
 
 let spy     = null
@@ -55,7 +56,7 @@ function paint() {
   const ground = groundAt(), [dark, bright, humo] = [token('--carbon'), token('--niebla'), token('--humo')]
   const t = clamp((luma(ground) - luma(dark)) / (luma(bright) - luma(dark)))
   document.documentElement.style.setProperty('--page', ground)
-  scroller.value.style.setProperty('--ink', t < .5 ? mix(humo, bright, t * 2) : mix(mix(dark, humo, INK.shade), dark, (t - .5) * 2))
+  sheet.value.style.setProperty('--ink', t < .5 ? mix(humo, bright, t * 2) : mix(mix(dark, humo, INK.shade), dark, (t - .5) * 2))
   store.groundLight = light(ground)
 }
 
@@ -132,7 +133,7 @@ onBeforeUnmount(() => {
 
 <template>
 
-  <div class="frame page">
+  <div class="frame page" ref="sheet">
 
     <main class="board" ref="scroller">
       <article v-for="e in entries" :id="e.id" :key="e.id" class="entry">
@@ -159,9 +160,9 @@ onBeforeUnmount(() => {
 
 <style scoped>
 
-.page   { position: relative; }
+.page   { --ink: var(--humo); position: relative; }
 
-.board  { --ink: var(--humo); flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3rem; padding: 0 3rem 50vh 0; scrollbar-width: none; }
+.board  { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3rem; padding: 0 3rem 50vh 0; scrollbar-width: none; }
 
 .entry  { display: flex; flex-direction: column; gap: 1.5rem; scroll-margin-top: 1rem; }
 
@@ -207,7 +208,7 @@ onBeforeUnmount(() => {
   /* BORDER */ border: none;
   /* FONT   */ font: inherit; text-align: right;
 
-  & .tick  { width: 1rem; height: 2px; background: var(--humo-a60); transition: width var(--animate-fast), background var(--animate-fast); }
+  & .tick  { width: 1rem; height: 2px; background: color-mix(in srgb, var(--ink) 60%, transparent); transition: width var(--animate-fast), background var(--animate-fast); }
   & .label { display: none; white-space: nowrap; }
   & .day   { color: var(--humo-a60); margin-right: .5rem; }
 
@@ -218,6 +219,8 @@ onBeforeUnmount(() => {
 }
 
 .rail:hover .label, .rail:focus-within .label, .rail.open .label { display: inline; }
+
+.rail:is(:hover, :focus-within, .open) .mark:not(.active, :hover, :focus-visible) .tick { background: var(--humo-a60); }
 
 @media (--mobile) { .board { padding-right: 2rem; } .rail { right: .25rem; } }
 
