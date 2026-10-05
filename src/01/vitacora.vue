@@ -4,6 +4,7 @@ import { ref, reactive, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import Drawing from '../03/drawing.vue'
+import { read } from '../03/shelf.js'
 
 const BLEND  = .25
 const FLIGHT = 4000
@@ -106,7 +107,7 @@ function outside(event) { if (!event.target.closest('.rail')) opened.value = fal
 watch(grounds, repaint)
 
 onMounted(async () => {
-  entries.value = await (await fetch('/vitacora.json')).json()
+  entries.value = JSON.parse(await read('/vitacora.json'))
   active.value  = entries.value[0]?.id ?? null
   await nextTick()
   spy = new IntersectionObserver(seen => { for (const entry of seen) if (entry.isIntersecting) active.value = entry.target.id }, { root: scroller.value, rootMargin: '-45% 0px -45% 0px' })

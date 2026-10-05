@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/config.js'
 import { sectionOf, labelOf, textOf, other, pageOf, pathOf, headFor, applyHead } from '@/04/map.js'
 import { DICT } from '@/04/lang.js'
+import { offline, shelved, read } from '@/03/shelf.js'
 import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
@@ -260,11 +261,7 @@ export const useStore = defineStore('store', () => {
     const ownPage = decodeURIComponent(location.pathname) === notePath && document.getElementById('note') && document.querySelector('noscript.archive')
 
     let rawText = ownPage?.textContent
-    if (!rawText) {
-      const res = await fetch(`${base}${notePath}.html`)
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-      rawText = await res.text()
-    }
+    if (!rawText) rawText = await read(`${base}${notePath}.html`)
 
     const parser = new DOMParser()
     const doc = parser.parseFromString(rawText, 'text/html')
@@ -309,9 +306,7 @@ export const useStore = defineStore('store', () => {
     notesLoadingPromise = (async () => {
       try {
 
-        const response = await fetch(`${base}/index.json`)
-        if (!response.ok) throw new Error('index.json not found')
-        notesIndex.value = await response.json()
+        notesIndex.value = JSON.parse(await read(`${base}/index.json`))
         notesLoaded.value = true
 
       } catch (e) { console.error('error loading notes index:', e); notesIndex.value = []; notesLoaded.value = true }
@@ -325,6 +320,8 @@ export const useStore = defineStore('store', () => {
   }
 
   async function fetchBTC() {                                                                                                         // fetch and update btc price 
+
+    if (offline) { btcPrice.value = shelved('btc'); return }
 
     try {
 

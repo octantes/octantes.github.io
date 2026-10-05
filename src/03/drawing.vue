@@ -1,6 +1,6 @@
 <script>
 
-const read = new Map()
+const interpreted = new Map()
 
 </script>
 
@@ -8,6 +8,7 @@ const read = new Map()
 
 import { ref, shallowRef, computed, onMounted, onBeforeUnmount } from 'vue'
 import { readDrawing } from './svg.js'
+import { read } from './shelf.js'
 import Sketch from './sketch.vue'
 
 const PACE = { least: 1300, most: 9000, base: 900, per: 300 }
@@ -63,8 +64,8 @@ function scrollerOf(el) {
 }
 
 async function load() {
-  if (!read.has(props.src)) read.set(props.src, fetch(props.src).then(r => r.text()).then(readDrawing))
-  drawing.value = await read.get(props.src)
+  if (!interpreted.has(props.src)) interpreted.set(props.src, read(props.src).then(readDrawing))
+  drawing.value = await interpreted.get(props.src)
   emit('ground', drawing.value.ground)
 }
 

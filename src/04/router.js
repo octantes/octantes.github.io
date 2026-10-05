@@ -1,7 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import Octantes from '../01/octantes.vue'
 import Portfolio from '../01/portfolio.vue'
 import { ROOM_WALLS } from './config.js'
+import { offline } from '../03/shelf.js'
 
 const wallPath  = `/havitat/:wall(${ROOM_WALLS.flatMap(w => [w.es, w.en]).join('|')})`
 const depthPath = `${wallPath}/:thing`
@@ -25,6 +26,6 @@ const routes = [
 
 ]
 
-const router = createRouter({ history: createWebHistory(import.meta.env.BASE_URL), routes })
+const router = createRouter({ history: offline ? createWebHashHistory() : createWebHistory(import.meta.env.BASE_URL), routes })
 
 export default router

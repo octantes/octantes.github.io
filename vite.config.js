@@ -5,7 +5,10 @@ import devPlugin from './vite.dev-plugin.js'
 import { MOBILE_MAX } from './src/04/config.js'
 import { headFor, renderHead } from './src/04/map.js'
 
-export default defineConfig({
+const EDITION = { outDir: 'edition', emptyOutDir: true, modulePreload: false, cssCodeSplit: false, assetsDir: '', rollupOptions: { output: { format: 'iife', inlineDynamicImports: true, entryFileNames: 'app.js', assetFileNames: '[name][extname]' } } }
+
+export default defineConfig(({ mode }) => ({
+  base: mode === 'edition' ? './' : '/',
   plugins: [
     vue(),
     devPlugin(),
@@ -25,5 +28,5 @@ export default defineConfig({
     }
   ],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) }, },
-  build: { outDir: 'dist', emptyOutDir: true, },
-})
+  build: mode === 'edition' ? EDITION : { outDir: 'dist', emptyOutDir: true },
+}))
