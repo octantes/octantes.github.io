@@ -50,8 +50,10 @@ function place([x, y, w, h]) {
 
 function lettering(m) {
   const per = m.box[3] / m.lines.length, bw = size.value[0]
-  return { ...place(m.box), color: m.color, fontFamily: m.family, fontWeight: m.weight, fontSize: `${m.size / bw * 100}cqw`, lineHeight: `${per / bw * 100}cqw` }
+  return { ...place(m.box), color: neutral(m.color) ? 'var(--ink, currentColor)' : m.color, fontFamily: m.family, fontWeight: m.weight, fontSize: `${m.size / bw * 100}cqw`, lineHeight: `${per / bw * 100}cqw` }
 }
+
+function neutral(hex) { const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)); return Math.max(r, g, b) - Math.min(r, g, b) < 24 }
 
 function assetOf(href) { return new URL(href, new URL(props.src, window.location.href)).href }
 
