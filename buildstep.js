@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
-import { SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/config.js'
+import { VITACORA, SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/config.js'
 import { DICT } from './src/04/lang.js'
 import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from './src/04/map.js'
 import { figlet } from './src/03/figlet.js'
@@ -64,6 +64,7 @@ md.renderer.rules.hardbreak = (tokens, idx, options, env, self) => env.flat ? ''
 
 md.renderer.rules.image = (tokens, idx, options, env, self) => {
   if (env.textOnly) return ''
+  if (env.folder) { const image = tokens[idx]; image.attrSet('src', env.folder + image.attrGet('src')); image.attrSet('loading', 'lazy'); return base.image(tokens, idx, options, env, self) }
   const token = tokens[idx]
   const src   = escapeHtml(token.attrGet('src'))
   const alt   = escapeHtml(self.renderInlineAsText(token.children, options, env))
@@ -788,7 +789,7 @@ async function writeVitacora() {
   for (const file of files.sort().reverse()) {
     const [, date, name, kind] = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.(svg|md)$/) ?? []
     const entry = { id: `${date}-${name}`, date, title: name?.replaceAll('-', ' '), kind }
-    if (kind === 'md') { entries.push({ ...entry, html: md.render(await fs.readFile(path.join(source, file), 'utf-8'), { textOnly: true }) }); continue }
+    if (kind === 'md') { entries.push({ ...entry, html: md.render(await fs.readFile(path.join(source, file), 'utf-8'), VITACORA.mdImages ? { folder: '/posts/vitacora/' } : { textOnly: true }) }); continue }
     await fs.copyFile(path.join(source, file), path.join(target, file))
     if (kind) entries.push({ ...entry, src: `/posts/vitacora/${file}`, size: sizeOf(await fs.readFile(path.join(source, file), 'utf-8')) })
   }
