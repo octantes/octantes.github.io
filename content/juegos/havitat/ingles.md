@@ -1,8 +1,8 @@
 ---
 tags: [havitat, drawing]
 type: juegos
-title: havitat - auto-visualizer
-description: an automatic visualization of havitat. the room wanders its own walls, lingers on its objects and never takes the same path twice. touch it and it lets you, then carries on.
+title: havitat-visualizer
+description: an automatic visualization of havitat - the room wanders, lingers on its objects and never takes the same path twice
 portada: portada.png
 date: 2026-10-05
 handle: kaste
