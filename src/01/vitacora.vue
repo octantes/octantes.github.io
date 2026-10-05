@@ -34,7 +34,8 @@ const token = name => getComputedStyle(document.documentElement).getPropertyValu
 const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => '#' + rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t).toString(16).padStart(2, '0')).join('')
 const clamp = t => Math.min(1, Math.max(0, t))
-const light = hex => { const [r, g, b] = rgb(hex); return (r * .299 + g * .587 + b * .114) / 255 > .5 }
+const luma  = hex => { const [r, g, b] = rgb(hex); return (r * .299 + g * .587 + b * .114) / 255 }
+const light = hex => luma(hex) > .5
 const tone  = hex => hex && token(light(hex) ? '--niebla' : '--carbon')
 
 function groundAt() {
@@ -50,8 +51,9 @@ function groundAt() {
 function paint() {
   frame = 0
   if (!scroller.value || !entries.value.length) return
-  const ground = groundAt()
+  const ground = groundAt(), [dark, bright] = [token('--carbon'), token('--niebla')]
   document.documentElement.style.setProperty('--page', ground)
+  scroller.value.style.setProperty('--ink', mix(token('--humo'), dark, clamp((luma(ground) - luma(dark)) / (luma(bright) - luma(dark)))))
   store.groundLight = light(ground)
 }
 
@@ -157,7 +159,7 @@ onBeforeUnmount(() => {
 
 .page   { position: relative; }
 
-.board  { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3rem; padding: 0 3rem 50vh 0; scrollbar-width: none; }
+.board  { --ink: var(--humo); flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3rem; padding: 0 3rem 50vh 0; scrollbar-width: none; }
 
 .entry  { display: flex; flex-direction: column; gap: 1.5rem; scroll-margin-top: 1rem; }
 
@@ -179,9 +181,7 @@ onBeforeUnmount(() => {
 
 }
 
-.prose  { max-width: 42rem; font-family: var(--font-mono); color: var(--humo); line-height: 1.6; }
-
-:global(.light) .prose { color: var(--carbon); }
+.prose  { max-width: 42rem; font-family: var(--font-mono); color: var(--ink); line-height: 1.6; }
 
 .rail {
 
