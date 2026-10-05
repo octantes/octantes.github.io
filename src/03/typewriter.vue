@@ -48,7 +48,7 @@ function compose() {
   for (const [k, v] of poem)    cells.set(k, v)
 }
 
-function readGrid() { grid = props.portal?.gridInfo?.() || null; return grid }
+function readGrid() { const info = props.portal?.gridInfo?.(); grid = info?.cols && info?.rows ? info : null; return grid }
 
 function toCell(ev) {
   if (!grid) return null
