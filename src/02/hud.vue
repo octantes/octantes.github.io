@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { useStore } from '../04/store.js'
 import { ROOM_TEXT } from '../04/rooms.js'
 
-const props = defineProps({ wall: Object, depth: Object, hot: String, place: String, docked: Object, pointed: Object })
+const props = defineProps({ wall: Object, depth: Object, hot: String, place: String, docked: Object, pointed: Object, bare: Boolean })
 
 const emit  = defineEmits(['hover', 'pick', 'turn', 'back', 'aim'])
 const store = useStore()
@@ -38,7 +38,7 @@ function placeHint(frame, [left, top, w, h]) {
 const tip = computed(() => props.pointed && placeHint(props.pointed.frame, props.pointed.box))
 
 const hints = computed(() => [
-  props.docked && { key: 'docked', item: props.docked, place: 'docked', named: !props.depth },
+  !props.bare && props.docked && { key: 'docked', item: props.docked, place: 'docked', named: !props.depth },
   tip.value && { key: 'tip', item: props.pointed.item, place: tip.value.place, named: true, floating: true, style: { left: `${tip.value.at[0]}px`, top: `${tip.value.at[1]}px`, width: `${HINT.w}px`, '--ah': `${HINT.arrow}px` } },
 ].filter(Boolean))
 
@@ -46,22 +46,22 @@ const hints = computed(() => [
 
 <template>
 
-  <nav class="guide" :inert="store.processing" :aria-label="text.items">
+  <nav class="guide" :class="{ hints: bare }" :inert="store.processing" :aria-label="text.items">
 
-    <header v-if="depth" class="head bare">
+    <header v-if="depth && !bare" class="head bare">
       <button class="turn" @click="emit('back')" :title="text.back" :aria-label="text.back">‹</button>
       <span class="name">{{ depth.label[store.lang] }}</span>
       <span class="place">{{ wall[store.lang] }}</span>
     </header>
 
-    <header v-else class="head">
+    <header v-else-if="!bare" class="head">
       <button class="turn" @pointerenter="emit('aim', -1)" @pointerleave="emit('aim', null)" @focus="emit('aim', -1)" @blur="emit('aim', null)" @click="emit('turn', -1)" :title="text.prev" :aria-label="text.prev">‹</button>
       <span class="name">{{ wall[store.lang] }}</span>
       <span class="place">{{ place }}</span>
       <button class="turn" @pointerenter="emit('aim', 1)" @pointerleave="emit('aim', null)" @focus="emit('aim', 1)" @blur="emit('aim', null)" @click="emit('turn', 1)" :title="text.next" :aria-label="text.next">›</button>
     </header>
 
-    <ul v-if="!depth" class="items">
+    <ul v-if="!depth && !bare" class="items">
       <li v-for="item in wall.items.filter(i => !i.decor)" :key="item.id">
         <button class="entry" :class="{ hot: hot === item.id }" @pointerenter="emit('hover', item.id, $event)" @pointerleave="emit('hover', null, $event)" @focus="emit('hover', item.id)" @blur="emit('hover', null)" @click="emit('pick', item, $event)">{{ item.label[store.lang] }}</button>
       </li>
@@ -95,6 +95,7 @@ const hints = computed(() => [
 .name   { flex: 1; color: var(--lirio); font-weight: 700; }
 .place  { color: var(--humo-a60); }
 .bare   { border-bottom: none; margin-bottom: 0; }
+.hints  { background: none; padding: 0; pointer-events: none; }
 
 .turn   { background: none; border: none; padding: 0 .25rem; color: var(--cristal); font: inherit; font-size: 1.1rem; line-height: 1; cursor: pointer; }
 .turn:hover { color: var(--lirio); }

@@ -2,10 +2,12 @@
 import { ref, computed, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Portal from './03/portal.vue'
+import Stage from './01/stage.vue'
 import DotGrid from './03/dotgrid.vue'
 import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
 import { pageOf, themeOf, inRoom } from './04/map.js'
 import { useStore } from './04/store.js'
+import { stage } from './04/stage.js'
 
 const ARRIVAL = { settle: 1000, finish: 400 }
 
@@ -49,13 +51,15 @@ useRouter().afterEach((to, from) => {
 
 <template>
 
-  <div class="pagina" :class="[fade && `fade-${fade}`, { landed }]">
+  <div class="pagina" :class="[fade && `fade-${fade}`, { landed, staged: stage }]">
 
     <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 
     <h1 class="a11y-only">octantes</h1>
 
     <RouterView />
+
+    <Stage v-if="stage" />
 
     <div v-if="veilOn" class="veil" :class="{ opaque: veilOpaque }" aria-hidden="true"><Portal :ref="registerVeil" /></div>
 
@@ -83,6 +87,8 @@ useRouter().afterEach((to, from) => {
 
 :is(.fade-hold, .fade-rise, .fade-finish) :is(.footer, .portal-glow),
 :is(.fade-hold, .fade-rise, .fade-finish):not(.landed) :is(.portada, .navigation, .portfolio) { opacity: var(--fade-to); transition: opacity var(--fade-time) var(--fade-curve, linear); }
+
+.staged > :not(.stage, .dotgrid, .veil) { visibility: hidden; }
 
 @media (--mobile) { .pagina { max-width: 100%; } }
 

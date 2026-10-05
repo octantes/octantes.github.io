@@ -19,13 +19,15 @@ import Hud from '../02/hud.vue'
 import Board from '../02/board.vue'
 import Sketch from '../03/sketch.vue'
 
+const props  = defineProps({ place: Object, watching: Boolean })
+const emit   = defineEmits(['go'])
 const route  = useRoute()
 const router = useRouter()
 const store  = useStore()
 
-store.land(route)
+if (!props.place) store.land(route)
 
-const page  = computed(() => pageOf(route))
+const page  = computed(() => props.place ?? pageOf(route))
 const index = computed(() => WALLS.findIndex(w => w.id === (page.value.id ?? LANDING_WALL)))
 const wall  = computed(() => drawnWall(WALLS[index.value]))
 const depth = computed(() => page.value.kind === 'depth' ? wall.value.items.find(i => i.id === page.value.item) : null)
@@ -83,7 +85,7 @@ function unveil() {
   hovered.value = null
 }
 
-watch(() => page.value.kind, kind => { if (kind === 'notfound') router.replace('/havitat') }, { immediate: true })
+watch(() => page.value.kind, kind => { if (kind === 'notfound') go({ kind: 'havitat' }) }, { immediate: true })
 
 const hovered = ref(null)
 const armed   = ref(null)
@@ -120,7 +122,7 @@ function kick(step) { kicked.value[step] = false; requestAnimationFrame(() => { 
 function arrow(step) {
   const label = ROOM_TEXT[store.lang][step < 0 ? 'prev' : 'next']
   return {
-    class: ['arrow', 'side', { kicked: kicked.value[step], lit: aimed.value === step, back: step < 0, hidden: shown.value.depth || intro.value }],
+    class: ['arrow', 'side', { kicked: kicked.value[step], lit: aimed.value === step, back: step < 0, hidden: shown.value.depth || intro.value || props.watching }],
     inert: store.processing || !!depth.value, title: label, 'aria-label': label,
     onClick: () => turn(step), onAnimationend: () => { kicked.value[step] = false },
   }
@@ -133,24 +135,26 @@ let touched = null
 
 const SWIPE = 50
 
-function turn(step) { kick(step); router.push(pathOf({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }, store.lang)) }
+function go(target) { if (props.place) emit('go', target); else router.push(typeof target === 'string' ? target : pathOf(target, store.lang)) }
+
+function turn(step) { kick(step); go({ kind: 'wall', id: WALLS[(index.value + step + WALLS.length) % WALLS.length].id }) }
 
 function pick(item, e) {
   if (intro.value) { unveil(); return }
   if (e.pointerType === 'touch' && armed.value !== item.id) { armed.value = item.id; return }
   if (e.pointerType === 'touch') hovered.value = null
   armed.value = null
-  router.push(depth.value ? item.to : pathOf({ kind: 'depth', id: wall.value.id, item: item.id }, store.lang))
+  go(depth.value ? item.to : { kind: 'depth', id: wall.value.id, item: item.id })
 }
 
-onBeforeRouteLeave(async to => {
+if (!props.place) onBeforeRouteLeave(async to => {
   if (inRoom(pageOf(to))) return
   if (!STILL) for (const el of shading()) el.style.transition = `background-color ${MOTION.length}ms ease-in-out`
   document.documentElement.classList.remove('light')
   await sketch.value?.leave()
 })
 
-function back() { router.push(pathOf({ kind: 'wall', id: wall.value.id }, store.lang)) }
+function back() { go({ kind: 'wall', id: wall.value.id }) }
 
 function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
 
@@ -176,6 +180,11 @@ function onKey(e) {
   if (e.key === 'ArrowLeft') turn(-1)
   if (e.key === 'ArrowRight') turn(1)
 }
+
+defineExpose({ room: {
+  state: () => ({ waiting: waiting.value, busy: store.processing, walls: WALLS.map(w => w.id), wall: wall.value.id, depth: depth.value, hovered: hovered.value, items: wall.value.items.filter(item => !item.decor) }),
+  enter: unveil, hover: id => { hovered.value = id }, open: item => pick(item, {}), back, visit: id => go({ kind: 'wall', id }),
+} })
 
 onMounted(() => {
   if (intro.value) { store.setProcessing(true); if (STILL) wait() }
@@ -210,7 +219,7 @@ onBeforeUnmount(() => {
 
         <button v-if="waiting" class="a11y-only enter" @click="unveil" @focus="hovered = door" @blur="hovered = null">{{ ROOM_TEXT[store.lang].enter }}</button>
 
-        <Hud v-if="!intro" :wall="shown.wall" :depth="shown.depth" :hot="hot" :place="`${WALLS.findIndex(w => w.id === shown.wall.id) + 1}/${WALLS.length}`" :docked="shown.depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
+        <Hud v-if="!intro" :bare="watching" :wall="shown.wall" :depth="shown.depth" :hot="hot" :place="`${WALLS.findIndex(w => w.id === shown.wall.id) + 1}/${WALLS.length}`" :docked="shown.depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
       </div>
 

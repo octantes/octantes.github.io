@@ -628,6 +628,8 @@ async function processPosts() {                                                 
       isoDate: isoDate,
       modified: modifiedDate,
       vuecomp: attributes.vuecomp || null,
+      game: attributes.game || null,
+      ground: attributes.ground || null,
       bilingual: isBilingual,
       titleEn: enAttributes.title || null,
       descriptionEn: enAttributes.description || null

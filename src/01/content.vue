@@ -8,6 +8,7 @@ import Subscribe from '../02/subscribe.vue'
 import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
 import { throughTheVeil, veilFromStart } from '../03/veil.js'
+import { launch } from '../04/stage.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
 import { MOBILE_MAX } from '../04/config.js'
@@ -62,6 +63,13 @@ async function revealError() {
   if (isMobile.value || !portalRef.value) return
   await portalRef.value.runQueue('outro')
   await portalRef.value.runQueue('hidden')
+}
+
+function play(e) {
+  const link = e.target.closest?.('a[href="#jugar"], a[href="#play"]')
+  if (!link || !currentPost.value?.game) return
+  e.preventDefault()
+  launch(currentPost.value.game, currentPost.value.ground)
 }
 
 function resetScroll() {
@@ -378,7 +386,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
       <div class="post" ref="postRef" :class="{ 'is-error': notFound }">
 
-        <div class="content" ref="contentRef">
+        <div class="content" ref="contentRef" @click="play">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp            -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />

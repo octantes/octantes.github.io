@@ -32,6 +32,7 @@ export const DICT = {
     status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
     gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
     vitacora: { desc: 'bitácora de estudio y proceso, dibujada a mano' },
+    stage: { leave: 'salir' },
     portfolio: {
       subtitle: 'Desarrollador Frontend & Diseñador',
       desc: 'desarrollando interfaces y experiencias digitales <br> con un enfoque en el diseño multimedia <br> y la simplicidad técnica',
@@ -105,6 +106,7 @@ export const DICT = {
     status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
     gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
     vitacora: { desc: 'a hand-drawn log of study and process' },
+    stage: { leave: 'exit' },
     portfolio: {
       subtitle: 'Frontend Engineer & Designer',
       desc: 'developing interfaces and digital experiences <br> with a focus on multimedia design <br> and technical simplicity',
