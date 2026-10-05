@@ -5,8 +5,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import Drawing from '../03/drawing.vue'
 
-const BLEND = .25
+const BLEND  = .25
 const FLIGHT = 4000
+const GLIDE  = .12
 const TOUCH  = matchMedia('(hover: none)').matches
 
 const route  = useRoute()
@@ -23,14 +24,18 @@ const opened   = ref(false)
 const scroller = ref(null)
 const grounds  = reactive({})
 
-let spy    = null
-let frame  = 0
-let landed = 0
+let spy     = null
+let frame   = 0
+let landed  = 0
+let target  = null
+let gliding = 0
 
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
 const mix   = (a, b, t) => '#' + rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t).toString(16).padStart(2, '0')).join('')
 const clamp = t => Math.min(1, Math.max(0, t))
+const light = hex => { const [r, g, b] = rgb(hex); return (r * .299 + g * .587 + b * .114) / 255 > .5 }
+const tone  = hex => hex && token(light(hex) ? '--niebla' : '--carbon')
 
 function groundAt() {
   const box = scroller.value.getBoundingClientRect(), middle = box.top + box.height / 2, band = box.height * BLEND
@@ -45,19 +50,43 @@ function groundAt() {
 function paint() {
   frame = 0
   if (!scroller.value || !entries.value.length) return
-  const ground = groundAt(), [r, g, b] = rgb(ground)
+  const ground = groundAt()
   document.documentElement.style.setProperty('--page', ground)
-  store.groundLight = (r * .299 + g * .587 + b * .114) / 255 > .5
+  store.groundLight = light(ground)
 }
 
 function repaint() { frame ||= requestAnimationFrame(paint) }
 
 function settle() { flying.value = null; clearTimeout(landed) }
 
+function glide() {
+  const s = scroller.value, now = s.scrollTop
+  s.scrollTop = Math.abs(target - now) < 2 ? target : now + (target - now) * GLIDE
+  if (s.scrollTop !== target && s.scrollTop !== now) { gliding = requestAnimationFrame(glide); return }
+  gliding = 0
+  target  = null
+  settle()
+}
+
+function glideTo(top) {
+  const s = scroller.value
+  target  = Math.max(0, Math.min(s.scrollHeight - s.clientHeight, top))
+  gliding ||= requestAnimationFrame(glide)
+}
+
+function wheel(e) {
+  if (e.ctrlKey) return
+  e.preventDefault()
+  const s = scroller.value, step = { 0: 1, 1: 40, 2: s.clientHeight }[e.deltaMode]
+  glideTo((target ?? s.scrollTop) + e.deltaY * step)
+}
+
 function go(id) {
+  const s = scroller.value, el = document.getElementById(id)
+  if (!el) return
   flying.value = id
   landed = setTimeout(settle, FLIGHT)
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  glideTo(el.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop - parseFloat(getComputedStyle(el).scrollMarginTop))
   router.replace({ hash: `#${id}` })
 }
 
@@ -78,7 +107,8 @@ onMounted(async () => {
   spy = new IntersectionObserver(seen => { for (const entry of seen) if (entry.isIntersecting) active.value = entry.target.id }, { root: scroller.value, rootMargin: '-45% 0px -45% 0px' })
   for (const el of scroller.value.querySelectorAll('.entry')) spy.observe(el)
   scroller.value.addEventListener('scroll', repaint, { passive: true })
-  scroller.value.addEventListener('scrollend', settle)
+  scroller.value.addEventListener('scrollend', () => { if (!gliding) settle() })
+  scroller.value.addEventListener('wheel', wheel, { passive: false })
   window.addEventListener('pointerdown', outside)
   if (route.hash) document.getElementById(decodeURIComponent(route.hash.slice(1)))?.scrollIntoView({ block: 'start' })
   repaint()
@@ -87,6 +117,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   spy?.disconnect()
   cancelAnimationFrame(frame)
+  cancelAnimationFrame(gliding)
   clearTimeout(landed)
   window.removeEventListener('pointerdown', outside)
   document.documentElement.style.removeProperty('--page')
@@ -106,7 +137,7 @@ onBeforeUnmount(() => {
           <span class="rule" />
           <h2 class="name">{{ e.title }}</h2>
         </header>
-        <Drawing v-if="e.kind === 'svg'" :src="e.src" :size="e.size" :instant="!!flying && flying !== e.id" @ground="grounds[e.id] = $event" />
+        <Drawing v-if="e.kind === 'svg'" :src="e.src" :size="e.size" :instant="!!flying && flying !== e.id" @ground="grounds[e.id] = tone($event)" />
         <div v-else class="prose" v-html="e.html" />
       </article>
     </main>
@@ -126,7 +157,7 @@ onBeforeUnmount(() => {
 
 .page   { position: relative; }
 
-.board  { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3rem; padding: 0 3rem 50vh 0; scroll-behavior: smooth; scrollbar-width: none; }
+.board  { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3rem; padding: 0 3rem 50vh 0; scrollbar-width: none; }
 
 .entry  { display: flex; flex-direction: column; gap: 1.5rem; scroll-margin-top: 1rem; }
 
