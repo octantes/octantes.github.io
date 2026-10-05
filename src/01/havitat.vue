@@ -88,6 +88,7 @@ function unveil() {
 watch(() => page.value.kind, kind => { if (kind === 'notfound') go({ kind: 'havitat' }) }, { immediate: true })
 
 const hovered = ref(null)
+const softly  = ref(false)
 const armed   = ref(null)
 const kicked  = ref({})
 const aimed   = ref(null)
@@ -156,7 +157,7 @@ if (!props.place) onBeforeRouteLeave(async to => {
 
 function back() { go({ kind: 'wall', id: wall.value.id }) }
 
-function hover(id, e) { if (e?.pointerType !== 'touch') hovered.value = id }
+function hover(id, e) { if (e?.pointerType !== 'touch') { softly.value = false; hovered.value = id } }
 
 function lock(busy) {
   store.setProcessing(busy || stops.value.length > 0)
@@ -183,7 +184,7 @@ function onKey(e) {
 
 defineExpose({ room: {
   state: () => ({ waiting: waiting.value, busy: store.processing, walls: WALLS.map(w => w.id), wall: wall.value.id, depth: depth.value, hovered: hovered.value, items: wall.value.items.filter(item => !item.decor) }),
-  enter: unveil, hover: id => { hovered.value = id }, open: item => pick(item, {}), back, visit: id => go({ kind: 'wall', id }),
+  enter: unveil, hover: id => { softly.value = true; hovered.value = id }, open: item => pick(item, {}), back, visit: id => go({ kind: 'wall', id }),
 } })
 
 onMounted(() => {
@@ -213,13 +214,13 @@ onBeforeUnmount(() => {
 
       <div class="room" ref="room" role="main" @touchstart.passive="swipeStart" @touchend="swipeEnd">
 
-        <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :interactive="intro ? waiting : !depth || !!depth.to" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
+        <Sketch v-if="scene" ref="sketch" :scene="scene" :hot="hot" :soft="softly" :interactive="intro ? waiting : !depth || !!depth.to" @hover="hover" @pick="pick" @clear="armed = null" @busy="lock" />
 
         <Board v-if="board && !intro && !store.processing && scene" :layout="scene.layout" :scale="bounds[0] / scene.layout.size[0]" :tab="tab" :page="leaf" @tab="openTab" @page="leaf = $event" />
 
         <button v-if="waiting" class="a11y-only enter" @click="unveil" @focus="hovered = door" @blur="hovered = null">{{ ROOM_TEXT[store.lang].enter }}</button>
 
-        <Hud v-if="!intro" :bare="watching" :wall="shown.wall" :depth="shown.depth" :hot="hot" :place="`${WALLS.findIndex(w => w.id === shown.wall.id) + 1}/${WALLS.length}`" :docked="shown.depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
+        <Hud v-if="!intro" :bare="watching" :soft="softly" :wall="shown.wall" :depth="shown.depth" :hot="hot" :place="`${WALLS.findIndex(w => w.id === shown.wall.id) + 1}/${WALLS.length}`" :docked="shown.depth ?? docked" :pointed="pointed" @hover="hover" @pick="pick" @turn="turn" @back="back" @aim="aimed = $event" />
 
       </div>
 

@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { useStore } from '../04/store.js'
 import { ROOM_TEXT } from '../04/rooms.js'
 
-const props = defineProps({ wall: Object, depth: Object, hot: String, place: String, docked: Object, pointed: Object, bare: Boolean })
+const props = defineProps({ wall: Object, depth: Object, hot: String, place: String, docked: Object, pointed: Object, bare: Boolean, soft: Boolean })
 
 const emit  = defineEmits(['hover', 'pick', 'turn', 'back', 'aim'])
 const store = useStore()
@@ -67,11 +67,13 @@ const hints = computed(() => [
       </li>
     </ul>
 
-    <div v-for="hint in hints" :key="hint.key" class="hint" :class="[hint.place, { plain: !hint.named }]" :style="hint.style" :aria-hidden="hint.floating ? 'true' : null">
-      <span v-if="hint.named" class="label">{{ hint.item.label[store.lang] }}</span>
-      <span class="text">{{ hint.item.description[store.lang] }}</span>
-      <div class="bar"><div class="track">{{ store.barContent }}</div></div>
-    </div>
+    <TransitionGroup name="soft" :css="soft">
+      <div v-for="hint in hints" :key="hint.key" class="hint" :class="[hint.place, { plain: !hint.named }]" :style="hint.style" :aria-hidden="hint.floating ? 'true' : null">
+        <span v-if="hint.named" class="label">{{ hint.item.label[store.lang] }}</span>
+        <span class="text">{{ hint.item.description[store.lang] }}</span>
+        <div class="bar"><div class="track">{{ store.barContent }}</div></div>
+      </div>
+    </TransitionGroup>
 
   </nav>
 
@@ -96,6 +98,9 @@ const hints = computed(() => [
 .place  { color: var(--humo-a60); }
 .bare   { border-bottom: none; margin-bottom: 0; }
 .hints  { background: none; padding: 0; pointer-events: none; }
+
+.soft-enter-active, .soft-leave-active { transition: opacity .7s ease; }
+.soft-enter-from, .soft-leave-to { opacity: 0; }
 
 .turn   { background: none; border: none; padding: 0 .25rem; color: var(--cristal); font: inherit; font-size: 1.1rem; line-height: 1; cursor: pointer; }
 .turn:hover { color: var(--lirio); }

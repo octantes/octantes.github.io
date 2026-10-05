@@ -9,7 +9,7 @@ let sketches = 0
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { BRUSH, MOTION, REEL, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
 
-const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, surface: { type: Boolean, default: true }, appear: { type: Boolean, default: true } })
+const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, surface: { type: Boolean, default: true }, appear: { type: Boolean, default: true }, soft: Boolean })
 const uid   = `sketch${sketches++}`
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
@@ -209,7 +209,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 
 <template>
 
-  <svg class="sketch" :class="{ focused: lit }" :viewBox="`0 0 ${current.layout.size[0]} ${current.layout.size[1]}`" aria-hidden="true">
+  <svg class="sketch" :class="{ focused: lit, soft }" :viewBox="`0 0 ${current.layout.size[0]} ${current.layout.size[1]}`" aria-hidden="true">
 
     <clipPath :id="`${uid}-inside`"><rect :x="inside[0]" :y="inside[1]" :width="inside[2]" :height="inside[3]" /></clipPath>
 
@@ -244,16 +244,18 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
       </template>
     </g>
 
-    <g v-if="lit" class="lit" :clip-path="`url(#${uid}-inside)`">
-      <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
-        <path :d="lit.variants[v].fill" :fill="lit.item.fill" />
-        <path v-for="(ink, k) in lit.variants[v].ink" :key="k" :class="k ? 'ink' : 'ink outline'" :d="ink" />
-        <g v-for="h in lit.held" :key="h.item.id">
-          <path :d="h.variants[v].fill" :fill="h.item.fill" />
-          <path v-for="(ink, k) in h.variants[v].ink" :key="k" class="ink" :style="h.tint" :d="ink" />
+    <Transition name="soft" :css="soft">
+      <g v-if="lit" class="lit" :clip-path="`url(#${uid}-inside)`">
+        <g v-for="v in VARIANTS" :key="v" v-show="v === frame">
+          <path :d="lit.variants[v].fill" :fill="lit.item.fill" />
+          <path v-for="(ink, k) in lit.variants[v].ink" :key="k" :class="k ? 'ink' : 'ink outline'" :d="ink" />
+          <g v-for="h in lit.held" :key="h.item.id">
+            <path :d="h.variants[v].fill" :fill="h.item.fill" />
+            <path v-for="(ink, k) in h.variants[v].ink" :key="k" class="ink" :style="h.tint" :d="ink" />
+          </g>
         </g>
       </g>
-    </g>
+    </Transition>
 
     <g v-if="framed" class="edge">
       <path v-for="v in VARIANTS" :key="v" v-show="v === frame" :d="edge[v]" />
@@ -275,5 +277,11 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 
 .items   { transition: opacity var(--animate-fast); }
 .focused .items { opacity: .35; }
+.soft .items    { transition-duration: var(--soft-fade); }
+
+.sketch { --soft-fade: .7s; }
+
+.soft-enter-active, .soft-leave-active { transition: opacity var(--soft-fade) ease; }
+.soft-enter-from, .soft-leave-to { opacity: 0; }
 
 </style>
