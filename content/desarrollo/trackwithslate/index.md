@@ -8,7 +8,7 @@ date: 2025-06-23
 handle: kaste
 ---
 
-*You can find the project repo in my [Github](https://github.com/octantes/trackwithslate)*
+*Podés encontrar el repositorio en mi [Github](https://github.com/octantes/trackwithslate)*
 
 slate es una webapp local para **crear, organizar y exportar data tabular** en el browser
 no necesita instalación ni internet: solo descargá el HTML y abrilo con el navegador

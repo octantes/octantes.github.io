@@ -10,6 +10,6 @@ game: havitat
 ground: carbon
 ---
 
-*[jugar](#jugar)*
+*Podés jugar ahora [lanzando](#jugar) el juego!*
 
 havitat, mirándose a sí misma: la habitación cambia de pared, mira sus objetos y entra en ellos, sin que nadie la toque.

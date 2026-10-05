@@ -8,7 +8,7 @@ date: 2026-03-05
 handle: kaste
 ---
 
-*You can find the project repo in my [Github](https://github.com/octantes/browsewithscroll)*
+*Podés encontrar el repositorio en mi [Github](https://github.com/octantes/browsewithscroll)*
 
 scroll es una herramienta local para **previsualizar colecciones de fuentes y multimedia**
 no necesita instalación ni internet: solo cloná el repo y ejecutá el script "launch.sh"
