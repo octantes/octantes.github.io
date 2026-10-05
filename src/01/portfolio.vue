@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { MAIN_PROJECTS, GITHUB_URL, AUTHOR_NAME } from '../04/config.js'
 import DotGrid from '../03/dotgrid.vue'
+import Corner from '../02/corner.vue'
 
 const authorpic = '/assets/kaste.webp'
 
@@ -123,10 +124,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
 
       <DotGrid />
 
-      <div class="top-actions">
-        <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
-        <button class="close-btn" @click="closePortfolio" :title="store.t.portfolio.close" :aria-label="store.t.portfolio.close">✘</button>
-      </div>
+      <Corner :label="store.t.portfolio.close" @close="closePortfolio" />
 
       <div class="profile-group"> 
 
@@ -219,29 +217,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
   }
 
 }
-
-.top-actions {
-
-  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50; display: flex;
-  /* BOX    */ gap: 0.75rem;
-
-}
-
-.close-btn { 
-
-  /* CURSOR */ cursor: pointer; user-select: none;
-  /* LAYOUT */ position: relative;
-  /* FILL   */ background: transparent; color: var(--humo-a60);
-  /* BORDER */ border: none; box-shadow: none;
-  /* FONT   */ font-family: var(--font-mono); font-size: 1.5rem; line-height: 1;
-  /* FX     */ mix-blend-mode: difference;
-  /* MOTION */ transition: color var(--animate-fast);
-
-  &:hover { color: var(--lirio); }
-
-}
-
-.lang-btn { font-size: 1rem; font-weight: bold; }
 
 .profile-group { position: relative; display: flex; align-items: center; z-index: 20; }
 
