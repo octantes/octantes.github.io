@@ -9,7 +9,7 @@ let sketches = 0
 import { ref, shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { BRUSH, MOTION, REEL, STILL, seedOf, trace, ribbon, shape, span, cut, sketchBox, useBoil } from './brush.js'
 
-const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, surface: { type: Boolean, default: true } })
+const props = defineProps({ scene: Object, hot: String, interactive: Boolean, framed: { type: Boolean, default: true }, surface: { type: Boolean, default: true }, appear: { type: Boolean, default: true } })
 const uid   = `sketch${sketches++}`
 const emit  = defineEmits(['hover', 'pick', 'clear', 'busy'])
 
@@ -71,19 +71,20 @@ function clusters(entries) {
   return groups.map(members => ({ members: members.sort((x, y) => (x.item.order ?? 0) - (y.item.order ?? 0) || y.total - x.total), total: members.reduce((sum, m) => sum + m.total, 0) }))
 }
 
-function timed(groups, [a, b], incoming) {
-  const window = (b - a) * MOTION.length
+function timed(groups, [a, b], incoming, length) {
+  const window = (b - a) * length
   const speed  = Math.max(...groups.flatMap(g => g.members.map(m => m.total))) / window
-  return groups.map(g => { const duration = Math.min(window, Math.max(window * MOTION.slowest, g.total / speed)); return { ...g, duration, start: incoming ? b * MOTION.length - duration : a * MOTION.length } })
+  return groups.map(g => { const duration = Math.min(window, Math.max(window * MOTION.slowest, g.total / speed)); return { ...g, duration, start: incoming ? b * length - duration : a * length } })
 }
 
 function play(from, to, end = blank()) {
   if (STILL) return
   const windows = from && to ? MOTION.turn : MOTION.alone
-  const [before, after] = [from ? prepare(from) : [], to ? prepare(to) : []]
+  const [before, after] = [from ? prepare(from) : [], to ? prepare(to) : []], length = to?.pace ?? from?.pace ?? MOTION.length
   motion.value = {
-    out: from ? timed(clusters(before.filter(pen)), windows.out, false) : [],
-    in:  to ? timed(clusters(after.filter(pen)), windows.in, true) : [],
+    length,
+    out: from ? timed(clusters(before.filter(pen)), windows.out, false, length) : [],
+    in:  to ? timed(clusters(after.filter(pen)), windows.in, true, length) : [],
     reels: { out: before.filter(reeled), in: after.filter(reeled) },
     colours: [from?.color ?? blank(), to?.color ?? end],
     start: performance.now(),
@@ -96,7 +97,7 @@ function play(from, to, end = blank()) {
 
 function tick() {
   clock.value = performance.now() - motion.value.start
-  if (clock.value < MOTION.length) { raf = requestAnimationFrame(tick); return }
+  if (clock.value < motion.value.length) { raf = requestAnimationFrame(tick); return }
   motion.value = null
   spin(prepared.value.some(reeled))
   if (leaving) { leaving(); return }
@@ -130,7 +131,7 @@ const moving = computed(() => {
   const t = clock.value
   const progress = e => ease(clamp((t - e.start) / e.duration))
   return {
-    colour: mix(...m.colours, ease(clamp(t / MOTION.length))),
+    colour: mix(...m.colours, ease(clamp(t / m.length))),
     poses: [m.out.flatMap(g => poses(g, 1 - progress(g), false)), m.in.flatMap(g => poses(g, progress(g), true))].flatMap(side => side.filter(Boolean).sort((x, y) => x.index - y.index)),
   }
 })
@@ -144,7 +145,7 @@ const drawn = computed(() => prepared.value.filter(pen).map(entry => ({
 })))
 
 const backdrop = computed(() => {
-  const m = motion.value, shown = m ? ease(clamp(clock.value / MOTION.length)) : 1
+  const m = motion.value, shown = m ? ease(clamp(clock.value / m.length)) : 1
   const layers = m ? [...m.reels.out.map(e => [e, 1 - shown]), ...m.reels.in.map(e => [e, shown])] : prepared.value.filter(reeled).map(e => [e, 1])
   return layers.map(([entry, opacity]) => ({ item: entry.item, tint: tintOf(entry.item), opacity, ...reelFrame(entry, reel.value) }))
 })
@@ -200,7 +201,7 @@ watch(() => props.scene, next => {
   current.value = next
 })
 
-onMounted(() => play(null, current.value))
+onMounted(() => { if (props.appear) play(null, current.value); else spin(prepared.value.some(reeled)) })
 
 onBeforeUnmount(() => cancelAnimationFrame(raf))
 

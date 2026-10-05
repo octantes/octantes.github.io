@@ -63,6 +63,7 @@ md.renderer.rules.softbreak = (tokens, idx, options, env, self) => env.trad ? ba
 md.renderer.rules.hardbreak = (tokens, idx, options, env, self) => env.flat ? '' : base.hardbreak(tokens, idx, options, env, self)
 
 md.renderer.rules.image = (tokens, idx, options, env, self) => {
+  if (env.textOnly) return ''
   const token = tokens[idx]
   const src   = escapeHtml(token.attrGet('src'))
   const alt   = escapeHtml(self.renderInlineAsText(token.children, options, env))
@@ -774,6 +775,8 @@ function awayWithoutScript(html, lang) {
 
 }
 
+function sizeOf(svg) { return (svg.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 1600 1000').split(/[\s,]+/).slice(2).map(Number) }
+
 async function writeVitacora() {
 
   const source = path.join(contentDir, 'vitacora'), target = path.join(outputDir, 'posts', 'vitacora')
@@ -784,9 +787,10 @@ async function writeVitacora() {
   const entries = []
   for (const file of files.sort().reverse()) {
     const [, date, name, kind] = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.(svg|md)$/) ?? []
-    if (kind === 'md') { entries.push({ id: `${date}-${name}`, date, title: name.replaceAll('-', ' '), kind, html: md.render(await fs.readFile(path.join(source, file), 'utf-8')) }); continue }
+    const entry = { id: `${date}-${name}`, date, title: name?.replaceAll('-', ' '), kind }
+    if (kind === 'md') { entries.push({ ...entry, html: md.render(await fs.readFile(path.join(source, file), 'utf-8'), { textOnly: true }) }); continue }
     await fs.copyFile(path.join(source, file), path.join(target, file))
-    if (kind) entries.push({ id: `${date}-${name}`, date, title: name.replaceAll('-', ' '), kind, src: `/posts/vitacora/${file}` })
+    if (kind) entries.push({ ...entry, src: `/posts/vitacora/${file}`, size: sizeOf(await fs.readFile(path.join(source, file), 'utf-8')) })
   }
 
   await fs.writeFile(path.join(outputDir, 'vitacora.json'), JSON.stringify(entries))
