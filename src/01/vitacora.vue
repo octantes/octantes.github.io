@@ -8,6 +8,7 @@ import Drawing from '../03/drawing.vue'
 const BLEND  = .25
 const FLIGHT = 4000
 const GLIDE  = .12
+const INK    = { shade: .1 }
 const TOUCH  = matchMedia('(hover: none)').matches
 
 const route  = useRoute()
@@ -51,9 +52,10 @@ function groundAt() {
 function paint() {
   frame = 0
   if (!scroller.value || !entries.value.length) return
-  const ground = groundAt(), [dark, bright] = [token('--carbon'), token('--niebla')]
+  const ground = groundAt(), [dark, bright, humo] = [token('--carbon'), token('--niebla'), token('--humo')]
+  const t = clamp((luma(ground) - luma(dark)) / (luma(bright) - luma(dark)))
   document.documentElement.style.setProperty('--page', ground)
-  scroller.value.style.setProperty('--ink', mix(token('--humo'), dark, clamp((luma(ground) - luma(dark)) / (luma(bright) - luma(dark)))))
+  scroller.value.style.setProperty('--ink', t < .5 ? mix(humo, bright, t * 2) : mix(mix(dark, humo, INK.shade), dark, (t - .5) * 2))
   store.groundLight = light(ground)
 }
 
@@ -185,7 +187,7 @@ onBeforeUnmount(() => {
 
 .rail {
 
-  /* LAYOUT */ position: absolute; top: 50%; right: 1rem; z-index: 2; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .15rem;
+  /* LAYOUT */ position: fixed; top: 50%; right: 1rem; z-index: 2; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .15rem;
   /* BOX    */ max-height: 70%; overflow-y: auto; padding: .75rem 1rem; scrollbar-width: none;
   /* FILL   */ color: var(--humo);
   /* BORDER */ border-radius: var(--radius-ss);
