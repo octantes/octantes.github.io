@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import { MOBILE_MAX } from '../04/config.js'
+import { read } from '../04/stage.js'
 
 const store               = useStore()                                                                                                // initializes global store
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
@@ -58,6 +59,10 @@ function toggle() {                                                             
         :aria-label="store.t.portada.langTitle">
         {{ store.lang.toUpperCase() }}
       </button>
+
+      <button v-if="store.currentPost" class="toggle wide-toggle" @click="read(true)"
+        :title="store.t.portada.readAlone"
+        :aria-label="store.t.portada.readAlone">⛶</button>
 
       <button class="toggle" @click="toggle"
         :title="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"
@@ -207,6 +212,8 @@ function toggle() {                                                             
   &:active { transform: var(--scale-min); }
 
 }
+
+.wide-toggle { font-size: 1.05rem; line-height: 1; @media (--mobile) { display: none; } }
 
 .lang-toggle {
   font-family: var(--font-mono);
