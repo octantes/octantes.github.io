@@ -1,5 +1,5 @@
 <script setup> 
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import { MOBILE_MAX } from '../04/config.js'
@@ -9,6 +9,7 @@ const store               = useStore()                                          
 const { computedPortada: data } = storeToRefs(store)                                                                                  // note data for text content
 
 const REMEMBER            = 'portada_open'
+const GLYPH               = { viewBox: '0 0 13 13', width: 13, height: 13, fill: 'none', stroke: 'currentColor', 'stroke-width': 1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }
 
 function initial() {
   if (typeof window === 'undefined') return false
@@ -19,15 +20,11 @@ function initial() {
 }
 
 const expanded            = ref(initial())                                                                                            // description deploy state
-const emit                = defineEmits(['update:expanded'])                                                                          // emit expanded state to parent
-
-onMounted(() => emit('update:expanded', expanded.value))
 
 function openAuthor(author) { window.open(author.link, '_blank', 'noopener,noreferrer'); }                                            // open author link
-function toggle() {                                                                                                                   // toggle and notify parent
+function toggle() {                                                                                                                   // toggle and remember
   expanded.value = !expanded.value
   try { localStorage.setItem(REMEMBER, expanded.value ? 'yes' : 'no') } catch { }
-  emit('update:expanded', expanded.value)
 }
 
 </script>
@@ -62,11 +59,11 @@ function toggle() {                                                             
 
       <button v-if="store.currentPost" class="toggle wide-toggle" @click="read(true)"
         :title="store.t.portada.readAlone"
-        :aria-label="store.t.portada.readAlone"><svg viewBox="0 0 13 13" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3M6.5 3H10v3.5M3 6.5V10h3.5" /></svg></button>
+        :aria-label="store.t.portada.readAlone"><svg v-bind="GLYPH"><path d="M3 10 10 3M6.5 3H10v3.5M3 6.5V10h3.5" /></svg></button>
 
       <button class="toggle" @click="toggle"
         :title="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"
-        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"><svg viewBox="0 0 13 13" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="expanded && { rotate: '180deg' }"><path d="M6.5 2.5v8M3.5 7.5l3 3 3-3" /></svg></button>
+        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"><svg v-bind="GLYPH" :style="expanded && { rotate: '180deg' }"><path d="M6.5 2.5v8M3.5 7.5l3 3 3-3" /></svg></button>
 
     </div>
 
