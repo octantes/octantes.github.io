@@ -12,18 +12,18 @@ const EDITION = { ...ALONE, outDir: 'edition' }
 const here    = path => fileURLToPath(new URL(path, import.meta.url))
 
 export function gameOf(slug) {
-  if (!fs.existsSync(here(`./juegos/${slug}/game.vue`))) throw new Error(`no game at juegos/${slug}/game.vue`)
+  if (!fs.existsSync(here(`./games/${slug}/game.vue`))) throw new Error(`no game at games/${slug}/game.vue`)
   const note = lang => frontMatter(fs.readFileSync(here(`./content/juegos/${slug}/${lang === 'es' ? 'index' : 'ingles'}.md`), 'utf-8')).attributes
   const [es, en] = [note('es'), fs.existsSync(here(`./content/juegos/${slug}/ingles.md`)) ? note('en') : note('es')]
   return { slug, ground: es.ground, steam: es.steam ?? null, title: { es: es.title, en: en.title }, description: { es: es.description, en: en.description } }
 }
 
 function game(slug) {
-  const store = here('./src/04/store.js'), alone = here('./juegos/store.js')
+  const store = here('./src/04/store.js'), alone = here('./games/store.js')
   return {
-    root: here('./juegos'), publicDir: false,
+    root: here('./games'), publicDir: false,
     define: { __GAME__: JSON.stringify(gameOf(slug)) },
-    alias: { '@game': here(`./juegos/${slug}/game.vue`) },
+    alias: { '@game': here(`./games/${slug}/game.vue`) },
     plugin: { name: 'game-store', enforce: 'pre', async resolveId(source, importer) { if (!/04\/store\.js$/.test(source)) return; const found = await this.resolve(source, importer, { skipSelf: true }); return found?.id === store ? alone : null } },
     build: { ...ALONE, outDir: here(`./export/${slug}`) },
   }
