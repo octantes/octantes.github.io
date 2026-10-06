@@ -2,8 +2,8 @@ import { createReadStream } from 'fs'
 import { readFile, stat } from 'fs/promises'
 import { spawn } from 'child_process'
 import path from 'path'
-import { SITE_URL } from './src/04/config.js'
-import { ARCHIVE_FLAG } from './src/04/map.js'
+import { SITE_URL } from '../src/04/config.js'
+import { ARCHIVE_FLAG } from '../src/04/map.js'
 
 const outputDir  = path.resolve('dist')
 const contentDir = path.resolve('content')

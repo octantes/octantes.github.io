@@ -84,7 +84,7 @@ md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 // VARIABLES
 
 const cacheFile = path.resolve(process.env.BUILD_CACHE || '.build-cache.json')
-const template = await fs.readFile('./post.html', 'utf-8')
+const template = await fs.readFile('./build/post.html', 'utf-8')
 
 const contentDir = './content'
 const outputDir = './dist'
