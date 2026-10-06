@@ -7,25 +7,35 @@ import Content from '../01/content.vue'
 import Status from '../01/status.vue'
 import Portada from '../02/portada.vue'
 import Corner from '../02/corner.vue'
-import { reading, read } from '../04/stage.js'
+import { reading, read, stage } from '../04/stage.js'
 import { MOBILE_MAX } from '../04/config.js'
 
 const store = useStore()
 const { currentPost } = storeToRefs(store)
 const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
 
-function escape(e) { if (e.key === 'Escape' && reading.value) read(false) }
+const narrow = matchMedia(`(max-width: ${MOBILE_MAX}px)`)
+const mobile = ref(narrow.matches)
 
-watch(currentPost, post => { if (!post && reading.value) reading.value = false })
+function fit() { mobile.value = narrow.matches; if (mobile.value) reading.value = false }
 
-onMounted(() => window.addEventListener('keydown', escape))
-onBeforeUnmount(() => { window.removeEventListener('keydown', escape); reading.value = false })
+function escape(e) { if (e.key === 'Escape' && reading.value && !stage.value) read(false) }
+
+function sideScroll(e) {
+  if (!reading.value || e.target.closest('.post') || !e.target.closest('.articulos')) return
+  document.querySelector('.articulos .post')?.scrollBy(0, e.deltaY * (e.deltaMode ? 40 : 1))
+}
+
+watch(currentPost, post => { if (!post) reading.value = false })
+
+onMounted(() => { window.addEventListener('keydown', escape); narrow.addEventListener('change', fit) })
+onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.removeEventListener('change', fit); reading.value = false })
 
 </script>
 
 <template>
 
-  <div class="layout page" :class="{ reading }">
+  <div class="layout page" :class="{ reading }" @wheel.passive="sideScroll">
 
     <div class="portal-glow" aria-hidden="true" />
     <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" :inert="store.processing" />
@@ -33,7 +43,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); reading.v
 
     <Content role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded || reading }" />
 
-    <Corner v-if="reading" :label="store.t.stage.unread" stacked @close="read(false)" />
+    <div v-if="reading && !mobile" class="reading-corner"><Corner :label="store.t.stage.unread" stacked @close="read(false)" /></div>
 
   </div>
 
@@ -82,9 +92,14 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); reading.v
 
 .layout.reading { @media (--desktop) {
 
+  --wider: 6rem;
+
   & .portada, & .navigation { display: none; }
-  & .articulos, & .portal-glow { grid-column: 1 / -1; grid-row: 1 / -1; justify-self: center; width: calc((100% - 1rem) / 2); }
-  & .portal-glow { width: calc((100% - 1rem) / 2 + 2rem); }
+  & .articulos, & .portal-glow, & .reading-corner { grid-column: 1 / -1; grid-row: 1 / -1; justify-self: center; width: calc((100% - 1rem) / 2 + var(--wider) * 2); }
+  & .articulos, & .reading-corner { margin-top: -1rem; }
+  & .portal-glow { width: calc((100% - 1rem) / 2 + var(--wider) * 2 + 2rem); }
+  & .articulos .post { width: calc(100% - var(--wider) * 2); margin-inline: auto; }
+  & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; } }
 
 } }
 
