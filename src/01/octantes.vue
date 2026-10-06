@@ -1,28 +1,39 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import Navigation from '../01/navigation.vue'
 import Content from '../01/content.vue'
 import Status from '../01/status.vue'
 import Portada from '../02/portada.vue'
+import Corner from '../02/corner.vue'
+import { reading, read } from '../04/stage.js'
 import { MOBILE_MAX } from '../04/config.js'
 
 const store = useStore()
 const { currentPost } = storeToRefs(store)
 const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
 
+function escape(e) { if (e.key === 'Escape' && reading.value) read(false) }
+
+watch(currentPost, post => { if (!post && reading.value) reading.value = false })
+
+onMounted(() => window.addEventListener('keydown', escape))
+onBeforeUnmount(() => { window.removeEventListener('keydown', escape); reading.value = false })
+
 </script>
 
 <template>
 
-  <div class="layout page">
+  <div class="layout page" :class="{ reading }">
 
     <div class="portal-glow" aria-hidden="true" />
     <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" :inert="store.processing" />
     <Navigation role="navigation" :aria-label="store.t.nav.search" class="navigation" :locked="store.processing" />
 
-    <Content role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded }" />
+    <Content role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded || reading }" />
+
+    <Corner v-if="reading" :label="store.t.stage.unread" stacked @close="read(false)" />
 
   </div>
 
@@ -68,6 +79,14 @@ const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
   /* FILL   */ background: var(--portal-glow);
 
 }
+
+.layout.reading { @media (--desktop) {
+
+  & .portada, & .navigation { display: none; }
+  & .articulos, & .portal-glow { grid-column: 1 / -1; grid-row: 1 / -1; justify-self: center; width: calc((100% - 1rem) / 2); }
+  & .portal-glow { width: calc((100% - 1rem) / 2 + 2rem); }
+
+} }
 
 .footer     { padding: 0rem 1rem 1rem 1rem; flex-shrink: 0; }
 
