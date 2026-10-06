@@ -9,4 +9,6 @@ export function launch(game, ground) { return throughTheVeil(() => { stage.value
 export function visit(path)          { return throughTheVeil(() => router.push(path)) }
 export function leave()              { return throughTheVeil(() => { stage.value = null }) }
 export function read(on)             { if (veilOn.value || reading.value === on) return; return throughTheVeil(() => { reading.value = on }) }
-export function back()               { return throughTheVeil(() => window.history.state?.back ? new Promise(done => { const off = router.afterEach(() => { off(); done() }); router.back() }) : router.push('/')) }
+export function back()               { return throughTheVeil(() => window.history.state?.back ? previous() : router.push('/')) }
+
+function previous() { return new Promise(done => { const off = router.afterEach(() => { off(); done() }); router.back() }) }

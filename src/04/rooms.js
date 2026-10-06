@@ -71,7 +71,7 @@ export const WALLS = furnish(ROOM_WALLS.map(wall => ({ ...wall, items: ITEMS[wal
 // ART
 
 export const LINE  = 18
-export const DEPTH = { grow: 2, fill: .6 }
+const DEPTH = { grow: 2, fill: .6 }
 
 const ART = {
 

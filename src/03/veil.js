@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-export const ENABLED = true
+const ENABLED = true
 
 export const veilOn = ref(false)
 export const veilOpaque = ref(false)
