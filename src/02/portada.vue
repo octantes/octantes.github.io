@@ -62,7 +62,7 @@ function toggle() {                                                             
 
       <button v-if="store.currentPost" class="toggle wide-toggle" @click="read(true)"
         :title="store.t.portada.readAlone"
-        :aria-label="store.t.portada.readAlone"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" /></svg></button>
+        :aria-label="store.t.portada.readAlone"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" vector-effect="non-scaling-stroke" /></svg></button>
 
       <button class="toggle" @click="toggle"
         :title="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"

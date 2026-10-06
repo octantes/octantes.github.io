@@ -99,7 +99,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
   & .articulos, & .reading-corner { margin-top: -1rem; }
   & .portal-glow { width: calc((100% - 1rem) / 2 + var(--wider) * 2 + 2rem); }
   & .articulos .post { width: calc(100% - var(--wider) * 2); margin-inline: auto; }
-  & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; } }
+  & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; top: 2.25rem; right: 3rem; } }
 
 } }
 
