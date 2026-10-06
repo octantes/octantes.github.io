@@ -82,7 +82,7 @@ useRouter().afterEach((to, from) => {
 .fade-finish { --fade-to: 1;   --fade-time: .4s;  --fade-curve: ease-out;                  }
 
 :is(.fade-hold, .fade-rise, .fade-finish) :is(.footer, .portal-glow),
-:is(.fade-hold, .fade-rise, .fade-finish):not(.landed) :is(.portada, .navigation, .portfolio) { opacity: var(--fade-to); transition: opacity var(--fade-time) var(--fade-curve, linear); }
+:is(.fade-hold, .fade-rise, .fade-finish):not(.landed) :is(.portada, .navigation, .portfolio, .vitacora) { opacity: var(--fade-to); transition: opacity var(--fade-time) var(--fade-curve, linear); }
 
 .staged > :not(.stage, .dotgrid, .veil) { visibility: hidden; }
 

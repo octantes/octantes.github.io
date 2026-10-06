@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
 
 <template>
 
-  <div class="frame page" ref="sheet">
+  <div class="frame page vitacora" ref="sheet">
 
     <Corner :label="store.t.stage.back" stacked @close="back" />
 
