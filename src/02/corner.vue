@@ -12,7 +12,7 @@ const store = useStore()
 <template>
 
   <div class="top-actions">
-    <button class="close-btn" @click="emit('close')" :title="label" :aria-label="label">✘</button>
+    <button v-if="label" class="close-btn" @click="emit('close')" :title="label" :aria-label="label">✘</button>
     <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
   </div>
 

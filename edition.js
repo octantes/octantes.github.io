@@ -2,11 +2,10 @@ import fs from 'fs/promises'
 import path from 'path'
 import { SITE_URL, ERA } from './src/04/config.js'
 import { pathOf } from './src/04/map.js'
+import { copy, fonts, inline } from './vendor.js'
 
 const DIST  = 'dist'
 const OUT   = 'edition'
-const FONTS = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap'
-const AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
 const BUNDLE = /\.(js|css)$/
 const IFRAME = /<iframe[^>]*src="([^"]+)"[^>]*>[\s\S]*?<\/iframe>/g
 const TUBE   = /youtube(?:-nocookie)?\.com\/embed\/([\w-]+)/
@@ -31,15 +30,6 @@ function local(text) {
 function article(html) {
   const start = html.indexOf('<main class="post-content')
   return start < 0 ? null : html.slice(start, html.indexOf('</main>', start) + '</main>'.length)
-}
-
-async function copy(from, to, keep = () => true) {
-  await fs.mkdir(to, { recursive: true })
-  for (const entry of await fs.readdir(from, { withFileTypes: true })) {
-    const [source, target] = [path.join(from, entry.name), path.join(to, entry.name)]
-    if (entry.isDirectory()) await copy(source, target, keep)
-    else if (keep(entry.name)) await fs.copyFile(source, target)
-  }
 }
 
 async function videos() {
@@ -82,24 +72,6 @@ async function shelve() {
 
 }
 
-async function fonts() {
-
-  try {
-    const css = await (await fetch(FONTS, { headers: { 'User-Agent': AGENT } })).text()
-    const files = [...new Set(css.match(/https:\/\/fonts\.gstatic\.com\/[^)]+/g))]
-    await fs.mkdir(path.join(OUT, 'fonts'), { recursive: true })
-    let sheet = css
-    for (const [i, url] of files.entries()) {
-      const name = `font-${i}${path.extname(url)}`
-      await fs.writeFile(path.join(OUT, 'fonts', name), Buffer.from(await (await fetch(url)).arrayBuffer()))
-      sheet = sheet.replaceAll(url, name)
-    }
-    await fs.writeFile(path.join(OUT, 'fonts', 'fonts.css'), sheet)
-    return files.length
-  } catch (e) { console.warn('fonts not vendored, the edition will fall back to system fonts:', e.message); return 0 }
-
-}
-
 async function page(vendored) {
 
   const file = path.join(OUT, 'index.html')
@@ -121,12 +93,6 @@ async function page(vendored) {
 
   await inline(path.join(OUT, 'style.css'), OUT)
 
-}
-
-async function inline(sheet, root) {
-  let css = await fs.readFile(sheet, 'utf-8')
-  for (const [match, file] of css.matchAll(/url\(['"]?([^'")]+\.svg)['"]?\)/g)) css = css.replaceAll(match, `url("data:image/svg+xml;base64,${(await fs.readFile(path.join(root, file))).toString('base64')}")`)
-  await fs.writeFile(sheet, css)
 }
 
 async function walk(dir, base = dir) {
@@ -181,7 +147,7 @@ async function main() {
   await copy(path.join(DIST, 'assets'), path.join(OUT, 'assets'), name => !BUNDLE.test(name) || name === 'neocities.css')
   await videos()
   const shelved = await shelve()
-  const vendored = await fonts()
+  const vendored = await fonts(OUT)
   await page(vendored)
   const archived = await archive()
   const plain = path.join(OUT, 'assets', 'neocities.css')

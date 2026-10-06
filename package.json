@@ -12,6 +12,7 @@
     "build:vite": "vite build",
     "build:static": "node buildstep.js",
     "edition": "npm run build && vite build --mode edition && node edition.js",
+    "game": "node game.js",
     "preview": "vite preview"
   },
   "dependencies": {
