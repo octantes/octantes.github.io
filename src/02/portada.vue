@@ -57,7 +57,7 @@ function toggle() {                                                             
       <button class="toggle lang-toggle" @click="store.toggleLang"
         :title="store.t.portada.langTitle"
         :aria-label="store.t.portada.langTitle">
-        {{ store.lang.toUpperCase() }}
+        <span class="ink lang-ink">{{ store.lang.toUpperCase() }}</span>
       </button>
 
       <button v-if="store.currentPost" class="toggle wide-toggle" @click="read(true)"
@@ -66,7 +66,7 @@ function toggle() {                                                             
 
       <button class="toggle" @click="toggle"
         :title="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"
-        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc">{{ expanded ? '↑' : '↓' }}</button>
+        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"><span class="ink arrow-ink">{{ expanded ? '↑' : '↓' }}</span></button>
 
     </div>
 
@@ -213,18 +213,24 @@ function toggle() {                                                             
 
 }
 
-.wide-toggle { @media (--mobile) { display: none; } }
+.wide-toggle { @media (--mobile) { display: none; } &:hover .spread { opacity: 1; } }
 
 .spread {
 
   /* LAYOUT */ position: relative; display: block;
   /* BOX    */ width: 1em; height: 1em;
+  /* FILL   */ color: var(--carbon); opacity: .5; transition: opacity var(--animate-faster);
+  /* ALIGN  */ translate: -.012em -.012em;
 
   & span { position: absolute; inset: 0; display: grid; place-items: center; font-size: .8em; line-height: 1; }
   & span:first-child { transform: translate(.18em, -.18em) rotate(-135deg); }
   & span:last-child  { transform: translate(-.18em, .18em) rotate(45deg); }
 
 }
+
+.ink       { display: block; }
+.lang-ink  { translate: 0 -.02em; }
+.arrow-ink { translate: 0 -.072em; }
 
 .lang-toggle {
   font-family: var(--font-mono);
