@@ -1,10 +1,11 @@
 <script setup>
 
-import { computed, watchEffect } from 'vue'
+import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from '@/04/store.js'
 import DotGrid from '@/03/dotgrid.vue'
 import Corner from '@/02/corner.vue'
 import Game from '@game'
+import { desktop, fullscreen, quit } from './desktop.js'
 
 const store = useStore()
 const paint = __GAME__.ground?.startsWith('#') ? __GAME__.ground : `var(--${__GAME__.ground ?? 'carbon'})`
@@ -16,6 +17,14 @@ store.groundLight = light(getComputedStyle(document.documentElement).getProperty
 
 const ink = computed(() => store.groundLight ? 'var(--carbon)' : 'var(--niebla)')
 
+const KEYS = { F11: fullscreen, Escape: quit }
+
+function key(e) { if (!KEYS[e.key]) return; e.preventDefault(); KEYS[e.key]() }
+
+onMounted(() => { if (desktop) window.addEventListener('keydown', key) })
+
+onBeforeUnmount(() => window.removeEventListener('keydown', key))
+
 watchEffect(() => { document.title = __GAME__.title[store.lang]; document.documentElement.classList.toggle('light', store.groundLight) })
 
 </script>
@@ -25,7 +34,7 @@ watchEffect(() => { document.title = __GAME__.title[store.lang]; document.docume
   <div class="juego">
     <DotGrid viewport :ink="ink" />
     <Game />
-    <Corner />
+    <Corner :label="desktop ? store.t.stage.leave : null" @close="quit" />
   </div>
 
 </template>

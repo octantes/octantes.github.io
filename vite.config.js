@@ -15,7 +15,7 @@ export function gameOf(slug) {
   if (!fs.existsSync(here(`./juegos/${slug}/game.vue`))) throw new Error(`no game at juegos/${slug}/game.vue`)
   const note = lang => frontMatter(fs.readFileSync(here(`./content/juegos/${slug}/${lang === 'es' ? 'index' : 'ingles'}.md`), 'utf-8')).attributes
   const [es, en] = [note('es'), fs.existsSync(here(`./content/juegos/${slug}/ingles.md`)) ? note('en') : note('es')]
-  return { slug, ground: es.ground, title: { es: es.title, en: en.title }, description: { es: es.description, en: en.description } }
+  return { slug, ground: es.ground, steam: es.steam ?? null, title: { es: es.title, en: en.title }, description: { es: es.description, en: en.description } }
 }
 
 function game(slug) {

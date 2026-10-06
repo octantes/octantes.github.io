@@ -1,0 +1,137 @@
+name: game-desktop
+
+on:
+  workflow_dispatch:
+    inputs:
+      game:
+        description: juego
+        type: choice
+        options: [ havitat ]
+      linux:
+        description: linux
+        type: boolean
+        default: true
+      windows:
+        description: windows
+        type: boolean
+        default: true
+      publish:
+        description: publish a release with the builds
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      platforms: ${{ steps.pick.outputs.platforms }}
+
+    steps:
+      - name: pick platforms
+        id: pick
+        run: |
+          list=()
+          [ "${{ inputs.linux }}" = "true" ] && list+=('{"name":"linux","os":"ubuntu-22.04"}')
+          [ "${{ inputs.windows }}" = "true" ] && list+=('{"name":"windows","os":"windows-latest"}')
+          [ ${#list[@]} -gt 0 ] || { echo "pick at least one platform"; exit 1; }
+          echo "platforms=[$(IFS=,; echo "${list[*]}")]" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: plan
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJSON(needs.plan.outputs.platforms) }}
+    runs-on: ${{ matrix.platform.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      GAME: ${{ inputs.game }}
+      APPIMAGE_EXTRACT_AND_RUN: 1
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: setup rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: juegos/desktop -> target
+          key: ${{ matrix.platform.name }}
+
+      - name: linux libraries
+        if: matrix.platform.name == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev librsvg2-dev patchelf libfuse2 file
+
+      - name: install deps
+        run: npm ci
+
+      - name: 1. export the game
+        run: npm run game "$GAME"
+
+      - name: 2. icons
+        run: npx --yes @tauri-apps/cli@2 icon "export/$GAME-icon.png" -o juegos/desktop/icons
+
+      - name: 3. desktop build
+        working-directory: juegos/desktop
+        run: |
+          STEAM_APP_ID=$(cat "../../export/$GAME-steam.txt")
+          export STEAM_APP_ID
+          npx --yes @tauri-apps/cli@2 build --config "../../export/$GAME-desktop.json" --no-bundle
+          if [ "${{ matrix.platform.name }}" = "linux" ]; then library=libsteam_api.so; else library=steam_api64.dll; fi
+          cp "$(find target/release/build -name "$library" | head -1)" target/release/
+
+      - name: 4. steam folder
+        run: |
+          folder="steam/$GAME-${{ matrix.platform.name }}"
+          mkdir -p steam
+          if [ "${{ matrix.platform.name }}" = "linux" ]; then
+            (cd juegos/desktop && LD_LIBRARY_PATH="$PWD/target/release" npx --yes @tauri-apps/cli@2 bundle --config "../../export/$GAME-desktop.json" --bundles appimage)
+            image=$(realpath juegos/desktop/target/release/bundle/appimage/*.AppImage)
+            (cd steam && "$image" --appimage-extract >/dev/null)
+            mv steam/squashfs-root "$folder"
+            tar -czf "$folder.tar.gz" -C steam "$GAME-linux"
+          else
+            mkdir -p "$folder"
+            cp "juegos/desktop/target/release/$GAME.exe" juegos/desktop/target/release/steam_api64.dll "$folder/"
+            (cd steam && 7z a -tzip "$GAME-windows.zip" "$GAME-windows" >/dev/null)
+          fi
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.game }}-${{ matrix.platform.name }}
+          path: steam/${{ inputs.game }}-${{ matrix.platform.name }}.*
+
+  release:
+    if: inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: download builds
+        uses: actions/download-artifact@v4
+        with:
+          path: builds
+          merge-multiple: true
+
+      - name: publish
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.game }}-${{ github.run_number }}
+          name: ${{ inputs.game }} ${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          files: builds/*

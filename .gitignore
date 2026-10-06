@@ -26,3 +26,7 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+juegos/desktop/target
+juegos/desktop/icons
+juegos/desktop/gen
