@@ -12,7 +12,7 @@ const { t }           = storeToRefs(store)
 
 const { activeFilter, userStatus, currentPost } = storeToRefs(store)                                                                  // imports refs from main store
 
-const displayFilter = computed(() => props.section || currentPost.value?.type || activeFilter.value)                                                   // show note type when reading, else active filter
+const displayFilter = computed(() => props.section || currentPost.value?.type || activeFilter.value)                                  // show note type, else active filter
 
 const currentTagline  = ref('')
 
