@@ -57,16 +57,16 @@ function toggle() {                                                             
       <button class="toggle lang-toggle" @click="store.toggleLang"
         :title="store.t.portada.langTitle"
         :aria-label="store.t.portada.langTitle">
-        <span class="ink lang-ink">{{ store.lang.toUpperCase() }}</span>
+        {{ store.lang.toUpperCase() }}
       </button>
 
       <button v-if="store.currentPost" class="toggle wide-toggle" @click="read(true)"
         :title="store.t.portada.readAlone"
-        :aria-label="store.t.portada.readAlone"><span class="spread" aria-hidden="true"><span>↓</span><span>↓</span></span></button>
+        :aria-label="store.t.portada.readAlone"><svg viewBox="0 0 13 13" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3M6.5 3H10v3.5M3 6.5V10h3.5" /></svg></button>
 
       <button class="toggle" @click="toggle"
         :title="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"
-        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"><span class="ink arrow-ink">{{ expanded ? '↑' : '↓' }}</span></button>
+        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc">{{ expanded ? '↑' : '↓' }}</button>
 
     </div>
 
@@ -213,24 +213,7 @@ function toggle() {                                                             
 
 }
 
-.wide-toggle { @media (--mobile) { display: none; } &:hover .spread { opacity: 1; } }
-
-.spread {
-
-  /* LAYOUT */ position: relative; display: block;
-  /* BOX    */ width: 1em; height: 1em;
-  /* FILL   */ color: var(--carbon); opacity: .5; transition: opacity var(--animate-faster);
-  /* ALIGN  */ translate: -.012em -.012em;
-
-  & span { position: absolute; inset: 0; display: grid; place-items: center; font-size: .8em; line-height: 1; }
-  & span:first-child { transform: translate(.18em, -.18em) rotate(-135deg); }
-  & span:last-child  { transform: translate(-.18em, .18em) rotate(45deg); }
-
-}
-
-.ink       { display: block; }
-.lang-ink  { translate: 0 -.02em; }
-.arrow-ink { translate: 0 -.072em; }
+.wide-toggle { @media (--mobile) { display: none; } }
 
 .lang-toggle {
   font-family: var(--font-mono);
