@@ -5,6 +5,7 @@ import crypto from 'crypto'
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
+
 import { VITACORA, SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from './src/04/config.js'
 import { DICT } from './src/04/lang.js'
 import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from './src/04/map.js'
@@ -98,7 +99,7 @@ const DEV = !!process.env.OCTANTES_DEV
 
 // MD TO HTML BODY PROCESSING
 
-function renderType(body, attributes, env) {                                     // render body applying type logic 
+function renderType(body, attributes, env) {                                                        // render body applying type logic 
 
   const type = attributes.type
   const isTrad = attributes.style === 'trad'
@@ -223,7 +224,7 @@ async function makeShare(inputPath, destPath) {
 
 }
 
-async function convertImage(inputPath, destPath, width = 1200, quality = 80) {   // convert input image files to WEBP 
+async function convertImage(inputPath, destPath, width = 1200, quality = 80) {                      // convert input image files to WEBP 
 
   try {
 
@@ -236,7 +237,7 @@ async function convertImage(inputPath, destPath, width = 1200, quality = 80) {  
 
 }
 
-async function convertAudio(inputPath, destPath) {                               // convert input audio files to OGG 
+async function convertAudio(inputPath, destPath) {                                                  // convert input audio files to OGG 
 
   const finalOutputPath = destPath.replace(/\.(mp3|wav)$/i, '.ogg')
   if (await fresh(inputPath, finalOutputPath)) return finalOutputPath
@@ -253,7 +254,7 @@ async function convertAudio(inputPath, destPath) {                              
 
 }
 
-async function convertVideo(inputPath, destPath) {                               // just copies video files to output 
+async function convertVideo(inputPath, destPath) {                                                  // just copies video files to output 
 
   try {
 
@@ -332,7 +333,7 @@ async function convertGif(inputPath, destPath) {
 
 // SETUP BUILD AND PROCESS
 
-async function setupBuild() {                                                    // load cache and prepare output directory 
+async function setupBuild() {                                                                       // load cache and prepare output directory 
 
   try { cache = JSON.parse(await fs.readFile(cacheFile, 'utf-8')) }
   catch { console.log("hash cache not found, recreating") }
@@ -355,7 +356,7 @@ async function setupBuild() {                                                   
 
 }
 
-async function copyAssets() {                                                    // copy global asset folder to output directory 
+async function copyAssets() {                                                                       // copy global asset folder to output directory 
 
   try {
 
@@ -391,7 +392,7 @@ async function copyAssets() {                                                   
 
 }
 
-async function cleanOrphans() {                                                  // delete orphans from cache and output directory 
+async function cleanOrphans() {                                                                     // delete orphans from cache and output directory 
 
   const postsDir = path.join(outputDir, 'posts')
 
@@ -510,7 +511,7 @@ function fillTemplate({ page, lang, item, title, meta, type, toggleHref, sidebar
 
 }
 
-async function processPosts() {                                                  // process and convert images from markdown and assets 
+async function processPosts() {                                                                     // process and convert images from markdown and assets 
 
   for (const post of postDirs) {
 
@@ -683,7 +684,7 @@ async function processPosts() {                                                 
 
 }
 
-async function writeIndex() {                                                    // create index.json with processed post metadata 
+async function writeIndex() {                                                                       // create index.json with processed post metadata 
 
   const indexPath = path.join(outputDir, 'index.json')
   
@@ -815,7 +816,7 @@ async function writeVitacora() {
 
 }
 
-async function writeArchive() {                                                  // create both language archive versions
+async function writeArchive() {                                                                     // create both language archive versions
 
   const page = { kind: 'archive' }
 
@@ -832,7 +833,7 @@ async function writeArchive() {                                                 
 
 }
 
-function generateMonolingualSidebar(lang) {                                 // create static sidebar for archive pages
+function generateMonolingualSidebar(lang) {                                                         // create static sidebar for archive pages
 
   const groups = {}
 
@@ -859,7 +860,7 @@ function generateMonolingualSidebar(lang) {                                 // c
   return html
 }
 
-async function updateSidebars() {                                                // update old archive website sidebars 
+async function updateSidebars() {                                                                   // update old archive website sidebars 
 
   const sidebars = { es: generateMonolingualSidebar('es'), en: generateMonolingualSidebar('en') }
 
@@ -880,7 +881,7 @@ async function updateSidebars() {                                               
 
 function newest(items) { return items.reduce((a, p) => (p.modified || p.isoDate) > a ? (p.modified || p.isoDate) : a, '') }
 
-async function writeSitemap() {                                                  // create sitemap and robots.txt 
+async function writeSitemap() {                                                                     // create sitemap and robots.txt 
 
   const latest = newest(indexItems)
   const paired = (page, lastmod) => ['es', 'en'].map(lang => ({ url: urlOf(page, lang), lastmod, alternates: { es: urlOf(page, 'es'), en: urlOf(page, 'en'), 'x-default': urlOf(page, 'es') } }))
@@ -923,7 +924,7 @@ async function writeSitemap() {                                                 
 
 }
 
-async function writeFeed() {                                                     // create RSS feed XML 
+async function writeFeed() {                                                                        // create RSS feed XML 
 
   const feedPath = path.join(outputDir, 'feed.xml')
   
@@ -967,7 +968,7 @@ async function writeFeed() {                                                    
 
 }
 
-async function finalizeBuild() {                                                 // update cache and create 404 
+async function finalizeBuild() {                                                                    // update cache and create 404 
 
   await fs.mkdir(path.dirname(cacheFile), { recursive: true })
   await fs.writeFile(cacheFile, JSON.stringify(cache, null, 2))
@@ -991,7 +992,7 @@ async function finalizeBuild() {                                                
 
 }
 
-async function main() {                                                          // main build process 
+async function main() {                                                                             // main build process 
 
   await setupBuild()
   shell = await readShell()

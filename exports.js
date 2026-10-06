@@ -4,9 +4,9 @@ import path from 'path'
 // EXPORTS  | command                         | output             | what it is
 // SITE     | npm run build                   | dist/              | the live site, deployed only by the build-md action on every push
 // DEV      | npm run dev                     | dist/ + server     | the site as the workshop: rebuilds on save and shows hidden notes ("mostrar: no") faded
-// ARCHIVE  | (part of every build)           | dist/**.html       | the flat no-js archive inside each page, indexed by archivo.html and archive.html
+// ARCHIVE  | part of every build             | dist/**.html       | the flat no-js archive inside each page, indexed by archivo.html and archive.html
 // EDITION  | npm run edition                 | edition/           | the whole site as a folder that runs from disk with no server or network, plus edition/archivo/
-// GAME     | npm run game <slug>             | export/<slug>/     | one game alone, runnable from disk, plus export/<slug>.zip to upload to itch.io as an html game
+// GAME     | npm run game <slug>             | export/<slug>/     | one game alone, runnable from disk, plus export/<slug>.zip to upload as html game
 // STEAM    | actions > game-desktop > run    | artifacts/release  | windows (<slug>.exe + steam_api64.dll) and linux (unpacked appimage, launch AppRun) builds
 
 /* NOTES

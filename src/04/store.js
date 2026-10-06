@@ -8,9 +8,9 @@ import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
 
-  const tabs                       = computed(() => SECTIONS.map(({ id }) => ({ label: labelOf(id, lang.value), value: id })))    // names for filters 
+  const tabs       = computed(() => SECTIONS.map(({ id }) => ({ label: labelOf(id, lang.value), value: id })))                    // names for filters 
 
-  const authorsMap = {                                                                                                                // author profile pic and link 
+  const authorsMap = {                                                                                                            // author profile pic and link 
 
     swim:     { img: '/assets/swim.webp',  link: 'https://youtu.be/dQw4w9WgXcQ?si=bz_5AJZx0wCKCccI' },
     kaste:    { img: '/assets/kaste.webp', link: 'https://x.com/octantes' },
@@ -49,7 +49,7 @@ export const useStore = defineStore('store', () => {
   const notesIndex                 = ref([])                                                                                          // note index array
   const currentPost                = ref(null)                                                                                        // current loaded post ref
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
-  let   notesLoadingPromise        = null                                                                                               // in-flight guard for loadNotesIndex
+  let   notesLoadingPromise        = null                                                                                             // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const classMap                   = { desarrollo: 'nota nota-verso', textos: 'nota nota-verso', diseño: 'nota-medios', musica: 'nota nota-verso', juegos: 'nota nota-verso'}                      // note type custom class map
   const postHtmlCache              = ref({})
@@ -60,9 +60,9 @@ export const useStore = defineStore('store', () => {
   const groundLight                = ref(null)
   const popLink                    = ref(POPUP_LINK)                                                                                  // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
-  const popString                  = computed(() => t.value.portada.popupText)                                                      // popup text
+  const popString                  = computed(() => t.value.portada.popupText)                                                        // popup text
   const mailtoDir                  = ref(CONTACT_EMAIL)                                                                               // contact direction
-  const userStatus                 = computed(() => {                                                                                   // current user status (lang-aware)
+  const userStatus                 = computed(() => {                                                                                 // current user status (lang-aware)
 
     const entry = STATUSES[STATUS] || Object.values(STATUSES)[0]
     return { emoji: entry.emoji, message: entry[lang.value] || entry.es || entry.emoji }
@@ -73,7 +73,7 @@ export const useStore = defineStore('store', () => {
 
   const subEmail                   = ref('')                                                                                          // email
   const subHoney                   = ref('')                                                                                          // bot honeypot
-  const subMessage                 = ref(t.value.subscribe.placeholder)                                                                 // status message
+  const subMessage                 = ref(t.value.subscribe.placeholder)                                                               // status message
   const subState                   = ref('default')                                                                                   // status states
   const subDone                    = ref((parseInt(localStorage.getItem('subscription_count') || '0', 10) || 0) > 0)                  // user already subscribed
   const emailRegex                 = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/                                             // email regex
@@ -99,8 +99,8 @@ export const useStore = defineStore('store', () => {
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
   function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // lock or unlock navigation
-  function togglePopup()                { showPopup.value = !showPopup.value; if (!showPopup.value) localStorage.setItem('popup_seen', popLink.value) } // toggle popup for notifications
-  function setSearchQuery(query)        { searchQuery.value = query }                                          // apply note search query to table
+  function togglePopup()                { showPopup.value = !showPopup.value; if (!showPopup.value) localStorage.setItem('popup_seen', popLink.value) } 
+  function setSearchQuery(query)        { searchQuery.value = query }                                                                 // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
 
   function fetchTime() {                                                                                                              // fetch and update current time  
@@ -200,7 +200,7 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  function hasNotes(type) {                                                                                                        // check if filter has notes
+  function hasNotes(type) {                                                                                                           // check if filter has notes
 
     if (type === 'portal') return true
     return notesIndex.value.some(note => note.type === type)

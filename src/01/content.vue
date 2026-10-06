@@ -24,10 +24,10 @@ let resizeTimer = null                                                          
 
 function checkViewport() { isMobile.value = window.innerWidth <= MOBILE_MAX }                                                         // detect mobile
 
-function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitCentred() }, 150) }                                       // use resize timer
+function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { checkViewport(); fitCentred() }, 150) }             // use resize timer
 
-const { currentPost, computedNoteComp, computedNoteClass } = storeToRefs(store)                                   // imports refs from main store
-const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                        // imports variables from main store
+const { currentPost, computedNoteComp, computedNoteClass } = storeToRefs(store)                                                       // imports refs from main store
+const { loadNotesIndex, setCurrentPost, setProcessing, fetchPost } = store                                                            // imports variables from main store
 
 const portalRef   = ref(null)                                                                                                         // shader variable for animations
 const containerRef= ref(null)
@@ -388,12 +388,12 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
         <div class="content" ref="contentRef" @click="play">
 
-          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />                <!-- for vuecomp            -->
+          <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />              <!-- for vuecomp -->
           <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
           <About v-else-if="aboutOpen && !notFound" :section="aboutOpen" :key="route.fullPath" />
           <template v-else>
             <NoteTitle v-if="currentPost && currentPost.type !== 'diseño'" :text="noteTitle" />
-            <div :class="computedNoteClass" v-html="noteContent" />                                   <!-- for html posts          -->
+            <div :class="computedNoteClass" v-html="noteContent" />                                 <!-- for html posts -->
           </template>
 
           <template v-if="currentPost && noteContent && !notFound && !computedNoteComp">

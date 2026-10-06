@@ -5,7 +5,5 @@ import router from './router.js'
 export const stage = shallowRef(null)
 
 export function launch(game, ground) { return throughTheVeil(() => { stage.value = { game, ground } }) }
-
-export function visit(path) { return throughTheVeil(() => router.push(path)) }
-
-export function leave() { return throughTheVeil(() => { stage.value = null }) }
+export function visit(path)          { return throughTheVeil(() => router.push(path)) }
+export function leave()              { return throughTheVeil(() => { stage.value = null }) }

@@ -12,10 +12,10 @@ const Vitacora  = () => import('../01/vitacora.vue')
 const routes = [
 
   { path: '/portfolio',      component: Portfolio }, // opens the portfolio page
-  { path: '/havitat',        component: Havitat   },
-  { path: '/vitacora',       component: Vitacora  },
-  { path: wallPath,          component: Havitat   },
-  { path: depthPath,         component: Havitat   },
+  { path: '/havitat',        component: Havitat   }, // opens the havitat from intro
+  { path: '/vitacora',       component: Vitacora  }, // opens the vitacora boards
+  { path: wallPath,          component: Havitat   }, // opens a specific havitat wall
+  { path: depthPath,         component: Havitat   }, // opens a specific havitat depth
   { path: '/portal',         component: Octantes  }, // opens the portal
   { path: '/about',          component: Octantes  }, // opens the portal's about
   { path: '/info',           component: Octantes  }, // opens the portal's about in spanish
