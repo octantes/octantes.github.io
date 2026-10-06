@@ -1,8 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { SITE_URL, ERA } from './src/04/config.js'
-import { pathOf } from './src/04/map.js'
-import { copy, fonts, inline } from './vendor.js'
+import { copy, fonts, inline } from './exports.js'
 
 const DIST  = 'dist'
 const OUT   = 'edition'
@@ -55,10 +54,11 @@ async function shelve() {
   const notes = JSON.parse(await fs.readFile(path.join(DIST, 'index.json'), 'utf-8'))
   shelf['index.json'] = local(JSON.stringify(notes))
 
-  for (const note of notes) for (const lang of note.bilingual ? ['es', 'en'] : ['es']) {
-    const page = pathOf({ kind: 'note', id: note.type, slug: note.slug }, lang)
-    const html = article(await fs.readFile(path.join(DIST, `${page}.html`), 'utf-8'))
-    if (html) shelf[`${page.slice(1)}.html`] = local(html)
+  for (const file of (await walk(DIST)).filter(file => file.endsWith('.html'))) {
+    const html = await fs.readFile(path.join(DIST, file), 'utf-8')
+    const meta = html.match(/<script type="application\/json" id="note">[\s\S]*?<\/script>/)?.[0]
+    const body = meta && article(html)
+    if (body) shelf[file] = local(meta + body)
   }
 
   shelf['vitacora.json'] = local(await fs.readFile(path.join(DIST, 'vitacora.json'), 'utf-8'))

@@ -29,7 +29,7 @@ function devPlugin() {
     running = true
 
     const t0   = Date.now()
-    const proc = spawn(process.execPath, ['buildstep.js'], { stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, BUILD_CACHE: devCache } })
+    const proc = spawn(process.execPath, ['buildstep.js'], { stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, BUILD_CACHE: devCache, OCTANTES_DEV: '1' } })
     let errors = ''
     proc.stderr.on('data', d => { errors += d })
 

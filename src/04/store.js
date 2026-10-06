@@ -275,12 +275,19 @@ export const useStore = defineStore('store', () => {
 
   }
 
+  async function unlisted(slug, type) {
+    try {
+      const page = new DOMParser().parseFromString(await read(`${base}${pathOf({ kind: 'note', id: type || 'textos', slug }, 'es')}.html`), 'text/html')
+      return JSON.parse(page.getElementById('note')?.textContent ?? 'null')
+    } catch { return null }
+  }
+
   async function fetchPost(slug, routeType) {                                                                                        // fetch post html 
 
     if (!slug) { setCurrentPost(null); return { html: '', error: null } }
     if (!notesLoaded.value) { await loadNotesIndex() }
 
-    const metadataSlug = notesIndex.value.find(p => p.slug === slug)
+    const metadataSlug = notesIndex.value.find(p => p.slug === slug) ?? await unlisted(slug, routeType)
     setCurrentPost(metadataSlug || { type: routeType || 'textos', slug })
     const post = currentPost.value
 
@@ -340,12 +347,12 @@ export const useStore = defineStore('store', () => {
   function syncHead() {
 
     const page = pageOf(router.currentRoute.value)
-    const post = page.kind === 'note' ? notesIndex.value.find(p => p.slug === page.slug) : null
+    const post = page.kind === 'note' ? notesIndex.value.find(p => p.slug === page.slug) ?? (currentPost.value?.slug === page.slug ? currentPost.value : null) : null
     if (page.kind !== 'note' || post) applyHead(headFor(page, lang.value, post))
 
   }
 
-  watch([() => router.currentRoute.value.fullPath, lang, notesIndex], syncHead, { immediate: true })
+  watch([() => router.currentRoute.value.fullPath, lang, notesIndex, currentPost], syncHead, { immediate: true })
 
   // COMPUTEDS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 

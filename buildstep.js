@@ -39,7 +39,10 @@ mostrar: si/no (si la propiedad no existe se considera como "si")
 
 CUSTOM:       add "vuecomp: componente" to metadata to mount a component (add imports in content.vue)
 TEXTOS:       add "style: trad" in metadata to remove the softbreaks rule from that specific note and set left alignment
-JUEGOS:       add "game: slug" (code in juegos/slug, registered in stage.vue) and optionally "ground: carbon/niebla/#hex"; a [link](#jugar) or [link](#play) in the note launches it
+JUEGOS:       add "game: slug" (code in games/slug, registered in stage.vue) and optionally "ground: carbon/niebla/#hex"; a [link](#jugar) or [link](#play) in the note launches it
+              add "steam: appid" for its steam builds (without it they use 480, valve's test app)
+PAGINAS:      add "opens: vitacora" (or another page) and a [link](#abrir) or [link](#open) in the note goes there through the veil
+VITACORA:     "date: vitacora" dates the note by the newest board, so its card climbs to the top whenever a board is added (no boards = no card)
 
 - .nota & .nota-verso are centered text classes which are affected by the container query
 - .nota-prosa is the left aligned, normal page, fixed rem size text class
@@ -90,6 +93,8 @@ let postDirs = []
 let fullRebuild = false
 
 const indexItems = []
+const hiddenItems = []
+const DEV = !!process.env.OCTANTES_DEV
 
 // MD TO HTML BODY PROCESSING
 
@@ -526,7 +531,9 @@ async function processPosts() {                                                 
 
     const { attributes, body } = fm(raw)
     const enAttributes = isBilingual ? fm(rawEn).attributes : {}
-    const showNote = attributes.mostrar !== 'no' && attributes.mostrar !== false
+    const follows = attributes.date === 'vitacora'
+    const dated = follows ? vitacoraDate : attributes.date
+    const showNote = attributes.mostrar !== 'no' && attributes.mostrar !== false && !(follows && !vitacoraDate)
     const postType = attributes.type || typeFolder
     const noteOutputDir = path.join(outputDir, 'posts', postType, slug)
 
@@ -534,6 +541,7 @@ async function processPosts() {                                                 
 
     const hash = crypto.createHash('sha256').update(raw)
     if (rawEn) hash.update(rawEn)
+    if (follows) hash.update(String(vitacoraDate))
 
     try {
 
@@ -602,7 +610,7 @@ async function processPosts() {                                                 
     } catch(e) { console.error(`error processing assets for ${slug}:`, e) }
 
     const finalHash = hash.digest('hex')
-    const dateObj = attributes.date ? new Date(attributes.date) : new Date()
+    const dateObj = dated ? new Date(dated) : new Date()
     const formatted = `${String(dateObj.getUTCDate()).padStart(2,'0')}/${String(dateObj.getUTCMonth()+1).padStart(2,'0')}/${dateObj.getUTCFullYear()}`
     const isoDate = dateObj.toISOString()
     const modifiedDate = attributes.modified ? new Date(attributes.modified).toISOString() : isoDate
@@ -630,6 +638,7 @@ async function processPosts() {                                                 
       vuecomp: attributes.vuecomp || null,
       game: attributes.game || null,
       ground: attributes.ground || null,
+      opens: attributes.opens || null,
       bilingual: isBilingual,
       titleEn: enAttributes.title || null,
       descriptionEn: enAttributes.description || null
@@ -668,6 +677,7 @@ async function processPosts() {                                                 
     writtenPages.push({ page, file: pageFile(page, 'es'), lang: 'es' }, { page, file: pageFile(page, 'en'), lang: isBilingual ? 'en' : 'es' })
 
     if (showNote) indexItems.push(item)
+    else if (DEV) hiddenItems.push({ ...item, hidden: true })
 
   }
 
@@ -678,7 +688,8 @@ async function writeIndex() {                                                   
   const indexPath = path.join(outputDir, 'index.json')
   
   indexItems.sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
-  const newIndexStr = JSON.stringify(indexItems, null, 2)
+  const listed = [...indexItems, ...hiddenItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
+  const newIndexStr = JSON.stringify(listed, null, 2)
   
   let prevIndex = '[]'
   try { prevIndex = await fs.readFile(indexPath, 'utf-8') } catch (e) { if (e.code !== 'ENOENT') console.warn('error leyendo index.json previo:', e) }
@@ -986,13 +997,13 @@ async function main() {                                                         
   shell = await readShell()
   await copyAssets()
   await cleanOrphans()
+  await writeVitacora()
   await processPosts()
   await writeIndex()
   await writePortfolio()
   await updateSidebars()
   await writeArchive()
   await writeAbouts()
-  await writeVitacora()
   await writeShells()
   await writeSitemap()
   await writeFeed()

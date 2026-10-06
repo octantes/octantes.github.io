@@ -47,7 +47,8 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
       :class="{ 
 
         expanded: route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery),
-        active: route.params.slug === note.slug
+        active: route.params.slug === note.slug,
+        hidden: note.hidden
 
       }"
 
@@ -107,6 +108,8 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
   /* FILL   */ background-color: var(--carbon-a15);
   /* BORDER */ border: var(--small-outline) var(--humo-a06); border-radius: var(--radius-ss);
   /* MOTION */ transition: all var(--animate-fast);
+
+  &.hidden { opacity: .35; &:hover, &.active { opacity: .7; } }
 
   &.expanded {
 
