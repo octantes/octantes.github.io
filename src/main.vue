@@ -73,10 +73,6 @@ useRouter().afterEach((to, from) => {
 
 .pagina > .dotgrid { z-index: -1; opacity: .1; }
 
-.page       { flex: 1 1 auto; width: 100%; min-height: 0; }
-
-.frame      { display: flex; flex-direction: column; height: 100%; overflow-y: hidden; padding: 1rem; }
-
 .veil       { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
 
 .veil.opaque { background: var(--carbon); }
