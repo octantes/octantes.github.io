@@ -69,7 +69,7 @@ jobs:
       - name: rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          workspaces: juegos/desktop -> target
+          workspaces: games/desktop -> target
           key: ${{ matrix.platform.name }}
 
       - name: linux libraries
@@ -83,10 +83,10 @@ jobs:
         run: npm run game "$GAME"
 
       - name: 2. icons
-        run: npx --yes @tauri-apps/cli@2 icon "export/$GAME-icon.png" -o juegos/desktop/icons
+        run: npx --yes @tauri-apps/cli@2 icon "export/$GAME-icon.png" -o games/desktop/icons
 
       - name: 3. desktop build
-        working-directory: juegos/desktop
+        working-directory: games/desktop
         run: |
           STEAM_APP_ID=$(cat "../../export/$GAME-steam.txt")
           export STEAM_APP_ID
@@ -99,14 +99,14 @@ jobs:
           folder="steam/$GAME-${{ matrix.platform.name }}"
           mkdir -p steam
           if [ "${{ matrix.platform.name }}" = "linux" ]; then
-            (cd juegos/desktop && LD_LIBRARY_PATH="$PWD/target/release" npx --yes @tauri-apps/cli@2 bundle --config "../../export/$GAME-desktop.json" --bundles appimage)
-            image=$(realpath juegos/desktop/target/release/bundle/appimage/*.AppImage)
+            (cd games/desktop && LD_LIBRARY_PATH="$PWD/target/release" npx --yes @tauri-apps/cli@2 bundle --config "../../export/$GAME-desktop.json" --bundles appimage)
+            image=$(realpath games/desktop/target/release/bundle/appimage/*.AppImage)
             (cd steam && "$image" --appimage-extract >/dev/null)
             mv steam/squashfs-root "$folder"
             tar -czf "$folder.tar.gz" -C steam "$GAME-linux"
           else
             mkdir -p "$folder"
-            cp "juegos/desktop/target/release/$GAME.exe" juegos/desktop/target/release/steam_api64.dll "$folder/"
+            cp "games/desktop/target/release/$GAME.exe" games/desktop/target/release/steam_api64.dll "$folder/"
             (cd steam && 7z a -tzip "$GAME-windows.zip" "$GAME-windows" >/dev/null)
           fi
 

@@ -27,6 +27,6 @@ coverage
 
 *.tsbuildinfo
 
-juegos/desktop/target
-juegos/desktop/icons
-juegos/desktop/gen
+games/desktop/target
+games/desktop/icons
+games/desktop/gen

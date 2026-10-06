@@ -4,7 +4,7 @@ import { execFileSync } from 'child_process'
 import { build } from 'vite'
 import sharp from 'sharp'
 import { ERA } from './src/04/config.js'
-import { fonts, inline } from './vendor.js'
+import { fonts, inline } from './exports.js'
 import { gameOf } from './vite.config.js'
 
 const SLUG = process.argv[2]
@@ -34,7 +34,7 @@ async function page(game, vendored) {
 
 async function desktop(game) {
 
-  const own = path.join('juegos', SLUG, 'icon.png')
+  const own = path.join('games', SLUG, 'icon.png')
   const source = await fs.access(own).then(() => own, () => path.join('content', 'juegos', SLUG, 'portada.png'))
   await sharp(source).resize(1024, 1024, { fit: 'cover' }).ensureAlpha().png().toFile(`${OUT}-icon.png`)
 

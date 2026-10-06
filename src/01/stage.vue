@@ -5,7 +5,7 @@ import { useStore } from '../04/store.js'
 import { stage, leave } from '../04/stage.js'
 import Corner from '../02/corner.vue'
 
-const GAMES = { havitat: () => import('../../juegos/havitat/game.vue') }
+const GAMES = { havitat: () => import('../../games/havitat/game.vue') }
 
 const store = useStore()
 const Game  = defineAsyncComponent(GAMES[stage.value.game])
