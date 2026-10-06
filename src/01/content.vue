@@ -389,8 +389,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
         <div class="content" ref="contentRef" @click="play">
 
           <component :is="computedComp" v-if="computedComp" :metadata="currentPost" />              <!-- for vuecomp -->
-          <Notification v-else-if="notFound" :code="notFound" :key="route.fullPath" />
-          <About v-else-if="aboutOpen && !notFound" :section="aboutOpen" :key="route.fullPath" />
+          <Notification v-else-if="notFound" :code="notFound" :key="`error-${route.fullPath}`" />
+          <About v-else-if="aboutOpen && !notFound" :section="aboutOpen" :key="`about-${route.fullPath}`" />
           <template v-else>
             <NoteTitle v-if="currentPost && currentPost.type !== 'diseño'" :text="noteTitle" />
             <div :class="computedNoteClass" v-html="noteContent" />                                 <!-- for html posts -->
