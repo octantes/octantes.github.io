@@ -12,8 +12,8 @@ const Vitacora  = () => import('../01/vitacora.vue')
 const routes = [
 
   { path: '/portfolio',      component: Portfolio }, // opens the portfolio page
-  { path: '/havitat',        component: Havitat   }, // opens the havitat from intro
   { path: '/vitacora',       component: Vitacora  }, // opens the vitacora boards
+  { path: '/havitat',        component: Havitat   }, // opens the havitat from intro
   { path: wallPath,          component: Havitat   }, // opens a specific havitat wall
   { path: depthPath,         component: Havitat   }, // opens a specific havitat depth
   { path: '/portal',         component: Octantes  }, // opens the portal
