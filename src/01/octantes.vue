@@ -12,8 +12,6 @@ import { MOBILE_MAX } from '../04/config.js'
 
 const store = useStore()
 const { currentPost } = storeToRefs(store)
-const portadaExpanded = ref(window.innerWidth <= MOBILE_MAX)
-
 const narrow = matchMedia(`(max-width: ${MOBILE_MAX}px)`)
 const mobile = ref(narrow.matches)
 
@@ -38,10 +36,10 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
   <div class="layout page" :class="{ reading }" @wheel.passive="sideScroll">
 
     <div class="portal-glow" aria-hidden="true" />
-    <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" @update:expanded="portadaExpanded = $event" :inert="store.processing" />
+    <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" :inert="store.processing" />
     <Navigation role="navigation" :aria-label="store.t.nav.search" class="navigation" :locked="store.processing" />
 
-    <Content role="main" class="articulos" :class="{ 'portada-collapsed': !portadaExpanded || reading }" />
+    <Content role="main" class="articulos" />
 
     <div v-if="reading && !mobile" class="reading-corner"><Corner :label="store.t.stage.unread" stacked @close="read(false)" /></div>
 
@@ -104,8 +102,6 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
 } }
 
 .footer     { padding: 0rem 1rem 1rem 1rem; flex-shrink: 0; }
-
-@media (--desktop) { .articulos.portada-collapsed .post { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; } }
 
 @media (--mobile) {
 
