@@ -1,5 +1,30 @@
 [
   {
+    "slug": "vitacora",
+    "title": "vitacora",
+    "description": "el tablero dibujado donde voy anotando lo que hago",
+    "type": "juegos",
+    "tags": [
+      "vitacora",
+      "dibujo"
+    ],
+    "portada": "https://octantes.github.io/posts/juegos/vitacora/portada.webp",
+    "share": "https://octantes.github.io/posts/juegos/vitacora/share.jpg",
+    "handle": [
+      "kaste"
+    ],
+    "date": "06/10/2026",
+    "isoDate": "2026-10-06T00:00:00.000Z",
+    "modified": "2026-10-06T00:00:00.000Z",
+    "vuecomp": null,
+    "game": null,
+    "ground": null,
+    "opens": "vitacora",
+    "bilingual": true,
+    "titleEn": "vitacora",
+    "descriptionEn": "the drawn board where i keep notes on what i am doing"
+  },
+  {
     "slug": "havitat",
     "title": "havitat - visualizer",
     "description": "una visualización automática de havitat - la habitación cambia, inspecciona sus objetos y nunca se repite",
@@ -19,6 +44,7 @@
     "vuecomp": null,
     "game": "havitat",
     "ground": "carbon",
+    "opens": null,
     "bilingual": true,
     "titleEn": "havitat - visualizer",
     "descriptionEn": "an automatic visualization of havitat - the room wanders, lingers on its objects and never takes the same path twice"
@@ -43,6 +69,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "culto",
     "descriptionEn": "empty rituals, altars of asphalt, and a faith in suspension"
@@ -67,6 +94,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "nubenueve - record store",
     "descriptionEn": "record store website, cd's, vinyls and cassette tapes"
@@ -91,6 +119,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "bocetos",
     "descriptionEn": "discarded presents, possible memories, and residual symbols"
@@ -115,6 +144,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "órbitas",
     "descriptionEn": "loops that come full circle, pyramids from the drawer"
@@ -139,6 +169,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "browsewithscroll",
     "descriptionEn": "tool to preview fonts and multimedia with scroll directly in the browser"
@@ -163,6 +194,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "arch-hud",
     "descriptionEn": "suckless tool pack to turn arch linux into a heads up display"
@@ -187,6 +219,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "shadewithseal",
     "descriptionEn": "playground to program and record GLSL fragment shaders directly in the browser"
@@ -211,6 +244,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "trackwithslate",
     "descriptionEn": "simple tool to edit and organize CSV tabular data directly in the browser"
@@ -235,6 +269,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "geminis",
     "descriptionEn": "my brother's music, alongside one of my own at the end"
@@ -259,6 +294,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "viñetas",
     "descriptionEn": "instrumental album with experimental visualizer"
@@ -283,6 +319,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "dinamik - studio dev",
     "descriptionEn": "branding and motion graphics project for a productivity software development company"
@@ -307,6 +344,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "cruzar - crypto cordillera",
     "descriptionEn": "branding and motion graphics project for a datacenter service across the mountain range"
@@ -331,6 +369,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "en una - digital publication",
     "descriptionEn": "branding and motion graphics project for a digital music magazine"
@@ -355,6 +394,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "virtual reality - the best applications",
     "descriptionEn": "In conversations about virtual reality, software often takes a back seat. Let's review some interesting uses."
@@ -379,6 +419,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "virtual reality - a contemporary future",
     "descriptionEn": "Virtual reality is in a remarkably interesting place, we invite you to discover it."
@@ -403,6 +444,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "seance",
     "descriptionEn": "first album with the guitar plugged in and an experimental visualizer"
@@ -427,6 +469,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "abandonware - the permanence of the author",
     "descriptionEn": "Abandonware occurs when art becomes tied to the advancement of technology, intensifying the difficulties of properly preserving it."
@@ -451,6 +494,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "intellectual properties - do we need new IPs?",
     "descriptionEn": "Nowadays, interest in intellectual properties has less to do with the particularities of the authors and more with hype."
@@ -475,6 +519,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "microtransactions and their future",
     "descriptionEn": "We explain the role of microtransactions within the industry and analyze the possible future of in-game monetization systems"
@@ -499,6 +544,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "six minutes older",
     "descriptionEn": "six one-minute midi experiments"
@@ -523,6 +569,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "kena - is it ok for aesthetics to be everything?",
     "descriptionEn": "Within the framework Kena offers us, we bring up the debate between graphics versus content. Is it wrong for a game to be just pretty?"
@@ -547,6 +594,7 @@
     "vuecomp": null,
     "game": null,
     "ground": null,
+    "opens": null,
     "bilingual": true,
     "titleEn": "mood worktapes",
     "descriptionEn": "my first album, learning to use ableton live"
