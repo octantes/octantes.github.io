@@ -4,19 +4,13 @@ import { defineAsyncComponent, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from '../04/store.js'
 import { stage, leave } from '../04/stage.js'
 import Corner from '../02/corner.vue'
+import { wear } from '../03/tone.js'
 
 const GAMES = { havitat: () => import('../../games/havitat/game.vue') }
 
 const store = useStore()
 const Game  = defineAsyncComponent(GAMES[stage.value.game])
-const paint = stage.value.ground?.startsWith('#') ? stage.value.ground : `var(--${stage.value.ground ?? 'carbon'})`
-
-function light(hex) { const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)); return (r * .299 + g * .587 + b * .114) / 255 > .5 }
-
-onMounted(() => {
-  document.documentElement.style.setProperty('--page', paint)
-  store.groundLight = light(getComputedStyle(document.documentElement).getPropertyValue('--page').trim())
-})
+onMounted(() => { store.groundLight = wear(stage.value.ground) })
 
 onBeforeUnmount(() => {
   document.documentElement.style.removeProperty('--page')
