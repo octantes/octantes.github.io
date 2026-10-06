@@ -11,7 +11,7 @@ import path from 'path'
 
 /* NOTES
 
-- this file holds what edition.js and game.js share: copying folders, vendoring the google fonts, inlining svgs used by css
+- this file holds what build/edition.js and build/game.js share: copying folders, vendoring the google fonts, inlining svgs used by css
 - edition and game builds are classic scripts with relative paths and no fetch (src/03/shelf.js holds the data), so they open by double click
 - a game's code lives in games/<slug>/game.vue and its title, ground and steam app id come from its note in content/juegos/<slug>
 - game builds swap src/04/store.js for games/store.js, so the site's router and pages never enter a game

@@ -8,11 +8,11 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node buildstep.js",
+    "build": "vite build && node build/buildstep.js",
     "build:vite": "vite build",
-    "build:static": "node buildstep.js",
-    "edition": "npm run build && vite build --mode edition && node edition.js",
-    "game": "node game.js",
+    "build:static": "node build/buildstep.js",
+    "edition": "npm run build && vite build --mode edition && node build/edition.js",
+    "game": "node build/game.js",
     "preview": "vite preview"
   },
   "dependencies": {
