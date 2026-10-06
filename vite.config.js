@@ -1,22 +1,14 @@
 import { fileURLToPath, URL } from 'node:url'
-import fs from 'node:fs'
 import { defineConfig } from 'vite'
-import frontMatter from 'front-matter'
 import vue from '@vitejs/plugin-vue'
 import devPlugin from './build/vite.dev-plugin.js'
+import { gameOf } from './build/exports.js'
 import { MOBILE_MAX } from './src/04/config.js'
 import { headFor, renderHead } from './src/04/map.js'
 
 const ALONE   = { emptyOutDir: true, modulePreload: false, cssCodeSplit: false, assetsDir: '', rollupOptions: { output: { format: 'iife', inlineDynamicImports: true, entryFileNames: 'app.js', assetFileNames: '[name][extname]' } } }
 const EDITION = { ...ALONE, outDir: 'edition' }
 const here    = path => fileURLToPath(new URL(path, import.meta.url))
-
-export function gameOf(slug) {
-  if (!fs.existsSync(here(`./games/${slug}/game.vue`))) throw new Error(`no game at games/${slug}/game.vue`)
-  const note = lang => frontMatter(fs.readFileSync(here(`./content/juegos/${slug}/${lang === 'es' ? 'index' : 'ingles'}.md`), 'utf-8')).attributes
-  const [es, en] = [note('es'), fs.existsSync(here(`./content/juegos/${slug}/ingles.md`)) ? note('en') : note('es')]
-  return { slug, ground: es.ground, steam: es.steam ?? null, title: { es: es.title, en: en.title }, description: { es: es.description, en: en.description } }
-}
 
 function game(slug) {
   const store = here('./src/04/store.js'), alone = here('./games/store.js')
@@ -54,6 +46,7 @@ export default defineConfig(({ mode }) => {
         }
       }
     ],
+    optimizeDeps: { entries: ['index.html'] },
     resolve: { alias: { '@': here('./src'), ...playing?.alias }, },
     build: playing ? playing.build : mode === 'edition' ? EDITION : { outDir: 'dist', emptyOutDir: true },
   }

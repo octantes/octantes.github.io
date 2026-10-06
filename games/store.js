@@ -25,8 +25,7 @@ export const useStore = defineStore('store', () => {
 
   function toggleLang()          { setLang(other(lang.value)) }
   function setProcessing(value)  { processing.value = value; document.body.style.cursor = value ? 'wait' : '' }
-  function land()                { }
 
-  return { lang, t, processing, groundLight, barContent, setLang, toggleLang, setProcessing, land }
+  return { lang, t, processing, groundLight, barContent, toggleLang, setProcessing }
 
 })

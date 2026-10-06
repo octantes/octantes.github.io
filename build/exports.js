@@ -1,5 +1,7 @@
 import fs from 'fs/promises'
+import { existsSync, readFileSync } from 'fs'
 import path from 'path'
+import frontMatter from 'front-matter'
 
 // EXPORTS  | command                         | output             | what it is
 // SITE     | npm run build                   | dist/              | the live site, deployed only by the build-md action on every push
@@ -11,7 +13,7 @@ import path from 'path'
 
 /* NOTES
 
-- this file holds what build/edition.js and build/game.js share: copying folders, vendoring the google fonts, inlining svgs used by css
+- this file holds what build/edition.js, build/game.js and vite.config.js share: copying folders, vendoring the google fonts, inlining svgs used by css, reading a game's note
 - edition and game builds are classic scripts with relative paths and no fetch (src/03/shelf.js holds the data), so they open by double click
 - a game's code lives in games/<slug>/game.vue and its title, ground and steam app id come from its note in content/juegos/<slug>
 - game builds swap src/04/store.js for games/store.js, so the site's router and pages never enter a game
@@ -23,7 +25,7 @@ import path from 'path'
 
 */
 
-export const FONTS = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap'
+const FONTS = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Inconsolata:wght@400;700&family=Space+Grotesk:wght@400;700&family=Jomolhari&display=swap'
 const AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
 
 export async function copy(from, to, keep = () => true) {
@@ -57,4 +59,11 @@ export async function inline(sheet, root) {
   let css = await fs.readFile(sheet, 'utf-8')
   for (const [match, file] of css.matchAll(/url\(['"]?([^'")]+\.svg)['"]?\)/g)) css = css.replaceAll(match, `url("data:image/svg+xml;base64,${(await fs.readFile(path.join(root, file))).toString('base64')}")`)
   await fs.writeFile(sheet, css)
+}
+
+export function gameOf(slug) {
+  if (!existsSync(`games/${slug}/game.vue`)) throw new Error(`no game at games/${slug}/game.vue`)
+  const note = file => frontMatter(readFileSync(`content/juegos/${slug}/${file}.md`, 'utf-8')).attributes
+  const [es, en] = [note('index'), existsSync(`content/juegos/${slug}/ingles.md`) ? note('ingles') : note('index')]
+  return { slug, ground: es.ground, steam: es.steam ?? null, title: { es: es.title, en: en.title }, description: { es: es.description, en: en.description } }
 }
