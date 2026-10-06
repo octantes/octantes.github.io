@@ -4,8 +4,7 @@ import { execFileSync } from 'child_process'
 import { build } from 'vite'
 import sharp from 'sharp'
 import { ERA } from '../src/04/config.js'
-import { fonts, inline } from './exports.js'
-import { gameOf } from '../vite.config.js'
+import { fonts, inline, gameOf } from './exports.js'
 
 const SLUG = process.argv[2]
 const OUT  = path.join('export', SLUG ?? '')

@@ -3,12 +3,13 @@ import path from 'path'
 import { SITE_URL, ERA } from '../src/04/config.js'
 import { copy, fonts, inline } from './exports.js'
 
-const DIST  = 'dist'
-const OUT   = 'edition'
-const BUNDLE = /\.(js|css)$/
-const IFRAME = /<iframe[^>]*src="([^"]+)"[^>]*>[\s\S]*?<\/iframe>/g
-const TUBE   = /youtube(?:-nocookie)?\.com\/embed\/([\w-]+)/
-const PLAY   = 'position: absolute; inset: 0; margin: auto; width: 68px; height: 48px; display: grid; place-items: center; border-radius: 14px; background: #FF0033; background-clip: border-box; color: #FFF; -webkit-text-fill-color: #FFF; font-size: 22px; line-height: 1;'
+const DIST     = 'dist'
+const OUT      = 'edition'
+const BUNDLE   = /\.(js|css)$/
+const IFRAME   = /<iframe[^>]*src="([^"]+)"[^>]*>[\s\S]*?<\/iframe>/g
+const RELATIVE = /(["'(])\/(posts|assets)\//g
+const TUBE     = /youtube(?:-nocookie)?\.com\/embed\/([\w-]+)/
+const PLAY     = 'position: absolute; inset: 0; margin: auto; width: 68px; height: 48px; display: grid; place-items: center; border-radius: 14px; background: #FF0033; background-clip: border-box; color: #FFF; -webkit-text-fill-color: #FFF; font-size: 22px; line-height: 1;'
 
 const thumbs = new Set()
 
@@ -22,7 +23,7 @@ function local(text) {
   return text
     .replace(IFRAME, embed('aspect-ratio: 16 / 9'))
     .replaceAll(`${SITE_URL}/posts/`, 'posts/').replaceAll(`${SITE_URL}/assets/`, 'assets/')
-    .replace(/(["'(])\/(posts|assets)\//g, '$1$2/')
+    .replace(RELATIVE, '$1$2/')
     .replace(/href="\/(?!\/)([^"]*)"/g, 'href="#/$1"')
 }
 
@@ -31,9 +32,8 @@ function article(html) {
   return start < 0 ? null : html.slice(start, html.indexOf('</main>', start) + '</main>'.length)
 }
 
-async function videos() {
+async function videos(pages) {
 
-  const pages = (await walk(DIST)).filter(file => file.endsWith('.html'))
   const ids = new Set()
   for (const file of pages) for (const [, src] of (await fs.readFile(path.join(DIST, file), 'utf-8')).matchAll(IFRAME)) { const id = src.match(TUBE)?.[1]; if (id) ids.add(id) }
   await fs.mkdir(path.join(OUT, 'posts', 'youtube'), { recursive: true })
@@ -48,13 +48,13 @@ async function videos() {
 
 }
 
-async function shelve() {
+async function shelve(pages) {
 
   const shelf = {}
   const notes = JSON.parse(await fs.readFile(path.join(DIST, 'index.json'), 'utf-8'))
   shelf['index.json'] = local(JSON.stringify(notes))
 
-  for (const file of (await walk(DIST)).filter(file => file.endsWith('.html'))) {
+  for (const file of pages) {
     const html = await fs.readFile(path.join(DIST, file), 'utf-8')
     const meta = html.match(/<script type="application\/json" id="note">[\s\S]*?<\/script>/)?.[0]
     const body = meta && article(html)
@@ -88,7 +88,7 @@ async function page(vendored) {
 
   for (const name of ['app.js', 'style.css']) {
     const target = path.join(OUT, name)
-    await fs.writeFile(target, (await fs.readFile(target, 'utf-8')).replace(/(["'(])\/(posts|assets)\//g, '$1$2/'))
+    await fs.writeFile(target, (await fs.readFile(target, 'utf-8')).replace(RELATIVE, '$1$2/'))
   }
 
   await inline(path.join(OUT, 'style.css'), OUT)
@@ -113,17 +113,16 @@ function linked(html, from) {
     .replace(/(src|href|poster)="\/(posts|assets)\/([^"]*)"/g, (_, attr, kind, rest) => `${attr}="${to(`${kind}/${rest}`)}"`)
     .replace(/href="\/feed\.xml"/g, 'href="#"')
     .replace(/href="\?(archivo|archive)"/g, (_, name) => `href="${to(`archivo/${name}.html`)}"`)
-    .replace(/href="\/([^"#?]*)(\?[^"#]*)?(#[^"]*)?"/g, (_, page, query, hash = '') => {
+    .replace(/href="\/([^"#?]*)(\?[^"#]*)?(#[^"]*)?"/g, (_, page, _query, hash = '') => {
       const name = decodeURI(page).replace(/\/$/, '') || 'archivo'
       return `href="${to(`archivo/${name.endsWith('.html') ? name : `${name}.html`}`)}${hash}"`
     })
 }
 
-async function archive() {
+async function archive(pages, vendored) {
 
-  const pages = (await walk(DIST)).filter(file => file.endsWith('.html') && !/^(posts|assets)\//.test(file))
   let written = 0
-  for (const file of pages) {
+  for (const file of pages.filter(file => !/^(posts|assets)\//.test(file))) {
     const html  = await fs.readFile(path.join(DIST, file), 'utf-8')
     const start = html.indexOf('<noscript class="archive">')
     const body  = start >= 0
@@ -137,6 +136,10 @@ async function archive() {
     await fs.writeFile(path.join(OUT, 'archivo', file), linked(page, file))
     written++
   }
+
+  const plain = path.join(OUT, 'assets', 'neocities.css')
+  await fs.writeFile(plain, (await fs.readFile(plain, 'utf-8')).replace(/url\((['"]?)\/assets\//g, 'url($1').replace(/@import url\(['"]?https:\/\/fonts\.googleapis[^)]*\);?/, vendored ? "@import url('../fonts/fonts.css');" : ''))
+  await inline(plain, path.join(OUT, 'assets'))
   return written
 
 }
@@ -145,14 +148,12 @@ async function main() {
 
   await copy(path.join(DIST, 'posts'), path.join(OUT, 'posts'))
   await copy(path.join(DIST, 'assets'), path.join(OUT, 'assets'), name => !BUNDLE.test(name) || name === 'neocities.css')
-  await videos()
-  const shelved = await shelve()
+  const pages = (await walk(DIST)).filter(file => file.endsWith('.html'))
+  await videos(pages)
+  const shelved = await shelve(pages)
   const vendored = await fonts(OUT)
   await page(vendored)
-  const archived = await archive()
-  const plain = path.join(OUT, 'assets', 'neocities.css')
-  await fs.writeFile(plain, (await fs.readFile(plain, 'utf-8')).replace(/url\((['"]?)\/assets\//g, 'url($1').replace(/@import url\(['"]?https:\/\/fonts\.googleapis[^)]*\);?/, vendored ? "@import url('../fonts/fonts.css');" : ''))
-  await inline(plain, path.join(OUT, 'assets'))
+  const archived = await archive(pages, vendored)
 
   const date = new Date().toISOString().slice(0, 10)
   await fs.writeFile(path.join(OUT, 'README.txt'), [

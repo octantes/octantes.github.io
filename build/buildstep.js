@@ -688,8 +688,9 @@ async function writeIndex() {                                                   
 
   const indexPath = path.join(outputDir, 'index.json')
   
-  indexItems.sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
-  const listed = [...indexItems, ...hiddenItems].sort((a,b)=> new Date(b.isoDate) - new Date(a.isoDate))
+  const newestFirst = (a, b) => new Date(b.isoDate) - new Date(a.isoDate)
+  indexItems.sort(newestFirst)
+  const listed = [...indexItems, ...hiddenItems].sort(newestFirst)
   const newIndexStr = JSON.stringify(listed, null, 2)
   
   let prevIndex = '[]'
