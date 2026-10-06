@@ -6,6 +6,7 @@ import { useStore } from '../04/store.js'
 import Drawing from '../03/drawing.vue'
 import { read } from '../03/shelf.js'
 import { back } from '../04/stage.js'
+import { luma, light, mix } from '../03/tone.js'
 import Corner from '../02/corner.vue'
 
 const BLEND  = .25
@@ -36,11 +37,7 @@ let target  = null
 let gliding = 0
 
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-const rgb   = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
-const mix   = (a, b, t) => '#' + rgb(a).map((c, i) => Math.round(c + (rgb(b)[i] - c) * t).toString(16).padStart(2, '0')).join('')
 const clamp = t => Math.min(1, Math.max(0, t))
-const luma  = hex => { const [r, g, b] = rgb(hex); return (r * .299 + g * .587 + b * .114) / 255 }
-const light = hex => luma(hex) > .5
 const tone  = hex => hex && token(light(hex) ? '--niebla' : '--carbon')
 
 function groundAt() {
