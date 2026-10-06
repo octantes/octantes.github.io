@@ -66,7 +66,7 @@ function toggle() {                                                             
 
       <button class="toggle" @click="toggle"
         :title="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"
-        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc">{{ expanded ? '↑' : '↓' }}</button>
+        :aria-label="expanded ? store.t.portada.closeDesc : store.t.portada.openDesc"><svg viewBox="0 0 13 13" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="expanded && { rotate: '180deg' }"><path d="M6.5 2.5v8M3.5 7.5l3 3 3-3" /></svg></button>
 
     </div>
 
