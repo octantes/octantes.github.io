@@ -2,7 +2,7 @@
 
 import { useStore } from '../04/store.js'
 
-defineProps({ label: String })
+defineProps({ label: String, stacked: Boolean })
 
 const emit  = defineEmits(['close'])
 const store = useStore()
@@ -11,7 +11,7 @@ const store = useStore()
 
 <template>
 
-  <div class="top-actions">
+  <div class="top-actions" :class="{ stacked }">
     <button v-if="label" class="close-btn" @click="emit('close')" :title="label" :aria-label="label">✘</button>
     <button class="close-btn lang-btn" @click="store.toggleLang" :title="store.t.portada.langTitle" :aria-label="store.t.portada.langTitle">{{ store.lang.toUpperCase() }}</button>
   </div>
@@ -22,8 +22,10 @@ const store = useStore()
 
 .top-actions {
 
-  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50; display: flex; flex-direction: column; align-items: center;
+  /* LAYOUT */ position: absolute; top: 1.5rem; right: 2rem; z-index: 50; display: flex; flex-direction: row-reverse;
   /* BOX    */ gap: 0.75rem;
+
+  &.stacked { flex-direction: column; align-items: center; }
 
 }
 

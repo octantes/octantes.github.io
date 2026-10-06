@@ -29,7 +29,7 @@ onBeforeUnmount(() => {
 
   <div class="stage">
     <component :is="Game" />
-    <Corner :label="store.t.stage.leave" @close="leave" />
+    <Corner :label="store.t.stage.leave" stacked @close="leave" />
   </div>
 
 </template>

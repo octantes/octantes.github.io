@@ -34,7 +34,7 @@ watchEffect(() => { document.title = __GAME__.title[store.lang]; document.docume
   <div class="juego">
     <DotGrid viewport :ink="ink" />
     <Game />
-    <Corner :label="desktop ? store.t.stage.leave : null" @close="quit" />
+    <Corner :label="desktop ? store.t.stage.leave : null" stacked @close="quit" />
   </div>
 
 </template>
