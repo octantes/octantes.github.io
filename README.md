@@ -21,4 +21,5 @@ Content is written in plain text and an automated action processes assets, hidra
 * **push to publish**: a github action runs the full build on every push and commits it to docs/
 * **offline edition**: npm run edition builds edition/, a folder that runs from disk with no server or network
 * **game export**: npm run game <slug> builds export/<slug>/, the game alone, runnable from disk, plus export/<slug>.zip for itch.io
+* **steam builds**: the game-desktop action (run it from the actions tab) wraps a game with tauri for windows and linux, with steam achievements
 * **centralized config**: site url and contact email live in a single src/04/config.js file

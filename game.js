@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import { execFileSync } from 'child_process'
 import { build } from 'vite'
+import sharp from 'sharp'
 import { ERA } from './src/04/config.js'
 import { fonts, inline } from './vendor.js'
 import { gameOf } from './vite.config.js'
@@ -9,6 +10,7 @@ import { gameOf } from './vite.config.js'
 const SLUG = process.argv[2]
 const OUT  = path.join('export', SLUG ?? '')
 const ICON = 'favicon.svg'
+const TEST = 480
 
 async function page(game, vendored) {
 
@@ -30,6 +32,23 @@ async function page(game, vendored) {
 
 }
 
+async function desktop(game) {
+
+  const own = path.join('juegos', SLUG, 'icon.png')
+  const source = await fs.access(own).then(() => own, () => path.join('content', 'juegos', SLUG, 'portada.png'))
+  await sharp(source).resize(1024, 1024, { fit: 'cover' }).ensureAlpha().png().toFile(`${OUT}-icon.png`)
+
+  await fs.writeFile(`${OUT}-desktop.json`, JSON.stringify({
+    productName: game.title.en,
+    mainBinaryName: SLUG,
+    identifier: `ar.octantes.${SLUG}`,
+    build: { frontendDist: `../../export/${SLUG}` },
+    app: { windows: [{ title: game.title.en, fullscreen: true, resizable: true, width: 1280, height: 800 }] },
+  }, null, 2))
+  await fs.writeFile(`${OUT}-steam.txt`, String(game.steam ?? TEST))
+
+}
+
 function zip() {
   const archive = path.resolve(`${OUT}.zip`)
   try { execFileSync('zip', ['-qr', archive, '.'], { cwd: OUT }); return archive }
@@ -44,6 +63,7 @@ async function main() {
   const game = gameOf(SLUG)
   const vendored = await fonts(OUT)
   await page(game, vendored)
+  await desktop(game)
 
   const date = new Date().toISOString().slice(0, 10)
   await fs.writeFile(path.join(OUT, 'README.txt'), [
