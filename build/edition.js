@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
-import { SITE_URL, ERA } from './src/04/config.js'
+import { SITE_URL, ERA } from '../src/04/config.js'
 import { copy, fonts, inline } from './exports.js'
 
 const DIST  = 'dist'
