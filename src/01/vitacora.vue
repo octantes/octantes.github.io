@@ -5,6 +5,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import Drawing from '../03/drawing.vue'
 import { read } from '../03/shelf.js'
+import { back } from '../04/stage.js'
+import Corner from '../02/corner.vue'
 
 const BLEND  = .25
 const FLIGHT = 4000
@@ -136,6 +138,8 @@ onBeforeUnmount(() => {
 
   <div class="frame page" ref="sheet">
 
+    <Corner :label="store.t.stage.back" stacked @close="back" />
+
     <main class="board" ref="scroller">
       <article v-for="e in entries" :id="e.id" :key="e.id" class="entry">
         <header class="divider" :class="{ open: TOUCH || hovered === e.id }" @pointerenter="hovered = e.id" @pointerleave="hovered = null">
@@ -169,7 +173,7 @@ onBeforeUnmount(() => {
 
 .divider {
 
-  /* LAYOUT */ display: flex; align-items: center; gap: 0; min-height: 2rem;
+  /* LAYOUT */ display: flex; align-items: center; gap: 0; min-height: 2rem; margin-right: 2.5rem;
   /* FILL   */ color: var(--lirio);
   /* FONT   */ font-family: var(--font-mono); font-size: .9rem;
 
