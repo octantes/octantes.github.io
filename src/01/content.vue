@@ -8,7 +8,8 @@ import Subscribe from '../02/subscribe.vue'
 import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
 import { throughTheVeil, veilFromStart } from '../03/veil.js'
-import { launch } from '../04/stage.js'
+import { launch, visit } from '../04/stage.js'
+import { pathOf } from '../04/map.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
 import { MOBILE_MAX } from '../04/config.js'
@@ -66,10 +67,9 @@ async function revealError() {
 }
 
 function play(e) {
-  const link = e.target.closest?.('a[href="#jugar"], a[href="#play"]')
-  if (!link || !currentPost.value?.game) return
-  e.preventDefault()
-  launch(currentPost.value.game, currentPost.value.ground)
+  const post = currentPost.value
+  if (e.target.closest?.('a[href="#jugar"], a[href="#play"]') && post?.game) { e.preventDefault(); launch(post.game, post.ground) }
+  else if (e.target.closest?.('a[href="#abrir"], a[href="#open"]') && post?.opens) { e.preventDefault(); visit(pathOf({ kind: post.opens }, store.lang)) }
 }
 
 function resetScroll() {
