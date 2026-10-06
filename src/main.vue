@@ -17,7 +17,6 @@ const baked = document.documentElement.classList.contains('light')
 const light = computed(() => store.groundLight ?? (route.matched.length ? themeOf(pageOf(route)) === 'light' : baked))
 
 const fade   = ref(null)
-const landed = ref(false)
 
 let locked = false
 let timer  = 0
@@ -44,14 +43,13 @@ watch(() => store.processing, busy => {
 
 useRouter().afterEach((to, from) => {
   if (inRoom(pageOf(to)) || to.matched[0]?.components.default === from.matched[0]?.components.default) return
-  landed.value = !from.matched.length
   fadeIn()
 })
 </script>
 
 <template>
 
-  <div class="pagina" :class="[fade && `fade-${fade}`, { landed, staged: stage }]">
+  <div class="pagina" :class="[fade && `fade-${fade}`, { staged: stage }]">
 
     <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 
@@ -81,8 +79,7 @@ useRouter().afterEach((to, from) => {
 .fade-rise   { --fade-to: .85; --fade-time: 1.8s; --fade-curve: cubic-bezier(.2, .6, .35, 1); }
 .fade-finish { --fade-to: 1;   --fade-time: .4s;  --fade-curve: ease-out;                  }
 
-:is(.fade-hold, .fade-rise, .fade-finish) :is(.footer, .portal-glow),
-:is(.fade-hold, .fade-rise, .fade-finish):not(.landed) :is(.portada, .navigation, .portfolio, .vitacora) { opacity: var(--fade-to); transition: opacity var(--fade-time) var(--fade-curve, linear); }
+:is(.fade-hold, .fade-rise, .fade-finish) :is(.footer, .portal-glow, .portada, .navigation, .portfolio, .vitacora) { opacity: var(--fade-to); transition: opacity var(--fade-time) var(--fade-curve, linear); }
 
 .staged > :not(.stage, .dotgrid, .veil) { visibility: hidden; }
 
