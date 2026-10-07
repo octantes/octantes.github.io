@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *This note was originally written for and published in [Press Over](https://pressover.news/opinion/abandonware-la-permanencia-del-autor/)*
+
+***
 
 As the arts mature, problems arise that complicate the preservation of certain works. All disciplines suffer the passage of time to a greater or lesser degree, but *when art is closely linked to the continuous advance of technology, as in our industry, those difficulties intensify*. There are specialists in painting restoration. Cinema has found the best ways to store celluloid and we see buildings under repair constantly, but meanwhile, many games are disappearing. Let's talk about abandonware.
 

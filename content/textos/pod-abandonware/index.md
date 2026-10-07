@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *Esta nota fue originalmente escrita para y publicada en [Press Over](https://pressover.news/opinion/abandonware-la-permanencia-del-autor/)*
+
+***
 
 A medida que las artes maduran, surgen problemas que complejizan la conservación de ciertas obras. Todas las disciplinas sufren en mayor o menor medida el paso del tiempo, pero *cuando el arte está estrechamente ligado al continuo avance de la tecnología, como en nuestra industria, esas dificultades se intensifican*. Existen especialistas en la restauración de pinturas. El cine ha encontrado las mejores formas de almacenar celuloides y vemos edificios en reparación constantemente, pero mientras tanto, muchos juegos están desapareciendo. Hablemos del abandonware.
 

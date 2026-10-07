@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *This note was originally written for and published in [Press Over](https://pressover.news/articulos/las-microtransacciones-y-su-futuro/)*
+
+***
 
 Many of us avoid them at all costs, others consider them a fundamental part of their gaming experience. While the debate over microtransactions is *rife with controversy*, the reality is that they belong to most of the worlds we inhabit daily, and as such, it's important to think about them going forward. To do this, we must first define them.
 

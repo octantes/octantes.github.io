@@ -8,7 +8,11 @@ date: 2026-03-05
 handle: kaste
 ---
 
+***
+
 *You can find the project repo in my [Github](https://github.com/octantes/browsewithscroll)*
+
+***
 
 scroll is a local tool to **preview font and multimedia collections**
 no installation or internet needed: just clone the repo and run the "launch.sh" script

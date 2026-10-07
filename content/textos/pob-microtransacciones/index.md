@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *Esta nota fue originalmente escrita para y publicada en [Press Over](https://pressover.news/articulos/las-microtransacciones-y-su-futuro/)*
+
+***
 
 Muchos las evitamos a toda costa, otros las consideran una parte fundamental de su experiencia al jugar. Si bien el debate sobre las microtransacciones está *plagado de polémicas*, la realidad es que pertenecen a la mayoría de los mundos que habitamos cotidianamente, y como tal, es importante pensarlas de cara al futuro. Para esto, primero debemos definirlas.
 

@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *This note was originally written for and published in [Press Over](https://pressover.news/articulos/realidad-virtual-un-futuro-contemporaneo/)*
+
+***
 
 Virtual reality is in an interesting place. As a technology, although still growing, it has already left the prototyping phase, moving from experiment to reality. **Prices are starting to drop, with proposals clearly aimed at the general market**, and we all know some games that make good use of the possibilities these systems offer. If we dip our heads in a bit, there seems to be an industry still in formation with a strong focus on innovation.
 

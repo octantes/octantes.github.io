@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *This note was originally written for and published in [Press Over](https://pressover.news/articulos/realidad-virtual-las-mejores-aplicaciones/)*
+
+***
 
 When talking about virtual reality, emphasis is often placed on the current state of hardware, discussing the latest advances and analyzing the newest products. While it's important to have a basic idea of what the technology allows in order to understand the phenomenon, **the software seems to take a back seat, when in reality it's what allows us to incorporate it into our lives**.
 

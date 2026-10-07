@@ -1,33 +1,44 @@
 ---
-tags: [branding, portfolio]
+tags: [branding, portfolio, motion, web]
 type: diseño
-title: en una - publicación digital
-description: proyecto de branding y motion graphics para revista digital de música
+title: en una
+description: identidad multimedia y web para en una, combinando raíces fanzine indie con una plataforma digital dinámica
 portada: portada.png
 date: 2023-09-06
 handle: kaste
+style: trad
 ---
 
-![header del proyecto de diseño](header.gif)
-![concepto de la marca explicado](explainer.gif)
-![divisor de presentacion](marquee.gif)
-![presentacion del icono](iconography.gif)
+![header del proyecto](header.gif)
+![concepto de marca explicado](explainer.gif)
+![divisor de presentación](marquee.gif)
+![presentación del icono](iconography.gif)
 ![assets de identidad para redes](identity.gif)
-![separador de presentacion](break.png)
-![creditos del proyecto de branding](credits.png)
+![separador de presentación](break.png)
+![créditos del proyecto](credits.png)
 
 [!TEXT]
 
-![embed youtube](https://www.youtube.com/watch?v=dINpNVg0hiw)
+***en una*** es una revista digital moldeada por la calle y el internet.
 
-este fue mi primer *proyecto* de diseño, después de años sin profundizar mucho
-se me ocurrió pensar conceptos de marcas ficticias, como excusa para practicar
+A medida que la publicación pasó de editar fanzines a ser una plataforma multimedia, necesitaba una identidad que pudiera cargar ambos mundos sin reducir ninguno.
 
-en este caso, el objetivo era diseñar assets y **animarlos** usando after effects
-para eso, la excusa fue una revista de publicación digital con muy pocos colores
-hoy en día le veo problemas de espaciado, y el texto del copy me parece básico
-me gustaría revisitar esta *estética* con algún proyecto real que la aproveche
+![Tablero](process-board.png)
 
-el trabajo fue realizado usando figma, photoshop y after effects, entre otros
+Construí un sistema visual alrededor de elementos reconocibles y flexibles que pudieran desplazarse entre el sitio web, contenido editorial, animaciones y posts. Cada pieza necesitaba sostener la misma identidad, dejando espacio para juego, evolución y nuevos formatos.
 
-inspirado en [cdc comms](https://cultdeadcow.com/about/), los [bumps](https://youtube.com/playlist?list=PL075thqiB6t9FE4pyy-2omH_rZMVhnp77&si=JR1lDU6VWQ2jujj9) de adult swim y las [animaciones](https://www.behance.net/gallery/47393655/Watch_Dogs-2-DEDSEC-Video) de dedsec
+El resultado se aleja de las estéticas de medios tradicionales y mantiene viva la energía áspera y hazlo tú mismo de la publicación original. Tipografía, textura, composición y animación trabajan juntos para que el sistema se sienta vivo.
+
+### Página
+
+El sitio debía funcionar como una pizarra a medida que el equipo encontraba su voz online: un lugar para testear ideas, cambiar dirección y seguir evolucionando sin reconstruir todo el sistema.
+
+El video vertical se estaba volviendo central al output de la revista, así que el sitio tenía que hacer que ese formato se sintiera nativo. Construimos un sistema flexible que trae los embeds verticales de YouTube a la página, donde se reproducen en hover y conviven con el trabajo escrito y visual de la revista.
+
+El resultado combina la plataforma y su output externo en una única experiencia continua.
+
+![Página](webpage.png)
+
+### Presentación
+
+![Embed YouTube](https://www.youtube.com/watch?v=dINpNVg0hiw)
