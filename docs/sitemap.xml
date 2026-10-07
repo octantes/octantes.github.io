@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://octantes.github.io/</loc>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/dise%C3%B1o</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o"/>
-    <lastmod>2026-06-20T00:00:00.000Z</lastmod>
+    <lastmod>2026-09-12T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/design</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o"/>
-    <lastmod>2026-06-20T00:00:00.000Z</lastmod>
+    <lastmod>2026-09-12T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/desarrollo</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo"/>
-    <lastmod>2026-03-05T00:00:00.000Z</lastmod>
+    <lastmod>2026-09-15T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/dev</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo"/>
-    <lastmod>2026-03-05T00:00:00.000Z</lastmod>
+    <lastmod>2026-09-15T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/musica</loc>
@@ -65,124 +65,152 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/games</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/info</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/info"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/about"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/info"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/about</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/info"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/about"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/info"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/portfolio</loc>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat</loc>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/gris</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/gris"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/grey"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/gris"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/grey</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/gris"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/grey"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/gris"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/naranja</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/naranja"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/orange"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/naranja"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/orange</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/naranja"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/orange"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/naranja"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/verde</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/verde"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/green"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/verde"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/green</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/verde"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/green"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/verde"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/azul</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/azul"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/blue"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/azul"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/havitat/blue</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/havitat/azul"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/havitat/blue"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/havitat/azul"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/vitacora</loc>
     <lastmod>2026-10-06</lastmod>
   </url>
   <url>
-    <loc>https://octantes.github.io/juegos/vitacora</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/vitacora"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/vitacora"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/vitacora"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://octantes.github.io/games/vitacora</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/vitacora"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/vitacora"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/vitacora"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://octantes.github.io/juegos/havitat</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/havitat"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/havitat"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/havitat"/>
+    <loc>https://octantes.github.io/juegos/rooms</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/rooms"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/rooms"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/rooms"/>
     <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
-    <loc>https://octantes.github.io/games/havitat</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/havitat"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/havitat"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/havitat"/>
+    <loc>https://octantes.github.io/games/rooms</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/juegos/rooms"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/games/rooms"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/juegos/rooms"/>
     <lastmod>2026-10-05T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/desarrollo/scavenger</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/scavenger"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/scavenger"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/scavenger"/>
+    <lastmod>2026-09-15T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dev/scavenger</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/desarrollo/scavenger"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/dev/scavenger"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/desarrollo/scavenger"/>
+    <lastmod>2026-09-15T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dise%C3%B1o/octantes</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/octantes"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/octantes"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/octantes"/>
+    <lastmod>2026-09-12T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/design/octantes</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/octantes"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/octantes"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/octantes"/>
+    <lastmod>2026-09-12T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/dise%C3%B1o/havitat</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/havitat"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/havitat"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/havitat"/>
+    <lastmod>2026-08-25T00:00:00.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://octantes.github.io/design/havitat</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/dise%C3%B1o/havitat"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/design/havitat"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/dise%C3%B1o/havitat"/>
+    <lastmod>2026-08-25T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/musica/culto</loc>
@@ -497,13 +525,13 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/archivo.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/archive.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/archivo.html"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
   <url>
     <loc>https://octantes.github.io/archive.html</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://octantes.github.io/archivo.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://octantes.github.io/archive.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://octantes.github.io/archivo.html"/>
-    <lastmod>2026-10-06T00:00:00.000Z</lastmod>
+    <lastmod>2026-10-05T00:00:00.000Z</lastmod>
   </url>
 </urlset>

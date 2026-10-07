@@ -1,40 +1,15 @@
 [
   {
-    "slug": "vitacora",
-    "title": "vitacora",
-    "description": "el tablero dibujado donde voy anotando lo que hago",
+    "slug": "rooms",
+    "title": "rooms - visualizer",
+    "description": "una visualización automática - la habitación cambia, inspecciona sus objetos y nunca se repite",
     "type": "juegos",
     "tags": [
-      "vitacora",
+      "interactivo",
       "dibujo"
     ],
-    "portada": "https://octantes.github.io/posts/juegos/vitacora/portada.webp",
-    "share": "https://octantes.github.io/posts/juegos/vitacora/share.jpg",
-    "handle": [
-      "kaste"
-    ],
-    "date": "06/10/2026",
-    "isoDate": "2026-10-06T00:00:00.000Z",
-    "modified": "2026-10-06T00:00:00.000Z",
-    "vuecomp": null,
-    "game": null,
-    "ground": null,
-    "opens": "vitacora",
-    "bilingual": true,
-    "titleEn": "vitacora",
-    "descriptionEn": "the drawn board where i keep notes on what i am doing"
-  },
-  {
-    "slug": "havitat",
-    "title": "havitat - visualizer",
-    "description": "una visualización automática de havitat - la habitación cambia, inspecciona sus objetos y nunca se repite",
-    "type": "juegos",
-    "tags": [
-      "havitat",
-      "dibujo"
-    ],
-    "portada": "https://octantes.github.io/posts/juegos/havitat/portada.webp",
-    "share": "https://octantes.github.io/posts/juegos/havitat/share.jpg",
+    "portada": "https://octantes.github.io/posts/juegos/rooms/portada.webp",
+    "share": "https://octantes.github.io/posts/juegos/rooms/share.jpg",
     "handle": [
       "kaste"
     ],
@@ -46,8 +21,87 @@
     "ground": "carbon",
     "opens": null,
     "bilingual": true,
-    "titleEn": "havitat - visualizer",
-    "descriptionEn": "an automatic visualization of havitat - the room wanders, lingers on its objects and never takes the same path twice"
+    "titleEn": "rooms - visualizer",
+    "descriptionEn": "an automatic visualization - the room wanders, lingers on its objects and never takes the same path twice"
+  },
+  {
+    "slug": "scavenger",
+    "title": "scav - substrato para una web portable",
+    "description": "Toda la web es un repositorio de componentes para tus proyectos - robá una pieza, reconectala, conservala para siempre",
+    "type": "desarrollo",
+    "tags": [
+      "portfolio",
+      "software",
+      "malleable"
+    ],
+    "portada": "https://octantes.github.io/posts/desarrollo/scavenger/portada.webp",
+    "share": "https://octantes.github.io/posts/desarrollo/scavenger/share.jpg",
+    "handle": [
+      "kaste"
+    ],
+    "date": "15/09/2026",
+    "isoDate": "2026-09-15T00:00:00.000Z",
+    "modified": "2026-09-15T00:00:00.000Z",
+    "vuecomp": null,
+    "game": null,
+    "ground": null,
+    "opens": null,
+    "bilingual": true,
+    "titleEn": "scav - substrate for a portable web",
+    "descriptionEn": "The whole web is a component repository for your projects - steal a piece, rewire it, keep it forever"
+  },
+  {
+    "slug": "octantes",
+    "title": "octantes",
+    "description": "diseño y desarrollo para esta página - experimentos, sistemas de contenido, shaders custom y animación",
+    "type": "diseño",
+    "tags": [
+      "branding",
+      "portfolio",
+      "web",
+      "meta"
+    ],
+    "portada": "https://octantes.github.io/posts/diseño/octantes/portada.webp",
+    "share": "https://octantes.github.io/posts/diseño/octantes/share.jpg",
+    "handle": [
+      "kaste"
+    ],
+    "date": "12/09/2026",
+    "isoDate": "2026-09-12T00:00:00.000Z",
+    "modified": "2026-09-12T00:00:00.000Z",
+    "vuecomp": null,
+    "game": null,
+    "ground": null,
+    "opens": null,
+    "bilingual": true,
+    "titleEn": "octantes",
+    "descriptionEn": "design and development work for this website - ongoing experiments, custom shaders and animation"
+  },
+  {
+    "slug": "havitat",
+    "title": "havitat",
+    "description": "identidad multimedia para havitat, práctica de diseño personal y stream",
+    "type": "diseño",
+    "tags": [
+      "branding",
+      "portfolio",
+      "motion"
+    ],
+    "portada": "https://octantes.github.io/posts/diseño/havitat/portada.webp",
+    "share": "https://octantes.github.io/posts/diseño/havitat/share.jpg",
+    "handle": [
+      "kaste"
+    ],
+    "date": "25/08/2026",
+    "isoDate": "2026-08-25T00:00:00.000Z",
+    "modified": "2026-08-25T00:00:00.000Z",
+    "vuecomp": null,
+    "game": null,
+    "ground": null,
+    "opens": null,
+    "bilingual": true,
+    "titleEn": "havitat",
+    "descriptionEn": "multimedia identity for havitat, spanning my personal design practice and a radio music stream"
   },
   {
     "slug": "culto",
@@ -76,12 +130,13 @@
   },
   {
     "slug": "nubenueve",
-    "title": "nubenueve - tienda de discos",
-    "description": "pagina para tienda de discos, vinilos y cintas de casette",
+    "title": "nubenueve",
+    "description": "identidad multimedia y tienda para nubenueve, sello discográfico centrado en formatos físicos y arte coleccionable",
     "type": "diseño",
     "tags": [
-      "sitio",
-      "portfolio"
+      "branding",
+      "portfolio",
+      "web"
     ],
     "portada": "https://octantes.github.io/posts/diseño/nubenueve/portada.webp",
     "share": "https://octantes.github.io/posts/diseño/nubenueve/share.jpg",
@@ -96,8 +151,8 @@
     "ground": null,
     "opens": null,
     "bilingual": true,
-    "titleEn": "nubenueve - record store",
-    "descriptionEn": "record store website, cd's, vinyls and cassette tapes"
+    "titleEn": "nubenueve",
+    "descriptionEn": "multimedia identity and storefront for nubenueve, a music label centered on physical formats and collectible album art"
   },
   {
     "slug": "bocetos",
@@ -301,12 +356,13 @@
   },
   {
     "slug": "dinamik",
-    "title": "dinamik - studio dev",
-    "description": "proyecto de branding y motion graphics para empresa de desarrollo de software de productividad",
+    "title": "dinamik",
+    "description": "identidad multimedia para DINAMIK, estudio boutique desarrollando sistemas precisos de interacción humano-computadora",
     "type": "diseño",
     "tags": [
       "branding",
-      "portfolio"
+      "portfolio",
+      "motion"
     ],
     "portada": "https://octantes.github.io/posts/diseño/dinamik/portada.webp",
     "share": "https://octantes.github.io/posts/diseño/dinamik/share.jpg",
@@ -321,17 +377,18 @@
     "ground": null,
     "opens": null,
     "bilingual": true,
-    "titleEn": "dinamik - studio dev",
-    "descriptionEn": "branding and motion graphics project for a productivity software development company"
+    "titleEn": "dinamik",
+    "descriptionEn": "multimedia identity for DINAMIK, a boutique development studio building precise human-computer interaction systems"
   },
   {
     "slug": "cruzar",
-    "title": "cruzar - cordillera cripto",
-    "description": "proyecto de branding y motion graphics para un servicio de datacenters sobre la cordillera",
+    "title": "cruzar",
+    "description": "identidad multimedia para CRUZAR, conectando paisajes patagónicos con infraestructura, computación y minería",
     "type": "diseño",
     "tags": [
       "branding",
-      "portfolio"
+      "portfolio",
+      "motion"
     ],
     "portada": "https://octantes.github.io/posts/diseño/cruzar/portada.webp",
     "share": "https://octantes.github.io/posts/diseño/cruzar/share.jpg",
@@ -346,17 +403,19 @@
     "ground": null,
     "opens": null,
     "bilingual": true,
-    "titleEn": "cruzar - crypto cordillera",
-    "descriptionEn": "branding and motion graphics project for a datacenter service across the mountain range"
+    "titleEn": "cruzar",
+    "descriptionEn": "multimedia identity for CRUZAR, connecting Patagonian landscapes with compute and mining infrastructure"
   },
   {
     "slug": "enuna",
-    "title": "en una - publicación digital",
-    "description": "proyecto de branding y motion graphics para revista digital de música",
+    "title": "en una",
+    "description": "identidad multimedia y web para en una, combinando raíces fanzine indie con una plataforma digital dinámica",
     "type": "diseño",
     "tags": [
       "branding",
-      "portfolio"
+      "portfolio",
+      "motion",
+      "web"
     ],
     "portada": "https://octantes.github.io/posts/diseño/enuna/portada.webp",
     "share": "https://octantes.github.io/posts/diseño/enuna/share.jpg",
@@ -371,8 +430,8 @@
     "ground": null,
     "opens": null,
     "bilingual": true,
-    "titleEn": "en una - digital publication",
-    "descriptionEn": "branding and motion graphics project for a digital music magazine"
+    "titleEn": "en una",
+    "descriptionEn": "flexible multimedia identity and webpage for en una, bridging indie-fanzine roots with a dynamic digital magazine platform"
   },
   {
     "slug": "pof-softwarevr",

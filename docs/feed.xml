@@ -5,23 +5,39 @@
     <link>https://octantes.github.io/</link>
     <description>weaving spells - a multimedia web portal, no algorithms or middlemen</description>
     <language>en</language>
-    <lastBuildDate>Tue, 06 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 05 Oct 2026 00:00:00 GMT</lastBuildDate>
     <generator>buildstep.js (custom)</generator>
     <atom:link href="https://octantes.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
-      <title>vitacora</title>
-      <link>https://octantes.github.io/games/vitacora</link>
-      <guid isPermaLink="true">https://octantes.github.io/games/vitacora</guid>
-      <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
-      <description>the drawn board where i keep notes on what i am doing</description>
+      <title>rooms - visualizer</title>
+      <link>https://octantes.github.io/games/rooms</link>
+      <guid isPermaLink="true">https://octantes.github.io/games/rooms</guid>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 GMT</pubDate>
+      <description>an automatic visualization - the room wanders, lingers on its objects and never takes the same path twice</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
-      <title>havitat - visualizer</title>
-      <link>https://octantes.github.io/games/havitat</link>
-      <guid isPermaLink="true">https://octantes.github.io/games/havitat</guid>
-      <pubDate>Mon, 05 Oct 2026 00:00:00 GMT</pubDate>
-      <description>an automatic visualization of havitat - the room wanders, lingers on its objects and never takes the same path twice</description>
+      <title>scav - substrate for a portable web</title>
+      <link>https://octantes.github.io/dev/scavenger</link>
+      <guid isPermaLink="true">https://octantes.github.io/dev/scavenger</guid>
+      <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
+      <description>The whole web is a component repository for your projects - steal a piece, rewire it, keep it forever</description>
+      <author>kaste@octantes.ar (kaste)</author>
+    </item>
+<item>
+      <title>octantes</title>
+      <link>https://octantes.github.io/design/octantes</link>
+      <guid isPermaLink="true">https://octantes.github.io/design/octantes</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 GMT</pubDate>
+      <description>design and development work for this website - ongoing experiments, custom shaders and animation</description>
+      <author>kaste@octantes.ar (kaste)</author>
+    </item>
+<item>
+      <title>havitat</title>
+      <link>https://octantes.github.io/design/havitat</link>
+      <guid isPermaLink="true">https://octantes.github.io/design/havitat</guid>
+      <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
+      <description>multimedia identity for havitat, spanning my personal design practice and a radio music stream</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
@@ -33,11 +49,11 @@
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
-      <title>nubenueve - record store</title>
+      <title>nubenueve</title>
       <link>https://octantes.github.io/design/nubenueve</link>
       <guid isPermaLink="true">https://octantes.github.io/design/nubenueve</guid>
       <pubDate>Sat, 20 Jun 2026 00:00:00 GMT</pubDate>
-      <description>record store website, cd&#39;s, vinyls and cassette tapes</description>
+      <description>multimedia identity and storefront for nubenueve, a music label centered on physical formats and collectible album art</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
@@ -105,27 +121,27 @@
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
-      <title>dinamik - studio dev</title>
+      <title>dinamik</title>
       <link>https://octantes.github.io/design/dinamik</link>
       <guid isPermaLink="true">https://octantes.github.io/design/dinamik</guid>
       <pubDate>Sat, 30 Nov 2024 00:00:00 GMT</pubDate>
-      <description>branding and motion graphics project for a productivity software development company</description>
+      <description>multimedia identity for DINAMIK, a boutique development studio building precise human-computer interaction systems</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
-      <title>cruzar - crypto cordillera</title>
+      <title>cruzar</title>
       <link>https://octantes.github.io/design/cruzar</link>
       <guid isPermaLink="true">https://octantes.github.io/design/cruzar</guid>
       <pubDate>Thu, 19 Sep 2024 00:00:00 GMT</pubDate>
-      <description>branding and motion graphics project for a datacenter service across the mountain range</description>
+      <description>multimedia identity for CRUZAR, connecting Patagonian landscapes with compute and mining infrastructure</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
-      <title>en una - digital publication</title>
+      <title>en una</title>
       <link>https://octantes.github.io/design/enuna</link>
       <guid isPermaLink="true">https://octantes.github.io/design/enuna</guid>
       <pubDate>Wed, 06 Sep 2023 00:00:00 GMT</pubDate>
-      <description>branding and motion graphics project for a digital music magazine</description>
+      <description>flexible multimedia identity and webpage for en una, bridging indie-fanzine roots with a dynamic digital magazine platform</description>
       <author>kaste@octantes.ar (kaste)</author>
     </item>
 <item>
