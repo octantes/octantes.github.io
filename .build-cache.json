@@ -1,12 +1,12 @@
 {
   "desarrollo/arch-hud/index.md": "e7b945c9de35a07abe8458c84b821d09f527c4b5a0e4cb85eff7d9e8c40225c5",
-  "desarrollo/browsewithscroll/index.md": "619b60be324cfb3002d1fc22e8d6ba0c37eda5d858eb806f8e95dbc0d66ac22e",
+  "desarrollo/browsewithscroll/index.md": "e5ade4fce416bc9eec942663100b2827f9d3fbed0f9f9ff31faf6b00d5eb6c86",
   "desarrollo/shadewithseal/index.md": "172f4faa79b8f2e0b5f27adf60c8c2a1ba85aefd7fbfbba7a04d636f5f9cb8c0",
   "desarrollo/trackwithslate/index.md": "a4a74c64b79d3fad339f506e270efb2a93c08b693feee39bb334acd0259b06b8",
-  "diseño/cruzar/index.md": "ba298f697bada7478d8d3b5ca80ef89afdc8b000c4bd8d126c52813774de28a9",
-  "diseño/dinamik/index.md": "c2ad9bd5befcfe7a51bde8073da3bc66f756c3d948154fc52fc6feb52e0e5e7d",
-  "diseño/enuna/index.md": "a903c74c635c103bf88c76aa8dda3adfab84ef900ae72c4e78470ce07fb46cef",
-  "diseño/nubenueve/index.md": "a54e63cb7a88901eb8ffb844a45a7566c394a055696e67bb4e373f76385cfbd9",
+  "diseño/cruzar/index.md": "e83c958742aea3d95333a0700294710b8af6523908a6021f29e9ab23b51cfe41",
+  "diseño/dinamik/index.md": "8dc6dd60b3a08773695414886eb7b7c8e3ae0bb3d59d1e5a45b7e69fcf1b623d",
+  "diseño/enuna/index.md": "5aba07f97c007f5735183c2ca3b38a5ddb2cc4b9eee71222f1f1ce7b31d487e8",
+  "diseño/nubenueve/index.md": "897f62256eff4750d01d34b2b560acab9cbbfdc147c6cf17a447525218a5dc86",
   "musica/bocetos/index.md": "3051e16b47d6fe70000019de9e40476e4defc18fcd18b9b8e4acaffb76e2a3dd",
   "musica/culto/index.md": "78e5359b17a81bb9bab96f6999bb442886a7d40be67fd103f3c716aeab8a289e",
   "musica/geminis/index.md": "cadce584c5b99122e287f049f94888da1d85a65a89141bece8ad77fcd0708f95",
@@ -21,6 +21,8 @@
   "textos/pod-abandonware/index.md": "c54b389866ed83befd67208948af13efb55d58f88230d85fe22b66cb46d7dbde",
   "textos/poe-futurovr/index.md": "1acfcec1c03caafde050f5b29f07c1809ef3db440f50b6c64c1a77146766127d",
   "textos/pof-softwarevr/index.md": "009be713b12cdecc428b3f293708a65b240818aa00b054050423a2d51077b669",
-  "juegos/havitat/index.md": "0955c5d48e4ea39cb859cb8072181ef29e2b4f54d0e8adcae5827a6f15f26554",
-  "juegos/vitacora/index.md": "dac1929ae94247d7260c3e134e618d66baae6eb1907eb405f857f993f57853ac"
+  "juegos/vitacora/index.md": "919539320db14d8773ab5e01627b4c0249337ba7e06dcf41246f89df30c6a081",
+  "diseño/havitat/index.md": "54ec552d5dfe7b9f777efbeb9998955835657f858342acca026477811800bf26",
+  "diseño/octantes/index.md": "bf4cdcd84af8d2dd00c7971339c132b5b63fce98ba10101adaa84d12fc6d8070",
+  "juegos/rooms/index.md": "49b4b3a0a72455b77a403efcefa838dae1c514cf59d93ba26de2c6f9187750b5"
 }

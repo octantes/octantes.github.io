@@ -7,6 +7,11 @@ portada: portada.png
 date: vitacora
 handle: kaste
 opens: vitacora
+mostrar: no
 ---
 
+***
+
 *Podés recorrer la vitacora [abriéndola](#abrir)*
+
+***

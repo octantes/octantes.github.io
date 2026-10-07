@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *Esta nota fue originalmente escrita para y publicada en [Press Over](https://pressover.news/articulos/realidad-virtual-un-futuro-contemporaneo/)*
+
+***
 
 La realidad virtual se encuentra en un lugar interesante. Como tecnología, por más que sigue en crecimiento, ya abandonó la fase de prototipado, pasando de experimento a realidad. **Los precios están empezando a bajar, con propuestas que apuntan claramente al mercado general**, y todos conocemos algunos juegos que hacen buen uso de las posibilidades que estos sistemas ofrecen. Si sumergimos un poco la cabeza, parece haber una industria aún en formación con un gran foco en la innovación.
 

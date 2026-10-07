@@ -6,6 +6,12 @@ description: the drawn board where i keep notes on what i am doing
 portada: portada.png
 date: vitacora
 handle: kaste
+opens: vitacora
+mostrar: no
 ---
 
+***
+
 *You can browse the log by [opening it](#open)*
+
+***

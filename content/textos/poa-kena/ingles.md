@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *This note was originally written for and published in [Press Over](https://pressover.news/opinion/kena-esta-bien-que-la-estetica-lo-sea-todo/)*
+
+***
 
 On September 21, Kena: Bridge of Spirits was released, the first game by Ember Lab, a development team that began its journey in the world of animation and digital content creation. Since its announcement in 2020, the title generated **a lot of expectation for its visual style**, blending Pixar-worthy 3D design with a world reminiscent of the best Studio Ghibli films.
 

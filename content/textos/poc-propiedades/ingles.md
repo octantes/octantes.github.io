@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *This note was originally written for and published in [Press Over](https://pressover.news/opinion/no-solo-propiedades-intelectuales/)*
+
+***
 
 With the consolidation of video games as one of the most important mass entertainment industries, we began to notice a trend in many studios to develop repeatable and engaging intellectual properties to sustain themselves over time through multiple installments. Nowadays, interest in consecutive works has **less to do with the particularities of the authors and more with their universe, nostalgia, and hype**.
 

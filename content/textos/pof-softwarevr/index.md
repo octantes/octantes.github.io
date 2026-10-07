@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *Esta nota fue originalmente escrita para y publicada en [Press Over](https://pressover.news/articulos/realidad-virtual-las-mejores-aplicaciones/)*
+
+***
 
 Cuando se habla de realidad virtual, se suele hacer énfasis en el estado actual del hardware, discutiendo los últimos avances y analizando los productos más nuevos. Si bien es importante tener una idea básica de lo que la tecnología permite para entender el fenómeno, **el software parece quedar en segundo plano, cuando en realidad es lo que nos permite incorporarlo a nuestras vidas**.
 

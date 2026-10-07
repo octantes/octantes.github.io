@@ -9,7 +9,11 @@ handle: kaste
 style: trad
 ---
 
+***
+
 *Esta nota fue originalmente escrita para y publicada en [Press Over](https://pressover.news/opinion/no-solo-propiedades-intelectuales/)*
+
+***
 
 Con la consolidación del videojuego como una de las industrias más importantes de entretenimiento masivo, empezamos a notar una tendencia en muchos estudios a desarrollar propiedades intelectuales repetibles y atrapantes para sostenerse en el tiempo a través de varias entregas. Hoy en día, el interés en obras consecutivas tiene **menos que ver con las particularidades de los autores y más con su universo, la nostalgia y el hype**.
 

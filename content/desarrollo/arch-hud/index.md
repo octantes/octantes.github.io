@@ -8,7 +8,11 @@ date: 2025-09-14
 handle: kaste
 ---
 
+***
+
 *Podés encontrar el repositorio en mi [Github](https://github.com/octantes/arch-hud)*
+
+***
 
 arch-hud es una build personal de herramientas [suckless](https://suckless.org/) para uso diario en arch
 
@@ -17,9 +21,7 @@ buscando que la pc vuelva a ser una herramienta y no un agujero negro cognitivo
 se implementaron varios parches sobre DWM junto a una estética de estilo retro
 sin gaps, transparencia ni compositor por defecto; **sin distracciones innecesarias**
 
-
 ![screenshot](screenshot.png)
-
 
 para compilar, entrá en cada dir y ejecutá *sudo make clean install* o usa build.sh
 
