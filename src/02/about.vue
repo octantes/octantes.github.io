@@ -2,7 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
-import { SECTIONS } from '../04/config.js'
+import { SECTIONS, ABOUT_NOTES } from '../04/config.js'
+import { shortOf } from '../04/map.js'
 const authorpic = '/assets/kaste.webp'
 
 const props           = defineProps({ section: { type: String, default: null } })
@@ -13,6 +14,7 @@ const { t }           = storeToRefs(store)
 const { activeFilter, userStatus, currentPost } = storeToRefs(store)                                                                  // imports refs from main store
 
 const displayFilter = computed(() => props.section || currentPost.value?.type || activeFilter.value)                                  // show note type, else active filter
+const linked        = computed(() => (ABOUT_NOTES[displayFilter.value] ?? []).map(slug => store.notesIndex.find(note => note.slug === slug)).filter(Boolean))
 
 const currentTagline  = ref('')
 
@@ -49,9 +51,17 @@ onMounted(() => {
 
         <p v-html="t.about.sections[section]"></p>
 
-        <br><hr><br>
+        <template v-if="linked.length">
 
-        <p v-html="t.about.footers[section]"></p> <br>
+          <br><hr><br>
+
+          <p v-html="t.about.footers[section]"></p>
+
+          <p v-for="note in linked" :key="note.slug" class="linked"><RouterLink :to="store.notePath(note.type, note.slug)">{{ shortOf(store.textOf(note, 'title')) }}</RouterLink>: {{ store.textOf(note, 'description') }}</p>
+
+          <br>
+
+        </template>
 
       </div>
 

@@ -19,6 +19,15 @@ export const SECTIONS = [
   { id: 'juegos',        es: 'juegos',        en: 'games',    label: { es: 'juegos',       en: 'games'   } },
 ]
 
+export const ABOUT_NOTES = {
+  portal:      ['octantes'],
+  'dise\u00f1o': ['cruzar', 'havitat', 'enuna'],
+  desarrollo:  ['scavenger'],
+  musica:      ['vi\u00f1etas'],
+  textos:      ['poa-kena', 'pod-abandonware'],
+  juegos:      [],
+}
+
 export const ABOUT_PATH   = { es: '/info', en: '/about' }
 export const ARCHIVE_VIEW = { es: 'archivo', en: 'archive' }
 

@@ -6,9 +6,9 @@ import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import sharp from 'sharp'
 
-import { VITACORA, SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from '../src/04/config.js'
+import { VITACORA, ABOUT_NOTES, SITE_URL, TAGLINE, SITE_DESCRIPTION, SECTIONS, ARCHIVE_VIEW, AUTHOR_NAME, MAIN_PROJECTS, GIF_AS_VIDEO, GIF_ENCODE } from '../src/04/config.js'
 import { DICT } from '../src/04/lang.js'
-import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, other, themeOf } from '../src/04/map.js'
+import { SHARE_SIZE, ARCHIVE_FLAG, headFor, renderHead, pathOf, urlOf, labelOf, textOf, shortOf, other, themeOf } from '../src/04/map.js'
 import { figlet } from '../src/03/figlet.js'
 import { WALLS } from '../src/04/rooms.js'
 
@@ -743,6 +743,14 @@ async function writePortfolio() {
 
 }
 
+function linkedNotes(id, lang, footer) {
+
+  const notes = (ABOUT_NOTES[id] ?? []).map(slug => indexItems.find(p => p.slug === slug)).filter(Boolean)
+  if (!notes.length) return []
+  return ['<hr>', `<p>${footer}</p>`, ...notes.map(p => `<p><a href="${noteHref(p, lang)}">${esc(shortOf(textOf(p, 'title', lang)))}</a>: ${esc(textOf(p, 'description', lang))}</p>`)]
+
+}
+
 async function writeAbouts() {
 
   const pages = [{ kind: 'about' }, ...SECTIONS.filter(s => s.id !== 'portal').map(s => ({ kind: 'section', id: s.id }))]
@@ -754,7 +762,7 @@ async function writeAbouts() {
     const html = fillTemplate({
       page, lang, title: headFor(page, lang).name, meta: chrome[lang].archiveMeta, type: page.kind,
       toggleHref: archiveHref(page, other(lang)), sidebar: generateMonolingualSidebar(lang),
-      content: [`<p>${about.sections[id]}</p>`, '<hr>', `<p>${about.footers[id]}</p>`].join('\n'),
+      content: [`<p>${about.sections[id]}</p>`, ...linkedNotes(id, lang, about.footers[id])].join('\n'),
     })
 
     await fs.mkdir(path.dirname(pageFile(page, lang)), { recursive: true })
