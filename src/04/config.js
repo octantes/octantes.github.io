@@ -30,6 +30,7 @@ export const TWITTER          = '@octantes'
 export const MOBILE_MAX = 1080
 
 export const GITHUB_URL = 'https://github.com/octantes'
+export const CONTRA_URL = 'https://contra.com/kaste_ad68w6qr?referralExperimentNid=DEFAULT_REFERRAL_PROGRAM&referrerUsername=kaste_ad68w6qr'
 
 export const MAIN_PROJECTS = [
   { name: 'scavenger', desc: { es: 'cuatro herramientas para puentear internet!', en: 'four tools to hotwire the entire web!' }, url: 'https://github.com/octantes/scavenger' },

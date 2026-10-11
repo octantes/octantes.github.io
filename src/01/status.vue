@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
+import { CONTRA_URL } from '../04/config.js'
 
 const store      = useStore()                                                                                                         // setup store usage
 const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
@@ -22,6 +23,8 @@ onUnmounted(() => { store.stopStatusUpdates() })
       <RouterLink :to="latestPost.url || '/'" :title="store.t.status.openLatest" :aria-label="store.t.status.openLatest">{{ latestPost.title }}</RouterLink>
       <span class="divisions">//</span>
       <a :href="'mailto:' + store.mailtoDir" :title="store.t.status.contact" :aria-label="store.t.status.contact">{{ store.t.status.contact }}</a>
+      <span class="divisions">//</span>
+      <a :href="CONTRA_URL" target="_blank" rel="noopener" :title="store.t.status.hireTitle" :aria-label="store.t.status.hireTitle">{{ store.t.status.hire }}</a>
       <span class="divisions">//</span>
       <RouterLink to="/portfolio" :title="store.t.status.portfolioTitle" :aria-label="store.t.status.portfolioTitle">{{ store.t.status.portfolioLabel }}</RouterLink>
 

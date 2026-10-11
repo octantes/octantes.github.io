@@ -30,7 +30,7 @@ export const DICT = {
       sigilAlt: 'sigilo'
     },
     nav: { search: 'buscar...', home: 'volver al inicio', prev: 'ver el filtro anterior', next: 'ver el filtro siguiente', filterBy: 'filtrar por ', filterByContent: 'filtrar contenidos por ' },
-    status: { contact: 'contactame!', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
+    status: { contact: 'contactame!', hire: 'contratame!', hireTitle: 'contratame en contra', archive: 'ARCHIVO', archiveLink: '/archivo.html', openLatest: 'abrir la \u00faltima nota publicada', portfolioTitle: 'ver portfolio din\u00e1mico', portfolioLabel: 'portfolio', rssTitle: 'suscribirse al feed RSS', rssAria: 'suscribirse a las \u00faltimas publicaciones por feed RSS', rssLabel: 'RSS', btcLabel: 'BTC:' },
     gallery: { loading: 'cargando...', empty: 'no hay notas que coincidan', open: 'abrir nota', noteCover: 'portada de la nota: ' },
     vitacora: { desc: 'bitácora de estudio y proceso, dibujada a mano' },
     stage: { leave: 'salir', unread: 'salir de pantalla completa', back: 'volver' },
@@ -105,7 +105,7 @@ export const DICT = {
       sigilAlt: 'sigil'
     },
     nav: { search: 'search...', home: 'back to home', prev: 'view previous filter', next: 'view next filter', filterBy: 'filter by ', filterByContent: 'filter posts by ' },
-    status: { contact: 'get in touch!', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
+    status: { contact: 'get in touch!', hire: 'hire me!', hireTitle: 'hire me on contra', archive: 'ARCHIVE', archiveLink: '/archive.html', openLatest: 'open latest published note', portfolioTitle: 'view dynamic portfolio', portfolioLabel: 'portfolio', rssTitle: 'subscribe to RSS feed', rssAria: 'subscribe to latest posts via RSS feed', rssLabel: 'RSS', btcLabel: 'BTC:' },
     gallery: { loading: 'loading...', empty: 'no matching notes', open: 'open note', noteCover: 'cover for note: ' },
     vitacora: { desc: 'a hand-drawn log of study and process' },
     stage: { leave: 'exit', unread: 'exit fullscreen', back: 'back' },
