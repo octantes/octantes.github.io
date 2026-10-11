@@ -70,7 +70,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
         <p v-if="route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery)" class="description">{{ note.displayDescription }}</p>
         
         <div class="tags">
-          <span class="tag mark" :title="note.type"><Icon :type="note.type" /></span>
+          <span class="tag mark" :title="store.labelOf(note.type)"><Icon :type="note.type" /><span class="mark-divider" aria-hidden="true">|</span>{{ store.labelOf(note.type) }}</span>
           <span v-for="tag in note.tags?.slice(0,3)" :key="tag" class="tag" role="button" tabindex="0" @click.stop="store.setSearchQuery(tag)" @keydown.enter.stop.prevent="store.setSearchQuery(tag)">{{ tag }}</span>
         </div>
 
@@ -202,7 +202,8 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: auto; }
 
-.tag.mark   { cursor: default; display: inline-flex; align-items: center; justify-content: center; }
+.tag.mark   { cursor: default; display: inline-flex; align-items: center; justify-content: center; gap: .3rem; }
+.mark-divider { opacity: .4; }
 
 .tag {
 
