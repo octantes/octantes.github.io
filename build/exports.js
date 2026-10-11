@@ -1,5 +1,5 @@
 import fs from 'fs/promises'
-import { existsSync, readFileSync } from 'fs'
+import { existsSync, readFileSync, readdirSync } from 'fs'
 import path from 'path'
 import frontMatter from 'front-matter'
 
@@ -15,7 +15,7 @@ import frontMatter from 'front-matter'
 
 - this file holds what build/edition.js, build/game.js and vite.config.js share: copying folders, vendoring the google fonts, inlining svgs used by css, reading a game's note
 - edition and game builds are classic scripts with relative paths and no fetch (src/03/shelf.js holds the data), so they open by double click
-- a game's code lives in games/<slug>/game.vue and its title, ground and steam app id come from its note in content/juegos/<slug>
+- a game's code lives in games/<slug>/game.vue and its title, ground and steam app id come from the note in content/juegos whose "game:" is <slug>
 - game builds swap src/04/store.js for games/store.js, so the site's router and pages never enter a game
 - game-desktop action: pick the game, linux and/or windows, and tick publish to also make a github release; add new games to its dropdown
 - the steam builds compile only on github, nothing of tauri or rust is installed locally or listed in package.json
@@ -63,7 +63,9 @@ export async function inline(sheet, root) {
 
 export function gameOf(slug) {
   if (!existsSync(`games/${slug}/game.vue`)) throw new Error(`no game at games/${slug}/game.vue`)
-  const note = file => frontMatter(readFileSync(`content/juegos/${slug}/${file}.md`, 'utf-8')).attributes
-  const [es, en] = [note('index'), existsSync(`content/juegos/${slug}/ingles.md`) ? note('ingles') : note('index')]
-  return { slug, ground: es.ground, steam: es.steam ?? null, title: { es: es.title, en: en.title }, description: { es: es.description, en: en.description } }
+  const folder = readdirSync('content/juegos').map(name => `content/juegos/${name}`).find(dir => existsSync(`${dir}/index.md`) && frontMatter(readFileSync(`${dir}/index.md`, 'utf-8')).attributes.game === slug)
+  if (!folder) throw new Error(`no note in content/juegos has "game: ${slug}"`)
+  const note = file => frontMatter(readFileSync(`${folder}/${file}.md`, 'utf-8')).attributes
+  const [es, en] = [note('index'), existsSync(`${folder}/ingles.md`) ? note('ingles') : note('index')]
+  return { slug, folder, ground: es.ground, steam: es.steam ?? null, title: { es: es.title, en: en.title }, description: { es: es.description, en: en.description } }
 }

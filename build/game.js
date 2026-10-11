@@ -34,7 +34,7 @@ async function page(game, vendored) {
 async function desktop(game) {
 
   const own = path.join('games', SLUG, 'icon.png')
-  const source = await fs.access(own).then(() => own, () => path.join('content', 'juegos', SLUG, 'portada.png'))
+  const source = await fs.access(own).then(() => own, () => path.join(game.folder, 'portada.png'))
   await sharp(source).resize(1024, 1024, { fit: 'cover' }).ensureAlpha().png().toFile(`${OUT}-icon.png`)
 
   await fs.writeFile(`${OUT}-desktop.json`, JSON.stringify({
