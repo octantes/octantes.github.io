@@ -72,7 +72,8 @@ md.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx]
   const src   = escapeHtml(token.attrGet('src'))
   const alt   = escapeHtml(self.renderInlineAsText(token.children, options, env))
-  return processAssets(src, alt, env.post) ?? base.image(tokens, idx, options, env, self)
+  const media = processAssets(src, alt, env.post) ?? base.image(tokens, idx, options, env, self)
+  return env.flat || !alt || media.startsWith('<iframe') ? media : `${media}<span class="caption">${alt}</span>`
 }
 
 md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
@@ -85,6 +86,7 @@ md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 
 const cacheFile = path.resolve(process.env.BUILD_CACHE || '.build-cache.json')
 const template = await fs.readFile('./build/post.html', 'utf-8')
+const renderer = crypto.createHash('sha256').update(await fs.readFile(new URL(import.meta.url))).update(template).digest('hex')       // a change here re-renders every note
 
 const contentDir = './content'
 const outputDir = './dist'
@@ -540,7 +542,7 @@ async function processPosts() {                                                 
 
     await fs.mkdir(noteOutputDir, { recursive: true })
 
-    const hash = crypto.createHash('sha256').update(raw)
+    const hash = crypto.createHash('sha256').update(renderer).update(raw)
     if (rawEn) hash.update(rawEn)
     if (follows) hash.update(String(vitacoraDate))
 

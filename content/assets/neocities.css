@@ -278,6 +278,7 @@ body::after {
 .post-content p                  { margin-top: var(--space-mm); margin-bottom: var(--space-mm); }
 .post-header                     { margin-bottom: 1rem;                     }
 .post-content img                { border: none; max-width: 100%; height: auto; }
+.post-content .caption           { display: block; text-align: center; margin: var(--space-ss) auto var(--space-mm); color: var(--humo-a60); font-family: var(--font-mono); font-size: .8rem; }
 .post-content p a                { 
 
   /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;

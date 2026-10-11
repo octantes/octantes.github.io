@@ -312,6 +312,15 @@ audio::-webkit-media-controls-enclosure:hover {
 
 }
 
+.caption {
+
+  /* LAYOUT */ display: block; text-align: center;
+  /* BOX    */ margin: var(--space-ss) auto var(--space-ll); max-width: var(--measure);
+  /* FILL   */ color: var(--humo-a60);
+  /* FONT   */ font-family: var(--font-mono); font-size: var(--text-ss); line-height: 1.4;
+
+}
+
 .nota-verso {
 
   /* LAYOUT */ text-align: center;
