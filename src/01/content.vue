@@ -52,6 +52,9 @@ if (isMobile.value && openKey.value) veilFromStart()
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
 let lastSlug   = null                                                                                                                 // previous slug flag for shader
+let settling   = false                                                                                                                // a transition is running; settle() re-reads the route when it ends
+let loads      = 0                                                                                                                    // latest note request, older ones are dropped
+let shownLang  = null                                                                                                                 // language of the note on screen
 
 const computedComp = computed(() => {                                                                                                 // compute vuecomp if it exists 
 
@@ -174,7 +177,12 @@ async function openInColumn(key) {
 
 async function handleLoadNote(slug) {                                                                                                 // custom html load behavior
 
-  const { html, error } = await fetchPost(slug, store.sectionOf(route.params.type) ?? route.params.type)
+  const ticket = ++loads
+  const lang   = store.lang
+  const type   = route.params.slug === slug ? store.sectionOf(route.params.type) ?? route.params.type : undefined
+  const { html, error } = await fetchPost(slug, type)
+  if (ticket !== loads) return
+  shownLang = lang
 
   notFound.value = !error ? 0 : /not a note page|HTTP error 404/.test(error.message || '') ? 404 : 500
   noteContent.value = error ? '' : html
@@ -248,115 +256,121 @@ watch(() => route.params.filterType, ft => {
   notFound.value = forcedError || (store.sectionOf(ft) ? 0 : 404)
 }, { immediate: true })
 
-watch(                                                                                                                                // trigger notes and animations 
+async function settle() {                                                                                                             // show the route, then again if it moved meanwhile
+
+  if (settling) return
+  settling = true
+
+  try {
+    let key
+    do { key = openKey.value; await show(key) } while (openKey.value !== key)
+    if (route.params.slug && store.currentPost?.bilingual && shownLang !== store.lang) await handleLoadNote(route.params.slug)
+  } finally { settling = false }
+
+}
+
+watch(openKey, settle, { immediate: true })                                                                                           // trigger notes and animations
+
+async function show(slug) {
+
+  setProcessing(true)
+
+  if (store.sectionOf(route.params.type) !== 'diseño') fullBleed.value = false
+
+  try {
+
+  await nextTick()
   
-  openKey,
-  
-  async slug => {
+  if (!slug && !store.notesLoaded) { await loadNotesIndex() }
+
+  switch (true) {
+
+    // back to home with note loaded, TRANSITION on note unload
+    case !slug && noteLoaded:
+
+      noteLoaded = false
+      lastSlug = null
+      notFound.value = 0
+      if (isMobile.value) {
+        await throughTheVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }, 'transition-intro', 'transition-outro')
+        break
+      }
+      await portalRef.value?.runQueue('transition-intro')
+      setCurrentPost(null)
+      aboutOpen.value = null
+      noteContent.value = ''
+      break
     
-    if (store.processing) return
-    setProcessing(true)
+    case !slug && notFound.value:
+      noteLoaded = false
+      lastSlug = null
+      setCurrentPost(null)
+      aboutOpen.value = null
+      noteContent.value = ''
+      if (!firstLoad) await revealError()
+      firstLoad = false
+      break
 
-    if (store.sectionOf(route.params.type) !== 'diseño') fullBleed.value = false
-
-    try {
-
-    await nextTick()
+    // first load without note, INTRO only on first page load
+    case !slug && firstLoad:
+      noteLoaded = false
+      firstLoad = false
+      lastSlug = null
+      setCurrentPost(null)
+      aboutOpen.value = null
+      noteContent.value = ''
+      if (isMobile.value) { await throughTheVeil(() => {}, 'static', 'direct', 500); break }
+      await portalRef.value?.runQueue('intro')
+      break
     
-    if (!slug && !store.notesLoaded) { await loadNotesIndex() }
+    // first note load, OUTRO only on first note load
+    case slug && !noteLoaded && !firstLoad:
+      noteLoaded = true
+      firstLoad = false
+      lastSlug = slug
+      if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'intro', 'outro'); break }
+      await openInColumn(slug)
+      await portalRef.value?.runQueue('outro')
+      await portalRef.value?.runQueue('hidden')
+      break
 
-    switch (true) {
+    // first load from url, DIRECT when loading from url
+    case slug && !noteLoaded && firstLoad:
+      noteLoaded = true
+      firstLoad = false
+      lastSlug = slug
+      if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
+      await portalRef.value?.runQueue('static')
+      await openInColumn(slug)
+      await new Promise(resolve => setTimeout(resolve, 500))
+      await portalRef.value?.runQueue('direct')
+      break
+    
+    // loaded note change, TRANSITION when switching note
+    case slug && noteLoaded && lastSlug !== slug:
+      noteLoaded = true
+      firstLoad = false
+      lastSlug = slug
+      if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'transition-intro', 'transition-outro'); break }
+      await portalRef.value?.runQueue('transition-intro')
+      await openInColumn(slug)
+      await portalRef.value?.runQueue('transition-outro')
+      break
+    
+  }
 
-      // back to home with note loaded, TRANSITION on note unload
-      case !slug && noteLoaded:
+  } finally {
 
-        noteLoaded = false
-        lastSlug = null
-        notFound.value = 0
-        if (isMobile.value) {
-          await throughTheVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }, 'transition-intro', 'transition-outro')
-          break
-        }
-        await portalRef.value?.runQueue('transition-intro')
-        setCurrentPost(null)
-        aboutOpen.value = null
-        noteContent.value = ''
-        break
-      
-      case !slug && notFound.value:
-        noteLoaded = false
-        lastSlug = null
-        setCurrentPost(null)
-        aboutOpen.value = null
-        noteContent.value = ''
-        if (!firstLoad) await revealError()
-        firstLoad = false
-        break
+    fullBleed.value = store.currentPost?.type === 'diseño'
+    setProcessing(false)
 
-      // first load without note, INTRO only on first page load
-      case !slug && firstLoad:
-        noteLoaded = false
-        firstLoad = false
-        lastSlug = null
-        setCurrentPost(null)
-        aboutOpen.value = null
-        noteContent.value = ''
-        if (isMobile.value) { await throughTheVeil(() => {}, 'static', 'direct', 500); break }
-        await portalRef.value?.runQueue('intro')
-        break
-      
-      // first note load, OUTRO only on first note load
-      case slug && !noteLoaded && !firstLoad:
-        noteLoaded = true
-        firstLoad = false
-        lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'intro', 'outro'); break }
-        await openInColumn(slug)
-        await portalRef.value?.runQueue('outro')
-        await portalRef.value?.runQueue('hidden')
-        break
+  }
 
-      case slug && notFound.value:
-        break
-      
-      // first load from url, DIRECT when loading from url
-      case slug && !noteLoaded && firstLoad:
-        noteLoaded = true
-        firstLoad = false
-        lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
-        await portalRef.value?.runQueue('static')
-        await openInColumn(slug)
-        await new Promise(resolve => setTimeout(resolve, 500))
-        await portalRef.value?.runQueue('direct')
-        break
-      
-      // loaded note change, TRANSITION when switching note
-      case slug && noteLoaded && lastSlug !== slug:
-        noteLoaded = true
-        firstLoad = false
-        lastSlug = slug
-        if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'transition-intro', 'transition-outro'); break }
-        await portalRef.value?.runQueue('transition-intro')
-        await openInColumn(slug)
-        await portalRef.value?.runQueue('transition-outro')
-        break
-      
-    }
-
-    } finally {
-
-      fullBleed.value = store.currentPost?.type === 'diseño'
-      setProcessing(false)
-
-    }
-
-  }, { immediate: true }
-
-)
+}
 
 watch(() => store.lang, async () => {
-  if (store.currentPost && store.currentPost.bilingual && !store.processing) {
+  if (settling) return
+  if (store.currentPost && store.currentPost.bilingual) {
     await handleLoadNote(store.currentPost.slug)
     return
   }

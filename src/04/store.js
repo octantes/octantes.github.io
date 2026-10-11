@@ -51,6 +51,7 @@ export const useStore = defineStore('store', () => {
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
   let   notesLoadingPromise        = null                                                                                             // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
+  const landing                    = decodeURIComponent(location.pathname)                                                            // the page the browser loaded, whose archive is in the dom
   const classMap                   = { desarrollo: 'nota nota-verso', textos: 'nota nota-verso', diseño: 'nota-medios', musica: 'nota nota-verso', juegos: 'nota nota-verso'}                      // note type custom class map
   const postHtmlCache              = ref({})
 
@@ -94,6 +95,7 @@ export const useStore = defineStore('store', () => {
   const sortOrder                  = ref('desc')                                                                                      // current sort order
   const aboutSection               = ref(null)
   let landed                       = false
+  let asked                        = null
   const searchQuery                = ref('')                                                                                          // searchbox current search
 
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -164,8 +166,10 @@ export const useStore = defineStore('store', () => {
 
   function openAbout(section) {
 
-    if (section === 'portal') router.push({ path: pathOf({ kind: 'about' }, lang.value) })
-    else aboutSection.value = section
+    if (section === 'portal') return router.push({ path: pathOf({ kind: 'about' }, lang.value) })
+    if (!router.currentRoute.value.params.slug) { aboutSection.value = section; return }
+    asked = section
+    router.push({ path: pathOf({ kind: 'section', id: section }, lang.value) })
 
   }
 
@@ -181,7 +185,11 @@ export const useStore = defineStore('store', () => {
 
   }
 
-  watch(() => pathOf(pageOf(router.currentRoute.value), 'es'), () => { aboutSection.value = aboutOf(router.currentRoute.value) })
+  watch(() => pathOf(pageOf(router.currentRoute.value), 'es'), () => {
+    const route = router.currentRoute.value, page = pageOf(route)
+    aboutSection.value = aboutOf(route) || (page.kind === 'section' && page.id === asked ? asked : null)
+    asked = null
+  })
 
   function changeFilter(direction) {                                                                                                  // advance or reduce filters 
 
@@ -253,12 +261,11 @@ export const useStore = defineStore('store', () => {
 
   async function fetchAndParse(slug, post, langCode) {
 
-    const cacheKey = `${slug}-${langCode}`
-    const cached = postHtmlCache.value[cacheKey]
+    const notePath = pathOf({ kind: 'note', id: post.type || 'textos', slug }, langCode)
+    const cached = postHtmlCache.value[notePath]
     if (cached) return cached
 
-    const notePath = pathOf({ kind: 'note', id: post.type || 'textos', slug }, langCode)
-    const ownPage = decodeURIComponent(location.pathname) === notePath && document.getElementById('note') && document.querySelector('noscript.archive')
+    const ownPage = notePath === landing && document.getElementById('note') && document.querySelector('noscript.archive')
 
     let rawText = ownPage?.textContent
     if (!rawText) rawText = await read(`${base}${notePath}.html`)
@@ -270,7 +277,7 @@ export const useStore = defineStore('store', () => {
     if (!article) throw new Error('not a note page')
 
     const html = article.outerHTML
-    postHtmlCache.value[cacheKey] = html
+    postHtmlCache.value[notePath] = html
     return html
 
   }
@@ -287,7 +294,7 @@ export const useStore = defineStore('store', () => {
     if (!slug) { setCurrentPost(null); return { html: '', error: null } }
     if (!notesLoaded.value) { await loadNotesIndex() }
 
-    const metadataSlug = notesIndex.value.find(p => p.slug === slug) ?? await unlisted(slug, routeType)
+    const metadataSlug = notesIndex.value.find(p => p.slug === slug && p.type === routeType) ?? notesIndex.value.find(p => p.slug === slug) ?? await unlisted(slug, routeType)
     setCurrentPost(metadataSlug || { type: routeType || 'textos', slug })
     const post = currentPost.value
 
@@ -297,7 +304,7 @@ export const useStore = defineStore('store', () => {
 
       const html = await fetchAndParse(slug, post, currentLang)
 
-      if (post.bilingual && !postHtmlCache.value[`${slug}-${other(currentLang)}`]) fetchAndParse(slug, post, other(currentLang)).catch(() => {})
+      if (post.bilingual) fetchAndParse(slug, post, other(currentLang)).catch(() => {})
 
       return { html, error: null }
 
