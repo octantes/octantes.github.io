@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../04/store.js'
 import { MAIN_PROJECTS, GITHUB_URL, AUTHOR_NAME } from '../04/config.js'
+import { shortOf } from '../04/map.js'
 import DotGrid from '../03/dotgrid.vue'
 import Corner from '../02/corner.vue'
 
@@ -156,7 +157,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', settle))
           <div v-for="(proj, i) in portfolioProjects" :key="proj.slug" class="ray-box" :class="[{ selected: currentProject && currentProject.slug === proj.slug }, `ray-${proj.type}`]" :style="{ transform: `rotate(${rayAngles[i]}deg)`, '--i': i, '--n': portfolioProjects.length }" @click="handleRayClick(proj)" @keydown.enter.prevent="handleRayClick(proj)" @keydown.space.prevent="handleRayClick(proj)" role="button" tabindex="0" :title="store.t.portfolio.select + store.textOf(proj, 'title')">
           
             <div class="ray-line"></div>
-            <span class="ray-text"><span class="ray-label">{{ store.textOf(proj, 'title') }}</span></span>
+            <span class="ray-text"><span class="ray-label">{{ shortOf(store.textOf(proj, 'title')) }}</span></span>
 
             <div v-if="currentProject && currentProject.slug === proj.slug && proj.slug !== WELCOME_SLUG" class="ray-portal" :title="store.t.portfolio.open + store.textOf(proj, 'title')">
               <div class="portal-line"></div>

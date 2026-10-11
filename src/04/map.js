@@ -48,6 +48,8 @@ export function labelOf(id, lang) { return sectionById(id)?.label[lang] ?? id }
 
 export function textOf(note, key, lang) { return lang === 'en' && note[`${key}En`] || note[key] }
 
+export function shortOf(title) { return title.split(' - ')[0].trim() || title }
+
 export function pageOf(route) {
 
   const path = route.path.length > 1 ? route.path.replace(/\/$/, '') : route.path

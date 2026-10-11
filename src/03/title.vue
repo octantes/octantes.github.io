@@ -1,10 +1,11 @@
 <script setup> 
 
 import { computed, ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { shortOf } from '../04/map.js'
 
 const props = defineProps({ text: { type: String, default: '' } })
 
-const shown = computed(() => props.text.split(' - ')[0].trim() || props.text)
+const shown = computed(() => shortOf(props.text))
 
 const host  = ref(null)
 const lines = ref(1)
