@@ -11,7 +11,7 @@ style: trad
 
 ![embed de culto en youtube](https://www.youtube.com/watch?v=LUvNdEdzvkg)
 
-***culto*** gathers tracks made around 2019, which were actually the first songs I made with my guitar plugged in: empty rituals, altars of asphalt, and a faith in suspension.
+***culto*** gathers tracks made around 2019, which were actually the first songs I made with my guitar plugged in: *empty rituals, altars of asphalt, and a faith in suspension*.
 
 They stayed in the background for years while I kept thinking about rebuilding and changing a lot of things. Eventually I stopped trying to make them into something else and decided to treat the release as an MVP.
 

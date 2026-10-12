@@ -11,7 +11,7 @@ style: trad
 
 ![embed de seance en youtube](https://www.youtube.com/watch?v=Ud0ZK6ZfOqk)
 
-¿Qué querés *cambiar*? ¿Tiramos las cartas?
+*¿Qué querés cambiar? ¿Tiramos las cartas?*
 
 ***seance*** pasó por **muchísimas iteraciones** que todavía tengo guardadas. Algunas incluso llegaron a tener letras terminadas, pero las voces nunca terminaron de cerrar. Eventualmente decidí publicarlo como un disco instrumental y pasar al siguiente proyecto.
 

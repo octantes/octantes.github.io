@@ -11,7 +11,7 @@ style: trad
 
 ![embed de órbitas en youtube](https://www.youtube.com/watch?v=eOnO8ECvJl0)
 
-***órbitas*** es un cambalache de temas que se fueron acumulando a lo largo de los años: loops que pegan la vuelta, pirámides del cajón.
+***órbitas*** es un cambalache de temas que se fueron acumulando a lo largo de los años: *loops que pegan la vuelta, pirámides del cajón*.
 
 Hay más presencia de sintes que de guitarra, aunque la viola sigue apareciendo bastante. Algunos temas se acercan más a la electrónica, otros parecen más tema de bossfight. En general es un disco con más energía que los anteriores, que pasa por muchos lugares.
 

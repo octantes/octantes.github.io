@@ -11,7 +11,7 @@ style: trad
 
 ![embed de bocetos en youtube](https://www.youtube.com/watch?v=pwzLUeVghDc)
 
-***bocetos*** is a collection of tracks from very different periods, brought together around a darker sound: discarded presents, possible memories, and residual symbols.
+***bocetos*** is a collection of tracks from very different periods, brought together around a darker sound: *discarded presents, possible memories, and residual symbols*.
 
 Unlike some earlier projects, there were fewer rules about how the tracks were supposed to sound. The album moves between different ideas, textures and approaches to production, with more use of breaks, layered effects and some weird textures. I think I was simply more willing to try things without knowing exactly where they would lead.
 

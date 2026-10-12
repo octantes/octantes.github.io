@@ -11,7 +11,7 @@ style: trad
 
 ![embed de culto en youtube](https://www.youtube.com/watch?v=LUvNdEdzvkg)
 
-***culto*** junta temas de alrededor de 2019, que fueron los true fr fr primeros temas que hice conectando la guitarra: rituales vacíos, altares de asfalto y una fe en pausa.
+***culto*** junta temas de alrededor de 2019, que fueron los true fr fr primeros temas que hice conectando la guitarra: *rituales vacíos, altares de asfalto y una fe en pausa*.
 
 Quedaron de fondo durante años, porque tenía ganas de rearmar y cambiar un montón de cosas. Eventualmente lo traté como un MVP y dejé de intentar convertirlos en otra cosa.
 

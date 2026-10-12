@@ -11,7 +11,7 @@ style: trad
 
 ![embed de seance en youtube](https://www.youtube.com/watch?v=Ud0ZK6ZfOqk)
 
-What do you want to *change*? Shall we read the cards?
+*What do you want to change? Shall we read the cards?*
 
 ***seance*** went through **many iterations** that I still have saved. Some of them even had finished lyrics, but the vocals never quite clicked. I eventually decided to release it as an instrumental album and move on to the next project.
 

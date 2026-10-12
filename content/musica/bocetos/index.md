@@ -11,7 +11,7 @@ style: trad
 
 ![embed de bocetos en youtube](https://www.youtube.com/watch?v=pwzLUeVghDc)
 
-***bocetos*** es una colección de temas de épocas muy distintas, reunidos alrededor de un sonido más oscuro: presentes descartados, recuerdos posibles y símbolos residuales.
+***bocetos*** es una colección de temas de épocas muy distintas, reunidos alrededor de un sonido más oscuro: *presentes descartados, recuerdos posibles y símbolos residuales*.
 
 A diferencia de algunos proyectos anteriores, había menos reglas sobre cómo tenían que sonar los temas. Hay más uso de breaks, efectos superpuestos y algunas texturas medio raras. Pintaba probar cosas sin saber muy bien a dónde iban a llevar, y está bueno eso.
 

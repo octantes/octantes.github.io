@@ -11,7 +11,7 @@ style: trad
 
 ![embed de órbitas en youtube](https://www.youtube.com/watch?v=eOnO8ECvJl0)
 
-***órbitas*** is a collection of tracks that had been accumulating around similar ideas over the years: loops that come full circle, pyramids from the drawer.
+***órbitas*** is a collection of tracks that had been accumulating around similar ideas over the years: *loops that come full circle, pyramids from the drawer*.
 
 There is more focus on synthesizers than guitar, although the guitar still appears throughout the album. Some tracks lean toward electronic and video game-like sounds, others are darker. The album as a whole is more energetic and moves through many different places.
 
