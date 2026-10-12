@@ -9,7 +9,7 @@ import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
 import { throughTheVeil, veilFromStart } from '../03/veil.js'
 import { launch, visit, reading, follow } from '../04/stage.js'
-import { pathOf, isFullscreen } from '../04/map.js'
+import { pathOf, pageOf, isFullscreen } from '../04/map.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
 import { MOBILE_MAX } from '../04/config.js'
@@ -46,7 +46,8 @@ const noteTitle = computed(() => currentPost.value ? store.textOf(currentPost.va
 
 const aboutOpen = ref(null)
 
-const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
+const page      = computed(() => pageOf(route))
+const openKey   = computed(() => page.value.kind === 'note' ? route.params.slug : aboutMode.value ? 'about:' + aboutMode.value : undefined)
 
 const designRoute = computed(() => store.sectionOf(route.params.type) === 'diseño')
 const fullTarget  = computed(() => !isMobile.value && isFullscreen(route))
@@ -78,6 +79,8 @@ async function revealError() {
   await portalRef.value.runQueue('outro')
   await portalRef.value.runQueue('hidden')
 }
+
+function clearColumn() { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }
 
 function play(e) {
   const post = currentPost.value
@@ -261,10 +264,7 @@ watch(isMobile, async (newVal) => {
 
 const forcedError = Number(new URLSearchParams(window.location.search).get('error')) || 0
 
-watch(() => route.params.filterType, ft => {
-  if (ft === undefined) { if (!route.params.slug) notFound.value = forcedError; return }
-  notFound.value = forcedError || (store.sectionOf(ft) ? 0 : 404)
-}, { immediate: true })
+watch(() => page.value.kind, kind => { if (kind !== 'note') notFound.value = forcedError || (kind === 'notfound' ? 404 : 0) }, { immediate: true })
 
 async function settle() {                                                                                                             // show the route, then again if it moved meanwhile
 
@@ -295,30 +295,23 @@ async function show(slug) {
 
   switch (true) {
 
-    // back to home with note loaded, TRANSITION on note unload
-    case !slug && noteLoaded:
-
-      noteLoaded = false
-      lastSlug = null
-      notFound.value = 0
-      if (veiled()) {
-        await underVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }, 'transition-intro', 'transition-outro')
-        break
-      }
-      await portalRef.value?.runQueue('transition-intro')
-      setCurrentPost(null)
-      aboutOpen.value = null
-      noteContent.value = ''
-      break
-    
     case !slug && notFound.value:
       noteLoaded = false
       lastSlug = null
-      setCurrentPost(null)
-      aboutOpen.value = null
-      noteContent.value = ''
-      if (!firstLoad) await revealError()
-      firstLoad = false
+      if (firstLoad) { firstLoad = false; clearColumn(); break }
+      if (veiled()) { await underVeil(clearColumn, 'transition-intro', 'transition-outro'); break }
+      await portalRef.value?.runQueue('transition-intro')
+      clearColumn()
+      await revealError()
+      break
+
+    // back to home with note loaded, TRANSITION on note unload
+    case !slug && noteLoaded:
+      noteLoaded = false
+      lastSlug = null
+      if (veiled()) { await underVeil(clearColumn, 'transition-intro', 'transition-outro'); break }
+      await portalRef.value?.runQueue('transition-intro')
+      clearColumn()
       break
 
     // first load without note, INTRO only on first page load
@@ -326,9 +319,7 @@ async function show(slug) {
       noteLoaded = false
       firstLoad = false
       lastSlug = null
-      setCurrentPost(null)
-      aboutOpen.value = null
-      noteContent.value = ''
+      clearColumn()
       if (isMobile.value) { await throughTheVeil(() => {}, 'static', 'direct', 500); break }
       await portalRef.value?.runQueue('intro')
       break
