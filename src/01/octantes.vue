@@ -92,7 +92,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
 
 .layout.reading { @media (--desktop) {
 
-  &, & + .footer { --wider: 6rem; --box: calc((100% - 1rem) / 2 + var(--wider) * 2); }
+  &, & + .footer { --wider: 6rem; --box: calc((100% - 1rem) / 2 + var(--wider) * 2); --slot: 3.25rem; }
 
   & .portada, & .navigation { display: none; }
   & .articulos, & .portal-glow, & .reading-corner { grid-column: 1 / -1; grid-row: 1 / -1; justify-self: center; width: var(--box); }
@@ -102,8 +102,8 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
   & .notedisplay { --vig-mask: var(--vig-oval), var(--vig-edges), linear-gradient(to bottom, var(--vig-band)); }
   & .notedisplay.no-aperture { --vig: 1; --vig-mask: var(--vig-edges); }
   & .notedisplay, & .notedisplay .post { transition: none; }
-  & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; top: 2.25rem; right: 3rem; } }
-  & + .footer .statusbar { width: var(--box); margin-inline: auto; }
+  & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; top: 2.25rem; right: calc(1rem + 1px); width: var(--slot); } }
+  & + .footer .statusbar { width: var(--box); margin-inline: auto; & .clock { min-width: var(--slot); text-align: center; } }
 
 } }
 

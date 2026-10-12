@@ -53,7 +53,7 @@ onUnmounted(() => { store.stopStatusUpdates() })
         <span class="btc">{{ store.t.status.btcLabel }} {{ btcPrice }}</span>
         <span class="btc divisions">//</span>
       </template>
-      <span>{{ currentTime }}</span>
+      <span class="clock">{{ currentTime }}</span>
 
     </div>
 
