@@ -150,7 +150,7 @@ function cellRender(x, y, headPos, colBuf, resultMask) {                // cell 
 
   }
   
-  if (overlay && overlay.size) { const ov = overlay.get(idx); if (ov) { outCh = ov.ch ?? drawCh; outColor = ov.color ?? color; outClear = false; return } }
+  if (!isTransparent && overlay && overlay.size) { const ov = overlay.get(idx); if (ov) { outCh = ov.ch ?? drawCh; outColor = ov.color ?? color; outClear = false; return } }
 
   outCh = drawCh
   outColor = color
@@ -270,7 +270,7 @@ function paintFull() {
   context.globalCompositeOperation = 'destination-out'
   context.fillStyle = '#000'
   context.beginPath()
-  for (let i = 0; i < isTransparentPath.length; i += 2) { context.rect(isTransparentPath[i] * fontSize, isTransparentPath[i + 1], fontSize + 1, fontSize + 1) }
+  for (let i = 0; i < isTransparentPath.length; i += 2) { context.rect(isTransparentPath[i] * fontSize, isTransparentPath[i + 1], fontSize, fontSize) }
   context.fill()
 
   context.globalCompositeOperation = 'source-over'
