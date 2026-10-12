@@ -6,16 +6,22 @@ description: seis experimentos midi de un minuto
 portada: portada.png
 date: 2021-12-08
 handle: kaste
+style: trad
 ---
 
 ![embed de six minutes older en youtube](https://www.youtube.com/watch?v=MQE5_oUOXXI)
 
-cerca de 2021 empecé a tener una cantidad inmensa de temas cajoneados
+Alrededor de 2021 empecé a acumular una cantidad absurda de temas cajoneados, loops e ideas sin terminar. ***six minutes older*** nació de una regla bastante simple: cada tema tenía que durar exactamente *un minuto*.
 
-se me ocurrió armar un proyecto en el que todos los tracks duren *un minuto*
-para aprovechar todos esos loops que de otra forma no iban a salir nunca
+La idea era darles un lugar a algunos de esos fragmentos en vez de dejarlos archivados para siempre. Los temas son bastante espaciosos, con pocos elementos y un sonido medio ingenuo, medio de videojuego. Gran parte del EP salió jugando con un VST de batería 909 y sintes bastante simples.
 
-el **video y el título** fueron apareciendo mientras armaba la estructura del ep
+El **video y el título** aparecieron en un viaje en micro, como una excusa rápida para sacar algo y practicar un poco de mezcla. La cantidad de temas archivados no bajó en absoluto; tendría que hacer otra iteración.
 
-terminó funcionando como excusa rápida para practicar un poco de mezcla
-la cantidad de temas archivados no disminuyó para nada, habría que reiterar
+### Temas
+
+- 00:00 - shift
+- 01:00 - pacing
+- 02:00 - descent
+- 03:00 - rebound
+- 04:00 - sedation
+- 05:00 - ethereal
