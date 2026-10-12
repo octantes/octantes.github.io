@@ -8,7 +8,7 @@ import Subscribe from '../02/subscribe.vue'
 import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
 import { throughTheVeil, veilFromStart } from '../03/veil.js'
-import { launch, visit } from '../04/stage.js'
+import { launch, visit, reading } from '../04/stage.js'
 import { pathOf } from '../04/map.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
@@ -173,6 +173,7 @@ async function openInColumn(key) {
   }
 
   aboutOpen.value = null
+  if (reading.value) fullBleed.value = store.sectionOf(route.params.type) === 'diseño'
   return handleLoadNote(key)
 
 }
@@ -277,7 +278,7 @@ async function show(slug) {
 
   setProcessing(true)
 
-  if (store.sectionOf(route.params.type) !== 'diseño') fullBleed.value = false
+  if (store.sectionOf(route.params.type) !== 'diseño' && !reading.value) fullBleed.value = false
 
   try {
 
