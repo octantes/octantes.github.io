@@ -41,6 +41,7 @@ const fullBleed = ref(false)
 store.land(route)
 
 const aboutMode = computed(() => store.aboutSection)
+const idle      = computed(() => !currentPost.value && !aboutMode.value)
 const noteTitle = computed(() => currentPost.value ? store.textOf(currentPost.value, 'title') || '' : '')
 
 const aboutOpen = ref(null)
@@ -400,12 +401,12 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 
 <template> 
 
-  <div v-if="!isMobile || openKey || currentPost || notFound" class="notedisplay" :class="{ 'no-aperture': fullBleed, pending: openKey && !noteContent && !aboutOpen && !notFound }">
+  <div v-if="!isMobile || openKey || currentPost || notFound" class="notedisplay" :class="{ 'no-aperture': fullBleed, pending: openKey && !noteContent && !aboutOpen && !notFound, idle }">
     
     <div class="container" ref="containerRef">
 
       <Portal class="portal" ref="portalRef"/>
-      <Typewriter :portal="portalRef" :container="containerRef" :enabled="!currentPost && !aboutMode" />
+      <Typewriter :portal="portalRef" :container="containerRef" :enabled="idle" />
 
       <div class="post" ref="postRef" :class="{ 'is-error': notFound }">
 
@@ -455,6 +456,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
 @property --vig { syntax: '<number>'; inherits: false; initial-value: 1; }
 
 .notedisplay.no-aperture { --vig: 0; }
+.notedisplay.idle { user-select: none; }
 
 
 .container {
