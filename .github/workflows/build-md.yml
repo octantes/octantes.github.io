@@ -3,9 +3,16 @@ name: build-md
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -33,7 +40,12 @@ jobs:
       - name: 1. build spa and content
         run: npm run build
 
-      - name: 2. sync dist-spa and dist-content to docs
+      - name: 2. upload site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+      - name: 3. sync dist-spa and dist-content to docs
         run: |
           mkdir -p docs
           rsync -a --update --delete dist/ docs/
@@ -49,3 +61,15 @@ jobs:
             git commit -m "build: regenerar html + index.json + SPA"
             git push origin HEAD:main
           fi
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
