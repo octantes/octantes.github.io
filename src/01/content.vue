@@ -47,7 +47,9 @@ const aboutOpen = ref(null)
 
 const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
 
-if (isMobile.value && openKey.value) veilFromStart()
+const fullEntry = 'fullscreen' in route.query && !!route.params.slug
+
+if ((isMobile.value || fullEntry) && openKey.value) veilFromStart()
 
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
@@ -339,7 +341,7 @@ async function show(slug) {
       noteLoaded = true
       firstLoad = false
       lastSlug = slug
-      if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
+      if (isMobile.value || fullEntry) { await throughTheVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
       await portalRef.value?.runQueue('static')
       await openInColumn(slug)
       await new Promise(resolve => setTimeout(resolve, 500))
