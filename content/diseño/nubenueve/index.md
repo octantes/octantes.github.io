@@ -11,7 +11,7 @@ style: trad
 
 ![presentación de homepage](1.mp4)
 ![arte de portadas](2.mp4)
-![pagina de estatus](3.mp4)
+![página de estatus](3.mp4)
 
 [!TEXT]
 

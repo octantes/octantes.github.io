@@ -21,7 +21,9 @@ I hope they reach the people who knew him, and that they can be of some comfort 
 
 ### Tracks
 
-- 00:00 - gen (emi)
-- 03:34 - migraña (emi)
-- 05:26 - trece (emi)
-- 07:46 - en mi (facu)
+```
+00:00 - gen (emi)
+03:34 - migraña (emi)
+05:26 - trece (emi)
+07:46 - en mi (facu)
+```

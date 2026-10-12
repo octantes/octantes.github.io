@@ -23,20 +23,22 @@ La idea detrás del video es representar la complejidad emergente con patrones f
 
 ### Temas
 
-- 00:00 - suspenso
-- 01:09 - abandonar
-- 02:48 - zarath
-- 04:20 - berisso
-- 06:00 - fiebre
-- 07:17 - verde
-- 08:50 - mudar
-- 11:15 - revant
-- 12:26 - estable
-- 14:46 - resonar
-- 16:07 - aire
-- 17:36 - coronas
-- 18:54 - golpear
-- 20:03 - sueños
-- 21:45 - cafeína
-- 25:15 - remate
-- 27:11 - oscurecer
+```
+00:00 - suspenso
+01:09 - abandonar
+02:48 - zarath
+04:20 - berisso
+06:00 - fiebre
+07:17 - verde
+08:50 - mudar
+11:15 - revant
+12:26 - estable
+14:46 - resonar
+16:07 - aire
+17:36 - coronas
+18:54 - golpear
+20:03 - sueños
+21:45 - cafeína
+25:15 - remate
+27:11 - oscurecer
+```

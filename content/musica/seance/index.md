@@ -25,10 +25,12 @@ El video es un *experimento extraño*; como siempre, una excusa para pavear.
 
 ### Temas
 
-- 00:00 - aphorisma
-- 02:54 - ink
-- 06:16 - autopsy
-- 09:38 - symptoms
-- 12:51 - synthesis
-- 15:59 - karma
-- 19:20 - tide
+```
+00:00 - aphorisma
+02:54 - ink
+06:16 - autopsy
+09:38 - symptoms
+12:51 - synthesis
+15:59 - karma
+19:20 - tide
+```

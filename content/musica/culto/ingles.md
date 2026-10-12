@@ -21,10 +21,12 @@ These are some of the earliest songs I made with guitar, finally getting their p
 
 ### Tracks
 
-- 00:00 - menguante
-- 01:19 - callejon
-- 03:32 - navajas
-- 04:52 - pecado
-- 06:25 - puñal
-- 07:34 - sight
-- 08:51 - armonico
+```
+00:00 - menguante
+01:19 - callejon
+03:32 - navajas
+04:52 - pecado
+06:25 - puñal
+07:34 - sight
+08:51 - armonico
+```

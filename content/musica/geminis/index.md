@@ -2,7 +2,7 @@
 tags: [album, instrumental]
 type: musica
 title: geminis
-description: la musica de mi hermano, junto a un tema propio al final
+description: la música de mi hermano, junto a un tema propio al final
 portada: portada.png
 date: 2025-06-06
 handle: kaste
@@ -21,7 +21,9 @@ Espero que les llegue a quienes lo conocieron, ojalá les sirva de algo.
 
 ### Temas
 
-- 00:00 - gen (emi)
-- 03:34 - migraña (emi)
-- 05:26 - trece (emi)
-- 07:46 - en mi (facu)
+```
+00:00 - gen (emi)
+03:34 - migraña (emi)
+05:26 - trece (emi)
+07:46 - en mi (facu)
+```

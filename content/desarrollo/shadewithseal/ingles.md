@@ -22,7 +22,7 @@ ideal for those seeking simplicity and privacy: not meant for professional use
 however, some important edge-cases are covered to ensure practicality
 
 all information stays on your machine, no accounts, servers or syncs
-the data *stays in your browser until you export it* — make regular backups
+the data *stays in your browser until you export it* - make regular backups
 
 ![screenshot](screenshot.png)
 

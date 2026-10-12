@@ -26,7 +26,7 @@ la data *queda en tu browser hasta que la exportás* - hacé backups regularment
 
 ![screenshot](screenshot.png)
 
-cada release es estable, el objetivo es mantenerlo **simple**: abrilo y programá
+cada release es estable, el objetivo es mantenerlo **simple**: abrilo y planificá
 
 *importar/exportar*: traé y guardá tu información en CSV, un formato plain text
 *editar registros*: visualizá, modificá y ordená la tabla con bulk-delete y fuzzy-find

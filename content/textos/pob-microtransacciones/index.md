@@ -61,7 +61,7 @@ Una de las últimas tendencias dentro de la monetización de videojuegos viene d
 
 La explosión de los NFTs ha sido fuertemente criticada por su impacto en el medioambiente, pero algunos de los conceptos en los que se basan llevan varios años en el gaming. Por ejemplo, en el mercado de Counter Strike, cada skin es única. **Dos personas pueden comprar el mismo objeto, pero estos van a tener diferencias sutiles**, como marcas de desgaste en lugares aleatorios que pueden elevar o disminuir su valor. La razón por la cual no podemos considerarlos NFTs es porque no funcionan en una blockchain, sino en el mercado centralizado de steam.
 
-![Aunque acotadas, las herramientas que nos da el mercado del CS:GO no difieren mucho de cualquier otra pagina de inversión.](microtransacciones-4.png)
+![Aunque acotadas, las herramientas que nos da el mercado del CS:GO no difieren mucho de cualquier otra página de inversión.](microtransacciones-4.png)
 
 La mayoría de los criptojuegos que exploran estas opciones las presentan como su principal novedad, pero es esperable que con el paso del tiempo y al ver los resultados de los experimentos actuales, *se vayan integrando a productos más diversos*.
 

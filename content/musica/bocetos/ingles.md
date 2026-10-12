@@ -23,9 +23,11 @@ The video is a piece of generative art built by scraping assets from a large col
 
 ### Tracks
 
-- 00:00 - todo fuego quema
-- 01:33 - no toda es dicha
-- 04:12 - me dejó con intriga
-- 05:21 - esto ya es un infierno
-- 07:13 - a su debido tiempo
-- 09:43 - mantener lo simple
+```
+00:00 - todo fuego quema
+01:33 - no toda es dicha
+04:12 - me dejó con intriga
+05:21 - esto ya es un infierno
+07:13 - a su debido tiempo
+09:43 - mantener lo simple
+```
