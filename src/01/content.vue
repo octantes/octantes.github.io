@@ -436,8 +436,8 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ display: flex; flex-direction: column; height: 100%; gap: 1rem;
   /* STATE  */ --vig: 1;
   /* MASK   */ --vig-band: rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem;
-               --vig-mask: radial-gradient(ellipse 50% 70% at 50% 30%, #000 100%, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 127%, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 152%),
-                           linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band));
+               --vig-light: radial-gradient(ellipse 50% 70% at 50% 30%, #000 100%, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 127%, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 152%);
+               --vig-mask: var(--vig-light), linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band));
                -webkit-mask-image: var(--vig-mask); mask-image: var(--vig-mask);
                -webkit-mask-composite: source-in; mask-composite: intersect;
   /* MOTION */ transition: --vig var(--animate-fast);

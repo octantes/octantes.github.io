@@ -98,6 +98,8 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
   & .articulos, & .reading-corner { margin-top: -1rem; }
   & .portal-glow { width: calc((100% - 1rem) / 2 + var(--wider) * 2 + 2rem); }
   & .articulos .post { width: calc(100% - var(--wider) * 2); margin-inline: auto; }
+  & .notedisplay { --vig-mask: var(--vig-light), linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band)), linear-gradient(to bottom, var(--vig-band)); }
+  & .notedisplay.no-aperture { --vig: 1; --vig-mask: linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band)); }
   & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; top: 2.25rem; right: 3rem; } }
 
 } }
