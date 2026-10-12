@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: kena - está bien que la estética lo sea todo?
-description: En el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?
+description: en el marco que nos ofrece Kena, traemos a colación el debate entre gráfico versus contenido ¿Está mal que un juego sea lindo y nada más?
 portada: portada.png
 date: 2021-09-10
 handle: kaste

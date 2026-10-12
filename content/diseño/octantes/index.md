@@ -29,7 +29,7 @@ La pregunta central era: ¿cómo sería ese estilo con una arquitectura web y UX
 
 El shader de portal es la respuesta a ese problema. Es un sistema de animación construido a mano en vanilla JS y manejado por una state machine, con animaciones específicas para revelar contenido según la ruta que seguimos.
 
-![Portal](portal.gif)
+![Portal](portal.mp4)
 
 Le aporta peso al acto de cargar, haciendo que se sienta como un motor físico. La navegación se pausa mientras corren las animaciones, como en la interfaz de Hearthstone.
 
@@ -39,24 +39,24 @@ Junto al shader hay una galería de cards con los posts reales. Seleccionar una 
 
 También necesitaba un punto de entrada directo para mi trabajo de diseño y desarrollo. Los proyectos se muestran en una interfaz radial, donde se puede seleccionar cada uno para ver sus detalles antes de abrirlo en el portal principal.
 
-![Portfolio](radial.gif)
+![Portfolio](radial.mp4)
 
 El layout usa un sistema custom de slots calculados, shifts y ángulos que crece con el contenido sin requerir cambios de código. Esto mantiene el posicionamiento y permite que sea barato de renderizar.
 
 ### havitat y vitacora
 
-*havitat* es una serie de habitaciones dibujadas a mano, que suman una forma alternativa de navegar por el sitio. Cada habitación contiene interfaces funcionales en el mismo estilo, renderizadas en tiempo real mientras exploras.
+***havitat*** es una serie de habitaciones dibujadas a mano, que suman una forma alternativa de navegar por el sitio. Cada habitación contiene interfaces funcionales en el mismo estilo, renderizadas en tiempo real mientras exploras.
 
-![havitat](havitat.gif)
+![havitat](havitat.mp4)
 
 El sistema implementa una definición de pincel propia con animaciones line boil estilo Flash, y mantiene todo liviano al usar SVG en vez de canvas o WebGL.
 
-El mismo lenguaje dibujado se extiende a *vitacora*, un log visual continuo para pizarras de estudio y updates chicos que no encajan como posts separados. Las entradas se van sumando a un feed único continuo y se animan al scrollear, dejando que el log crezca en el tiempo.
+El mismo lenguaje dibujado se extiende a ***vitacora***, un log visual continuo para pizarras de estudio y updates chicos que no encajan como posts separados. Las entradas se van sumando a un feed único continuo y se animan al scrollear, dejando que el log crezca en el tiempo.
 
 ### Archivo
 
 Cada vez que se sube contenido nuevo, el sitio autogenera una versión de archivo de sí mismo. Cada página queda alcanzable a través de versiones HTML estilo GeoCities, servidas automáticamente a usuarios sin JS.
 
-![Archivo](archive.gif)
+![Archivo](archive.mp4)
 
 Al sacar el portal, shaders y capas interactivas, el archivo mantiene la página completamente accesible sin importar hardware ni navegador.

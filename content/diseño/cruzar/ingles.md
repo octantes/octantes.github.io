@@ -9,11 +9,11 @@ handle: kaste
 style: trad
 ---
 
-![project header](banner.gif)
-![brand fundamentals](fundamentos.gif)
-![terrain and topography](topografico.gif)
-![service packages](servicios.gif)
-![presentation footer](footer.gif)
+![project header](banner.mp4)
+![brand fundamentals](fundamentos.mp4)
+![terrain and topography](topografico.mp4)
+![service packages](servicios.mp4)
+![presentation footer](footer.mp4)
 
 [!TEXT]
 
@@ -37,11 +37,11 @@ The work became an exercise in selection. I repurposed the elements that could c
 
 Satellite imagery needed to be a living part of *CRUZAR's* visual identity, not a fixed background asset. I built a custom system connected to the Google Earth API that automatically exports new, processed animations ready to use across the project.
 
-![Asset](topografico.gif)
+![Asset](topografico.mp4)
 
 The export system runs on a local-first server with custom tooling. It supports location updates based on coordinates and automatically generates identity cards that can be exported as static assets or ready-to-use animations.
 
-![Google Earth](ge-system.gif)
+![Google Earth](ge-system.mp4)
 
 ### Packages
 
@@ -55,7 +55,7 @@ I based the tiers on native animals, turning each one into a rotating 3D object 
 
 **Cóndor:** is the enterprise package, shaped through direct conversation and customized around specific infrastructure needs.
 
-![Packages](servicios.gif)
+![Packages](servicios.mp4)
 
 ### Presentation
 

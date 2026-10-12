@@ -29,7 +29,7 @@ I kept coming back to one question: what would that spirit look like with modern
 
 The portal shader is the answer to that problem. It is a hand-built animation system driven by a state machine, with specific animations for revealing content, direct loads, and transitions between sections.
 
-![Portal](portal.gif)
+![Portal](portal.mp4)
 
 It gives weight to the act of loading, turning a standard UI cut into a deliberate mechanism. To make the interface feel like a physical engine, navigation locks while the brief animations run, like in Hearthstone's UI.
 
@@ -39,24 +39,24 @@ Alongside the shader sits a gallery of cards housing the actual posts. Selecting
 
 I also needed a streamlined entry point for my professional design and development work. Projects are arranged in a radial interface, where visitors spin through options and preview details before opening a case study in the main portal.
 
-![Portfolio](radial.gif)
+![Portfolio](radial.mp4)
 
 The layout uses a custom system of calculated slots, shifts, and angles that grows with the content without requiring changes to the code. This keeps the positioning precise while staying cheap to render.
 
 ### havitat and vitacora
 
-*havitat* is a series of hand-drawn rooms offering an alternative, spatial way to navigate the site. Each room contains fully functional interfaces in the same style, rendered in real time as you explore.
+***havitat*** is a series of hand-drawn rooms offering an alternative, spatial way to navigate the site. Each room contains fully functional interfaces in the same style, rendered in real time as you explore.
 
-![havitat](havitat.gif)
+![havitat](havitat.mp4)
 
 The system implements a custom brush definition with a Flash-style line boil, keeping everything lightweight by using SVG instead of canvas or WebGL.
 
-The same artisanal language extends to *vitacora*, an ongoing visual log for study sessions and smaller updates that don't fit as standalone posts. Entries append to a single continuous feed and animate as you scroll, letting the log grow over time.
+The same artisanal language extends to ***vitacora***, an ongoing visual log for study sessions and smaller updates that don't fit as standalone posts. Entries append to a single continuous feed and animate as you scroll, letting the log grow over time.
 
 ### Archive
 
 Whenever new content is deployed, the site automatically generates an archival version of itself. Every page remains reachable through an early-web, GeoCities-style HTML directory, which is served automatically to visitors without JS.
 
-![Archive](archive.gif)
+![Archive](archive.mp4)
 
 By stripping away the portal, shaders, and interactive layers, the archive keeps the work accessible across different hardware, browsers, and eras.

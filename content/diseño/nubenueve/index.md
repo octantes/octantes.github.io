@@ -9,9 +9,9 @@ handle: kaste
 style: trad
 ---
 
-![presentación de homepage](1.gif)
-![arte de portadas](2.gif)
-![experiencia de navegación](3.gif)
+![presentación de homepage](1.mp4)
+![arte de portadas](2.mp4)
+![pagina de estatus](3.mp4)
 
 [!TEXT]
 

@@ -24,7 +24,7 @@ however, being so lightweight, it handles huge directories without issues
 all information stays on your machine, no accounts, servers or syncs
 the tool *bypasses CORS by using scripts* to "bake" the file list
 
-![screenshot](preview.gif)
+![screenshot](preview.mp4)
 
 each release is stable, the goal is to keep it **simple**: open it and scroll
 

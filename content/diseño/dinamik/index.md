@@ -10,11 +10,11 @@ style: trad
 ---
 
 ![info del proyecto](top.png)
-![banner del proyecto](banner.gif)
-![concepto de marca y tagline](tagline.gif)
-![tesis sobre interfaces](presentacion.gif)
-![presentación de interfaces](explicacion.gif)
-![animación del logo](footer.gif)
+![banner del proyecto](banner.mp4)
+![concepto de marca y tagline](tagline.mp4)
+![tesis sobre interfaces](presentacion.mp4)
+![presentación de interfaces](explicacion.mp4)
+![animación de reticula](footer.mp4)
 ![assets estáticos](assets.png)
 ![presentación del logo](bot.png)
 
@@ -30,7 +30,7 @@ El sistema visual debía reflejar esa misma disciplina: técnico, preciso, enfoc
 
 *DINAMIK* construye sistemas para que sean usados por personas, así que la identidad debía sentirse viva. El motion aporta presencia y calidez a assets que de otro modo quedarían estériles, haciendo que el sistema visual se sienta más cerca de una interfaz que de un brand toolkit estático.
 
-![Tagline](tagline.gif)
+![Tagline](tagline.mp4)
 
 El tagline *VOLVETE DINÁMICO* fue una frase que el equipo usó para explicar su foco: adaptabilidad a través de workflows multi-dominio. Su fundamento es aplicar una mentalidad UNIX para crear herramientas pequeñas, interconectadas, con feel táctil, que hacen una cosa bien y componen con el resto.
 
@@ -38,7 +38,7 @@ El tagline *VOLVETE DINÁMICO* fue una frase que el equipo usó para explicar su
 
 Como el estudio crea distintas herramientas, cada una necesita una identidad derivada del mismo lenguaje visual. ***Retícula***, su primera herramienta, fue renombrada tras aprobarse el concepto visual. Es una interfaz radial para disparar macros sin usar el teclado.
 
-![Retícula](footer.gif)
+![Retícula](footer.mp4)
 
 *Retícula* se diferencia por su forma radial, así que cada parte de la retícula se construyó desde cero. El sistema lleva la precisión de *DINAMIK* a la interfaz permitiendo motion y animación totalmente customizables.
 

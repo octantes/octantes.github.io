@@ -24,7 +24,7 @@ sin embargo, por lo liviano que es, se encarga de directorios enormes sin proble
 toda la información se mantiene en tu máquina, sin cuentas, servidores o syncs
 la herramienta *se salta el CORS al usar scripts* para "bakear" la lista de archivos
 
-![screenshot](preview.gif)
+![screenshot](preview.mp4)
 
 cada release es estable, el objetivo es mantenerlo **simple**: abrilo y scrolleá
 

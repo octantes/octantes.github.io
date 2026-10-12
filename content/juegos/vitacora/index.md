@@ -12,6 +12,6 @@ mostrar: no
 
 ***
 
-*Podés recorrer la vitacora [abriéndola](#abrir)*
+*Podés recorrer la **vitacora** [abriéndola](#abrir)*
 
 ***

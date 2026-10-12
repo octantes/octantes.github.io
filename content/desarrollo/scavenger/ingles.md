@@ -2,7 +2,7 @@
 tags: [portfolio, software, malleable]
 type: desarrollo
 title: scav - substrate for a portable web
-description: The whole web is a component repository for your projects - steal a piece, rewire it, keep it forever
+description: the whole web is a component repository for your projects - steal a piece, rewire it, keep it forever
 portada: portada.png
 date: 2026-09-15
 handle: kaste
@@ -18,10 +18,10 @@ style: trad
 ```
 > Harvest anything from the web and wire it into something new
 > Export it as a single html file, use it anywhere and publish it
-> UI is a function of state, and in s<av> state is a function of DOM
+> UI is a function of state, and in scav state is a function of DOM
 ```
 
-![loop](loop.gif)
+![loop](loop.mp4)
 
 **scavenger is a substrate for portable web tools.** Anything you build with scav becomes portable by definition, exporting into a single, standalone HTML file that works anywhere. No packages, no build step, no framework, no account, and *nothing phoning home* unless you explicitly want it to.
 
@@ -33,7 +33,7 @@ The toolkit has four core primitives, deliberately different in shape because ea
 
 The script that you run on any website to harvest components, lift data and run visual debugging tools.
 
-![harvest](harvest.gif)
+![harvest](harvest.mp4)
 
 Harvesting is not scraping HTML or taking a screenshot. It **takes a rendered component from a live page and reconstructs it** as an independent Web Component: resolving the styles the browser actually applied, preserving the cascade, responsive units, variables, pseudo-elements, fonts, assets, form state, and relevant layout behavior.
 
@@ -41,21 +41,21 @@ Harvesting is not scraping HTML or taking a screenshot. It **takes a rendered co
 
 The runtime, where you place components and wire them, exporting the project as-is into HTML.
 
-![wiring](wiring.gif)
+![wiring](wiring.mp4)
 
 [quests](https://github.com/octantes/scavenger/blob/main/docs/quests.md)
 
 The bridge to live external state and data, turning CSS selectors into channels for patchbay to consume.
 
-![quests](quests.gif)
+![quests](quests.mp4)
 
 [compiler](https://github.com/octantes/scavenger/blob/main/docs/compiler.md)
 
 The authoring environment, where you create new logic nodes and components that extend patchbay.
 
-![component](component.gif)
+![component](component.mp4)
 
-## Philosophy
+### Philosophy
 
 This project starts from a simple premise: **the browser already is a malleable computational substrate.**
 

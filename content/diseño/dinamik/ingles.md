@@ -10,11 +10,11 @@ style: trad
 ---
 
 ![project info](top.png)
-![design project banner](banner.gif)
-![brand concept explained](tagline.gif)
-![thesis on interfaces](presentacion.gif)
-![interface presentation](explicacion.gif)
-![logo grid animation](footer.gif)
+![design project banner](banner.mp4)
+![brand concept explained](tagline.mp4)
+![thesis on interfaces](presentacion.mp4)
+![interface presentation](explicacion.mp4)
+![reticle animation](footer.mp4)
 ![static assets and grids](assets.png)
 ![brand logo presentation](bot.png)
 
@@ -30,7 +30,7 @@ The visual system needed to reflect that same discipline: technical, precise, an
 
 *DINAMIK* builds systems meant to be used by people, so the identity needed to feel active in the same way. Motion brings presence and warmth to assets that would otherwise remain sterile, making the visual system feel closer to an interface than a fixed brand toolkit.
 
-![Tagline](tagline.gif)
+![Tagline](tagline.mp4)
 
 The *Become DINAMIK* tagline was a long-running phrase the team used to explain their focus: adaptability through multi-domain workflows. They apply a UNIX mindset to create small, interconnected, tactile-feeling tools that do one thing well and compose with the rest.
 
@@ -38,7 +38,7 @@ The *Become DINAMIK* tagline was a long-running phrase the team used to explain 
 
 Because the studio creates different tools, each needs an identity derived from the same visual language. ***Reticula***, their first tool, was renamed after the visual concept was approved. It is a radial interface for triggering key macros.
 
-![Reticula](footer.gif)
+![Reticula](footer.mp4)
 
 *Reticula* is differentiated by its radial form, so every part of the reticle was built from the ground up. The system carries *DINAMIK's* precision into the interface while allowing for fully customizable motion and animation.
 

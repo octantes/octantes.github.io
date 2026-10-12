@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: virtual reality - the best applications
-description: In conversations about virtual reality, software often takes a back seat. Let's review some interesting uses.
+description: in conversations about virtual reality, software often takes a back seat. Let's review some interesting uses.
 portada: portada.png
 date: 2022-07-21
 handle: kaste

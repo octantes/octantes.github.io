@@ -9,11 +9,11 @@ handle: kaste
 style: trad
 ---
 
-![header del proyecto](banner.gif)
-![fundamentos de la marca](fundamentos.gif)
-![terreno y topografía](topografico.gif)
-![paquetes de servicio](servicios.gif)
-![presentación final](footer.gif)
+![header del proyecto](banner.mp4)
+![fundamentos de la marca](fundamentos.mp4)
+![terreno y topografía](topografico.mp4)
+![paquetes de servicio](servicios.mp4)
+![presentación final](footer.mp4)
 
 [!TEXT]
 
@@ -37,11 +37,11 @@ El trabajo fue un ejercicio de selección: mantuve los elementos que podían car
 
 La imaginería satelital necesitaba ser una parte viva de la identidad visual, no un asset fijo. Armé un sistema propio conectado a la API de Google Earth que exporta automáticamente animaciones procesadas listas para usar en todo el proyecto.
 
-![Asset](topografico.gif)
+![Asset](topografico.mp4)
 
 El sistema corre en un servidor local con herramientas personalizadas, soporta actualizaciones por coordenadas y genera identity cards exportables como assets estáticos o animaciones listas para usar.
 
-![Google Earth](ge-system.gif)
+![Google Earth](ge-system.mp4)
 
 ### Paquetes
 
@@ -53,9 +53,9 @@ Basé los íconos en animales nativos, volviendo cada uno un objeto 3D rotativo 
 
 **Puma:** Un tier avanzado, para usuarios que necesitan configurar en detalle.
 
-**Cóndor:**El paquete enterprise, moldeado por conversación directa y customizado a necesidades específicas en escala.
+**Cóndor:** El paquete enterprise, moldeado por conversación directa y customizado a necesidades específicas en escala.
 
-![Paquetes](servicios.gif)
+![Paquetes](servicios.mp4)
 
 ### Presentación
 

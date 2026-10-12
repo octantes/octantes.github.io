@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: microtransactions and their future
-description: We explain the role of microtransactions within the industry and analyze the possible future of in-game monetization systems
+description: we explain the role of microtransactions within the industry and analyze the possible future of in-game monetization systems
 portada: portada.png
 date: 2021-12-13
 handle: kaste

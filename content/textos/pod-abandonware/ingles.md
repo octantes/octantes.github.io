@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: abandonware - the permanence of the author
-description: Abandonware occurs when art becomes tied to the advancement of technology, intensifying the difficulties of properly preserving it.
+description: abandonware occurs when art becomes tied to the advancement of technology, intensifying the difficulties of properly preserving it.
 portada: portada.png
 date: 2022-03-31
 handle: kaste

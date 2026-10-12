@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: realidad virtual - un futuro contemporáneo
-description: La realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a descubrirlo.
+description: la realidad virtual se encuentra en un lugar sumamente interesante, te invitamos a descubrirlo.
 portada: portada.png
 date: 2022-05-10
 handle: kaste

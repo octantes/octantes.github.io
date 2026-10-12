@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: kena - is it ok for aesthetics to be everything?
-description: Within the framework Kena offers us, we bring up the debate between graphics versus content. Is it wrong for a game to be just pretty?
+description: within the framework Kena offers us, we bring up the debate between graphics versus content. Is it wrong for a game to be just pretty?
 portada: portada.png
 date: 2021-09-10
 handle: kaste

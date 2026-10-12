@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: intellectual properties - do we need new IPs?
-description: Nowadays, interest in intellectual properties has less to do with the particularities of the authors and more with hype.
+description: nowadays, interest in intellectual properties has less to do with the particularities of the authors and more with hype.
 portada: portada.png
 date: 2022-02-07
 handle: kaste

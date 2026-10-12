@@ -9,11 +9,11 @@ handle: kaste
 style: trad
 ---
 
-![header del proyecto](header.gif)
-![concepto de marca explicado](explainer.gif)
-![divisor de presentación](marquee.gif)
-![presentación del icono](iconography.gif)
-![assets de identidad para redes](identity.gif)
+![header del proyecto](header.mp4)
+![concepto de marca explicado](explainer.mp4)
+![divisor de presentación](marquee.mp4)
+![presentación del icono](iconography.mp4)
+![assets de identidad para redes](identity.mp4)
 ![separador de presentación](break.png)
 ![créditos del proyecto](credits.png)
 

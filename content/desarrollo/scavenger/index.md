@@ -2,7 +2,7 @@
 tags: [portfolio, software, malleable]
 type: desarrollo
 title: scav - substrato para una web portable
-description: Toda la web es un repositorio de componentes para tus proyectos - robá una pieza, reconectala, conservala para siempre
+description: toda la web es un repositorio de componentes para tus proyectos - robá una pieza, reconectala, conservala para siempre
 portada: portada.png
 date: 2026-09-15
 handle: kaste
@@ -21,7 +21,7 @@ style: trad
 > La UI es una función del estado, y el estado es una función del DOM
 ```
 
-![loop](loop.gif)
+![loop](loop.mp4)
 
 **scavenger es un substrato para herramientas web portables.** Cualquier cosa que construyas con scav se vuelve portable por definición, exportándose a un único archivo HTML independiente que funciona en cualquier lugar.
 
@@ -35,7 +35,7 @@ El kit de herramientas tiene cuatro primitivas principales, deliberadamente dife
 
 El script que ejecutás en cualquier sitio web para cosechar componentes, extraer datos y ejecutar herramientas de debugging visual o interactuar con cualquier página.
 
-![harvest](harvest.gif)
+![harvest](harvest.mp4)
 
 Cosechar no es scrapear HTML o sacar una captura de pantalla. Consiste en **tomar un componente renderizado de una página en vivo y reconstruirlo** como un Web Component independiente: resolviendo los estilos que el navegador realmente aplicó, preservando la cascada, unidades responsivas, variables, pseudo-elementos, fuentes, recursos, estado de los formularios y el comportamiento de diseño relevante.
 
@@ -43,21 +43,21 @@ Cosechar no es scrapear HTML o sacar una captura de pantalla. Consiste en **toma
 
 El entorno de ejecución, donde colocás componentes y los conectás, exportando el proyecto como está a HTML.
 
-![wiring](wiring.gif)
+![wiring](wiring.mp4)
 
 [quests](https://github.com/octantes/scavenger/blob/main/docs/quests.md)
 
 El puente hacia los datos externos en vivo, convirtiendo selectores CSS en canales para que patchbay los consuma como valores o componentes de una página que se actualizan en vivo.
 
-![quests](quests.gif)
+![quests](quests.mp4)
 
 [compiler](https://github.com/octantes/scavenger/blob/main/docs/compiler.md)
 
 El entorno de creación, donde creás nuevos nodos lógicos y componentes que extienden patchbay.
 
-![component](component.gif)
+![component](component.mp4)
 
-## Filosofía
+### Filosofía
 
 Este proyecto parte de una premisa simple: **el navegador ya es un substrato computacional maleable.**
 

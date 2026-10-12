@@ -2,7 +2,7 @@
 tags: [videojuegos, opinión]
 type: textos
 title: virtual reality - a contemporary future
-description: Virtual reality is in a remarkably interesting place, we invite you to discover it.
+description: virtual reality is in a remarkably interesting place, we invite you to discover it.
 portada: portada.png
 date: 2022-05-10
 handle: kaste
