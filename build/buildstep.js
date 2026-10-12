@@ -993,14 +993,6 @@ async function finalizeBuild() {                                                
   await fs.writeFile(path.join(outputDir, '404.html'), withEnglish(fill('es'), fill('en')))
   console.log('404.html generated')
 
-  await fs.writeFile(path.join(outputDir, '.nojekyll'), '')
-  console.log('.nojekyll created')
-  
-  try {
-    await fs.writeFile(path.resolve('docs', '.nojekyll'), '')
-    console.log('.nojekyll created in docs/')
-  } catch (e) { console.warn('could not write .nojekyll to docs/:', e.message) }
-
 }
 
 async function main() {                                                                             // main build process 

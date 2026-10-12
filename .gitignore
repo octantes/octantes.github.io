@@ -30,3 +30,4 @@ coverage
 games/desktop/target
 games/desktop/icons
 games/desktop/gen
+.build-cache.json
