@@ -36,7 +36,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
   <div class="layout page" :class="{ reading }" @wheel.passive="sideScroll">
 
     <div class="portal-glow" aria-hidden="true" />
-    <Portada role="banner" class="portada" :class="{ 'mobile-gap': !currentPost }" :inert="store.processing" />
+    <Portada role="banner" class="portada" :inert="store.processing" />
     <Navigation role="navigation" :aria-label="store.t.nav.search" class="navigation" :locked="store.processing" />
 
     <Content role="main" class="articulos" />
@@ -111,7 +111,8 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
 
   .portal-glow { display: none; }
   .layout > .articulos { background: var(--carbon); }
-  .portada { order: 1; } .portada.mobile-gap { margin-bottom: 1rem; border-radius: var(--radius-ss); } .articulos { order: 2; margin-bottom: 1rem; } .navigation { order: 3; }
+  .portada { order: 1; } .articulos { order: 2; margin-bottom: 1rem; } .navigation { order: 3; }
+  .layout.page > .portada { margin: -1rem -1rem 1rem; width: calc(100% + 2rem); border-radius: 0; }
 
   .footer  { padding: 0 1rem 1rem; }
   .content { height: auto; scrollbar-width: none; -ms-overflow-style: none; &::-webkit-scrollbar { display: none; } }
