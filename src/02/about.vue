@@ -57,7 +57,9 @@ onMounted(() => {
 
           <p v-html="t.about.footers[section]"></p>
 
-          <p v-for="note in linked" :key="note.slug" class="linked"><RouterLink :to="store.notePath(note.type, note.slug)">{{ shortOf(store.textOf(note, 'title')) }}</RouterLink>: {{ store.textOf(note, 'description') }}</p>
+          <ul class="linked">
+            <li v-for="note in linked" :key="note.slug"><RouterLink :to="store.notePath(note.type, note.slug)">{{ shortOf(store.textOf(note, 'title')) }}</RouterLink></li>
+          </ul>
 
           <br>
 
@@ -83,6 +85,8 @@ onMounted(() => {
   /* FONT   */ font-size: 1rem; line-height: 1.5; word-break: break-word;
 
 }
+
+.linked        { display: flex; flex-direction: column; gap: .4rem; margin: 0; padding: 0; }
 
 .profile-head   { display: flex; flex-direction: column; position: relative; justify-content: center; align-items: center; gap: 1.5rem; }
 

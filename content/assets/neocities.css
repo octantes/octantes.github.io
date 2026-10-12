@@ -279,7 +279,8 @@ body::after {
 .post-header                     { margin-bottom: 1rem;                     }
 .post-content img                { border: none; max-width: 100%; height: auto; }
 .post-content .caption           { display: block; text-align: center; margin: var(--space-ss) auto var(--space-mm); color: var(--humo-a60); font-family: var(--font-mono); font-size: .8rem; }
-.post-content p a                { 
+.post-content p a,
+.post-content .linked a          { 
 
   /* FILL   */ background: linear-gradient(125deg, var(--cristal), var(--lirio)); background-clip: text;
   /* FONT   */ font-family: var(--font-main); text-decoration: underline; text-decoration-color: var(--cristal-a50); text-underline-offset: 3px; 

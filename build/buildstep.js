@@ -747,7 +747,7 @@ function linkedNotes(id, lang, footer) {
 
   const notes = (ABOUT_NOTES[id] ?? []).map(slug => indexItems.find(p => p.slug === slug)).filter(Boolean)
   if (!notes.length) return []
-  return ['<hr>', `<p>${footer}</p>`, ...notes.map(p => `<p><a href="${noteHref(p, lang)}">${esc(shortOf(textOf(p, 'title', lang)))}</a>: ${esc(textOf(p, 'description', lang))}</p>`)]
+  return ['<hr>', `<p>${footer}</p>`, `<ul class="linked">${notes.map(p => `<li><a href="${noteHref(p, lang)}">${esc(shortOf(textOf(p, 'title', lang)))}</a></li>`).join('')}</ul>`]
 
 }
 
