@@ -8,7 +8,7 @@ import Subscribe from '../02/subscribe.vue'
 import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
 import { throughTheVeil, veilFromStart } from '../03/veil.js'
-import { launch, visit, reading } from '../04/stage.js'
+import { launch, visit, reading, follow } from '../04/stage.js'
 import { pathOf, isFullscreen } from '../04/map.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
@@ -47,10 +47,16 @@ const aboutOpen = ref(null)
 
 const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
 
-const fullEntry = isFullscreen(route)
 const designRoute = computed(() => store.sectionOf(route.params.type) === 'diseño')
+const fullTarget  = computed(() => !isMobile.value && isFullscreen(route))
 
-if ((isMobile.value || fullEntry) && openKey.value) veilFromStart()
+function veiled() { return isMobile.value || reading.value || fullTarget.value }
+
+function underVeil(work, enter, exit, hold) {
+  return throughTheVeil(() => { follow(fullTarget.value, true); fullBleed.value = designRoute.value; return work() }, enter, exit, hold)
+}
+
+if (veiled() && openKey.value) veilFromStart()
 
 let noteLoaded = false                                                                                                                // note loaded bool flag for shader
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
@@ -174,7 +180,6 @@ async function openInColumn(key) {
   }
 
   aboutOpen.value = null
-  if (reading.value) fullBleed.value = designRoute.value
   return handleLoadNote(key)
 
 }
@@ -279,7 +284,7 @@ async function show(slug) {
 
   setProcessing(true)
 
-  if (!designRoute.value && !reading.value) fullBleed.value = false
+  if (!designRoute.value && !veiled()) fullBleed.value = false
 
   try {
 
@@ -295,8 +300,8 @@ async function show(slug) {
       noteLoaded = false
       lastSlug = null
       notFound.value = 0
-      if (isMobile.value) {
-        await throughTheVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }, 'transition-intro', 'transition-outro')
+      if (veiled()) {
+        await underVeil(() => { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }, 'transition-intro', 'transition-outro')
         break
       }
       await portalRef.value?.runQueue('transition-intro')
@@ -332,7 +337,7 @@ async function show(slug) {
       noteLoaded = true
       firstLoad = false
       lastSlug = slug
-      if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'intro', 'outro'); break }
+      if (veiled()) { await underVeil(() => openInColumn(slug), 'intro', 'outro'); break }
       await openInColumn(slug)
       await portalRef.value?.runQueue('outro')
       await portalRef.value?.runQueue('hidden')
@@ -343,7 +348,7 @@ async function show(slug) {
       noteLoaded = true
       firstLoad = false
       lastSlug = slug
-      if (isMobile.value || fullEntry) { await throughTheVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
+      if (veiled()) { await underVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
       await portalRef.value?.runQueue('static')
       await openInColumn(slug)
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -355,7 +360,7 @@ async function show(slug) {
       noteLoaded = true
       firstLoad = false
       lastSlug = slug
-      if (isMobile.value) { await throughTheVeil(() => openInColumn(slug), 'transition-intro', 'transition-outro'); break }
+      if (veiled()) { await underVeil(() => openInColumn(slug), 'transition-intro', 'transition-outro'); break }
       await portalRef.value?.runQueue('transition-intro')
       await openInColumn(slug)
       await portalRef.value?.runQueue('transition-outro')

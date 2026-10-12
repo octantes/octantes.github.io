@@ -26,7 +26,7 @@ function sideScroll(e) {
   document.querySelector('.articulos .post')?.scrollBy(0, e.deltaY * (e.deltaMode ? 40 : 1))
 }
 
-watch([fullscreen, mobile], ([on, small], [, was]) => follow(on, small !== was || !route.params.slug), { immediate: true })
+watch([fullscreen, mobile, () => route.params.slug], ([on, small, slug], [, was, before]) => { if (small !== was) follow(on, true); else if (slug === before) follow(on) }, { immediate: true })
 
 onMounted(() => { window.addEventListener('keydown', escape); narrow.addEventListener('change', fit) })
 onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.removeEventListener('change', fit); follow(false, true) })

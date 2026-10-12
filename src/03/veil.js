@@ -11,7 +11,15 @@ export function registerVeil(instance) { canvas = instance || null }
 
 export function veilFromStart() { veilOn.value = true; veilOpaque.value = true }
 
-export async function throughTheVeil(work, enter = 'intro', exit = 'outro', hold = 0) {
+let queue = Promise.resolve()
+
+export function throughTheVeil(work, enter = 'intro', exit = 'outro', hold = 0) {
+  const run = queue.then(() => pass(work, enter, exit, hold))
+  queue = run.catch(() => {})
+  return run
+}
+
+async function pass(work, enter, exit, hold) {
 
   if (!ENABLED) { await work(); return }
 
