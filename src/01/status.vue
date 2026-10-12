@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted } from 'vue'
 import { useStore } from '../04/store.js'
 import { storeToRefs } from 'pinia'
 import { CONTRA_URL } from '../04/config.js'
+import { reading } from '../04/stage.js'
 
 const store      = useStore()                                                                                                         // setup store usage
 const latestPost = computed(() => store.loadLatestPost)                                                                               // latest note fetch result
@@ -20,8 +21,10 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
     <div class="stleft">
 
-      <RouterLink :to="latestPost.url || '/'" :title="store.t.status.openLatest" :aria-label="store.t.status.openLatest">{{ latestPost.title }}</RouterLink>
-      <span class="divisions">//</span>
+      <template v-if="!reading">
+        <RouterLink :to="latestPost.url || '/'" :title="store.t.status.openLatest" :aria-label="store.t.status.openLatest">{{ latestPost.title }}</RouterLink>
+        <span class="divisions">//</span>
+      </template>
       <a :href="'mailto:' + store.mailtoDir" :title="store.t.status.contact" :aria-label="store.t.status.contact">{{ store.t.status.contact }}</a>
       <span class="divisions">//</span>
       <a :href="CONTRA_URL" target="_blank" rel="noopener" :title="store.t.status.hireTitle" :aria-label="store.t.status.hireTitle">{{ store.t.status.hire }}</a>
@@ -42,8 +45,10 @@ onUnmounted(() => { store.stopStatusUpdates() })
 
       <a :href="store.t.status.archiveLink" :title="store.t.status.archive" :aria-label="store.t.status.archive">{{ store.t.status.archive }}</a>
       <span class="btc divisions">//</span>
-      <a href="/feed.xml" target="_blank" :title="store.t.status.rssTitle" :aria-label="store.t.status.rssAria">{{ store.t.status.rssLabel }}</a>
-      <span class="btc divisions">//</span>
+      <template v-if="!reading">
+        <a href="/feed.xml" target="_blank" :title="store.t.status.rssTitle" :aria-label="store.t.status.rssAria">{{ store.t.status.rssLabel }}</a>
+        <span class="btc divisions">//</span>
+      </template>
       <template v-if="btcPrice !== null">
         <span class="btc">{{ store.t.status.btcLabel }} {{ btcPrice }}</span>
         <span class="btc divisions">//</span>
