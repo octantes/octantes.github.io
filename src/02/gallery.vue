@@ -42,11 +42,10 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
     <div v-if="!notesLoaded" class="empty-state">{{ store.t.gallery.loading }}</div>
     <div v-else-if="noteSortFilter.length === 0" class="empty-state">{{ store.t.gallery.empty }}{{ searchQuery ? `: "${searchQuery}"` : '' }}</div>
 
-    <div v-for="(note, index) in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
+    <div v-for="note in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
 
-      :class="{ 
+      :class="{
 
-        expanded: route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery),
         active: route.params.slug === note.slug,
         hidden: note.hidden
 
@@ -67,8 +66,6 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
         <span class="date">{{ note.date }}</span>
         <h3 class="title">{{ note.displayTitle }}</h3>
 
-        <p v-if="route.params.slug === note.slug || (!route.params.slug && index === 0 && !searchQuery)" class="description">{{ note.displayDescription }}</p>
-        
         <div class="tags">
           <span class="tag mark" :title="note.type"><Icon :type="note.type" /></span>
           <span v-for="tag in note.tags?.slice(0,3)" :key="tag" class="tag" role="button" tabindex="0" @click.stop="store.setSearchQuery(tag)" @keydown.enter.stop.prevent="store.setSearchQuery(tag)">{{ tag }}</span>
@@ -86,7 +83,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
 
 .gallery {
 
-  /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); grid-auto-flow: dense;
+  /* LAYOUT */ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   /* BOX    */ width: 100%; gap: 1rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 2rem;
 
 }
@@ -111,17 +108,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
 
   &.hidden { opacity: .35; &:hover, &.active { opacity: .7; } }
 
-  &.expanded {
-
-    grid-column: span 2; grid-row: span 2;
-
-    & .title    { font-size: 1.1rem; }
-    & .date    { font-size: 0.85rem; }
-    & .description { display: block; }
-
-  }
-
-  &:hover { 
+  &:hover {
 
     transform: translateY(-2px);
     border-color: var(--lirio);
@@ -139,8 +126,6 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
     box-shadow: 0 0 3.2rem -0.4rem var(--cristal-a21), 0 0 1rem -0.45rem var(--cristal-a15);
 
     & .title { color: var(--cristal); }
-    & .date  { font-size: 0.85rem; }
-    & .tag   { padding: 0.3rem 0.5rem; font-size: 0.75rem; }
 
   }
 
@@ -192,14 +177,6 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
 
 }
 
-.description { 
-
-  /* BOX    */ margin: 0.5rem 0; overflow: hidden;
-  /* FILL   */ color: var(--humo);
-  /* FONT   */ font-family: var(--font-mono); font-style: italic; font-size: 0.85rem; line-height: 1.4;
-
-}
-
 .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: auto; }
 
 .tag.mark   { cursor: default; display: inline-flex; align-items: center; justify-content: center; }
@@ -215,7 +192,5 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
   &:hover { background-color: var(--lirio-a15); }
 
 }
-
-@media (max-width: 580px) { .notecard.expanded { grid-column: span 1; grid-row: span 1; & .title { font-size: 0.9rem; }; & .description { display: none } } }
 
 </style>
