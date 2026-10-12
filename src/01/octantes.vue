@@ -21,21 +21,29 @@ function fit() { mobile.value = narrow.matches }
 
 function escape(e) { if (e.key === 'Escape' && reading.value && !stage.value) read(false) }
 
+const calm = matchMedia('(prefers-reduced-motion: reduce)')
+let aim = null, aimAt = 0
+
 function sideScroll(e) {
-  if (!reading.value || e.target.closest('.post') || !e.target.closest('.articulos')) return
-  document.querySelector('.articulos .post')?.scrollBy(0, e.deltaY * (e.deltaMode ? 40 : 1))
+  if (!reading.value || stage.value || e.target.closest?.('.post')) return
+  const post = document.querySelector('.articulos .post')
+  if (!post) return
+  const from = aim !== null && e.timeStamp - aimAt < 600 ? aim : post.scrollTop
+  aim = Math.min(post.scrollHeight - post.clientHeight, Math.max(0, from + e.deltaY * (e.deltaMode ? 40 : 1)))
+  aimAt = e.timeStamp
+  post.scrollTo({ top: aim, behavior: calm.matches ? 'auto' : 'smooth' })
 }
 
 watch([fullscreen, mobile, () => route.params.slug], ([on, small, slug], [, was, before]) => { if (small !== was) follow(on, true); else if (slug === before) follow(on) }, { immediate: true })
 
-onMounted(() => { window.addEventListener('keydown', escape); narrow.addEventListener('change', fit) })
-onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.removeEventListener('change', fit); follow(false, true) })
+onMounted(() => { window.addEventListener('keydown', escape); window.addEventListener('wheel', sideScroll, { passive: true }); narrow.addEventListener('change', fit) })
+onBeforeUnmount(() => { window.removeEventListener('keydown', escape); window.removeEventListener('wheel', sideScroll); narrow.removeEventListener('change', fit); follow(false, true) })
 
 </script>
 
 <template>
 
-  <div class="layout page" :class="{ reading }" @wheel.passive="sideScroll">
+  <div class="layout page" :class="{ reading }">
 
     <div class="portal-glow" aria-hidden="true" />
     <Portada role="banner" class="portada" :inert="store.processing" />
