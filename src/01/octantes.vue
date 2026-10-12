@@ -91,7 +91,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
 
 .layout.reading { @media (--desktop) {
 
-  --wider: 6rem;
+  &, & + .footer { --wider: 6rem; }
 
   & .portada, & .navigation { display: none; }
   & .articulos, & .portal-glow, & .reading-corner { grid-column: 1 / -1; grid-row: 1 / -1; justify-self: center; width: calc((100% - 1rem) / 2 + var(--wider) * 2); }
@@ -101,6 +101,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
   & .notedisplay { --vig-mask: var(--vig-light), linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band)), linear-gradient(to bottom, var(--vig-band)); }
   & .notedisplay.no-aperture { --vig: 1; --vig-mask: linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band)); }
   & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; top: 2.25rem; right: 3rem; } }
+  & + .footer .statusbar { width: calc((100% - 1rem) / 2 + var(--wider) * 2); margin-inline: auto; }
 
 } }
 
