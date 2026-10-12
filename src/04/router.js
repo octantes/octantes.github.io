@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import Octantes from '../01/octantes.vue'
 import Portfolio from '../01/portfolio.vue'
 import { ROOM_WALLS } from './config.js'
+import { isFullscreen } from './map.js'
 import { offline } from '../03/shelf.js'
 
 const wallPath  = `/havitat/:wall(${ROOM_WALLS.flatMap(w => [w.es, w.en]).join('|')})`
@@ -35,7 +36,7 @@ router.options.history.listen(() => { traveled = true })
 router.beforeEach((to, from) => {
   const popped = traveled
   traveled = false
-  if (popped || !('fullscreen' in from.query) || 'fullscreen' in to.query || !to.params.slug || to.path === from.path) return
+  if (popped || !isFullscreen(from) || !to.params.slug || 'fullscreen' in to.query || to.path === from.path) return
   return { path: to.path, query: { ...to.query, fullscreen: null }, hash: to.hash }
 })
 

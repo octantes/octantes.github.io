@@ -105,6 +105,8 @@ export function inRoom(page) { return ['havitat', 'wall', 'depth'].includes(page
 
 export function themeOf(page) { return inRoom(page) ? 'light' : 'dark' }
 
+export function isFullscreen(route) { return !!route.params.slug && 'fullscreen' in route.query }
+
 export function urlOf(page, lang) { return page.kind === 'home' ? `${SITE_URL}/` : `${SITE_URL}${pathOf(page, lang)}` }
 
 export function headFor(page, lang, post) {

@@ -9,7 +9,7 @@ import Portal from '../03/portal.vue'
 import Notification from '../02/notification.vue'
 import { throughTheVeil, veilFromStart } from '../03/veil.js'
 import { launch, visit, reading } from '../04/stage.js'
-import { pathOf } from '../04/map.js'
+import { pathOf, isFullscreen } from '../04/map.js'
 import Typewriter from '../03/typewriter.vue'
 import NoteTitle from '../03/title.vue'
 import { MOBILE_MAX } from '../04/config.js'
@@ -47,7 +47,8 @@ const aboutOpen = ref(null)
 
 const openKey   = computed(() => route.params.slug || (aboutMode.value ? 'about:' + aboutMode.value : undefined))
 
-const fullEntry = 'fullscreen' in route.query && !!route.params.slug
+const fullEntry = isFullscreen(route)
+const designRoute = computed(() => store.sectionOf(route.params.type) === 'diseño')
 
 if ((isMobile.value || fullEntry) && openKey.value) veilFromStart()
 
@@ -173,7 +174,7 @@ async function openInColumn(key) {
   }
 
   aboutOpen.value = null
-  if (reading.value) fullBleed.value = store.sectionOf(route.params.type) === 'diseño'
+  if (reading.value) fullBleed.value = designRoute.value
   return handleLoadNote(key)
 
 }
@@ -278,7 +279,7 @@ async function show(slug) {
 
   setProcessing(true)
 
-  if (store.sectionOf(route.params.type) !== 'diseño' && !reading.value) fullBleed.value = false
+  if (!designRoute.value && !reading.value) fullBleed.value = false
 
   try {
 
@@ -437,8 +438,9 @@ onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout
   /* LAYOUT */ display: flex; flex-direction: column; height: 100%; gap: 1rem;
   /* STATE  */ --vig: 1;
   /* MASK   */ --vig-band: rgba(0,0,0,calc(1 - var(--vig))) 0, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 1.2rem, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 3rem, rgba(0,0,0,calc(1 - var(--vig) * 0.1451)) 5rem, #000 8rem;
-               --vig-light: radial-gradient(ellipse 50% 70% at 50% 30%, #000 100%, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 127%, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 152%);
-               --vig-mask: var(--vig-light), linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band));
+               --vig-oval: radial-gradient(ellipse 50% 70% at 50% 30%, #000 100%, rgba(0,0,0,calc(1 - var(--vig) * 0.3137)) 127%, rgba(0,0,0,calc(1 - var(--vig) * 0.5647)) 152%);
+               --vig-edges: linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band));
+               --vig-mask: var(--vig-oval), var(--vig-edges);
                -webkit-mask-image: var(--vig-mask); mask-image: var(--vig-mask);
                -webkit-mask-composite: source-in; mask-composite: intersect;
   /* MOTION */ transition: --vig var(--animate-fast);

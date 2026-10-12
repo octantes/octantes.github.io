@@ -8,13 +8,14 @@ import Status from '../01/status.vue'
 import Portada from '../02/portada.vue'
 import Corner from '../02/corner.vue'
 import { reading, read, follow, stage } from '../04/stage.js'
+import { isFullscreen } from '../04/map.js'
 import { MOBILE_MAX } from '../04/config.js'
 
 const store = useStore()
 const route = useRoute()
 const narrow = matchMedia(`(max-width: ${MOBILE_MAX}px)`)
 const mobile = ref(narrow.matches)
-const fullscreen = computed(() => !mobile.value && !!route.params.slug && 'fullscreen' in route.query)
+const fullscreen = computed(() => !mobile.value && isFullscreen(route))
 
 function fit() { mobile.value = narrow.matches }
 
@@ -28,7 +29,7 @@ function sideScroll(e) {
 watch([fullscreen, mobile], ([on, small], [, was]) => follow(on, small !== was || !route.params.slug), { immediate: true })
 
 onMounted(() => { window.addEventListener('keydown', escape); narrow.addEventListener('change', fit) })
-onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.removeEventListener('change', fit); reading.value = false })
+onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.removeEventListener('change', fit); follow(false, true) })
 
 </script>
 
@@ -91,18 +92,18 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.re
 
 .layout.reading { @media (--desktop) {
 
-  &, & + .footer { --wider: 6rem; }
+  &, & + .footer { --wider: 6rem; --box: calc((100% - 1rem) / 2 + var(--wider) * 2); }
 
   & .portada, & .navigation { display: none; }
-  & .articulos, & .portal-glow, & .reading-corner { grid-column: 1 / -1; grid-row: 1 / -1; justify-self: center; width: calc((100% - 1rem) / 2 + var(--wider) * 2); }
+  & .articulos, & .portal-glow, & .reading-corner { grid-column: 1 / -1; grid-row: 1 / -1; justify-self: center; width: var(--box); }
   & .articulos, & .reading-corner { margin-top: -1rem; }
-  & .portal-glow { width: calc((100% - 1rem) / 2 + var(--wider) * 2 + 2rem); }
+  & .portal-glow { width: calc(var(--box) + 2rem); }
   & .articulos .post { width: calc(100% - var(--wider) * 2); margin-inline: auto; }
-  & .notedisplay { --vig-mask: var(--vig-light), linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band)), linear-gradient(to bottom, var(--vig-band)); }
-  & .notedisplay.no-aperture { --vig: 1; --vig-mask: linear-gradient(to right, var(--vig-band)), linear-gradient(to left, var(--vig-band)), linear-gradient(to top, var(--vig-band)); }
+  & .notedisplay { --vig-mask: var(--vig-oval), var(--vig-edges), linear-gradient(to bottom, var(--vig-band)); }
+  & .notedisplay.no-aperture { --vig: 1; --vig-mask: var(--vig-edges); }
   & .notedisplay, & .notedisplay .post { transition: none; }
   & .reading-corner { position: relative; z-index: 2; pointer-events: none; & .top-actions { pointer-events: auto; top: 2.25rem; right: 3rem; } }
-  & + .footer .statusbar { width: calc((100% - 1rem) / 2 + var(--wider) * 2); margin-inline: auto; }
+  & + .footer .statusbar { width: var(--box); margin-inline: auto; }
 
 } }
 

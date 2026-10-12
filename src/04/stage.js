@@ -1,5 +1,6 @@
 import { shallowRef } from 'vue'
 import { throughTheVeil, veilOn } from '../03/veil.js'
+import { isFullscreen } from './map.js'
 import router from './router.js'
 
 export const stage   = shallowRef(null)
@@ -15,20 +16,19 @@ export function back()               { return throughTheVeil(() => window.histor
 
 export function read(on) {
   const route = router.currentRoute.value
-  if (veilOn.value || 'fullscreen' in route.query === on) return
-  const query = { ...route.query, fullscreen: null }
-  if (on) return router.push({ path: route.path, query, hash: route.hash })
-  delete query.fullscreen
-  const plain = router.resolve({ path: route.path, query, hash: route.hash }).fullPath
+  if (veilOn.value || isFullscreen(route) === on) return
+  const { path, query, hash } = route
+  if (on) return router.push({ path, hash, query: { ...query, fullscreen: null } })
+  const plain = router.resolve({ path, hash, query: { ...query, fullscreen: undefined } }).fullPath
   return window.history.state?.back === plain ? previous() : router.replace(plain)
 }
 
 export async function follow(on, instant) {
   wanted = on
-  if (turning) return
-  if (instant) { reading.value = on; return }
+  if (instant) reading.value = on
+  if (turning || reading.value === on) return
   turning = true
-  try { while (reading.value !== wanted) { const next = wanted; await throughTheVeil(() => { reading.value = next }) } }
+  try { while (reading.value !== wanted) await throughTheVeil(() => { reading.value = wanted }) }
   finally { turning = false }
 }
 
