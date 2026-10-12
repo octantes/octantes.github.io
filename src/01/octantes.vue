@@ -1,21 +1,22 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
-import { storeToRefs } from 'pinia'
 import Navigation from '../01/navigation.vue'
 import Content from '../01/content.vue'
 import Status from '../01/status.vue'
 import Portada from '../02/portada.vue'
 import Corner from '../02/corner.vue'
-import { reading, read, stage } from '../04/stage.js'
+import { reading, read, follow, stage } from '../04/stage.js'
 import { MOBILE_MAX } from '../04/config.js'
 
 const store = useStore()
-const { currentPost } = storeToRefs(store)
+const route = useRoute()
 const narrow = matchMedia(`(max-width: ${MOBILE_MAX}px)`)
 const mobile = ref(narrow.matches)
+const fullscreen = computed(() => !mobile.value && !!route.params.slug && 'fullscreen' in route.query)
 
-function fit() { mobile.value = narrow.matches; if (mobile.value) reading.value = false }
+function fit() { mobile.value = narrow.matches }
 
 function escape(e) { if (e.key === 'Escape' && reading.value && !stage.value) read(false) }
 
@@ -24,7 +25,7 @@ function sideScroll(e) {
   document.querySelector('.articulos .post')?.scrollBy(0, e.deltaY * (e.deltaMode ? 40 : 1))
 }
 
-watch(currentPost, post => { if (!post) reading.value = false })
+watch([fullscreen, mobile], ([on, small], [, was]) => follow(on, small !== was || !route.params.slug), { immediate: true })
 
 onMounted(() => { window.addEventListener('keydown', escape); narrow.addEventListener('change', fit) })
 onBeforeUnmount(() => { window.removeEventListener('keydown', escape); narrow.removeEventListener('change', fit); reading.value = false })

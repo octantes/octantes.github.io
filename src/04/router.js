@@ -28,4 +28,15 @@ const routes = [
 
 const router = createRouter({ history: offline ? createWebHashHistory() : createWebHistory(import.meta.env.BASE_URL), routes })
 
+let traveled = false
+
+router.options.history.listen(() => { traveled = true })
+
+router.beforeEach((to, from) => {
+  const popped = traveled
+  traveled = false
+  if (popped || !('fullscreen' in from.query) || 'fullscreen' in to.query || !to.params.slug || to.path === from.path) return
+  return { path: to.path, query: { ...to.query, fullscreen: null }, hash: to.hash }
+})
+
 export default router
