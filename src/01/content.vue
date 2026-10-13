@@ -65,6 +65,7 @@ let opened     = false                                                          
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
 let lastSlug   = null                                                                                                                 // previous slug flag for shader
 let settling   = false                                                                                                                // a transition is running; settle() re-reads the route when it ends
+let target     = undefined
 let loads      = 0                                                                                                                    // latest note request, older ones are dropped
 let shownLang  = null                                                                                                                 // language of the note on screen
 
@@ -75,17 +76,20 @@ const computedComp = computed(() => {                                           
 
 })
 
+function stale() { return scene.value !== target }
+
 async function arrive(work) {
   if (veiled()) return underVeil(work, 'static', 'direct', 500)
   await portalRef.value?.runQueue('static')
   await work()
   await new Promise(resolve => setTimeout(resolve, 500))
-  await portalRef.value?.runQueue('direct')
+  if (!stale()) await portalRef.value?.runQueue('direct')
 }
 
 async function enter(work) {
   if (veiled()) return underVeil(work, 'intro', 'outro')
   await work()
+  if (stale()) return
   await portalRef.value?.runQueue('outro')
   await portalRef.value?.runQueue('hidden')
 }
@@ -94,7 +98,7 @@ async function swap(work) {
   if (veiled()) return underVeil(work, 'transition-intro', 'transition-outro')
   await portalRef.value?.runQueue('transition-intro')
   await work()
-  await portalRef.value?.runQueue('transition-outro')
+  if (!stale()) await portalRef.value?.runQueue('transition-outro')
 }
 
 function clearColumn() { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }
@@ -289,8 +293,7 @@ async function settle() {                                                       
   settling = true
 
   try {
-    let at
-    do { at = scene.value; await show(openKey.value) } while (scene.value !== at)
+    do { target = scene.value; await show(openKey.value) } while (scene.value !== target)
     if (route.params.slug && store.currentPost?.bilingual && shownLang !== store.lang) await handleLoadNote(route.params.slug)
   } finally { settling = false }
 
