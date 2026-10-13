@@ -48,7 +48,7 @@ const aboutOpen = ref(null)
 
 const page      = computed(() => pageOf(route))
 const openKey   = computed(() => page.value.kind === 'note' ? route.params.slug : aboutMode.value ? 'about:' + aboutMode.value : undefined)
-const scene     = computed(() => openKey.value ?? (page.value.kind === 'notfound' ? ':404' : undefined))
+const scene     = computed(() => openKey.value ?? (page.value.kind === 'notfound' ? '404:' + route.path : undefined))
 
 const designRoute = computed(() => store.sectionOf(route.params.type) === 'diseño')
 const fullTarget  = computed(() => !isMobile.value && isFullscreen(route))
@@ -83,10 +83,18 @@ async function arrive(work) {
   await portalRef.value?.runQueue('direct')
 }
 
-async function revealError() {
-  if (isMobile.value || !portalRef.value) return
-  await portalRef.value.runQueue('outro')
-  await portalRef.value.runQueue('hidden')
+async function enter(work) {
+  if (veiled()) return underVeil(work, 'intro', 'outro')
+  await work()
+  await portalRef.value?.runQueue('outro')
+  await portalRef.value?.runQueue('hidden')
+}
+
+async function swap(work) {
+  if (veiled()) return underVeil(work, 'transition-intro', 'transition-outro')
+  await portalRef.value?.runQueue('transition-intro')
+  await work()
+  await portalRef.value?.runQueue('transition-outro')
 }
 
 function clearColumn() { setCurrentPost(null); aboutOpen.value = null; noteContent.value = '' }
@@ -306,13 +314,10 @@ async function show(slug) {
   switch (true) {
 
     case !slug && !!notFound.value:
-      opened = true
       lastSlug = null
-      if (firstLoad) { firstLoad = false; await arrive(clearColumn); break }
-      if (veiled()) { await underVeil(clearColumn, 'transition-intro', 'transition-outro'); break }
-      await portalRef.value?.runQueue('transition-intro')
-      clearColumn()
-      await revealError()
+      if (firstLoad) { firstLoad = false; opened = true; await arrive(clearColumn); break }
+      await (opened ? swap : enter)(clearColumn)
+      opened = true
       break
 
     // back to home with note loaded, TRANSITION on note unload
@@ -339,10 +344,7 @@ async function show(slug) {
       opened = true
       firstLoad = false
       lastSlug = slug
-      if (veiled()) { await underVeil(() => openInColumn(slug), 'intro', 'outro'); break }
-      await openInColumn(slug)
-      await portalRef.value?.runQueue('outro')
-      await portalRef.value?.runQueue('hidden')
+      await enter(() => openInColumn(slug))
       break
 
     // first load from url, DIRECT when loading from url
@@ -358,10 +360,7 @@ async function show(slug) {
       opened = true
       firstLoad = false
       lastSlug = slug
-      if (veiled()) { await underVeil(() => openInColumn(slug), 'transition-intro', 'transition-outro'); break }
-      await portalRef.value?.runQueue('transition-intro')
-      await openInColumn(slug)
-      await portalRef.value?.runQueue('transition-outro')
+      await swap(() => openInColumn(slug))
       break
     
   }
