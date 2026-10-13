@@ -49,7 +49,7 @@ useRouter().afterEach((to, from) => {
 
 <template>
 
-  <div class="pagina" :class="[fade && `fade-${fade}`, { staged: stage }]" :inert="veilOn">
+  <div class="pagina" :class="[fade && `fade-${fade}`, { staged: stage }]">
 
     <DotGrid viewport :ink="light ? 'var(--carbon)' : 'var(--niebla)'" />
 

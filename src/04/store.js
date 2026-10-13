@@ -4,6 +4,7 @@ import { CONTACT_EMAIL, POPUP_LINK, SECTIONS, STATUS, STATUSES } from '@/04/conf
 import { sectionOf, labelOf, textOf, other, pageOf, pathOf, headFor, applyHead } from '@/04/map.js'
 import { DICT } from '@/04/lang.js'
 import { offline, shelved, read } from '@/03/shelf.js'
+import { veilOn } from '@/03/veil.js'
 import router from '@/04/router.js'
 
 export const useStore = defineStore('store', () => {
@@ -58,7 +59,8 @@ export const useStore = defineStore('store', () => {
 
   // STATES                                                                                                                           // CHANGE STATES
 
-  const processing                 = ref(false)                                                                                       // navigation lock state
+  const working                    = ref(false)
+  const processing                 = computed(() => working.value || veilOn.value)                                                    // navigation lock state
   const groundLight                = ref(null)
   const popLink                    = ref(POPUP_LINK)                                                                                  // popup go link
   const showPopup                  = ref(localStorage.getItem('popup_seen') !== popLink.value)                                        // enable popup in navigation
@@ -101,10 +103,12 @@ export const useStore = defineStore('store', () => {
 
   // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  function setProcessing(val)           { processing.value = val; document.body.style.cursor = val ? 'wait' : '' }                    // lock or unlock navigation
+  function setProcessing(val)           { working.value = val }                                                                       // lock or unlock navigation
   function togglePopup()                { showPopup.value = !showPopup.value; if (!showPopup.value) localStorage.setItem('popup_seen', popLink.value) } 
   function setSearchQuery(query)        { searchQuery.value = query }                                                                 // apply note search query to table
   function setCurrentPost(metadataSlug) { currentPost.value = metadataSlug }                                                          // apply current post from slug
+
+  watch(processing, busy => { document.body.style.cursor = busy ? 'wait' : '' })
 
   function fetchTime() {                                                                                                              // fetch and update current time  
 
