@@ -2,6 +2,7 @@
 import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../04/store.js'
+import { pageOf } from '../04/map.js'
 import Navbar from '../02/navbar.vue'
 import Gallery from '../02/gallery.vue'
 import Popup from '../02/popup.vue'
@@ -11,7 +12,7 @@ const store           = useStore()                                              
 
 defineProps({ locked: Boolean })
 
-const urlFilter = computed(() => route.params.filterType && (store.sectionOf(route.params.filterType) ?? route.params.filterType))
+const urlFilter = computed(() => { const page = pageOf(route); return page.kind === 'section' ? page.id : page.kind === 'home' ? 'portal' : undefined })
 
 onMounted(async () => {                                                                                                               // searches notes on mount
 
