@@ -8,6 +8,7 @@ import { read } from '../03/shelf.js'
 import { back } from '../04/stage.js'
 import { luma, light, mix } from '../03/tone.js'
 import Corner from '../02/corner.vue'
+import Notification from '../02/notification.vue'
 
 const BLEND  = .25
 const FLIGHT = 4000
@@ -22,6 +23,7 @@ const store  = useStore()
 store.land(route)
 
 const entries  = ref([])
+const failed   = ref(false)
 const active   = ref(null)
 const hovered  = ref(null)
 const flying   = ref(null)
@@ -106,7 +108,7 @@ function outside(event) { if (!event.target.closest('.rail')) opened.value = fal
 watch(grounds, repaint)
 
 onMounted(async () => {
-  entries.value = JSON.parse(await read('/vitacora.json'))
+  try { entries.value = JSON.parse(await read('/vitacora.json')) } catch { failed.value = true; return }
   active.value  = entries.value[0]?.id ?? null
   await nextTick()
   spy = new IntersectionObserver(seen => { for (const entry of seen) if (entry.isIntersecting) active.value = entry.target.id }, { root: scroller.value, rootMargin: '-45% 0px -45% 0px' })
@@ -137,7 +139,9 @@ onBeforeUnmount(() => {
 
     <Corner :label="store.t.stage.back" stacked @close="back" />
 
-    <main class="board" ref="scroller">
+    <Notification v-if="failed" :code="500" />
+
+    <main v-else class="board" ref="scroller">
       <article v-for="e in entries" :id="e.id" :key="e.id" class="entry">
         <header class="divider" :class="{ open: TOUCH || hovered === e.id }" @pointerenter="hovered = e.id" @pointerleave="hovered = null">
           <time class="day" :datetime="e.date">{{ e.date }}</time>

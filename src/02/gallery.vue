@@ -40,6 +40,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
   <div class="gallery" ref="galleryRef">
 
     <div v-if="!notesLoaded" class="empty-state">{{ store.t.gallery.loading }}</div>
+    <div v-else-if="store.notesFailed" class="empty-state">{{ store.t.notFound.byCode['500'] }}</div>
     <div v-else-if="noteSortFilter.length === 0" class="empty-state">{{ store.t.gallery.empty }}{{ searchQuery ? `: "${searchQuery}"` : '' }}</div>
 
     <div v-for="note in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"

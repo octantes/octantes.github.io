@@ -49,6 +49,7 @@ export const useStore = defineStore('store', () => {
   const notesIndex                 = ref([])                                                                                          // note index array
   const currentPost                = ref(null)                                                                                        // current loaded post ref
   const notesLoaded                = ref(false)                                                                                       // note loaded boolean ref
+  const notesFailed                = ref(false)
   let   notesLoadingPromise        = null                                                                                             // in-flight guard for loadNotesIndex
   const base                       = import.meta.env.BASE_URL.replace(/\/$/, '')                                                      // base url from index html
   const landing                    = decodeURIComponent(location.pathname)                                                            // the page the browser loaded, whose archive is in the dom
@@ -323,7 +324,7 @@ export const useStore = defineStore('store', () => {
         notesIndex.value = JSON.parse(await read(`${base}/index.json`))
         notesLoaded.value = true
 
-      } catch (e) { console.error('error loading notes index:', e); notesIndex.value = []; notesLoaded.value = true }
+      } catch (e) { console.error('error loading notes index:', e); notesIndex.value = []; notesFailed.value = true; notesLoaded.value = true }
       finally { notesLoadingPromise = null }
 
       return notesIndex.value
@@ -483,7 +484,7 @@ export const useStore = defineStore('store', () => {
 
   return { 
 
-    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, base, subEmail, subHoney, subMessage, subState, subDone, userStatus,
+    /* NOTES VAR */ notesIndex, currentPost, notesLoaded, notesFailed, base, subEmail, subHoney, subMessage, subState, subDone, userStatus,
     /* NOTES FUN */ fetchPost, loadNotesIndex, setCurrentPost, emitSub,
     /* NOTES COM */ computedNoteComp, computedNoteClass, computedPortada, loadLatestPost,
     /* STATS VAR */ btcPrice, currentTime, barContent,
