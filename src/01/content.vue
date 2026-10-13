@@ -313,14 +313,16 @@ async function show(slug) {
 
   switch (true) {
 
-    case !slug && !!notFound.value:
-      lastSlug = null
-      if (firstLoad) { firstLoad = false; opened = true; await arrive(clearColumn); break }
-      await (opened ? swap : enter)(clearColumn)
+    case !slug && !!notFound.value: {
+      const into = firstLoad ? arrive : opened ? swap : enter
       opened = true
+      firstLoad = false
+      lastSlug = null
+      await into(clearColumn)
       break
+    }
 
-    // back to home with note loaded, TRANSITION on note unload
+    // back to home from a note or an error, TRANSITION on unload
     case !slug && opened:
       opened = false
       lastSlug = null

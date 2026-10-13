@@ -9,7 +9,7 @@ const router          = useRouter()                                             
 const route           = useRoute()                                                                                                    // sets the current url route
 const store           = useStore()                                                                                                    // initializes global store
 
-const { noteSortFilter, searchQuery, notesLoaded } = storeToRefs(store)                                                               // imports refs from main store
+const { noteSortFilter, searchQuery, notesLoaded, notesFailed } = storeToRefs(store)                                                  // imports refs from main store
 
 function noteOpen(type, slug) { router.push({ path: store.notePath(type, slug) }) }                                                   // change route and open post
 
@@ -40,7 +40,7 @@ watch(() => [route.params.slug, noteSortFilter.value.length], revealActive, { fl
   <div class="gallery" ref="galleryRef">
 
     <div v-if="!notesLoaded" class="empty-state">{{ store.t.gallery.loading }}</div>
-    <div v-else-if="store.notesFailed" class="empty-state">{{ store.t.notFound.byCode['500'] }}</div>
+    <div v-else-if="notesFailed" class="empty-state">{{ store.t.notFound.byCode['500'] }}</div>
     <div v-else-if="noteSortFilter.length === 0" class="empty-state">{{ store.t.gallery.empty }}{{ searchQuery ? `: "${searchQuery}"` : '' }}</div>
 
     <div v-for="note in noteSortFilter" :key="note.slug" class="notecard" @click="noteOpen(note.type, note.slug)"
