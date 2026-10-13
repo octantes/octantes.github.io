@@ -443,6 +443,8 @@ function initGrid() {                                                   // creat
 
   if (!context) return
 
+  const kept = cols && rows && logicMask ? { cols, rows, logic: logicMask.slice(), visual: visualMask.slice() } : null
+
   // set size
   cols = Math.ceil(width / fontSize)
   rows = Math.ceil(height / fontSize)
@@ -466,6 +468,7 @@ function initGrid() {                                                   // creat
   const total = cols * rows
 
   initMasks()
+  if (kept && (kept.cols !== cols || kept.rows !== rows)) { refit(kept.logic, logicMask, kept); refit(kept.visual, visualMask, kept) }
 
   const cx = cols / 2
   const cy = rows / 2
@@ -541,6 +544,10 @@ function clampValue(value, min = 0, max = 1) {                          // const
   
   return Math.min(max, Math.max(min, value))
 
+}
+
+function refit(from, to, { cols: was, rows: had }) {
+  for (let y = 0, i = 0; y < rows; y++) for (let x = 0; x < cols; x++, i++) to[i] = from[Math.min(y, had - 1) * was + Math.min(x, was - 1)]
 }
 
 function secureCopy(destination, source) {                              // prevent overwrite on UINT8 array copy 
@@ -853,7 +860,7 @@ function runIntro()             { mode = 'intro'; germFrame = 0; }
 function runOutro()             { mode = 'outro'; outroRadius = 0; outroCenter = { x: 0, y: rows } }
 function runDirect()            { mode = 'direct'; germFrame = 0; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
 function runTransitionFull()    { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = true }
-function runTransitionIntro()   { mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = false }
+function runTransitionIntro()   { if (mode === 'static') return; mode = 'transition'; resetMasks(); logicMask.fill(0); visualMask.fill(0); swipeFrame = 0; swipePhase = 0; outroAuto = false }
 function runTransitionOutro()   { mode = 'transition'; resetMasks(); secureCopy(visualMask, logicMask); swipeFrame = 0; swipePhase = 1; outroAuto = false }
 function runStatic()            { mode = 'static'; resetMasks(); for (let i = 0; i < rows * cols; i++) logicMask[i] = 1; secureCopy(visualMask, logicMask) }
 function runHidden()            { mode = 'hidden' }
@@ -891,12 +898,14 @@ function onContainerResize() {
   const w = Math.round(r.width), h = Math.round(r.height)
   if (w === observed.w && h === observed.h) return
   observed = { w, h }
-  resetContext()
+  resize()
 }
+
+function resize() { resetContext(); if (mode !== 'hidden') drawFrame(0) }
 
 onMounted(() => { requestAnimationFrame(() => {
   resetContext()
-  window.addEventListener('resize', resetContext)
+  window.addEventListener('resize', resize)
   if (containerRef.value && typeof ResizeObserver !== 'undefined') {
     const r = containerRef.value.getBoundingClientRect()
     observed = { w: Math.round(r.width), h: Math.round(r.height) }
@@ -909,7 +918,7 @@ onBeforeUnmount(() => {
 
   if (taskResolve) { const r = taskResolve; taskPromise = null; taskResolve = null; r() }
   cancelAnimationFrame(animationID)
-  window.removeEventListener('resize', resetContext)
+  window.removeEventListener('resize', resize)
   if (sizeWatch) { sizeWatch.disconnect(); sizeWatch = null }
   if (animateGerm.lastRatio !== undefined) animateGerm.lastRatio = 0
   if (animateGermInv.frontierQueue !== undefined) animateGermInv.frontierQueue = null
