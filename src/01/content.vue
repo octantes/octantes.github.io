@@ -48,6 +48,7 @@ const aboutOpen = ref(null)
 
 const page      = computed(() => pageOf(route))
 const openKey   = computed(() => page.value.kind === 'note' ? route.params.slug : aboutMode.value ? 'about:' + aboutMode.value : undefined)
+const scene     = computed(() => openKey.value ?? (page.value.kind === 'notfound' ? ':404' : undefined))
 
 const designRoute = computed(() => store.sectionOf(route.params.type) === 'diseño')
 const fullTarget  = computed(() => !isMobile.value && isFullscreen(route))
@@ -58,9 +59,9 @@ function underVeil(work, enter, exit, hold) {
   return throughTheVeil(() => { follow(fullTarget.value, true); fullBleed.value = designRoute.value; return work() }, enter, exit, hold)
 }
 
-if (veiled() && openKey.value) veilFromStart()
+if (veiled() && scene.value) veilFromStart()
 
-let noteLoaded = false                                                                                                                // note loaded bool flag for shader
+let opened     = false                                                                                                                // a note or an error fills the column
 let firstLoad  = true                                                                                                                 // first load bool flag for shader
 let lastSlug   = null                                                                                                                 // previous slug flag for shader
 let settling   = false                                                                                                                // a transition is running; settle() re-reads the route when it ends
@@ -73,6 +74,14 @@ const computedComp = computed(() => {                                           
   return null
 
 })
+
+async function arrive(work) {
+  if (veiled()) return underVeil(work, 'static', 'direct', 500)
+  await portalRef.value?.runQueue('static')
+  await work()
+  await new Promise(resolve => setTimeout(resolve, 500))
+  await portalRef.value?.runQueue('direct')
+}
 
 async function revealError() {
   if (isMobile.value || !portalRef.value) return
@@ -272,14 +281,14 @@ async function settle() {                                                       
   settling = true
 
   try {
-    let key
-    do { key = openKey.value; await show(key) } while (openKey.value !== key)
+    let at
+    do { at = scene.value; await show(openKey.value) } while (scene.value !== at)
     if (route.params.slug && store.currentPost?.bilingual && shownLang !== store.lang) await handleLoadNote(route.params.slug)
   } finally { settling = false }
 
 }
 
-watch(openKey, settle, { immediate: true })                                                                                           // trigger notes and animations
+watch(scene, settle, { immediate: true })                                                                                             // trigger notes and animations
 
 async function show(slug) {
 
@@ -292,13 +301,14 @@ async function show(slug) {
   await nextTick()
   
   if (!slug && !store.notesLoaded) { await loadNotesIndex() }
+  if (!slug && store.notesFailed && !notFound.value) notFound.value = 500
 
   switch (true) {
 
-    case !slug && notFound.value:
-      noteLoaded = false
+    case !slug && !!notFound.value:
+      opened = true
       lastSlug = null
-      if (firstLoad) { firstLoad = false; clearColumn(); break }
+      if (firstLoad) { firstLoad = false; await arrive(clearColumn); break }
       if (veiled()) { await underVeil(clearColumn, 'transition-intro', 'transition-outro'); break }
       await portalRef.value?.runQueue('transition-intro')
       clearColumn()
@@ -306,8 +316,8 @@ async function show(slug) {
       break
 
     // back to home with note loaded, TRANSITION on note unload
-    case !slug && noteLoaded:
-      noteLoaded = false
+    case !slug && opened:
+      opened = false
       lastSlug = null
       if (veiled()) { await underVeil(clearColumn, 'transition-intro', 'transition-outro'); break }
       await portalRef.value?.runQueue('transition-intro')
@@ -316,7 +326,7 @@ async function show(slug) {
 
     // first load without note, INTRO only on first page load
     case !slug && firstLoad:
-      noteLoaded = false
+      opened = false
       firstLoad = false
       lastSlug = null
       clearColumn()
@@ -325,8 +335,8 @@ async function show(slug) {
       break
     
     // first note load, OUTRO only on first note load
-    case slug && !noteLoaded && !firstLoad:
-      noteLoaded = true
+    case slug && !opened && !firstLoad:
+      opened = true
       firstLoad = false
       lastSlug = slug
       if (veiled()) { await underVeil(() => openInColumn(slug), 'intro', 'outro'); break }
@@ -336,20 +346,16 @@ async function show(slug) {
       break
 
     // first load from url, DIRECT when loading from url
-    case slug && !noteLoaded && firstLoad:
-      noteLoaded = true
+    case slug && !opened && firstLoad:
+      opened = true
       firstLoad = false
       lastSlug = slug
-      if (veiled()) { await underVeil(() => openInColumn(slug), 'static', 'direct', 500); break }
-      await portalRef.value?.runQueue('static')
-      await openInColumn(slug)
-      await new Promise(resolve => setTimeout(resolve, 500))
-      await portalRef.value?.runQueue('direct')
+      await arrive(() => openInColumn(slug))
       break
     
     // loaded note change, TRANSITION when switching note
-    case slug && noteLoaded && lastSlug !== slug:
-      noteLoaded = true
+    case slug && opened && lastSlug !== slug:
+      opened = true
       firstLoad = false
       lastSlug = slug
       if (veiled()) { await underVeil(() => openInColumn(slug), 'transition-intro', 'transition-outro'); break }
@@ -384,7 +390,6 @@ onMounted(async () => {
   checkViewport()
   await nextTick(); await fitCentred()
   window.addEventListener('resize', onResize)
-  if (notFound.value) { await nextTick(); await new Promise(r => requestAnimationFrame(r)); await revealError() }
 })
 onUnmounted(() => { window.removeEventListener('resize', onResize); clearTimeout(resizeTimer) })
 
