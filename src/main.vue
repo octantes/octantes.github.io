@@ -7,7 +7,7 @@ import DotGrid from './03/dotgrid.vue'
 import { veilOn, veilOpaque, registerVeil } from './03/veil.js'
 import { pageOf, themeOf, inRoom } from './04/map.js'
 import { useStore } from './04/store.js'
-import { stage } from './04/stage.js'
+import { stage, leave } from './04/stage.js'
 
 const ARRIVAL = { settle: 1000, finish: 400 }
 
@@ -16,12 +16,16 @@ const store = useStore()
 const baked = document.documentElement.classList.contains('light')
 const light = computed(() => store.groundLight ?? (route.matched.length ? themeOf(pageOf(route)) === 'light' : baked))
 
+const place = computed(() => { const page = pageOf(route); return [page.kind, page.id, page.slug, page.item].join(':') })
+
 const fade   = ref(null)
 
 let locked = false
 let timer  = 0
 
 watchEffect(() => document.documentElement.classList.toggle('light', light.value))
+
+watch(place, () => { if (stage.value) leave() })
 
 function phase(next) { clearTimeout(timer); fade.value = next }
 
