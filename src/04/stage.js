@@ -9,10 +9,10 @@ export const reading = shallowRef(false)
 let wanted  = false
 let turning = false
 
-export function launch(game, ground) { return throughTheVeil(() => { stage.value = { game, ground } }) }
-export function visit(path)          { return throughTheVeil(() => router.push(path)) }
-export function leave()              { return throughTheVeil(() => { stage.value = null }) }
-export function back()               { return throughTheVeil(() => window.history.state?.back ? previous() : router.push('/')) }
+export function launch(game, ground) { const at = router.currentRoute.value.fullPath; return once(() => { if (router.currentRoute.value.fullPath === at) stage.value = { game, ground } }) }
+export function visit(path)          { return once(() => router.push(path)) }
+export function leave()              { return once(() => { stage.value = null }) }
+export function back()               { return once(() => window.history.state?.back ? previous() : router.push('/')) }
 
 export function read(on) {
   const route = router.currentRoute.value
@@ -31,5 +31,7 @@ export async function follow(on, instant) {
   try { while (reading.value !== wanted) await throughTheVeil(() => { reading.value = wanted }) }
   finally { turning = false }
 }
+
+function once(work) { if (!veilOn.value) return throughTheVeil(work) }
 
 function previous() { return new Promise(done => { const off = router.afterEach(() => { off(); done() }); router.back() }) }
